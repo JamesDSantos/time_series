@@ -1,0 +1,96 @@
+# Introdução
+
+
+## Notações
+
+Serão utilizadas letras minúsculas para designar tanto variáveis aleatórias quanto seus respectivos valores observados, entando a diferença clara no contexto. Exemplo: em $$x_t\sim\hbox{Normal}(0,1),$$
+$x_t$ representa uma variável aleatória, enquanto que em $x_t=0$ é um valor observado.
+
+Vetores serão denotados por negritos e sempre serão vetores-coluna. Exemplo $$\boldsymbol{x}=\left(\begin{array}{c}x_1 \\ x_2 \\ \vdots \\ x_q\end{array}\right).$$ O vetor $\boldsymbol{x}'$ é o transposto de $\boldsymbol{x}$.
+
+Para $\mathcal{T}=\{1,2\ldots,\}$,
+
+-   Se $A\subset\mathcal{T}$. Então $x_A=\{x_{t},t\in A\}$.
+-   $x_{a:b}=x_a,x_{a+1},\ldots,x_{b-1},x_{b}.$
+-   Um vetor de dimensão $q$ observado no tempo $t$ é escrito como $$\boldsymbol{x}_t =\left(\begin{array}{c}x_{1} \\ \vdots \\ x_{q}\end{array}\right)_{t}.$$
+
+
+## O que é uma análise de séries temporais?
+
+Considera-se que uma série temporal é uma coleção de observações realizadas ao longo do tempo. Será utilizada a notação $x_t$ para designar o valor registrado no tempo $t$ e $\mathcal{D}_t=}=\{x_1,\ldots,x_t\}$ representará a série observada até o tempo $t$.
+
+Existem três objetivos principais no estudo de séries temporais
+
+-   *Previsão:* Dado $\mathcal{D}_t$ a previsão trata do problema de realizar inferências sobre $x_{t+h}$, com $h>0$.
+
+-   *Suavização (ou alisamento):* Dado $\mathcal{D}_t$ a suavização trata do problema de realizar inferências baseadas $x_{t-h}$, com $h>0$
+
+-   *Monitoramento:* detectar em tempo real as mudanças ou discrepâncias no comportamento do processo.
+
+
+Note que tais objetivos só fazem sentido se há alguma estrutura de dependência entre as variáveis que compõe a série temporal. Para ilustrar, considere a figura abaixo representa o gráfico a série temporal com o número anual de embarques e desembarques de passageiros em vôos domésticos no aeroporto Eduardo Gomes.
+
+
+```{r echo=FALSE, message=FALSE , warning=FALSE}
+url <- 'https://docs.google.com/spreadsheets/d/1QpBrW2uRZcNYJo_slcl6KBYOvIJOt_CetXiqJMQoNUA/edit?usp=sharing'
+library(data.table)
+library(TSA)
+x <- fread(url)
+y <- ts(x$DOMESTICO[-c(13,14,15)], start = 2006)
+plot(y, lwd = 2, type = 'o', pch = 16, ylab = 'No. de embarques e desembarques', xlab = 'Ano')
+
+```
+
+Ainda considerando a série acima, seja $x_t$ o número de embarques e desembarques registrado no ano $t$. A figura abaixo mostra o diagrama de disperão entre $x_t$ e $x_{t-1}$, de onde é possível observar a correlação positiva, estimada em 0,86.
+
+```{r echo=FALSE, message=FALSE , warning=FALSE}
+plot.new()
+plot.window(xlim = c(1600000,2800000), ylim = c(1600000,2800000))
+points(zlag(y),y, type = 'p', pch = 16)
+title(ylab = expression(x[t]), xlab = expression(x[t-1]) )
+axis(1); axis(2)
+```
+De posse desses resultados, pode-se imaginar um primeiro modelo, no qual a relação entre o presente e o passado imediato é ditado por uma regressão linear simples, gerando a equação
+
+$$\hat{x}_t = 7,589\times 10^5 +0,7109 x_{t-1}.$$
+Sabendo que $x_{2017}=2.376.505$, uma previsão para 2018 seria $\hat{x}_{2018}=2.448.357$. O valor observado em 2018 foi 2.572.159, gerando um erro de previsão igual a $x_{2018}-\hat{x}_{2018}=195.654$
+embarques e desembarques domésticos. 
+
+## Exemplos de séries temporais
+
+```{r echo = FALSE}
+source('./Base_de_Dados/base_dropbox.R')
+```
+
+### Eletrocardiograma
+
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - "1800 medidas da taxa cardíaca instantânea, em batidas por minuto, de um indivíduo."
+
+ts.plot(ECG)
+```
+
+### Produto Interno Brupo Brasileiro
+
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - "PIB entre 1967 e 2014 corrigidos pelo valor do dólar em 4/2015."
+
+ts.plot(PIB)
+```
+
+### Mortes por doenças pulmonares no Reino Unido
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - "PIB entre 1967 e 2014 corrigidos pelo valor do dólar em 4/2015."
+
+ts.plot(ldeaths)
+
+```

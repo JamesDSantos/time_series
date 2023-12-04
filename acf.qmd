@@ -1,0 +1,127 @@
+# Defasagens e autocorrelação
+
+## Gráfico de Defasagens
+
+Denomina-se por **defasagem** $h$ (*lag*, em inglês), um atraso em $h$ nos índices da série temporal. A tabela abaixo ilustra algumas defasagens para a série $x_1,\ldots,x_5$
+
+| Série original | $h=1$ | $h=2$ | $h=3$ |
+|----------------|-------|-------|-------|
+| $x_1$          |       |       |       |
+| $x_2$          | $x_1$ |       |       |
+| $x_3$          | $x_2$ |$x_1$  |       |
+| $x_4$          | $x_3$ |$x_2$  | $x_1$ |
+| $x_5$          | $x_4$ |$x_3$  | $x_2$ | 
+
+Conforme dito anteriormente, a existência de uma estrutura de dependência entre $x_t$ e $x_{t-h}$ permite que a série observada seja utilizada para realizar previsões. Uma ferramenta exploratória interessante para analisar esse tipo de estrutura é gráfico de defasagens (no inglês *lag plot*). Trata-se de um diagrama de dispersão entre a série original e a série defasada, para algum $h$ fixado. Abaixo apresenta-se a série de embarques e desembraques no aeroporo Eduardo Gomes para as 4 primeiras defasagens. Os números representam a ordem (temporal) dos pares do diagrama e a linha cinza pontilha é a reta $y=x$. 
+
+```{r echo=FALSE, message=FALSE , warning=FALSE}
+url <- 'https://docs.google.com/spreadsheets/d/1QpBrW2uRZcNYJo_slcl6KBYOvIJOt_CetXiqJMQoNUA/edit?usp=sharing'
+library(data.table)
+library(TSA)
+x <- fread(url)
+y <- ts(x$DOMESTICO[-c(13,14,15)], start = 2006)
+lag.plot(y,4)
+```
+
+Abaixo, a figura mostra o gráfico de defasagens para $h=1,2,3,12$ considerando a série de mortes por doenças pulmonares no Reino Unido.
+
+
+```{r echo = F}
+lag.plot(ldeaths, set.lag=c(1:3,12))
+```
+
+
+## A função de autocorrelação
+
+::: {#def-autocovariancia}
+A função de autocovariância da série temporal $x_t$ é dada por
+$$\begin{equation}
+		  \gamma(s,t) = Cov(x_t,x_s)=E\left[(x_t-\mu_t)(x_s-\mu_s)\right],
+		\end{equation}$$
+para todo $s,t$ com $\mu_j=E(y_j)$ e sua respectiva função de autocorrelção é dada por
+$$\begin{equation}
+		\rho(s,t)=\frac{\gamma(s,t)}{\sqrt{\gamma(s,s)\gamma(t,t)}}
+		\end{equation}$$
+
+:::
+
+
+:::{#exm-acf1 }
+Considere a série temporal
+		$$x_t= x_{t-1}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),$$
+para $t=1,2,\ldots$ com a condição de que $x_0=0$ e que $Cov(\varepsilon_t,\varepsilon_s)=0\;\;\forall s\neq t$.
+É imediato que
+$$\begin{equation}
+	x_{t}=\sum_{j=1}^{t}\varepsilon_{j},
+	\end{equation}$$
+o que implica em $x_t\sim\hbox{Normal}(0,t)$. Portanto,
+$$\begin{align}
+		E(x_t)&=0\\
+		Var(x_t)&=t.
+		\end{align}$$
+Além disso,
+$$\begin{align*}
+	\gamma(t,t-h)&=Cov(x_t,x_{t-h})=Cov\left(\sum_{i=1}^{t}\varepsilon_{i},\sum_{j=1}^{t-h}\varepsilon_{j}\right)\\
+	&=\sum_{i=1}^{t}\sum_{j=1}^{t-h}Cov\left(\varepsilon_{i},\varepsilon_{j}\right)=\sum_{i=1}^{t-h}Cov(\varepsilon_i,\varepsilon_i)\\
+	&=t-h
+	\end{align*}$$
+	e
+	$$\begin{equation}
+	\rho(t,t-h)=\frac{\gamma(t,t-h)}{\sqrt{\gamma(t,t)\gamma(t-h,t-h)}}=\frac{t-h}{\sqrt{t(t-h)}}=\sqrt{1-\frac{h}{t}}
+	\end{equation}$$
+A figura abaixo mostra o gráfico da função de autocorrelação desse processo, considerando uma série de tamanho 100. Note que a série é mais dependente dos valores atuais, embora ainda possua uma autocorrelação alta para defasagens elevadas.
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - "Função de autocorrelação do Exemplo @exm-acf1, para t=100"
+
+curve( sqrt(1-x/100),0,99, xlab= 'Defasagem', ylab = 'Autocorrelação')
+
+```
+
+$\blacksquare$
+
+:::
+
+Para uma série estacionária, tem-se que $E(x_t)=\mu$ para todo $t$, logo
+$$\begin{equation}
+		\gamma(t-s) = Cov(y_t,y_s)=E\left[(y_t-\mu)(y_s-\mu)\right].
+\end{equation}$$
+Fazendo $h=t-s$, tem-se
+$$\begin{equation}
+			\gamma(h)=Cov(y_t,y_{t-h}).
+		\end{equation}$$
+
+A função de autocorrelação (ACF) para um processo estacionário é
+$$\begin{equation}
+				\rho(h)=\frac{\gamma(h)}{\gamma(0)}
+\end{equation}$$
+e ela mede a dependência linear entre $y_t$ e os valores defasados da série.Sempre será verdade que $\rho\in[-1,1]$, $\rho(h)=\rho(-h)$ e, se $y_{t+h}$ é independente de $y_t$, então $\rho(h)=0$.
+
+
+::: {#exm-acf2}
+Considere novamente a série temporal
+$$\begin{align}
+	x_t = \varepsilon_t +\frac{1}{2}\varepsilon_{t-1} \label{exer1}
+	\end{align}$$
+onde $\varepsilon_t\sim\hbox{Normal}(0,\nu)$ para $t=1,\ldots$, $\varepsilon_t$ é independente de $\varepsilon_s$ para todo $s\neq t$ e $\varepsilon_0=0$.
+Já foi mostrado que 
+$$\begin{align}
+	E(x_t)&=E(\varepsilon_t)+\frac{1}{2}E(\varepsilon_{t-1})=0\\
+	Var(x_t)&=Var(\varepsilon_t)+\frac{1}{4}Var(\varepsilon_{t-1})=\frac{5}{4}\nu\\
+	\gamma(h)&=\left\{ \begin{array}{ll}
+	\frac{5}{4}\nu,&\; h = 0 \\		  
+	\frac{1}{2}\nu,&\; |h|=1,\\
+	0,&\;\hbox{caso contrário.}
+	\end{array} \right.
+	\end{align}
+$$	
+Portanto,
+$$\begin{align}
+	\rho(h)&=\frac{\gamma(h)}{\gamma(0)}=\left\{ \begin{array}{ll}
+	1,&\; h = 0 \\		  
+	\frac{2}{5},&\; |h|=1,\\
+	0,&\;\hbox{caso contrário.}
+	\end{array} \right.
+	\end{align}$$

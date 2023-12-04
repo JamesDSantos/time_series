@@ -1,0 +1,79 @@
+# Séries Estacionárias
+
+Uma coleção do tipo $\{x(t),t\in\mathcal{T}\}$, $\mathcal{T}\subseteq \mathbb{R}$, onde $x(t)$ é uma variável aleatória para cada $t$ fixado,  é denominada processo estocástico.
+
+Um processo estocástico é dito ser fortemente estacionário se sua distribuição é invariante ao índice. Portanto, para qualquer $t_1,\ldots,t_k$, a distribuição de $x(t_1),\ldots,x(t_k)$ é a mesma de $x(t_1+h),\ldots,x(t_k+h)$.  
+
+::: {#exm-serie_estacionaria_1}
+Se $x(t)\sim \hbox{Normal}(0,1)$ e $x(t)$ é independente de $x(s)$ para todo $t\neq s$, então, para qualquer $t_1,\ldots,t_k$,
+
+$$\begin{align}P(x(t_1)<x_1,\ldots,x(t_k)<x_k)&=\prod_{i=1}^k P(x(t_i)<x_i)=\prod_{i=1}^k P(x(t_i+h)<x_i)\\&=P(x(t_1+h)<x_1,\ldots,x(t_k+h)<x_k)\end{align}$$
+logo, $\{x(t),t\in \mathbb{R}\}$ é um processo fortemente estacionário.
+$\blacksquare$
+:::
+
+
+:::{#thm-exm_estacionaria2}
+Seja $\{x(t),t\in\mathbb{N}\}$ um processo estocástico com 
+	$$x(t)= x_{(t-1)}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),$$
+para $t=1,2,\ldots$ com a condição de que $x_0\sim\hbox{Normal}(0,1)$ e que $Cov(\varepsilon_t,\varepsilon_s)=0\;\;\forall s\neq t$.
+	Então,
+	$$x_t=x_{t-1}+\varepsilon_{t}=\cdots=x_0+\sum_{j=1}^t\varepsilon_t\sim\hbox{Normal}(0,t+1).$$
+	Como $x_t\sim\hbox{Normal}(0,t+1)$ e, para qualquer $h>0$, $x_{t+h}\sim\hbox{Normal}(0,t+h+1)$, temos que este processo não é fortemente estacionário.
+$\blacksquare$
+:::
+
+
+::: {#def-fracamente}
+Um processo estocástico $\{y_t\}$ é dito ser fracamente estacionário (ou de segunda ordem) se 
+$$\begin{align*}
+	E(y_t)&=\mu,\\
+	Var(y_t)&=\nu,\\ 
+	Cov(y_t,y_s)&=E(y_ty_s)-E(y_t)E(y_s)=\gamma(t-s)
+	\end{align*}$$
+onde $\mu$ e $\nu$ são constantes independentes de $t$ e $\gamma(t-s)$ depende de $t$ e $s$ somente através da diferença $|t-s|$.
+$\blacksquare$
+:::
+				
+
+::: {#exm-fracamente1}
+Considere o processo estocástico $\{x(t),t\in\mathbb{N}\}$, onde 
+$$x(t) = \varepsilon(t) +\frac{1}{2}\varepsilon(t-1)
+$$
+onde $\varepsilon(t)\sim\hbox{Normal}(0,\nu)$ para $t=1,\ldots$, $\varepsilon(t)$ é independente de $\varepsilon(s)$ para todo $s\neq t$ e $\varepsilon(0)=0$.
+Então:
+$$\begin{align}
+E(x(t))&=E(\varepsilon(t))+\frac{1}{2}E(\varepsilon(t-1))=0\\
+Var(x(t))&=Var(\varepsilon(t))+\frac{1}{4}Var(\varepsilon(t-1))=\frac{5}{4}\nu
+\end{align}
+$$
+e
+$$\begin{align}
+		  Cov(x(t),x(t+h))&=Cov\left(\varepsilon(t)+\frac{1}{2}\varepsilon(t-1),\varepsilon(t+h)+\frac{1}{2}\varepsilon(t+h-1)\right)\\
+		  &=Cov\left(\varepsilon(t),\varepsilon(t+h)\right)+\frac{1}{2}Cov\left(\varepsilon(t),\varepsilon(t+h-1)\right)\\
+		  &+\frac{1}{2}Cov\left(\varepsilon(t-1),\varepsilon(t+h)\right)+\frac{1}{4}Cov\left(\varepsilon(t-1),\varepsilon(t+h-1)\right)\\
+		  &=\left\{ \begin{array}{ll}
+		  \frac{4}{5}\nu,&\; h = 0 \\		  
+		  \frac{1}{2}\nu,&\; |h|=1,\\
+		  0,&\;\hbox{caso contrário.}
+		  \end{array} \right.
+	\end{align}$$
+Portanto, o processo é fracamente estacionáriao.
+$\blacksquare$
+:::
+
+Quando $\mathcal{T}=\{t\in D\subseteq \mathbb{Z}\}$, utiliza-se a notação $x(t)=x_t$. Além disso, se $t$ pode ser interpretado como tempo, $x_t$ é uma série temporal.
+Uma série temporal é dita ser estacionária se ela é fracamente estacionária e o mesmo princípio se aplica nessas notas de aula.  
+
+## Ruído branco
+
+::: {#def-ruido_branco}
+A Série $x_t$ é dita ser um ruído branco se
+		$$\begin{equation}
+		Cov(x_t,x_s)=0,
+		\end{equation}$$
+para todo $t\neq s$.
+$\blacksquare$
+::: 
+
+É imediato que o ruído branco é uma série temporal estacionária. Se $x_t\sim\hbox{Normal}(0,\sigma^2)$ é um ruído branco, então $x_t$ é independente de $x_s$ para todo $t\neq s$.

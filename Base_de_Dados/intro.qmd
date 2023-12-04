@@ -1,0 +1,95 @@
+# Introdução
+
+
+## Notação e Definições Básicas
+
+Uma série temporal é uma função (aleatória ou determinística) $x$ de uma variável $t$.
+		
+Geralmente $x(t)$ representa o valor da série no tempo $t$ (mas $t$ pode ser interpretado de outras formas, como veremos mais adiante).
+		
+Estamos interessados em séries temporais aleatórias, ou seja, para cada $t$ fixado, $x(t)$ é uma variável aleatória. 
+
+
+<div class='alert alert-success'>
+<strong> Exemplos de série temporais determinísticas</strong> 
+			$$\begin{align}
+			x(t)&=2t\\
+			x(t)&= t-1
+			\end{align}$$
+</div>			
+			
+<div class='alert alert-success'>
+<strong> Exemplos de série temporais aleatórias</strong> 
+			$$\begin{align}
+			x(t)&= 2t + \varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,\sigma^2)\\
+			x(t)&= \varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(t,\sigma^2)
+			\end{align}$$
+</div>			
+
+
+## Objetivos de uma análise de séries temporais
+
+Existem três objetivos principais no estudo de séries temporais
+	
+- *Previsão:* realizar inferências sobre valores ainda não observados.
+
+- *Suavização:* estudar o comportamento previamente observado.
+
+- *Monitoramento:* detectar em tempo real as mudanças ou discrepâncias no comportamento do processo.
+
+
+## Exemplos de séries temporais
+
+```{r echo = FALSE}
+source('./Base de Dados/base_dropbox.R')
+```
+
+
+### Eletrocardiograma
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - "1800 medidas da taxa cardíaca instantânea, em batidas por minuto, de um indivíduo."
+
+ts.plot(ECG)
+```
+
+
+\begin{frame}{PIB Brasileiro}
+
+	\begin{center}
+		\includegraphics[width=1\linewidth]{"FigurasAulas/PIB_Brasileiro/PIB_imagem"}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{"../PIB Brasileiro/PIB_brasil"}
+\caption{PIB entre 1967 e 2014 corrigidos pelo valor do dólar em 4/2015}
+\label{fig:PIB_brasil}
+\end{figure}
+
+\end{frame}
+
+
+
+
+## Notações
+
+Utilizaremos letras minúsculas para designar variáveis aleatórias e seus respectivos valores observados. Exemplo: $$x(t)\sim\hbox{Normal}(0,1)$$ e $$x(t)=0.$$
+			
+Vetores serão denotados por negritos e sempre serão vetores-coluna. Exemplo
+		$$\boldsymbol{x}=\left(\begin{array}{c}x_1 \\ x_2 \\ \vdots \\ x_q\end{array}\right).$$
+O vetor $\boldsymbol{x}'$ é o transposto de $\boldsymbol{x}$.
+
+
+	Para $\mathcal{T}=\{1,2\ldots,\}$,
+- Se $A\subset\mathcal{T}$. Então $x_A=\{x_{t},t\in A\}$.
+-  $x_{a:b}=x_a,x_{a+1},\ldots,x_{b-1},x_{b}.$
+- Um vetor de dimensão $q$ observado no tempo $t$ é escrito como 
+		$$\boldsymbol{x}_t =\left(\begin{array}{c}x_{1} \\ \vdots \\ x_{q}\end{array}\right)_{t}.$$ 	
+
+
+
