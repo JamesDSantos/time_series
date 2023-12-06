@@ -100,13 +100,13 @@ $$\begin{equation}
 e ela mede a dependência linear entre $y_t$ e os valores defasados da série.Sempre será verdade que $\rho\in[-1,1]$, $\rho(h)=\rho(-h)$ e, se $y_{t+h}$ é independente de $y_t$, então $\rho(h)=0$.
 
 
-::: {#exm-acf2}
-Considere novamente a série temporal
+:::{#exm-acf2}
+Considere a série temporal
 $$\begin{align}
 	x_t = \varepsilon_t +\frac{1}{2}\varepsilon_{t-1} \label{exer1}
 	\end{align}$$
 onde $\varepsilon_t\sim\hbox{Normal}(0,\nu)$ para $t=1,\ldots$, $\varepsilon_t$ é independente de $\varepsilon_s$ para todo $s\neq t$ e $\varepsilon_0=0$.
-Já foi mostrado que 
+Como 
 $$\begin{align}
 	E(x_t)&=E(\varepsilon_t)+\frac{1}{2}E(\varepsilon_{t-1})=0\\
 	Var(x_t)&=Var(\varepsilon_t)+\frac{1}{4}Var(\varepsilon_{t-1})=\frac{5}{4}\nu\\
@@ -117,7 +117,7 @@ $$\begin{align}
 	\end{array} \right.
 	\end{align}
 $$	
-Portanto,
+tem-se  que,
 $$\begin{align}
 	\rho(h)&=\frac{\gamma(h)}{\gamma(0)}=\left\{ \begin{array}{ll}
 	1,&\; h = 0 \\		  
@@ -125,3 +125,100 @@ $$\begin{align}
 	0,&\;\hbox{caso contrário.}
 	\end{array} \right.
 	\end{align}$$
+	$\blacksquare$
+:::
+
+:::{#exm-acf_ruido_branco}
+Seja $x_t$ um ruído branco. Então
+$$\gamma(h)=\nu I(h=0),$$
+e
+$$\rho(h)=\frac{\gamma(h)}{\gamma(0)}=I(h=0),$$
+onde $I(A)$ é a função indicadora da ocorrência do evento $A$. 
+:::
+
+## A função de autocorrelação estimada e o correlograma
+
+Considere uma série temporal $x_1,\ldots,x_n$. Supondo que ela é proveniente de uma série estacionária (ergódico), pode-se estimar $\gamma(h)$ pelo método da substituição:
+$$\begin{align}
+						\widehat{\gamma(h)}&=\frac{1}{n}\sum_{i=1}^{n-h}\left(x_{i+h} - \bar{x}\right)\left(x_{i} - \bar{x}\right)
+						\end{align}$$ 
+e $\rho$ por				
+$$\begin{equation}
+		\hat{\rho}(h)=\frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}
+		\end{equation}$$
+
+É importante notar que tanto $\gamma(h)$ quanto $\rho(h)$ são invariantes a transformações de locação. Por exemplo, seja $\gamma(h)$ a função de autocovariância de $x_t$ e considere $y_t=x_t+a$. Então $E(y_t)=\mu+a$ e
+$$E[(y_t-\mu-a)(y_{t-h}-\mu-a)]=E[(x_t-\mu)(x_{t-h}-\mu)]=\gamma(h).$$
+
+O correlograma é um gráfico cartesiano construído a partir dos pontos $(h, \hat{\rho})$. A partir de cada ponto é desenhada uma linha, semelhante a um gráfico de barras. Como $\hat{\rho}(0)=1$, a implementação desta função em softwares estatísticos pode variar com $h=0$ ou em 1. Por exemplo, a função `acf` do pacote `stats` começa na defasagem 0, enquanto a função `Acf` do pacote `forecast` (ou ainda a `acf` do pacote `TSA`) começam na defasagem 1.
+
+
+:::{#exm-afogamentos}
+
+A série abaixo representa o número anual de óbitos por afogamento na cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o código internacional de doenças (CID10) W70  - Afogamento e submersão conseqüentes a queda dentro de águas naturais.
+
+
+```{r warning=FALSE}
+url <- 'https://docs.google.com/spreadsheets/d/13MdzvZB5U85MkLy97ZRytkylikJu7rJoC1WL0XjKw-c/edit?usp=sharing'
+
+require(data.table)
+dados <- fread(url)
+afogamentos <- ts( dados[,2], start = 1996)
+```
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - "Número anual de óbitos por afogamento em Manaus."
+
+ts.plot(afogamentos, lwd = 2, main = '', xlab = 'Ano', ylab = 'No. óbitos por afogamento')
+```
+
+A figura abaixo mostra o correlograma dessa série. Observe que as autocorrelações amostrais observadas são baixas. Esse tipo de comportamento é esperado em um ruído branco. Como a série não oscila em torno de zero, um modelo razoável seria
+$$y_t=\mu+\varepsilon_t,$$
+onde $\varepsilon_t$ é um ruído branco. Nesse caso, $\bar{y}_n=1,88$ é uma estimativa para $\mu$. 
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - "Correlograma para o número anual de óbitos por afogamento em Manaus."
+#| label: fig-acf_afogamentos
+
+acf(afogamentos, lwd = 2, main = '', xlab = 'Defasagem', ylab = 'Autocorrelação')
+```
+$\blacksquare$
+:::
+
+
+Sem perda de generalidade, assuma que $x_t$ é um processo estacionário com $\mu=0$. Para uma defasagem $h>0$, considere a hipótese $H_0:\rho(h)=0$. Sob $H_0$, o processo estacionário é um ruído branco e a distribuição da função de autocorrelação amostral é $N(0,1/n)$. Portanto, uma região de rejeição ao níve de 5\% de significância para um teste baseado nessa distribuição é  
+	$$R={\hat{\rho}(h): \hat{\rho}(h)|>\frac{2}{\sqrt{n}},$$
+Este é o valor da linha pontilhada que aparece no correlograma na @fig-acf_afogamentos.
+
+
+## Testes para a autocorrelação
+
+Na seção anterior mostrou-se como testar $H_0:\rho(h)=0$, para um $h$ fixado. Como várias autocorrelações para diferentes defasagens são avaliadas simultaneamente, o correto seria testar $H_0: \rho(h)=0\;\;\forall h=1,\ldots,q$, onde $q$ é o valor máximo da defasagem a ser testado. Considerando a região de rejeição dada anteriormente, pela desigualdade de Bonferroni,
+
+$$\begin{align}P(\hbox{Rejeitar }H_0|H_0\hbox{ é verdadeira})&=P\left(\cup_{h=1}^q\left\{ \hat{\rho}(h)>\frac{2}{\sqrt{n}}\right\}| H_0\hbox{ é verdade}\right)\\
+&\leq \sum_{h=1}^qP\left( \hat{\rho}(h)>\frac{2}{\sqrt{n}}| H_0\hbox{ é verdade}\right)\\ &<q\alpha\end{align}$$
+
+Portanto, a probabilidade de cometer o erro tipo 1 pode aumentar na medida que testamos mais de uma defasagem. 
+
+Como alternativa, considere a mesma hipótese nula. Se todas as autocorrelaçãoes, de defasagens 1 até $q$, são baixas, não há evidências contra $H_0$. Com esse espírito o teste de Ljung-Box (1978) utiliza a estatística
+$$Q_{LB}=n(n+2)\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}$$
+e rejeita $H_0$ se $Q_{LB}>\chi^2_{1-\alpha,q}$, onde $\chi^2_{\lambda,n}$ é o quantil $\lambda$ da distribuição $\chi^2_n$. 
+
+O teste de Box-Pierce (1970) possui o mesmo objetivo e tem a mesma regra de decisão, mudando apenas a estatística de teste para
+
+$$Q_{BP}=n\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}.$$
+
+:::{#exm-afogamentos_testes}
+Para a série de óbitos anuais por afogamentos em Manaus, tem-se que os teste Ljung-Box e Box-Pierce não rejeitam a hipótese de ruído branco.
+
+```{r}
+Box.test(afogamentos, type = 'Ljung-Box')
+Box.test(afogamentos, type = 'Box-Pierce')
+
+```
+$\blacksquare$
+:::

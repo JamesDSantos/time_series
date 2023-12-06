@@ -147,7 +147,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#ruído-branco" id="toc-ruído-branco" class="nav-link active" data-scroll-target="#ruído-branco"><span class="header-section-number">3.1</span> Ruído branco</a></li>
+  <li><a href="#processo-estacionário-ergódico" id="toc-processo-estacionário-ergódico" class="nav-link active" data-scroll-target="#processo-estacionário-ergódico"><span class="header-section-number">3.1</span> Processo estacionário ergódico</a></li>
+  <li><a href="#ruído-branco" id="toc-ruído-branco" class="nav-link" data-scroll-target="#ruído-branco"><span class="header-section-number">3.2</span> Ruído branco</a></li>
   </ul>
 </nav>
     </div>
@@ -205,14 +206,45 @@ Var(x(t))&amp;=Var(\varepsilon(t))+\frac{1}{4}Var(\varepsilon(t-1))=\frac{5}{4}\
     \end{align}\]</span> Portanto, o processo é fracamente estacionáriao. <span class="math inline">\(\blacksquare\)</span></p>
 </div>
 <p>Quando <span class="math inline">\(\mathcal{T}=\{t\in D\subseteq \mathbb{Z}\}\)</span>, utiliza-se a notação <span class="math inline">\(x(t)=x_t\)</span>. Além disso, se <span class="math inline">\(t\)</span> pode ser interpretado como tempo, <span class="math inline">\(x_t\)</span> é uma série temporal. Uma série temporal é dita ser estacionária se ela é fracamente estacionária e o mesmo princípio se aplica nessas notas de aula.</p>
-<section id="ruído-branco" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="ruído-branco"><span class="header-section-number">3.1</span> Ruído branco</h2>
+<section id="processo-estacionário-ergódico" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="processo-estacionário-ergódico"><span class="header-section-number">3.1</span> Processo estacionário ergódico</h2>
+<p>Seja <span class="math inline">\(x_1,x_2,\ldots,x_n\)</span> uma série temporal estacionária. Então, a média <span class="math inline">\(\mu\)</span> pode ser estimada por <span class="math inline">\(\bar{x}_n\)</span>, uma vez que <span class="math inline">\(E(\bar{x})=\mu\)</span>. A variância essa estatística é</p>
+<p><span class="math display">\[\begin{align}Var(\bar{x})&amp;=Cov(\bar{x}_n,\bar{x}_n)=Cov\left(\sum_{i=1}^n \frac{x_i}{n},\sum_{j=1}^n\frac{x_j}{n}\right)=\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^nCov(x_i,x_j)\\
+&amp;=\frac{1}{n^2}\left[\sum_{i=1}^nCov(x_i,x_i)+2\sum_{i=1}^n\sum_{j\neq i}Cov(x_i,x_j)\right]\\
+&amp;=\frac{1}{n^2}\left[n\nu+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right]=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\gamma(h)
+\end{align}\]</span></p>
+<p>Note que, diferente do caso independente e identicamente distribuído, <span class="math inline">\(\bar{x}\)</span> não é necessariamente um estimador adequado, conforme pode ser constatado no exemplo abaixo.</p>
+<div id="exm-estationario_nao_ergodico" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.3 </strong></span>Seja <span class="math inline">\(x_t\)</span> um processo onde <span class="math inline">\(x_0\sim\hbox{Normal}(0,\nu)\)</span> e <span class="math inline">\(x_t=x_0\)</span> para todo <span class="math inline">\(t&gt;0\)</span>. Como</p>
+<p><span class="math display">\[\begin{align}
+E(x_t)&amp;=E(E(x_t|x_0))=E(x_0)=0\\
+Var(x_t)&amp;=E(Var(x_t|x_0))+Var(E(x_t|x_0))=E(0)+Var(x_0)=\nu\\
+Cov(x_t,x_{t-h})&amp;=E( Cov(x_t,x_{t-h}|x_0))+Cov( E(x_t|x_0),E(x_{t-h}|x_0))\\
+&amp;=E(0)+Cov(x_0,x_0)=Var(x_0)=\nu
+\end{align}\]</span> e, portanto, o processo é fracamente estacionário. Contudo, <span class="math display">\[Var(\bar{x})=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,\]</span> portanto, o erro padrão não decai com o aumento do tamanho da amostra.</p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>A partir do exemplo acima, fica claro que <span class="math inline">\(\bar{x}\)</span> nem sempre será um estimador adequado para uma série estacionária.</p>
+<div id="def-ergodica" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 3.2 </strong></span>Uma série temporal estacionária é dita ser ergódica para a média se <span class="math display">\[\sum_{i=1}^n\frac{x_1}{n}\stackrel{p}{\rightarrow} \mu,\]</span> quando <span class="math inline">\(n\rightarrow\infty\)</span>.</p>
+</div>
+<p>A partir deste momento será considerado que toda série temporal estacionária é ergódica e, portanto <span class="math inline">\(\bar{x}\)</span> é um estimador para <span class="math inline">\(\mu\)</span>.</p>
+<div id="exm-estationario_nao_ergodico_conclusao" class="theorem example">
+<p><span class="theorem-title"><strong>Example 3.4 </strong></span>Considere novamente o processo no <span class="citation" data-cites="estationario_nao_ergodico">(<a href="#ref-estationario_nao_ergodico" role="doc-biblioref"><strong>estationario_nao_ergodico?</strong></a>)</span>. Como <span class="math inline">\(\bar{x}_n=x_0\)</span>, tem-se que, para <span class="math inline">\(\varepsilon&gt;0\)</span> arbitrário, <span class="math inline">\(\bar{x}\sim\hbox{Normal}(0,\nu)\)</span> e <span class="math display">\[P(|\bar{x}_n-0|&gt;\varepsilon)=2P(x_0&gt;\varepsilon)=2\int_{-\infty}^\varepsilon \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}d\nu&gt;\frac{1}{2}\]</span> logo, <span class="math inline">\(\bar{x}\)</span> não converge em probabilidade para <span class="math inline">\(0\)</span> e, portanto, o processo não é ergódico na média. <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+</section>
+<section id="ruído-branco" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="ruído-branco"><span class="header-section-number">3.2</span> Ruído branco</h2>
 <div id="def-ruido_branco" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 3.2 </strong></span>A Série <span class="math inline">\(x_t\)</span> é dita ser um ruído branco se <span class="math display">\[\begin{equation}
+<p><span class="theorem-title"><strong>Definition 3.3 </strong></span>A série estacionária <span class="math inline">\(x_t\)</span> é dita ser um ruído branco se <span class="math inline">\(E(x_t)=0\)</span>, <span class="math inline">\(Var(x_t)=\nu\)</span> e <span class="math display">\[\begin{equation}
         Cov(x_t,x_s)=0,
         \end{equation}\]</span> para todo <span class="math inline">\(t\neq s\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
 </div>
-<p>É imediato que o ruído branco é uma série temporal estacionária. Se <span class="math inline">\(x_t\sim\hbox{Normal}(0,\sigma^2)\)</span> é um ruído branco, então <span class="math inline">\(x_t\)</span> é independente de <span class="math inline">\(x_s\)</span> para todo <span class="math inline">\(t\neq s\)</span>.</p>
+<p>É imediato que o ruído branco é uma série temporal estacionária. Além disso, pela Desigualdade de Chebyshev, para qualquer <span class="math inline">\(\varepsilon&gt;0\)</span>,</p>
+<p><span class="math display">\[P\left(|\bar{x}_n|\geq\varepsilon\right)\leq \frac{E(\bar{x}_n^2)}{\varepsilon^2}=\frac{Var(\bar{x}_n)}{\varepsilon^2}=\frac{\nu}{n\varepsilon^2}\]</span> logo <span class="math inline">\(\lim_{n}P(|\bar{x}_n|\leq \varepsilon)=0\)</span> e <span class="math inline">\(\bar{x}_n\stackrel{p}{\rightarrow}0\)</span>. Portanto, o ruído branco é ergódico.</p>
+<p>Considere agora a série temporal <span class="math inline">\(y_t=\mu+x_t\)</span>, onde <span class="math inline">\(x_t\)</span> é um ruído branco. Então <span class="math display">\[\bar{y}_n=\mu+\bar{x}_n\stackrel{p}{\rightarrow}\mu\]</span> e <span class="math inline">\(\bar{y}_n\)</span> é um estimador para <span class="math inline">\(\mu\)</span>.</p>
+<p>Em certos momentos, será considerado que <span class="math inline">\(x_t\)</span> e <span class="math inline">\(x_s\)</span>, para todo <span class="math inline">\(t\neq s\)</span> são independentes (essa é uma condição mais forte, pois implica em <span class="math inline">\(Cov(x_t,x_s)=0\)</span>). Esse processo é denominado ruído branco independente.</p>
+<p>Por último, também será considerado a possibilidade de que <span class="math inline">\(x_t\sim\hbox{Normal}(0,\nu)\)</span>, com <span class="math inline">\(x_t\)</span> e <span class="math inline">\(x_s\)</span> indepentens para todo <span class="math inline">\(t\neq s\)</span>. Esse processo será denominado é denominado ruído branco gaussiano.</p>
 
 
 </section>

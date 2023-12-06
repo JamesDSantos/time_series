@@ -17,7 +17,7 @@ Para $\mathcal{T}=\{1,2\ldots,\}$,
 
 ## O que é uma análise de séries temporais?
 
-Considera-se que uma série temporal é uma coleção de observações realizadas ao longo do tempo. Será utilizada a notação $x_t$ para designar o valor registrado no tempo $t$ e $\mathcal{D}_t=}=\{x_1,\ldots,x_t\}$ representará a série observada até o tempo $t$.
+Considera-se que uma série temporal é uma coleção de observações realizadas ao longo do tempo. Será utilizada a notação $x_t$ para designar o valor registrado no tempo $t$ e $\mathcal{D}_t==\{x_1,\ldots,x_t\}$ representará a série observada até o tempo $t$.
 
 Existem três objetivos principais no estudo de séries temporais
 
@@ -33,6 +33,7 @@ Note que tais objetivos só fazem sentido se há alguma estrutura de dependênci
 
 ```{r echo=FALSE, message=FALSE , warning=FALSE}
 url <- 'https://docs.google.com/spreadsheets/d/1QpBrW2uRZcNYJo_slcl6KBYOvIJOt_CetXiqJMQoNUA/edit?usp=sharing'
+
 library(data.table)
 library(TSA)
 x <- fread(url)

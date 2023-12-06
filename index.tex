@@ -184,10 +184,10 @@
 \usepackage{amsthm}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
-\theoremstyle{definition}
-\newtheorem{example}{Example}[chapter]
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter]
+\theoremstyle{definition}
+\newtheorem{example}{Example}[chapter]
 \theoremstyle{remark}
 \AtBeginDocument{\renewcommand*{\proofname}{Proof}}
 \newtheorem*{remark}{Remark}
@@ -229,7 +229,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[frame hidden, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, sharp corners, enhanced, interior hidden, breakable]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, enhanced, frame hidden, borderline west={3pt}{0pt}{shadecolor}, breakable, sharp corners, boxrule=0pt]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -299,8 +299,8 @@ temporais?}\label{o-que-uxe9-uma-anuxe1lise-de-suxe9ries-temporais}}
 Considera-se que uma série temporal é uma coleção de observações
 realizadas ao longo do tempo. Será utilizada a notação \(x_t\) para
 designar o valor registrado no tempo \(t\) e
-\(\mathcal{D}_t=}=\{x_1,\ldots,x_t\}\) representará a série observada
-até o tempo \(t\).
+\(\mathcal{D}_t==\{x_1,\ldots,x_t\}\) representará a série observada até
+o tempo \(t\).
 
 Existem três objetivos principais no estudo de séries temporais
 
@@ -537,20 +537,103 @@ tempo, \(x_t\) é uma série temporal. Uma série temporal é dita ser
 estacionária se ela é fracamente estacionária e o mesmo princípio se
 aplica nessas notas de aula.
 
+\hypertarget{processo-estacionuxe1rio-erguxf3dico}{%
+\section{Processo estacionário
+ergódico}\label{processo-estacionuxe1rio-erguxf3dico}}
+
+Seja \(x_1,x_2,\ldots,x_n\) uma série temporal estacionária. Então, a
+média \(\mu\) pode ser estimada por \(\bar{x}_n\), uma vez que
+\(E(\bar{x})=\mu\). A variância essa estatística é
+
+\[\begin{align}Var(\bar{x})&=Cov(\bar{x}_n,\bar{x}_n)=Cov\left(\sum_{i=1}^n \frac{x_i}{n},\sum_{j=1}^n\frac{x_j}{n}\right)=\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^nCov(x_i,x_j)\\
+&=\frac{1}{n^2}\left[\sum_{i=1}^nCov(x_i,x_i)+2\sum_{i=1}^n\sum_{j\neq i}Cov(x_i,x_j)\right]\\
+&=\frac{1}{n^2}\left[n\nu+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right]=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\gamma(h)
+\end{align}\]
+
+Note que, diferente do caso independente e identicamente distribuído,
+\(\bar{x}\) não é necessariamente um estimador adequado, conforme pode
+ser constatado no exemplo abaixo.
+
+\begin{example}[]\protect\hypertarget{exm-estationario_nao_ergodico}{}\label{exm-estationario_nao_ergodico}
+
+Seja \(x_t\) um processo onde \(x_0\sim\hbox{Normal}(0,\nu)\) e
+\(x_t=x_0\) para todo \(t>0\). Como
+
+\[\begin{align}
+E(x_t)&=E(E(x_t|x_0))=E(x_0)=0\\
+Var(x_t)&=E(Var(x_t|x_0))+Var(E(x_t|x_0))=E(0)+Var(x_0)=\nu\\
+Cov(x_t,x_{t-h})&=E( Cov(x_t,x_{t-h}|x_0))+Cov( E(x_t|x_0),E(x_{t-h}|x_0))\\
+&=E(0)+Cov(x_0,x_0)=Var(x_0)=\nu
+\end{align}\] e, portanto, o processo é fracamente estacionário.
+Contudo,
+\[Var(\bar{x})=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,\]
+portanto, o erro padrão não decai com o aumento do tamanho da amostra.
+
+\(\blacksquare\)
+
+\end{example}
+
+A partir do exemplo acima, fica claro que \(\bar{x}\) nem sempre será um
+estimador adequado para uma série estacionária.
+
+\begin{definition}[]\protect\hypertarget{def-ergodica}{}\label{def-ergodica}
+
+Uma série temporal estacionária é dita ser ergódica para a média se
+\[\sum_{i=1}^n\frac{x_1}{n}\stackrel{p}{\rightarrow} \mu,\] quando
+\(n\rightarrow\infty\).
+
+\end{definition}
+
+A partir deste momento será considerado que toda série temporal
+estacionária é ergódica e, portanto \(\bar{x}\) é um estimador para
+\(\mu\).
+
+\begin{example}[]\protect\hypertarget{exm-estationario_nao_ergodico_conclusao}{}\label{exm-estationario_nao_ergodico_conclusao}
+
+Considere novamente o processo no
+(\textbf{estationario\_nao\_ergodico?}). Como \(\bar{x}_n=x_0\), tem-se
+que, para \(\varepsilon>0\) arbitrário,
+\(\bar{x}\sim\hbox{Normal}(0,\nu)\) e
+\[P(|\bar{x}_n-0|>\varepsilon)=2P(x_0>\varepsilon)=2\int_{-\infty}^\varepsilon \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}d\nu>\frac{1}{2}\]
+logo, \(\bar{x}\) não converge em probabilidade para \(0\) e, portanto,
+o processo não é ergódico na média. \(\blacksquare\)
+
+\end{example}
+
 \hypertarget{ruuxeddo-branco}{%
 \section{Ruído branco}\label{ruuxeddo-branco}}
 
 \begin{definition}[]\protect\hypertarget{def-ruido_branco}{}\label{def-ruido_branco}
 
-A Série \(x_t\) é dita ser um ruído branco se \[\begin{equation}
+A série estacionária \(x_t\) é dita ser um ruído branco se \(E(x_t)=0\),
+\(Var(x_t)=\nu\) e \[\begin{equation}
         Cov(x_t,x_s)=0,
         \end{equation}\] para todo \(t\neq s\). \(\blacksquare\)
 
 \end{definition}
 
-É imediato que o ruído branco é uma série temporal estacionária. Se
-\(x_t\sim\hbox{Normal}(0,\sigma^2)\) é um ruído branco, então \(x_t\) é
-independente de \(x_s\) para todo \(t\neq s\).
+É imediato que o ruído branco é uma série temporal estacionária. Além
+disso, pela Desigualdade de Chebyshev, para qualquer \(\varepsilon>0\),
+
+\[P\left(|\bar{x}_n|\geq\varepsilon\right)\leq \frac{E(\bar{x}_n^2)}{\varepsilon^2}=\frac{Var(\bar{x}_n)}{\varepsilon^2}=\frac{\nu}{n\varepsilon^2}\]
+logo \(\lim_{n}P(|\bar{x}_n|\leq \varepsilon)=0\) e
+\(\bar{x}_n\stackrel{p}{\rightarrow}0\). Portanto, o ruído branco é
+ergódico.
+
+Considere agora a série temporal \(y_t=\mu+x_t\), onde \(x_t\) é um
+ruído branco. Então
+\[\bar{y}_n=\mu+\bar{x}_n\stackrel{p}{\rightarrow}\mu\] e \(\bar{y}_n\)
+é um estimador para \(\mu\).
+
+Em certos momentos, será considerado que \(x_t\) e \(x_s\), para todo
+\(t\neq s\) são independentes (essa é uma condição mais forte, pois
+implica em \(Cov(x_t,x_s)=0\)). Esse processo é denominado ruído branco
+independente.
+
+Por último, também será considerado a possibilidade de que
+\(x_t\sim\hbox{Normal}(0,\nu)\), com \(x_t\) e \(x_s\) indepentens para
+todo \(t\neq s\). Esse processo será denominado é denominado ruído
+branco gaussiano.
 
 \bookmarksetup{startatroot}
 
@@ -682,12 +765,13 @@ valores defasados da série.Sempre será verdade que \(\rho\in[-1,1]\),
 \(\rho(h)=\rho(-h)\) e, se \(y_{t+h}\) é independente de \(y_t\), então
 \(\rho(h)=0\).
 
-::: \{\#exm-acf2\} Considere novamente a série temporal \[\begin{align}
+\begin{example}[]\protect\hypertarget{exm-acf2}{}\label{exm-acf2}
+
+Considere a série temporal \[\begin{align}
     x_t = \varepsilon_t +\frac{1}{2}\varepsilon_{t-1} \label{exer1}
     \end{align}\] onde \(\varepsilon_t\sim\hbox{Normal}(0,\nu)\) para
 \(t=1,\ldots\), \(\varepsilon_t\) é independente de \(\varepsilon_s\)
-para todo \(s\neq t\) e \(\varepsilon_0=0\). Já foi mostrado que
-\[\begin{align}
+para todo \(s\neq t\) e \(\varepsilon_0=0\). Como \[\begin{align}
     E(x_t)&=E(\varepsilon_t)+\frac{1}{2}E(\varepsilon_{t-1})=0\\
     Var(x_t)&=Var(\varepsilon_t)+\frac{1}{4}Var(\varepsilon_{t-1})=\frac{5}{4}\nu\\
     \gamma(h)&=\left\{ \begin{array}{ll}
@@ -697,13 +781,210 @@ para todo \(s\neq t\) e \(\varepsilon_0=0\). Já foi mostrado que
     \end{array} \right.
     \end{align}
 \]\\
-Portanto, \[\begin{align}
+tem-se que, \[\begin{align}
     \rho(h)&=\frac{\gamma(h)}{\gamma(0)}=\left\{ \begin{array}{ll}
     1,&\; h = 0 \\        
     \frac{2}{5},&\; |h|=1,\\
     0,&\;\hbox{caso contrário.}
     \end{array} \right.
-    \end{align}\]
+    \end{align}\] \(\blacksquare\)
+
+\end{example}
+
+\begin{example}[]\protect\hypertarget{exm-acf_ruido_branco}{}\label{exm-acf_ruido_branco}
+
+Seja \(x_t\) um ruído branco. Então \[\gamma(h)=\nu I(h=0),\] e
+\[\rho(h)=\frac{\gamma(h)}{\gamma(0)}=I(h=0),\] onde \(I(A)\) é a função
+indicadora da ocorrência do evento \(A\).
+
+\end{example}
+
+\hypertarget{a-funuxe7uxe3o-de-autocorrelauxe7uxe3o-estimada-e-o-correlograma}{%
+\section{A função de autocorrelação estimada e o
+correlograma}\label{a-funuxe7uxe3o-de-autocorrelauxe7uxe3o-estimada-e-o-correlograma}}
+
+Considere uma série temporal \(x_1,\ldots,x_n\). Supondo que ela é
+proveniente de uma série estacionária (ergódico), pode-se estimar
+\(\gamma(h)\) pelo método da substituição: \[\begin{align}
+                        \widehat{\gamma(h)}&=\frac{1}{n}\sum_{i=1}^{n-h}\left(x_{i+h} - \bar{x}\right)\left(x_{i} - \bar{x}\right)
+                        \end{align}\] e \(\rho\) por\\
+\[\begin{equation}
+        \hat{\rho}(h)=\frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}
+        \end{equation}\]
+
+É importante notar que tanto \(\gamma(h)\) quanto \(\rho(h)\) são
+invariantes a transformações de locação. Por exemplo, seja \(\gamma(h)\)
+a função de autocovariância de \(x_t\) e considere \(y_t=x_t+a\). Então
+\(E(y_t)=\mu+a\) e
+\[E[(y_t-\mu-a)(y_{t-h}-\mu-a)]=E[(x_t-\mu)(x_{t-h}-\mu)]=\gamma(h).\]
+
+O correlograma é um gráfico cartesiano construído a partir dos pontos
+\((h, \hat{\rho})\). A partir de cada ponto é desenhada uma linha,
+semelhante a um gráfico de barras. Como \(\hat{\rho}(0)=1\), a
+implementação desta função em softwares estatísticos pode variar com
+\(h=0\) ou em 1. Por exemplo, a função \texttt{acf} do pacote
+\texttt{stats} começa na defasagem 0, enquanto a função \texttt{Acf} do
+pacote \texttt{forecast} (ou ainda a \texttt{acf} do pacote
+\texttt{TSA}) começam na defasagem 1.
+
+\begin{example}[]\protect\hypertarget{exm-afogamentos}{}\label{exm-afogamentos}
+
+A série abaixo representa o número anual de óbitos por afogamento na
+cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do
+Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o
+código internacional de doenças (CID10) W70 - Afogamento e submersão
+conseqüentes a queda dentro de águas naturais.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}https://docs.google.com/spreadsheets/d/13MdzvZB5U85MkLy97ZRytkylikJu7rJoC1WL0XjKw{-}c/edit?usp=sharing\textquotesingle{}}
+
+\FunctionTok{require}\NormalTok{(data.table)}
+\NormalTok{dados }\OtherTok{\textless{}{-}} \FunctionTok{fread}\NormalTok{(url)}
+\NormalTok{afogamentos }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{( dados[,}\DecValTok{2}\NormalTok{], }\AttributeTok{start =} \DecValTok{1996}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(afogamentos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{main =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }\AttributeTok{xlab =} \StringTok{\textquotesingle{}Ano\textquotesingle{}}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. óbitos por afogamento\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+\begin{minipage}[t]{\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{acf_files/figure-pdf/unnamed-chunk-5-1.pdf}
+
+}
+
+\caption{Número anual de óbitos por afogamento em Manaus.}
+
+}
+
+\end{minipage}%
+
+\end{figure}
+
+A figura abaixo mostra o correlograma dessa série. Observe que as
+autocorrelações amostrais observadas são baixas. Esse tipo de
+comportamento é esperado em um ruído branco. Como a série não oscila em
+torno de zero, um modelo razoável seria \[y_t=\mu+\varepsilon_t,\] onde
+\(\varepsilon_t\) é um ruído branco. Nesse caso, \(\bar{y}_n=1,88\) é
+uma estimativa para \(\mu\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(afogamentos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{main =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }\AttributeTok{xlab =} \StringTok{\textquotesingle{}Defasagem\textquotesingle{}}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}Autocorrelação\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+\begin{minipage}[t]{\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{acf_files/figure-pdf/fig-acf_afogamentos-1.pdf}
+
+}
+
+\caption{\label{fig-acf_afogamentos}Correlograma para o número anual de
+óbitos por afogamento em Manaus.}
+
+}
+
+\end{minipage}%
+
+\end{figure}
+
+\(\blacksquare\)
+
+\end{example}
+
+Sem perda de generalidade, assuma que \(x_t\) é um processo estacionário
+com \(\mu=0\). Para uma defasagem \(h>0\), considere a hipótese
+\(H_0:\rho(h)=0\). Sob \(H_0\), o processo estacionário é um ruído
+branco e a distribuição da função de autocorrelação amostral é
+\(N(0,1/n)\). Portanto, uma região de rejeição ao níve de 5\% de
+significância para um teste baseado nessa distribuição é\\
+\[R={\hat{\rho}(h): \hat{\rho}(h)|>\frac{2}{\sqrt{n}},\] Este é o valor
+da linha pontilhada que aparece no correlograma na
+Figure~\ref{fig-acf_afogamentos}.
+
+\hypertarget{testes-para-a-autocorrelauxe7uxe3o}{%
+\section{Testes para a
+autocorrelação}\label{testes-para-a-autocorrelauxe7uxe3o}}
+
+Na seção anterior mostrou-se como testar \(H_0:\rho(h)=0\), para um
+\(h\) fixado. Como várias autocorrelações para diferentes defasagens são
+avaliadas simultaneamente, o correto seria testar
+\(H_0: \rho(h)=0\;\;\forall h=1,\ldots,q\), onde \(q\) é o valor máximo
+da defasagem a ser testado. Considerando a região de rejeição dada
+anteriormente, pela desigualdade de Bonferroni,
+
+\[\begin{align}P(\hbox{Rejeitar }H_0|H_0\hbox{ é verdadeira})&=P\left(\cup_{h=1}^q\left\{ \hat{\rho}(h)>\frac{2}{\sqrt{n}}\right\}| H_0\hbox{ é verdade}\right)\\
+&\leq \sum_{h=1}^qP\left( \hat{\rho}(h)>\frac{2}{\sqrt{n}}| H_0\hbox{ é verdade}\right)\\ &<q\alpha\end{align}\]
+
+Portanto, a probabilidade de cometer o erro tipo 1 pode aumentar na
+medida que testamos mais de uma defasagem.
+
+Como alternativa, considere a mesma hipótese nula. Se todas as
+autocorrelaçãoes, de defasagens 1 até \(q\), são baixas, não há
+evidências contra \(H_0\). Com esse espírito o teste de Ljung-Box (1978)
+utiliza a estatística
+\[Q_{LB}=n(n+2)\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}\] e rejeita
+\(H_0\) se \(Q_{LB}>\chi^2_{1-\alpha,q}\), onde \(\chi^2_{\lambda,n}\) é
+o quantil \(\lambda\) da distribuição \(\chi^2_n\).
+
+O teste de Box-Pierce (1970) possui o mesmo objetivo e tem a mesma regra
+de decisão, mudando apenas a estatística de teste para
+
+\[Q_{BP}=n\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}.\]
+
+\begin{example}[]\protect\hypertarget{exm-afogamentos_testes}{}\label{exm-afogamentos_testes}
+
+Para a série de óbitos anuais por afogamentos em Manaus, tem-se que os
+teste Ljung-Box e Box-Pierce não rejeitam a hipótese de ruído branco.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(afogamentos, }\AttributeTok{type =} \StringTok{\textquotesingle{}Ljung{-}Box\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Ljung test
+
+data:  afogamentos
+X-squared = 2.2888, df = 1, p-value = 0.1303
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(afogamentos, }\AttributeTok{type =} \StringTok{\textquotesingle{}Box{-}Pierce\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Pierce test
+
+data:  afogamentos
+X-squared = 2.0345, df = 1, p-value = 0.1538
+\end{verbatim}
+
+\(\blacksquare\)
+
+\end{example}
 
 \bookmarksetup{startatroot}
 

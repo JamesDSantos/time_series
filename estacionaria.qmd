@@ -65,10 +65,60 @@ $\blacksquare$
 Quando $\mathcal{T}=\{t\in D\subseteq \mathbb{Z}\}$, utiliza-se a notação $x(t)=x_t$. Além disso, se $t$ pode ser interpretado como tempo, $x_t$ é uma série temporal.
 Uma série temporal é dita ser estacionária se ela é fracamente estacionária e o mesmo princípio se aplica nessas notas de aula.  
 
+
+
+## Processo estacionário ergódico
+
+Seja $x_1,x_2,\ldots,x_n$ uma série temporal estacionária. Então, a média $\mu$ pode ser estimada por $\bar{x}_n$, uma vez que $E(\bar{x})=\mu$. A variância essa estatística  é
+
+$$\begin{align}Var(\bar{x})&=Cov(\bar{x}_n,\bar{x}_n)=Cov\left(\sum_{i=1}^n \frac{x_i}{n},\sum_{j=1}^n\frac{x_j}{n}\right)=\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^nCov(x_i,x_j)\\
+&=\frac{1}{n^2}\left[\sum_{i=1}^nCov(x_i,x_i)+2\sum_{i=1}^n\sum_{j\neq i}Cov(x_i,x_j)\right]\\
+&=\frac{1}{n^2}\left[n\nu+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right]=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\gamma(h)
+\end{align}$$
+	
+Note que, diferente do caso independente e identicamente distribuído, $\bar{x}$ não é necessariamente um estimador adequado, conforme pode ser constatado no exemplo abaixo.
+
+
+::: {#exm-estationario_nao_ergodico}
+Seja $x_t$ um processo onde $x_0\sim\hbox{Normal}(0,\nu)$ e $x_t=x_0$ para todo $t>0$. Como
+
+$$\begin{align}
+E(x_t)&=E(E(x_t|x_0))=E(x_0)=0\\
+Var(x_t)&=E(Var(x_t|x_0))+Var(E(x_t|x_0))=E(0)+Var(x_0)=\nu\\
+Cov(x_t,x_{t-h})&=E( Cov(x_t,x_{t-h}|x_0))+Cov( E(x_t|x_0),E(x_{t-h}|x_0))\\
+&=E(0)+Cov(x_0,x_0)=Var(x_0)=\nu
+\end{align}$$
+e, portanto, o processo é fracamente estacionário. Contudo, 
+$$Var(\bar{x})=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,$$
+portanto, o erro padrão não decai com o aumento do tamanho da amostra. 
+
+$\blacksquare$
+:::
+
+A partir do exemplo acima, fica claro que $\bar{x}$ nem sempre será um estimador adequado para uma série estacionária. 
+
+::: {#def-ergodica}
+Uma série temporal estacionária é dita ser ergódica para a média se
+$$\sum_{i=1}^n\frac{x_1}{n}\stackrel{p}{\rightarrow} \mu,$$
+quando $n\rightarrow\infty$.
+:::
+
+A partir deste momento será considerado que toda série temporal estacionária é ergódica e, portanto $\bar{x}$ é um estimador para $\mu$. 
+
+::: {#exm-estationario_nao_ergodico_conclusao}
+
+Considere novamente o processo no @estationario_nao_ergodico. Como
+$\bar{x}_n=x_0$, tem-se que, para $\varepsilon>0$ arbitrário, $\bar{x}\sim\hbox{Normal}(0,\nu)$ e 
+$$P(|\bar{x}_n-0|>\varepsilon)=2P(x_0>\varepsilon)=2\int_{-\infty}^\varepsilon \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}d\nu>\frac{1}{2}$$
+logo, $\bar{x}$ não converge em probabilidade para $0$ e, portanto, o processo não é ergódico na média.
+$\blacksquare$
+:::
+
+
 ## Ruído branco
 
 ::: {#def-ruido_branco}
-A Série $x_t$ é dita ser um ruído branco se
+A série estacionária $x_t$ é dita ser um ruído branco se $E(x_t)=0$, $Var(x_t)=\nu$ e
 		$$\begin{equation}
 		Cov(x_t,x_s)=0,
 		\end{equation}$$
@@ -76,4 +126,15 @@ para todo $t\neq s$.
 $\blacksquare$
 ::: 
 
-É imediato que o ruído branco é uma série temporal estacionária. Se $x_t\sim\hbox{Normal}(0,\sigma^2)$ é um ruído branco, então $x_t$ é independente de $x_s$ para todo $t\neq s$.
+É imediato que o ruído branco é uma série temporal estacionária. Além disso, pela Desigualdade de Chebyshev, para qualquer $\varepsilon>0$, 
+
+$$P\left(|\bar{x}_n|\geq\varepsilon\right)\leq \frac{E(\bar{x}_n^2)}{\varepsilon^2}=\frac{Var(\bar{x}_n)}{\varepsilon^2}=\frac{\nu}{n\varepsilon^2}$$
+logo $\lim_{n}P(|\bar{x}_n|\leq \varepsilon)=0$ e $\bar{x}_n\stackrel{p}{\rightarrow}0$. Portanto, o ruído branco é ergódico.
+
+Considere agora a série temporal $y_t=\mu+x_t$, onde $x_t$ é um ruído branco. Então 
+$$\bar{y}_n=\mu+\bar{x}_n\stackrel{p}{\rightarrow}\mu$$
+e $\bar{y}_n$ é um estimador para $\mu$.
+
+Em certos momentos, será considerado que $x_t$ e $x_s$, para todo $t\neq s$ são independentes (essa é uma condição mais forte, pois implica em $Cov(x_t,x_s)=0$). Esse processo é denominado ruído branco independente.
+
+Por último, também será considerado a possibilidade de que $x_t\sim\hbox{Normal}(0,\nu)$, com $x_t$ e $x_s$ indepentens para todo $t\neq s$. Esse processo será denominado é denominado ruído branco gaussiano. 
