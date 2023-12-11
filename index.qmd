@@ -1,9 +1,7 @@
-# Preface {.unnumbered}
+# Prefácio {.unnumbered}
 
-This is a Quarto book.
+Estas são as notas de aula estão sendo produzidas para a utilização na disciplina Séries Temporais, no Bacharelado de Estatística.
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+Considere-as um rascunho, e portanto, sujeita a erros.
 
-```{r}
-1 + 1
-```
+Dúvidas e sugestões podem ser enviadas para o e-mail james@ufam.edu.br

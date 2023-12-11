@@ -1,0 +1,78 @@
+# Revisão sobre o modelo linear
+
+## Definição 
+
+Para $i=1,\ldots,n$, considere o modelo linear abaixo:
+		$$y_i= \beta_0+\sum_{j=1}^{p-1}x_{i,j}+\varepsilon_i=\underbrace{ \left(1\;\;x_{i,1}\;\;\cdots\;\;x_{i,p-1}\right)}_\text{$\boldsymbol{f}'_i$}\underbrace{\left(\begin{array}{c}\beta_0 \\ \beta_1 \\ \vdots \\ \beta_{p-1} 
+		\end{array}\right)}_\text{$\boldsymbol{\beta}$}+\varepsilon_i=\boldsymbol{f}'_i\boldsymbol{\beta}+\varepsilon_i,$$
+onde $x_i$ é fixado e $\varepsilon$ é um ruído branco gaussiano. Pela independência entre $y_i$ e $y_j$, pode-se fazer a seguinte representação estocástica de $\boldsymbol{y}$:
+$$\begin{equation}
+		\boldsymbol{y}=\boldsymbol{F}'\boldsymbol{\beta} + \boldsymbol{\varepsilon},
+		\end{equation}$$
+onde $\boldsymbol{\varepsilon}\sim\hbox{Normal}(\boldsymbol{0},\nu\textbf{I}_n)$ e $\boldsymbol{F}$ é uma matriz $p\times n$ conhecida com $i$-ésima coluna dada por $\boldsymbol{f}_i$:
+		
+$$\boldsymbol{F}=\left(\boldsymbol{f}_1,\ldots,\boldsymbol{F}\right).$$
+		
+A função de verossimilhança é dada por
+$$\begin{align*}
+    L(\boldsymbol{\beta},\nu)&\propto \left(\frac{1}{v}\right)^{\frac{T}{2}}\exp\left\{-\frac{1}{2\nu}(\boldsymbol{y}-\boldsymbol{F}'\boldsymbol{\beta})'(\boldsymbol{y}-\boldsymbol{F}'\boldsymbol{\beta}) \right\}\\
+    &\propto \left(\frac{1}{v}\right)^{\frac{T}{2}}\exp\left\{-\frac{1}{2\nu}\left[(\boldsymbol{\beta}-\hat{\boldsymbol{\beta}})'\boldsymbol{F}\boldsymbol{F}'(\boldsymbol{\beta}-\hat{\boldsymbol{\beta}}) + R\right]\right\}\\
+	\end{align*}$$
+	onde
+$$\begin{align}
+	\hat{\boldsymbol{\beta}}&=\left(\boldsymbol{F}\boldsymbol{F}'\right)^{-1}\boldsymbol{F}\boldsymbol{y},\\
+	R &= \left( \boldsymbol{y}-\boldsymbol{F}' \hat{\boldsymbol{\beta}}\right)' \left( \boldsymbol{y}-\boldsymbol{F}' \hat{\boldsymbol{\beta}}\right)	
+	\end{align}$$
+
+É sabido que:
+
+- $\hat{\boldsymbol{\beta}}$ é o estimador de máxima verossimilhança de $\boldsymbol{\beta}$
+
+- $R$ é conhecido como *soma de quadrados de resíduos*
+- $\hat{\nu}=R/(n-p)$ é um estimador não viciado para $\nu$.	 	
+
+Além disso, tem-se que
+
+$$\begin{align*}
+	 \hat{\boldsymbol{\beta}}&\sim\hbox{Normal}_p(\boldsymbol{\beta},(\boldsymbol{F}\boldsymbol{F}'_n)^{-1}\nu)\\
+	 \frac{R}{\nu}&\sim\chi^2_{n-p}\\
+	 \sqrt{n-p}\frac{\hat{\boldsymbol{\beta}}-\boldsymbol{\beta}}{\sqrt{R}}&\sim t_{n-p}(\boldsymbol{0}_p, (\boldsymbol{F}'\boldsymbol{F})^{-1})
+	 \end{align*}$$
+	 
+
+
+## Resíduos e valores ajustados
+	
+O valor ajustado da $i$-ésima observação é dado por
+		$$\begin{equation}
+		\hat{y}_i=\boldsymbol{f}_i' \hat{\boldsymbol{\beta}}
+		\end{equation}$$
+e, concluímos que 
+		$$\hat{\boldsymbol{y}}\sim \hbox{Normal}( \boldsymbol{F}'\boldsymbol{\beta}, \boldsymbol{F}'(\boldsymbol{F}\boldsymbol{F}')^{-1}\boldsymbol{F}\nu )$$
+		
+O respectivo resíduo é dado por
+$$e_i=y_i - \hat{y}_i,$$
+e, como o vetor de resíduos é dado por
+$$\boldsymbol{e}=\boldsymbol{y}-\hat{\boldsymbol{y}},$$
+tem-se que 
+$$\boldsymbol{e}\sim \hbox{Normal}(\boldsymbol{0}_n,\nu(\boldsymbol{I}_n-\boldsymbol{F}'(\boldsymbol{F}\boldsymbol{F}')^{-1}\boldsymbol{F}))$$
+Denotando $\boldsymbol{H}=\boldsymbol{F}'(\boldsymbol{F}\boldsymbol{F}')^{-1}\boldsymbol{F})$, de $h_i$ como sendo o $i$-ésimo elemento na diagonal de $\boldsymbol{H}$, defini-se o resíduo studentizado por
+
+$$\tilde{e}_i=\frac{e_i}{\sqrt{\hat{\nu}(1-h_i)}}$$
+Acontece que, se a suposição de ruído btanco gaussiano for verdadeira, $\tilde{e}_i$ tende a se comportar como um ruído branco.
+
+
+## Seleção de modelos	
+
+
+Modelos lineares podem ser comparados através do critério de informação de Akaike (AIC):
+        
+$$-2\log L(\hat{\boldsymbol{\beta}},\hat{\nu}) - 2(p+1).$$
+        
+Considera-se como mais parcimonioso o modelo com menor valor do AIC.
+
+## Robustez do modelo linear
+
+Embora tenhamos utilizado o ruído branco gaussiano, estes resultados ainda podem ser aplicados quando $\varepsilon_n$ é um ruído branco qualquer.
+
+De fato, pode-se mostrar que os estimadores são os mesmos obtidos pelo método dos mínimos quadrados. Neste caso, as distribuições dos estimadores podem ser utilizadas como aproximações.

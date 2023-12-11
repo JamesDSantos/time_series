@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Series temporais - 4&nbsp; Defasagens e autocorrelação</title>
+<title>Séries Temporais - 3&nbsp; Defasagens e autocorrelação</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
+<link href="./ts_window_date.html" rel="next">
 <link href="./estacionaria.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./acf.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Defasagens e autocorrelação</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./acf.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Defasagens e autocorrelação</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -125,7 +125,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Series temporais</a> 
+      <a href="./">Séries Temporais</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -138,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preface</span></a>
+ <span class="menu-text">Prefácio</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -149,20 +149,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./estacionaria.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./acf.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Defasagens e autocorrelação</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Defasagens e autocorrelação</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ts_window_date.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modelo_linear.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Revisão sobre o modelo linear</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -181,10 +187,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#gráfico-de-defasagens" id="toc-gráfico-de-defasagens" class="nav-link active" data-scroll-target="#gráfico-de-defasagens"><span class="header-section-number">4.1</span> Gráfico de Defasagens</a></li>
-  <li><a href="#a-função-de-autocorrelação" id="toc-a-função-de-autocorrelação" class="nav-link" data-scroll-target="#a-função-de-autocorrelação"><span class="header-section-number">4.2</span> A função de autocorrelação</a></li>
-  <li><a href="#a-função-de-autocorrelação-estimada-e-o-correlograma" id="toc-a-função-de-autocorrelação-estimada-e-o-correlograma" class="nav-link" data-scroll-target="#a-função-de-autocorrelação-estimada-e-o-correlograma"><span class="header-section-number">4.3</span> A função de autocorrelação estimada e o correlograma</a></li>
-  <li><a href="#testes-para-a-autocorrelação" id="toc-testes-para-a-autocorrelação" class="nav-link" data-scroll-target="#testes-para-a-autocorrelação"><span class="header-section-number">4.4</span> Testes para a autocorrelação</a></li>
+  <li><a href="#gráfico-de-defasagens" id="toc-gráfico-de-defasagens" class="nav-link active" data-scroll-target="#gráfico-de-defasagens"><span class="header-section-number">3.1</span> Gráfico de Defasagens</a></li>
+  <li><a href="#a-função-de-autocorrelação" id="toc-a-função-de-autocorrelação" class="nav-link" data-scroll-target="#a-função-de-autocorrelação"><span class="header-section-number">3.2</span> A função de autocorrelação</a></li>
+  <li><a href="#a-função-de-autocorrelação-estimada-e-o-correlograma" id="toc-a-função-de-autocorrelação-estimada-e-o-correlograma" class="nav-link" data-scroll-target="#a-função-de-autocorrelação-estimada-e-o-correlograma"><span class="header-section-number">3.3</span> A função de autocorrelação estimada e o correlograma</a></li>
+  <li><a href="#testes-para-a-autocorrelação" id="toc-testes-para-a-autocorrelação" class="nav-link" data-scroll-target="#testes-para-a-autocorrelação"><span class="header-section-number">3.4</span> Testes para a autocorrelação</a></li>
   </ul>
 </nav>
     </div>
@@ -193,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Defasagens e autocorrelação</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Defasagens e autocorrelação</span></h1>
 </div>
 
 
@@ -208,8 +214,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="gráfico-de-defasagens" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="gráfico-de-defasagens"><span class="header-section-number">4.1</span> Gráfico de Defasagens</h2>
+<section id="gráfico-de-defasagens" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="gráfico-de-defasagens"><span class="header-section-number">3.1</span> Gráfico de Defasagens</h2>
 <p>Denomina-se por <strong>defasagem</strong> <span class="math inline">\(h\)</span> (<em>lag</em>, em inglês), um atraso em <span class="math inline">\(h\)</span> nos índices da série temporal. A tabela abaixo ilustra algumas defasagens para a série <span class="math inline">\(x_1,\ldots,x_5\)</span></p>
 <table class="table">
 <thead>
@@ -266,17 +272,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="a-função-de-autocorrelação" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="a-função-de-autocorrelação"><span class="header-section-number">4.2</span> A função de autocorrelação</h2>
+<section id="a-função-de-autocorrelação" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="a-função-de-autocorrelação"><span class="header-section-number">3.2</span> A função de autocorrelação</h2>
 <div id="def-autocovariancia" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 4.1 </strong></span>A função de autocovariância da série temporal <span class="math inline">\(x_t\)</span> é dada por <span class="math display">\[\begin{equation}
+<p><span class="theorem-title"><strong>Definition 3.1 </strong></span>A função de autocovariância da série temporal <span class="math inline">\(x_t\)</span> é dada por <span class="math display">\[\begin{equation}
           \gamma(s,t) = Cov(x_t,x_s)=E\left[(x_t-\mu_t)(x_s-\mu_s)\right],
         \end{equation}\]</span> para todo <span class="math inline">\(s,t\)</span> com <span class="math inline">\(\mu_j=E(y_j)\)</span> e sua respectiva função de autocorrelção é dada por <span class="math display">\[\begin{equation}
         \rho(s,t)=\frac{\gamma(s,t)}{\sqrt{\gamma(s,s)\gamma(t,t)}}
         \end{equation}\]</span></p>
 </div>
 <div id="exm-acf1" class="theorem example">
-<p><span class="theorem-title"><strong>Example 4.1 </strong></span>Considere a série temporal <span class="math display">\[x_t= x_{t-1}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),\]</span> para <span class="math inline">\(t=1,2,\ldots\)</span> com a condição de que <span class="math inline">\(x_0=0\)</span> e que <span class="math inline">\(Cov(\varepsilon_t,\varepsilon_s)=0\;\;\forall s\neq t\)</span>. É imediato que <span class="math display">\[\begin{equation}
+<p><span class="theorem-title"><strong>Example 3.1 </strong></span>Considere a série temporal <span class="math display">\[x_t= x_{t-1}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),\]</span> para <span class="math inline">\(t=1,2,\ldots\)</span> com a condição de que <span class="math inline">\(x_0=0\)</span> e que <span class="math inline">\(Cov(\varepsilon_t,\varepsilon_s)=0\;\;\forall s\neq t\)</span>. É imediato que <span class="math display">\[\begin{equation}
     x_{t}=\sum_{j=1}^{t}\varepsilon_{j},
     \end{equation}\]</span> o que implica em <span class="math inline">\(x_t\sim\hbox{Normal}(0,t)\)</span>. Portanto, <span class="math display">\[\begin{align}
         E(x_t)&amp;=0\\
@@ -314,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                 \rho(h)=\frac{\gamma(h)}{\gamma(0)}
 \end{equation}\]</span> e ela mede a dependência linear entre <span class="math inline">\(y_t\)</span> e os valores defasados da série.Sempre será verdade que <span class="math inline">\(\rho\in[-1,1]\)</span>, <span class="math inline">\(\rho(h)=\rho(-h)\)</span> e, se <span class="math inline">\(y_{t+h}\)</span> é independente de <span class="math inline">\(y_t\)</span>, então <span class="math inline">\(\rho(h)=0\)</span>.</p>
 <div id="exm-acf2" class="theorem example">
-<p><span class="theorem-title"><strong>Example 4.2 </strong></span>Considere a série temporal <span class="math display">\[\begin{align}
+<p><span class="theorem-title"><strong>Example 3.2 </strong></span>Considere a série temporal <span class="math display">\[\begin{align}
     x_t = \varepsilon_t +\frac{1}{2}\varepsilon_{t-1} \label{exer1}
     \end{align}\]</span> onde <span class="math inline">\(\varepsilon_t\sim\hbox{Normal}(0,\nu)\)</span> para <span class="math inline">\(t=1,\ldots\)</span>, <span class="math inline">\(\varepsilon_t\)</span> é independente de <span class="math inline">\(\varepsilon_s\)</span> para todo <span class="math inline">\(s\neq t\)</span> e <span class="math inline">\(\varepsilon_0=0\)</span>. Como <span class="math display">\[\begin{align}
     E(x_t)&amp;=E(\varepsilon_t)+\frac{1}{2}E(\varepsilon_{t-1})=0\\
@@ -335,11 +341,11 @@ tem-se que, <span class="math display">\[\begin{align}
     \end{align}\]</span> <span class="math inline">\(\blacksquare\)</span></p>
 </div>
 <div id="exm-acf_ruido_branco" class="theorem example">
-<p><span class="theorem-title"><strong>Example 4.3 </strong></span>Seja <span class="math inline">\(x_t\)</span> um ruído branco. Então <span class="math display">\[\gamma(h)=\nu I(h=0),\]</span> e <span class="math display">\[\rho(h)=\frac{\gamma(h)}{\gamma(0)}=I(h=0),\]</span> onde <span class="math inline">\(I(A)\)</span> é a função indicadora da ocorrência do evento <span class="math inline">\(A\)</span>.</p>
+<p><span class="theorem-title"><strong>Example 3.3 </strong></span>Seja <span class="math inline">\(x_t\)</span> um ruído branco. Então <span class="math display">\[\gamma(h)=\nu I(h=0),\]</span> e <span class="math display">\[\rho(h)=\frac{\gamma(h)}{\gamma(0)}=I(h=0),\]</span> onde <span class="math inline">\(I(A)\)</span> é a função indicadora da ocorrência do evento <span class="math inline">\(A\)</span>.</p>
 </div>
 </section>
-<section id="a-função-de-autocorrelação-estimada-e-o-correlograma" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="a-função-de-autocorrelação-estimada-e-o-correlograma"><span class="header-section-number">4.3</span> A função de autocorrelação estimada e o correlograma</h2>
+<section id="a-função-de-autocorrelação-estimada-e-o-correlograma" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="a-função-de-autocorrelação-estimada-e-o-correlograma"><span class="header-section-number">3.3</span> A função de autocorrelação estimada e o correlograma</h2>
 <p>Considere uma série temporal <span class="math inline">\(x_1,\ldots,x_n\)</span>. Supondo que ela é proveniente de uma série estacionária (ergódico), pode-se estimar <span class="math inline">\(\gamma(h)\)</span> pelo método da substituição: <span class="math display">\[\begin{align}
                         \widehat{\gamma(h)}&amp;=\frac{1}{n}\sum_{i=1}^{n-h}\left(x_{i+h} - \bar{x}\right)\left(x_{i} - \bar{x}\right)
                         \end{align}\]</span> e <span class="math inline">\(\rho\)</span> por<br>
@@ -349,7 +355,7 @@ tem-se que, <span class="math display">\[\begin{align}
 <p>É importante notar que tanto <span class="math inline">\(\gamma(h)\)</span> quanto <span class="math inline">\(\rho(h)\)</span> são invariantes a transformações de locação. Por exemplo, seja <span class="math inline">\(\gamma(h)\)</span> a função de autocovariância de <span class="math inline">\(x_t\)</span> e considere <span class="math inline">\(y_t=x_t+a\)</span>. Então <span class="math inline">\(E(y_t)=\mu+a\)</span> e <span class="math display">\[E[(y_t-\mu-a)(y_{t-h}-\mu-a)]=E[(x_t-\mu)(x_{t-h}-\mu)]=\gamma(h).\]</span></p>
 <p>O correlograma é um gráfico cartesiano construído a partir dos pontos <span class="math inline">\((h, \hat{\rho})\)</span>. A partir de cada ponto é desenhada uma linha, semelhante a um gráfico de barras. Como <span class="math inline">\(\hat{\rho}(0)=1\)</span>, a implementação desta função em softwares estatísticos pode variar com <span class="math inline">\(h=0\)</span> ou em 1. Por exemplo, a função <code>acf</code> do pacote <code>stats</code> começa na defasagem 0, enquanto a função <code>Acf</code> do pacote <code>forecast</code> (ou ainda a <code>acf</code> do pacote <code>TSA</code>) começam na defasagem 1.</p>
 <div id="exm-afogamentos" class="theorem example">
-<p><span class="theorem-title"><strong>Example 4.4 </strong></span>A série abaixo representa o número anual de óbitos por afogamento na cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o código internacional de doenças (CID10) W70 - Afogamento e submersão conseqüentes a queda dentro de águas naturais.</p>
+<p><span class="theorem-title"><strong>Example 3.4 </strong></span>A série abaixo representa o número anual de óbitos por afogamento na cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o código internacional de doenças (CID10) W70 - Afogamento e submersão conseqüentes a queda dentro de águas naturais.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/13MdzvZB5U85MkLy97ZRytkylikJu7rJoC1WL0XjKw-c/edit?usp=sharing'</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -381,7 +387,7 @@ tem-se que, <span class="math display">\[\begin{align}
 <div id="fig-acf_afogamentos" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="acf_files/figure-html/fig-acf_afogamentos-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.1: Correlograma para o número anual de óbitos por afogamento em Manaus.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.1: Correlograma para o número anual de óbitos por afogamento em Manaus.</figcaption>
 </figure>
 </div>
 </div>
@@ -393,8 +399,8 @@ tem-se que, <span class="math display">\[\begin{align}
 <p>Sem perda de generalidade, assuma que <span class="math inline">\(x_t\)</span> é um processo estacionário com <span class="math inline">\(\mu=0\)</span>. Para uma defasagem <span class="math inline">\(h&gt;0\)</span>, considere a hipótese <span class="math inline">\(H_0:\rho(h)=0\)</span>. Sob <span class="math inline">\(H_0\)</span>, o processo estacionário é um ruído branco e a distribuição da função de autocorrelação amostral é <span class="math inline">\(N(0,1/n)\)</span>. Portanto, uma região de rejeição ao níve de 5% de significância para um teste baseado nessa distribuição é<br>
 <span class="math display">\[R={\hat{\rho}(h): \hat{\rho}(h)|&gt;\frac{2}{\sqrt{n}},\]</span> Este é o valor da linha pontilhada que aparece no correlograma na <a href="#fig-acf_afogamentos">Figure&nbsp;<span class="quarto-unresolved-ref">fig-acf_afogamentos</span></a>.</p>
 </section>
-<section id="testes-para-a-autocorrelação" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="testes-para-a-autocorrelação"><span class="header-section-number">4.4</span> Testes para a autocorrelação</h2>
+<section id="testes-para-a-autocorrelação" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="testes-para-a-autocorrelação"><span class="header-section-number">3.4</span> Testes para a autocorrelação</h2>
 <p>Na seção anterior mostrou-se como testar <span class="math inline">\(H_0:\rho(h)=0\)</span>, para um <span class="math inline">\(h\)</span> fixado. Como várias autocorrelações para diferentes defasagens são avaliadas simultaneamente, o correto seria testar <span class="math inline">\(H_0: \rho(h)=0\;\;\forall h=1,\ldots,q\)</span>, onde <span class="math inline">\(q\)</span> é o valor máximo da defasagem a ser testado. Considerando a região de rejeição dada anteriormente, pela desigualdade de Bonferroni,</p>
 <p><span class="math display">\[\begin{align}P(\hbox{Rejeitar }H_0|H_0\hbox{ é verdadeira})&amp;=P\left(\cup_{h=1}^q\left\{ \hat{\rho}(h)&gt;\frac{2}{\sqrt{n}}\right\}| H_0\hbox{ é verdade}\right)\\
 &amp;\leq \sum_{h=1}^qP\left( \hat{\rho}(h)&gt;\frac{2}{\sqrt{n}}| H_0\hbox{ é verdade}\right)\\ &amp;&lt;q\alpha\end{align}\]</span></p>
@@ -403,7 +409,7 @@ tem-se que, <span class="math display">\[\begin{align}
 <p>O teste de Box-Pierce (1970) possui o mesmo objetivo e tem a mesma regra de decisão, mudando apenas a estatística de teste para</p>
 <p><span class="math display">\[Q_{BP}=n\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}.\]</span></p>
 <div id="exm-afogamentos_testes" class="theorem example">
-<p><span class="theorem-title"><strong>Example 4.5 </strong></span>Para a série de óbitos anuais por afogamentos em Manaus, tem-se que os teste Ljung-Box e Box-Pierce não rejeitam a hipótese de ruído branco.</p>
+<p><span class="theorem-title"><strong>Example 3.5 </strong></span>Para a série de óbitos anuais por afogamentos em Manaus, tem-se que os teste Ljung-Box e Box-Pierce não rejeitam a hipótese de ruído branco.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(afogamentos, <span class="at">type =</span> <span class="st">'Ljung-Box'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -665,12 +671,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./estacionaria.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./ts_window_date.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

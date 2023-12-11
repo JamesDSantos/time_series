@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 21.6) (preloaded format=xelatex 2022.1.11)  6 DEC 2023 10:34
+This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 21.6) (preloaded format=xelatex 2022.1.11)  11 DEC 2023 10:23
 entering extended mode
 **./index.tex
 (index.tex
@@ -656,9 +656,9 @@ Package: amsthm 2020/05/29 v2.20.6
 Package: xpatch 2020/03/25 v0.3a Extending etoolbox patching commands
 )
 Class scrreprt Info: amsthm's \deferred@thm@head patched.
-\c@definition=\count322
-\c@theorem=\count323
-\c@example=\count324
+\c@theorem=\count322
+\c@example=\count323
+\c@definition=\count324
 (C:\Users\jam_d\AppData\Local\Programs\MiKTeX\tex/latex/caption\subcaption.sty
 Package: subcaption 2020/10/07 v1.3j Sub-captions (AR)
 \c@subfigure=\count325
@@ -1418,24 +1418,7 @@ Package tocbasic Info: character protrusion at toc deactivated on input line 23
 
 [2
 
-]
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.665pt on input line 251.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.475pt on input line 251.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.95099pt on input line 251.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.66568pt on input line 251.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.4755pt on input line 251.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.94882pt on input line 251.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.66417pt on input line 251.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.47441pt on input line 251.
-[3
+] [3
 
 ]
 chapter 1.
@@ -1454,24 +1437,40 @@ Class scrreprt Warning: \float@addtolists detected!
 (scrreprt)              a package that still implements the
 (scrreprt)              deprecated \float@addtolist interface.
 
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.665pt on input line 265.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.475pt on input line 265.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 10.95099pt on input line 265.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 7.66568pt on input line 265.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 5.4755pt on input line 265.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 10.94882pt on input line 265.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 7.66417pt on input line 265.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 5.47441pt on input line 265.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 10.95pt on input line 279.
+(Font)              scaled to size 10.95pt on input line 271.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 7.665pt on input line 279.
+(Font)              scaled to size 7.665pt on input line 271.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 5.475pt on input line 279.
+(Font)              scaled to size 5.475pt on input line 271.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 10.95099pt on input line 279.
+(Font)              scaled to size 10.95099pt on input line 271.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 7.66568pt on input line 279.
+(Font)              scaled to size 7.66568pt on input line 271.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 5.4755pt on input line 279.
+(Font)              scaled to size 5.4755pt on input line 271.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 10.94882pt on input line 279.
+(Font)              scaled to size 10.94882pt on input line 271.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 7.66417pt on input line 279.
+(Font)              scaled to size 7.66417pt on input line 271.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 5.47441pt on input line 279.
+(Font)              scaled to size 5.47441pt on input line 271.
 [4
 
 ]
@@ -1489,10 +1488,6 @@ File: intro_files/figure-pdf/unnamed-chunk-6-1.pdf Graphic file (type pdf)
 <use intro_files/figure-pdf/unnamed-chunk-6-1.pdf>
 [8]
 chapter 2.
-[9
-
-]
-chapter 3.
 
 ! Package amsmath Error: Erroneous nesting of equation structures;
 (amsmath)                trying to recover with `aligned'.
@@ -1501,15 +1496,15 @@ See the amsmath package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.477 ..._1+h)<x_1,\ldots,x(t_k+h)<x_k)\end{align}
+l.452 ..._1+h)<x_1,\ldots,x(t_k+h)<x_k)\end{align}
                                                   \] 
 Here is how much of TeX's memory you used:
- 36472 strings out of 411271
- 732207 string characters out of 2828803
- 1394618 words of memory out of 3000000
- 56403 multiletter control sequences out of 15000+600000
+ 36465 strings out of 411271
+ 732083 string characters out of 2828803
+ 1394621 words of memory out of 3000000
+ 56396 multiletter control sequences out of 15000+600000
  411314 words of font info for 86 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 108i,9n,120p,10602b,923s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 108i,9n,120p,10602b,925s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on index.pdf (9 pages).
+Output written on index.pdf (8 pages).
