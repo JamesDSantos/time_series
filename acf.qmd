@@ -158,7 +158,7 @@ O correlograma é um gráfico cartesiano construído a partir dos pontos $(h, \h
 A série abaixo representa o número anual de óbitos por afogamento na cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o código internacional de doenças (CID10) W70  - Afogamento e submersão conseqüentes a queda dentro de águas naturais.
 
 
-```{r warning=FALSE}
+```{r warning=FALSE, results = 'hide'}
 url <- 'https://docs.google.com/spreadsheets/d/13MdzvZB5U85MkLy97ZRytkylikJu7rJoC1WL0XjKw-c/edit?usp=sharing'
 
 require(data.table)

@@ -13,6 +13,7 @@ book:
     - acf.qmd
     - ts_window_date.qmd
     - modelo_linear.qmd
+    - tendencia.qmd
     - references.qmd
 
 bibliography: references.bib

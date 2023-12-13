@@ -182,12 +182,12 @@
 \floatname{codelisting}{Listing}
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \usepackage{amsthm}
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[chapter]
 \theoremstyle{definition}
 \newtheorem{example}{Example}[chapter]
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
 \theoremstyle{remark}
 \AtBeginDocument{\renewcommand*{\proofname}{Proof}}
 \newtheorem*{remark}{Remark}
@@ -229,7 +229,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, boxrule=0pt, frame hidden, borderline west={3pt}{0pt}{shadecolor}, enhanced, interior hidden, breakable]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, boxrule=0pt, interior hidden, borderline west={3pt}{0pt}{shadecolor}, enhanced, frame hidden, breakable]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -1410,6 +1410,904 @@ qualquer.
 De fato, pode-se mostrar que os estimadores são os mesmos obtidos pelo
 método dos mínimos quadrados. Neste caso, as distribuições dos
 estimadores podem ser utilizadas como aproximações.
+
+\bookmarksetup{startatroot}
+
+\hypertarget{tenduxeancia}{%
+\chapter{Tendência}\label{tenduxeancia}}
+
+\hypertarget{o-que-uxe9-tenduxeancia}{%
+\section{O que é tendência?}\label{o-que-uxe9-tenduxeancia}}
+
+Diz-se que uma série temporal observada possui tendência quando ela
+exibe um padrão de crescimento ou decrescimento em médio/longo prazo.
+
+A Figure~\ref{fig-fabMes} mostra a série do número mensal de acidentes
+com aeronaves, construída através dos dados diários mantidos pela Força
+Aérea Brasileira. Note uma tendência de decrescimento na série até
+meados de 2016, substituída então por uma tendência de crescimento.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}https://www.dropbox.com/scl/fi/kq4jwbovu94u857238sus/N{-}mensal{-}de{-}acidentes{-}com{-}aeronaves{-}2013jan.csv?rlkey=n5pa45e7ht33houmiawdkjb09\&dl=1\textquotesingle{}}
+
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(url, }\AttributeTok{h =}\NormalTok{ T)}
+\NormalTok{acidentesFAB }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{( x, }\AttributeTok{start =} \FunctionTok{c}\NormalTok{(}\DecValTok{2013}\NormalTok{,}\DecValTok{1}\NormalTok{), }\AttributeTok{frequency=}\DecValTok{12}\NormalTok{)}
+\FunctionTok{ts.plot}\NormalTok{(acidentesFAB, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{xlab =} \StringTok{\textquotesingle{}Ano\textquotesingle{}}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. acidentes\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+\begin{minipage}[t]{\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/fig-fabMes-1.pdf}
+
+}
+
+\caption{\label{fig-fabMes}Número mensal de acidentes envolvendo
+aeronaves. Fonte: FAB}
+
+}
+
+\end{minipage}%
+
+\end{figure}
+
+\hypertarget{tenduxeancia-aletuxf3ria-e-tenduxeancia-determinuxedstica}{%
+\section{Tendência aletória e tendência
+determinística}\label{tenduxeancia-aletuxf3ria-e-tenduxeancia-determinuxedstica}}
+
+A tendência pode ser duas naturezas: determinística ou aleatória.
+
+A tendência aleatória é construída ao acaso. Considere, por exemplo, o
+passeio aleatório definido por \(x_0=0\) e
+\(x_t = x_{t-1}+\varepsilon_t\), onde \(\varepsilon_t\) é um ruído
+branco gaussiano com \(\nu=1\). Já foi mostrado que \(E(x_t)=0\) e
+\(Var(x_t)=t\). A figura abaixo apresenta uma série simulada desse
+processo.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{x }\OtherTok{=} \DecValTok{0}
+\ControlFlowTok{for}\NormalTok{( t }\ControlFlowTok{in} \DecValTok{2}\SpecialCharTok{:}\DecValTok{100}\NormalTok{) x[t] }\OtherTok{=}\NormalTok{ x[t }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\FunctionTok{ts.plot}\NormalTok{(x, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-2-1.pdf}
+
+}
+
+\end{figure}
+
+Observe que a série exibe um tendência, mas não há qualquer explicação
+para a sua exsitência, uma vez que este comportamento é fruto do acaso.
+Ainda, teremos que \(E(x_t)=0\), o que torna o padrão observado
+irrelevante.
+
+Na tendência determinística, há uma função T(.) que determina seu
+comportamento. Nesse caso, é assumido que
+
+\[y_t = T(t) + \varepsilon_t,\] onde \(\varepsilon_t\) é uma série
+estacionária com média \(0\) e variância \(\nu\). Deste modo,
+\(E(y_t)=T(t)\), o que implica que \(T(.)\) representa o comportamento
+médio da série. O problema de estimar \(T(.)\) é denominado suavização.
+
+Na prática, é impossível determinar se uma tendência é aleatória ou
+determinística, cabendo ao estastístico procurar se há motivos para
+acreditar que está analisando o segundo tipo. A partir deste momento,
+toda tendência será considerada determinística.
+
+\hypertarget{o-modelo-de-tenduxeancia-polinomial}{%
+\section{O modelo de tendência
+polinomial}\label{o-modelo-de-tenduxeancia-polinomial}}
+
+Considere que a série temporal foi observada até o tempo \(s\). Então, a
+tendência é definida como uma função \(T:(0,t]\rightarrow \mathbb{R}\).
+O Teorema de Weierstrass afirma que, se \(T\) é contínua, então para
+qualquer \(\delta>0\), existe um polinômio \(u(.)\) tal que
+\[|T(t)-u(t)|<\delta.\] Isto quer dizer que \(T(.)\) sempre pode ser
+aproximada por um polinômio. Assim, para determinada ordem \(p\), é
+correto afirmar que\\
+\[\begin{equation}
+        y_t = \beta_0 + \sum_{j=1}^p \beta_j t^j + \varepsilon_t
+        \end{equation}\] onde \(\varepsilon_t\) é uma série
+estacionária, é um modelo razoável para uma série temporal com
+tendência. Assumindo que \(\varepsilon_t\) é um ruído branco gaussiano,
+tem-se o modelo de tendência polinomial de grau \(p\).
+
+Fazendo \(\boldsymbol{f}_t'=(1,t,\ldots,t^p)\) , o modelo de tendência
+polinomial é reescrito como
+\[\boldsymbol{y}=\boldsymbol{F}'\boldsymbol{\beta}+\boldsymbol{\varepsilon}\]
+e inferências sobre \(\boldsymbol{\beta}\) e \(\nu\) são feitas
+utilizando o modelo linear tradicional.
+
+\begin{example}[]\protect\hypertarget{exm-nascidos}{}\label{exm-nascidos}
+
+Considere o número anual de nascidos vivos no estado do Amazonas entre
+os anos 2000 e 20013:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{( }\DecValTok{67646}\NormalTok{ , }\DecValTok{70252}\NormalTok{ , }\DecValTok{70671}\NormalTok{ , }\DecValTok{70751}\NormalTok{ , }\DecValTok{71345}\NormalTok{ ,}
+        \DecValTok{73488}\NormalTok{ , }\DecValTok{75584}\NormalTok{ , }\DecValTok{73469}\NormalTok{ , }\DecValTok{75030}\NormalTok{ , }\DecValTok{75729}\NormalTok{ , }
+        \DecValTok{74188}\NormalTok{ , }\DecValTok{76202}\NormalTok{ , }\DecValTok{77434}\NormalTok{ , }\DecValTok{79041}\NormalTok{)}
+
+\NormalTok{nascidos }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(x, }\AttributeTok{start =}\DecValTok{2000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(nascidos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. nascidos vivos\textquotesingle{}}\NormalTok{)}
+\NormalTok{stats}\SpecialCharTok{::}\FunctionTok{acf}\NormalTok{(nascidos)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/fig-nascidosAM-1.pdf}
+
+}
+
+\caption{\label{fig-nascidosAM-1}Número de nascimentos anual no estado
+do Amazonas (Fonte: SINASC/SUS)}
+
+}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/fig-nascidosAM-2.pdf}
+
+}
+
+\caption{\label{fig-nascidosAM-2}Correlograma da série (Fonte:
+SINASC/SUS).}
+
+}
+
+\end{minipage}%
+
+\end{figure}
+
+Vamos ajustar um modelo de tendência polinomial de ordem 1, ou seja
+
+\[y_t=\beta_0+\beta_1 t + \varepsilon_t\] onde \(t=1,\ldots,14\)
+representa os tempos \(2000,\ldots,2013\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tempo }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{14}
+\NormalTok{mod }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{( nascidos }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(tempo, }\DecValTok{1}\NormalTok{, }\AttributeTok{raw =} \ConstantTok{TRUE}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+As estimativas de máxima verossimilhança para \(\beta_0\) e \(\beta_1\)
+são:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod}\SpecialCharTok{$}\NormalTok{coefficients}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+               (Intercept) poly(tempo, 1, raw = TRUE) 
+                 68266.879                    715.178 
+\end{verbatim}
+
+ou seja, \[\hat{T}(t)=\hat{\beta}+\hat{\beta}_1 t = 68.267+715 t\] Os
+resíduos do modelo linear \texttt{mod} podem ser obtidos via função
+\texttt{residuals}. Abaixo, verificamos que a série dos resíduos oscila
+em torno de zero e que nenhuma autocorrelação parece ser relevante, o
+que dão indícios de que os erros são um ruído branco.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res }\OtherTok{\textless{}{-}} \FunctionTok{residuals}\NormalTok{(mod)}
+\FunctionTok{ts.plot}\NormalTok{( res, }\AttributeTok{main =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\FunctionTok{acf}\NormalTok{(res, }\AttributeTok{main =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/unnamed-chunk-7-1.pdf}
+
+}
+
+\caption{Série dos resíduos}
+
+}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/unnamed-chunk-7-2.pdf}
+
+}
+
+\caption{Correlograma dos resíduos}
+
+}
+
+\end{minipage}%
+
+\end{figure}
+
+Abaixo, o teste de Shapiro-Wilks não gera evidências contra a suposição
+de normalidade e o teste de Box-Pierce não gera evidências contra a
+hipótese de ruído branco.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Shapiro-Wilk normality test
+
+data:  res
+W = 0.96982, p-value = 0.8743
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Pierce test
+
+data:  res
+X-squared = 0.02156, df = 1, p-value = 0.8833
+\end{verbatim}
+
+É interessante notar que, para \(t=1,\ldots,14\),
+\[\hat{T}(t)=\hat{\beta}_0+\hat{\beta}_1 t = \hat{y}_t,\] logo, os
+valores preditos do modelo são uma estimativa para a tendência nos
+pontos observados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{( }\FunctionTok{cbind}\NormalTok{( nascidos, }\FunctionTok{fitted}\NormalTok{(mod)), }\AttributeTok{col =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+\begin{minipage}[t]{\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/unnamed-chunk-9-1.pdf}
+
+}
+
+\caption{Linha preta: série original. Linha vermelha: tendência
+estimada}
+
+}
+
+\end{minipage}%
+
+\end{figure}
+
+\end{example}
+
+\hypertarget{previsuxe3o}{%
+\subsection{Previsão}\label{previsuxe3o}}
+
+A previsão é realizada utilizando o modelo ajustado, estrapolando para
+um tempo não observado. Por exemplo a estimativa para 2014 (\(t=15\)) é
+
+\[\hat{T}(15)=\hat{\beta}+\hat{\beta}_1 15 = 78.992\] (o valor real foi
+81.145).
+
+É importante ressaltar que esse tipo de modelo é interessante para fazer
+inferências sobre a tendência, mas pode ser inadequado para previsões,
+uma vez que o polinômio é uma aproximação apenas para o intervalo
+observado.
+
+\hypertarget{seleuxe7uxe3o-de-modelos-lineares}{%
+\subsection{Seleção de modelos
+lineares}\label{seleuxe7uxe3o-de-modelos-lineares}}
+
+O valor do Critério de Informação de Akaike (AIC) é dado por
+\(-2L(\hat{\theta})+2k\) onde \(L\) é a função de verossimilhança e
+\(\hat{\theta}\) e \(k\) são o estimador de máxima verossimilhança para
+\(\theta\) e sua dimensão, respectivamente. O modelo com menor AIC é
+considerado mais adequado.
+
+Considere o nível anual, em pés, do Lago Huron. Essa série já vem
+carregada no \texttt{R} sob o nome \texttt{LakeHuron}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(LakeHuron, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}Nível (pés)\textquotesingle{}}\NormalTok{)}
+\NormalTok{stats}\SpecialCharTok{::}\FunctionTok{acf}\NormalTok{(LakeHuron)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/fig-lakeHuron-1.pdf}
+
+}
+
+\caption{\label{fig-lakeHuron-1}Nível anual do Lago Huron, entre 1875 e
+1972}
+
+}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/fig-lakeHuron-2.pdf}
+
+}
+
+\caption{\label{fig-lakeHuron-2}Correlograma da série}
+
+}
+
+\end{minipage}%
+
+\end{figure}
+
+Vamos ajustar alguns modelos para tentar explica a tendêndia dessa
+série.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tempo }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{:} \FunctionTok{length}\NormalTok{(LakeHuron)}
+\NormalTok{mod1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{( LakeHuron }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(tempo, }\DecValTok{1}\NormalTok{, }\AttributeTok{raw =}\NormalTok{ T))}
+\NormalTok{mod2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{( LakeHuron }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(tempo, }\DecValTok{2}\NormalTok{, }\AttributeTok{raw =}\NormalTok{ T))}
+\NormalTok{mod3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{( LakeHuron }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(tempo, }\DecValTok{3}\NormalTok{, }\AttributeTok{raw =}\NormalTok{ T))}
+\NormalTok{mod4 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{( LakeHuron }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(tempo, }\DecValTok{4}\NormalTok{, }\AttributeTok{raw =}\NormalTok{ T))}
+\NormalTok{mod5 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{( LakeHuron }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(tempo, }\DecValTok{5}\NormalTok{, }\AttributeTok{raw =}\NormalTok{ T))}
+\NormalTok{mod6 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{( LakeHuron }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(tempo, }\DecValTok{6}\NormalTok{, }\AttributeTok{raw =}\NormalTok{ T))}
+
+\FunctionTok{AIC}\NormalTok{(mod1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 306.0957
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{AIC}\NormalTok{(mod2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 287.8407
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{AIC}\NormalTok{(mod3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 289.8391
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{AIC}\NormalTok{(mod4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 291.7127
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{AIC}\NormalTok{(mod5)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 293.475
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{AIC}\NormalTok{(mod6)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 291.7054
+\end{verbatim}
+
+Entre os modelos ajustados, o de ordem 2 foi aquele com o menor valor do
+AIC. Sua tendência estimada é
+
+O polinômio ajustado foi \[\hat{T}(t) = 581 -0,091 t + 0,001 t^2\]
+
+Abaixo, apresentamos a análise de resíduos desse modelo.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res }\OtherTok{\textless{}{-}} \FunctionTok{residuals}\NormalTok{(mod2)}
+\FunctionTok{ts.plot}\NormalTok{( res, }\AttributeTok{main =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{acf}\NormalTok{(res, }\AttributeTok{main =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/unnamed-chunk-12-1.pdf}
+
+}
+
+\caption{Série dos resíduos}
+
+}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_files/figure-pdf/unnamed-chunk-12-2.pdf}
+
+}
+
+\caption{Correlograma dos resíduos}
+
+}
+
+\end{minipage}%
+
+\end{figure}
+
+Os resíduos parecem oscilar em torno de zero com um variância constante,
+mas o correlograma sugere que não temos um ruído branco. O teste de
+Box-Pierce, dado abaixo, confirma a nossa suspeita. Deste modo, este
+modelo não é adequado.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Pierce test
+
+data:  res
+X-squared = 50.973, df = 1, p-value = 9.365e-13
+\end{verbatim}
+
+\hypertarget{muxe9todos-nuxe3o-paramuxe9tricos-para-estimauxe7uxe3o-da-tenduxeancia}{%
+\section{Métodos não paramétricos para estimação da
+tendência}\label{muxe9todos-nuxe3o-paramuxe9tricos-para-estimauxe7uxe3o-da-tenduxeancia}}
+
+O modelo de tendência polinomial é robusto quando relaxamos a
+necessidade do ruído branco ser gaussiano. Nesse sentido, as estimativas
+ainda são válidas, mas perdemos todos os testes de hipóteses.
+
+Os métodos não paramétricos independem da distribuição do ruído, sendo
+úteis para a análise exploratória.
+
+\hypertarget{muxe9dias-muxf3veis}{%
+\subsection{Médias Móveis}\label{muxe9dias-muxf3veis}}
+
+O método das médias móveis consiste em obter \(\hat{T}(t)\) através da
+média da série considerando os valores
+\(\{y_{t-h},\ldots,y_t,\ldots,y_{t+h}\}\), para \(h>0\), ou seja
+\[\hat{T}_h(t)=\frac{1}{2h+1}\sum_{ i = t-h}^{t+h}y_i,\;h<t<n-h\]. A
+constante \(h\) é denominada \emph{largura da banda}. Para compreender
+melhor esse estimador, considere que a relação entre pontos vizinhos é
+aproximadamente linear, ou seja, para qualquer
+\(t\in\mathcal{V}_t=\{t-h,\ldots,t+h\}\) existem \(a_\mathcal{V}\) e
+\(b_\mathcal{V}\) tais que
+\[y_t\approx a_\mathcal{V}+b_\mathcal{V}t+\varepsilon_t,\] onde \(t\) é
+uma série temporal estacionária e ergódica. Então
+\[\begin{align}E(\hat{T}(t))&=\frac{a_\mathcal{V}+b_\mathcal{V}(t-h)+\cdots+a_\mathcal{V}+b_\mathcal{V}t+\cdots+a_\mathcal{V}+b_\mathcal{V}(t+h)}{2h+1}\\&=a_\mathcal{V}+b_\mathcal{V}t\end{align}\]
+\[Var(\hat{T}(t))=\frac{\nu}{2h+1}+\]
+
+Quanto maior for o valor de \(h\), maior será o nível de suavização.
+
+\begin{verbatim}
+    \item Desvantagem: não pode ser utilizado para fazer previsões.
+    \end{itemize}   
+\end{verbatim}
+
+\textbackslash end\{frame\}
+
+\begin{frame}{Exemplo - Nascimentos por ano}
+    Abaixo apresentamos as médias móveis para os nascimentos anuais no Amazonas, utilizando $h=2$. Como o série começa e 1994, o primeiro valor suavizado é 1998.
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{FigurasAulas/GIF/mediamovel-0}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    O segundo valor suavizado se refere a  1999.
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{FigurasAulas/GIF/mediamovel-1}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    O terceiro valor suavizado se refere a 2000.
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{FigurasAulas/GIF/mediamovel-2}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    Até chegar em 20013 (2015-$h$).
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{FigurasAulas/GIF/mediamovel-15}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{FigurasAulas/nascimento_menor_media_movel}
+\caption{Esquerda: erro estimado (valor real menos o suavizado). Direita: correlograma do erro.}
+\label{fig:nascimento_menor_media_movel}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Nível do Lago Huron}
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{lakehuron}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Nível do Lago Huron }
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.7\linewidth]{lakehuron_media_movel}
+        \caption{Série Nível do Lago Huron suavizada, utilizando $h=2$ e $h=6$ (Método das médias móveis).}
+        \label{fig:lakehuron_media_movel}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Suavização via método do núcleo}
+    \begin{itemize}
+        \item O método anterior pode ser descrito como 
+        
+        $$\tilde{y}_t = \sum_{i=1}^{T} w_t(i)y_t,$$
+        onde
+        $$w_t(i)=\left\{\begin{array}{ll}
+        \frac{1}{2h+1},&t-h\leq i \leq t+h \\
+        0,&\hbox{ caso contrário.}
+        \end{array}\right.$$
+        
+        \item O método de suavização pode ser considerado uma generalização das médias móveis, onde os pesos das observações decaem gradualmente a medida que $i$ se afasta de $t$.
+     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}     
+        \item Considere que 
+        $$\tilde{y}_t = \sum_{i=1}^{T} w_t(i)y_i,$$
+        onde $w_t(i)$ são os pesos da $i$-ésima observação para $y_t$, com $\sum_{i=1}^{T}w_t(i)=1$.
+        \item Seja $K(.)$ uma função núcleo, como por exemplo (o núcleo gaussiano):
+        $$K(y)=\frac{1}{\sqrt{2\pi}}e^{-\frac{y^2}{2}}.$$
+        \item O método da suavização via método do núcleo consiste em fazer
+        $$w_t(i)=\frac{K\left(\frac{t-i}{b}\right)}{\sum_{j=1}^TK\left(\frac{t-j}{b}\right)},$$
+        onde a largura da banda $b$ atua controla o nível de suavização.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{FigurasAulas/smooth_kernel}
+\caption{Pesos para três filtros considerando $t=5$. Em cinza: pesos das médias móveis; Em preto e roxo: pesos do método do núcleo com $b=1$ e $b=2$, respectivamente.}
+\label{fig:smooth_kernel}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Nível do Lago Huron}
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{lakehuron}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Nível do Lago Huron }
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.7\linewidth]{lakehuron_kernel}
+        \caption{Nível do Lago Huron a duas suavizações utilizando $h=2$ e $h=6$ (Método do núcleo).
+            \textcolor{blue}{Exercício: reproduzir este gráfico, adicionando mais valores para $h$}. }
+        \label{fig:lakehuron_nucleo}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Testes para tendência}
+    Os seguintes testes de hipóteses podem ser utilizados para detectar tendências:
+    \begin{itemize}
+        \item Wald-Wolfwitz
+        \item Cox-Stuart
+        \item Mann-Kendall
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{O teste de Wald-Wolfowitz}
+    \begin{itemize}
+        \item Considere a amostra $y_1,\ldots,y_n$.
+        \item Considere a hipótese $H_0$:  $H_0$: $\{y_t\}$ é uma amostra de variáveis independentes e estacionárias.
+        \item Seja $m$ a mediana amostral.
+        \item Faça
+        $$s_t = \left\{\begin{array}{ll}
+        "-",&\hbox{ se $y_t < m$} \\
+        "+",&\hbox{ se $y_t > m$}  \end{array}\right.$$
+        \item O que devemos esperar de $s_1,\ldots,s_n$ se $H_0$ for verdadeira/falsa?              
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{FigurasAulas/waldwolfowitz-1}
+\caption{Existe uma tendência monótona. Neste caso, o número de sequências de "+" e "-" consecutivos será baixo. Neste exemplo, existem apenas duas sequência.}
+\label{fig:waldwolfowitz-1}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{FigurasAulas/wald_wolfowitz_2}
+        \caption{Não parece haver tendência monótona. Neste caso, o número de sequências de "+" e "-" consecutivos será alto. Neste exemplo, existem 9 sequências.}
+    \end{figure}    
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item O teste de Wald-Wolfwitz tem como estatística de teste o número de sequências consecutivas com o mesmo símbolo.
+        \item A distribuição desta estatística sob a hipótese nula é tabela.
+        \item Para grandes amostras, o teste é feito utilizando a distribuição normal. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{O teste de Cox-Stuart}
+    \begin{itemize}
+        \item Considere a amostra $y_1,\ldots,y_n$.
+        \item Considere a hipótese $H_0$: não há tendência monótona.
+        \item Construa os pares $(y_1,y_{1+c}),(y_2,y_{2+c}),\ldots,(y_{n-c},y_{n})$, onde
+        $c=n/2$ se $n$ for par e $c=(n+1)/2$ se $n$ for ímpar.
+        \item Faça
+        $$s_t = \left\{\begin{array}{ll}
+        "-",&\hbox{ se $y_t < y_{t+c}$} \\
+        "+",&\hbox{ se $y_t > y_{t+c}$}  \end{array}\right.$$
+        \item O que devemos esperar de $s_1,\ldots,s_n$ se $H_0$ for verdadeira/falsa?              
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{FigurasAulas/coxstuart0}
+\caption{Neste exemplo $H_0$ é falsa. Neste caso, esperamos observar um número elevado de sinais do mesmo tipo.}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{FigurasAulas/coxstuart1}
+        \caption{Neste exemplo $H_0$ é verdadeira. Neste caso, esperamos observar um número de sinais do mesmo tipo próximo de $c/2$.}
+    \end{figure}
+\end{frame}
+
+\%
+
+\begin{frame}{Testes de correlação}
+%   \begin{frame}
+%       \item Considere uma amostra $y_1,\ldots,y_n$
+%       \item Os testes do tipo correlação servem para identificar se existe correlação significativa entre $(x_t,t)$ onde
+%       $x_t=y_t$ no Teste de Pearson e $x_t=\hbox{posto}(y_t)$ no Teste de Spearman.
+%       \item A diferença entre os testes está na distribuição dos dados: o primeiro assume normalidade e o segundo é um teste não paramétrico.
+%       \item Para ambos os testes a hipótese nula é a de que a correlação é igual a zero.
+%   \end{frame}
+%\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item O teste de Cox-Stuart tem como estatística o número de sinais positivos.
+        \item Este teste pode ser visto como um teste do sinal 
+        \item Para grandes amostras, o teste é feito utilizando a distribuição normal. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Testes de Mann-Kendall}
+    \begin{itemize}
+        \item Considere uma amostra $y_1,\ldots,y_n$
+        \item Considere a hipótese nula de que os dados não apresentam tendência.
+            \item Para $j>i$ faça
+            $$s_t = \left\{\begin{array}{ll}
+            "-",&\hbox{ se $y_i < y_{j}$} \\
+            "+",&\hbox{ se $y_i > y_{j}$}  \end{array}\right.$$
+            \item O que devemos esperar de $s_1,\ldots,s_n$ se $H_0$ for verdadeira/falsa?              
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{FigurasAulas/mannkendall0}
+        \caption{Neste exemplo $H_0$ é falsa. Neste caso, esperamos observar um número extremo de sinais do mesmo tipo. De fato, de 45 pares, 39 são negativos}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{FigurasAulas/mannkendall1}
+        \caption{Neste exemplo $H_0$ é verdadeira. Neste caso, esperamos observar um número próximo de sinais do mesmo tipo. Neste caso, de 45, 21 são negativos}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item A estatística do teste de Mann-Kendall é a soma dos sinais ( `+` é representado +1 e `-` por $-1$).
+        \item Para grandes amostras, o teste é feito utilizando a distribuição normal. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Exemplo - Acidentes aéreos}
+    \begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{FigurasAulas/acidentes_aereos_series_acf}
+\caption{Série do número mensal de acidentes aéreos. A inspeção visual da série pode deixar dúvidas sobre a existência de uma leve tendência, mas o correlograma não apresenta qualquer sinal desta.}
+\label{fig:acidentes_aereos_series_acf}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \footnotesize{
+        \begin{tabular}{llll}\hline
+            Teste & $H_0$ &$p$-valor & Decisão \\ \hline
+            Wald-Wolfowitz & Variáveis independentes de & 0,1524 & Não há evidências  \\
+            & uma amostra estacionária & & contra $H_0$\\ 
+            &&&\\           
+            Cox-Stuart & Não há tendência monótona & 0,1083   & Não há evidências  \\
+             & & & contra $H_0$ \\ 
+             &&&\\
+             Mann-Kendall & Não há tendência na série  & 0,012 & Rejeitamos $H_0$ \\ \hline
+        \end{tabular}}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item Realizamos 3 testes de hipóteses, sendo que 2 não rejeitaram $H_0$.
+        \item Como todo teste de hipóteses é feito para rejeitar $H_0$, sabemos o teste de Mann-Kendall ainda estaria rejeitando $H_0$ com um nível de confiança menor que 1,3\%.
+        \item Isto nos leva a investigar um pouco melhor estes dados.
+        \item O próximo gráfico mostra a estimativa da tendência utilizando o método do núcleo.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{FigurasAulas/acidentes_aereos_filtro}
+\caption{Valores suavizados para a série de acidentes aéreos. Podemos verificar que é plausível a existência de uma leve tendência de decrescimento.}
+\label{fig:acidentes_aereos_filtro}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{FigurasAulas/acidentes_aereos_residuos_autocorrelacao}
+\caption{Gráficos dos resíduos.}
+\label{fig:acidentes_aereos_residuos_autocorrelacao}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item Após retirar a tendência estimada, todos os $p$-valores foram maiores que 0,25, não provendo qualquer evidência contra as hipóteses nulas.
+        \item Seja $y_t$ o número de acidentes por mês. Concluímos então que
+        $$y_t = \tilde{y}_t + \varepsilon_t,$$
+        onde $\varepsilon_t$ é um ruído branco.
+        \item Note que na aula prática 1 conseguimos ajustar um modelo binomial negativo para estes dados, assumindo que a amostra era iid.
+        \item Qual das duas abordagens é mais interessante?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item Estamos interessados na habilidade de dizer qual é o valor de $y_{T+1}$.
+        \item Podemos então comparar como os modelos conseguem predizer os valores, usando o EQM
+        \item Para o caso iid, um bom preditor para $y_j$ é a média amostral $\bar{y}_T$
+        $$\bar{y}_T=\frac{1}{T}\sum_{t=1}^{T}y_t,$$
+        o EQM é dado por
+        $$\frac{1}{T}\sum_{i=1}^T( y_t - \bar{y}_T)^2.$$
+        Obtivemos $EQM = 31,4$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item Para o segundo modelo (com tendência) a predição para $y_t$ é dada por $\tilde{y}_{t}$. Neste caso, o EQM é dado por
+        $$\frac{1}{T}\sum_{i=1}^T(y_t - \tilde{y}_t)^2.$$
+        Obtivemos $EQM = 26,89$.
+        \item Podemos optar pelo modelo com menor EQM. Contudo isto é apenas um critério. Talvez um especialista pudesse apontar melhor o motivo de uma leve tendência de decrescimento, ou considerar que isto foi obra do acaso.
+    \end{itemize}
+\end{frame}
 
 \bookmarksetup{startatroot}
 
