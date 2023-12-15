@@ -182,12 +182,12 @@
 \floatname{codelisting}{Listing}
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \usepackage{amsthm}
-\theoremstyle{definition}
-\newtheorem{example}{Example}[chapter]
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[chapter]
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\theoremstyle{definition}
+\newtheorem{example}{Example}[chapter]
 \theoremstyle{remark}
 \AtBeginDocument{\renewcommand*{\proofname}{Proof}}
 \newtheorem*{remark}{Remark}
@@ -229,7 +229,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, boxrule=0pt, interior hidden, borderline west={3pt}{0pt}{shadecolor}, enhanced, frame hidden, breakable]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, breakable, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, frame hidden, sharp corners, enhanced]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -1960,354 +1960,395 @@ Os métodos não paramétricos independem da distribuição do ruído, sendo
 \subsection{Médias Móveis}\label{muxe9dias-muxf3veis}}
 
 O método das médias móveis consiste em obter \(\hat{T}(t)\) através da
-média da série considerando os valores
-\(\{y_{t-h},\ldots,y_t,\ldots,y_{t+h}\}\), para \(h>0\), ou seja
-\[\hat{T}_h(t)=\frac{1}{2h+1}\sum_{ i = t-h}^{t+h}y_i,\;h<t<n-h\]. A
-constante \(h\) é denominada \emph{largura da banda}. Para compreender
-melhor esse estimador, considere que a relação entre pontos vizinhos é
-aproximadamente linear, ou seja, para qualquer
-\(t\in\mathcal{V}_t=\{t-h,\ldots,t+h\}\) existem \(a_\mathcal{V}\) e
-\(b_\mathcal{V}\) tais que
-\[y_t\approx a_\mathcal{V}+b_\mathcal{V}t+\varepsilon_t,\] onde \(t\) é
-uma série temporal estacionária e ergódica. Então
-\[\begin{align}E(\hat{T}(t))&=\frac{a_\mathcal{V}+b_\mathcal{V}(t-h)+\cdots+a_\mathcal{V}+b_\mathcal{V}t+\cdots+a_\mathcal{V}+b_\mathcal{V}(t+h)}{2h+1}\\&=a_\mathcal{V}+b_\mathcal{V}t\end{align}\]
-\[Var(\hat{T}(t))=\frac{\nu}{2h+1}+\]
+média da série considerando os valores vizinhos à \(y_t\). Para o tempo
+\(t\) e \(m=2h+1\), com \(h=1,2,\ldots\), considere o conjunto
+\(\mathcal{V}(m)_t=\{t-h,\ldots,t+h\}\). Defini-se a média móvel de
+ordem \(m\) (notamção \(m\)-MM) como
+\[\hat{T}_h(t)=\frac{1}{m}\sum_{ i = t-h}^{t+h}y_i,\;h<t<n-h\].
 
-Quanto maior for o valor de \(h\), maior será o nível de suavização.
+Para compreender melhor esse estimador, considere que a relação entre
+pontos vizinhos é aproximadamente linear, ou seja, para qualquer
+\(t\in\mathcal{V}(m)_t\) existem \(a_\mathcal{V}\) e \(b_\mathcal{V}\)
+tais que \[y_t\approx a_\mathcal{V}+b_\mathcal{V}t+\varepsilon_t,\] onde
+\(\varepsilon_t\) é considerado uma série temporal estacionária e
+ergódica. Então
+\[\begin{align}E(\hat{T}(t))&=\frac{a_\mathcal{V}+b_\mathcal{V}(t-h)+\cdots+a_\mathcal{V}+b_\mathcal{V}t+\cdots+a_\mathcal{V}+b_\mathcal{V}(t+h)}{m}\\&=a_\mathcal{V}+b_\mathcal{V}t\end{align}\]
+\[Var(\hat{T}(t))=\frac{\nu}{m}+\frac{2}{m}\sum_{j=1}^{2h}j\gamma(j)\]
+Observe que, como \(T(.)\) é determinística e os ruídos são
+estacionários e ergódicos, então \(Var(\hat{T}(t))\) converge para zero
+quando \(m\rightarrow \infty\). Contudo, \(T(.)\) é localmente linear,
+logo \(\hat{T}\) é um estimador razoável para valores baixos de \(h\).
+Este é um exemplo típico de \emph{trade off} entre víes e variância,
+onde não é possível minimizar os dois simultaneamente.
+
+Utilizaremos a função \texttt{ma(x,m)}, do pacote \texttt{forecast} para
+encontrar \(m-\)MM para a série `x
+
+\begin{example}[]\protect\hypertarget{exm-NACIDOSMA}{}\label{exm-NACIDOSMA}
+
+Abaixo, apresentamos a série anual histórica de nascidos vivos no
+Amazonas desde 1994 até 2021.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{47780}\NormalTok{, }\DecValTok{47966}\NormalTok{, }\DecValTok{49112}\NormalTok{, }\DecValTok{56070}\NormalTok{, }\DecValTok{57180}\NormalTok{, }\DecValTok{62037}\NormalTok{,}
+\DecValTok{67646}\NormalTok{, }\DecValTok{70252}\NormalTok{, }\DecValTok{70671}\NormalTok{, }\DecValTok{70751}\NormalTok{, }\DecValTok{71345}\NormalTok{, }\DecValTok{73488}\NormalTok{, }\DecValTok{75584}\NormalTok{,}
+\DecValTok{73469}\NormalTok{, }\DecValTok{75030}\NormalTok{, }\DecValTok{75729}\NormalTok{, }\DecValTok{74188}\NormalTok{, }\DecValTok{76202}\NormalTok{, }\DecValTok{77434}\NormalTok{, }\DecValTok{79041}\NormalTok{,}
+\DecValTok{81145}\NormalTok{, }\DecValTok{80097}\NormalTok{, }\DecValTok{76703}\NormalTok{, }\DecValTok{78066}\NormalTok{, }\DecValTok{78087}\NormalTok{, }\DecValTok{77622}\NormalTok{, }\DecValTok{75635}\NormalTok{,}
+\DecValTok{78454}\NormalTok{)}
+
+\NormalTok{nascidos }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(x, }\AttributeTok{start =}\DecValTok{1994}\NormalTok{)}
+\FunctionTok{ts.plot}\NormalTok{(nascidos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. nascidos vivos\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-14-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(forecast)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-    \item Desvantagem: não pode ser utilizado para fazer previsões.
-    \end{itemize}   
+Carregando pacotes exigidos: forecast
 \end{verbatim}
 
-\textbackslash end\{frame\}
+\begin{verbatim}
+Warning: package 'forecast' was built under R version 4.3.1
+\end{verbatim}
 
-\begin{frame}{Exemplo - Nascimentos por ano}
-    Abaixo apresentamos as médias móveis para os nascimentos anuais no Amazonas, utilizando $h=2$. Como o série começa e 1994, o primeiro valor suavizado é 1998.
-\begin{figure}
-\centering
-\includegraphics[width=0.9\linewidth]{FigurasAulas/GIF/mediamovel-0}
-\end{figure}
-\end{frame}
+\begin{verbatim}
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+\end{verbatim}
 
-\begin{frame}
-    O segundo valor suavizado se refere a  1999.
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.9\linewidth]{FigurasAulas/GIF/mediamovel-1}
-    \end{figure}
-\end{frame}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{oo }\OtherTok{\textless{}{-}} \FunctionTok{par}\NormalTok{( }\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{), }\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+\FunctionTok{ts.plot}\NormalTok{(nascidos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. nascidos vivos\textquotesingle{}}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{( }\FunctionTok{ma}\NormalTok{(nascidos,}\DecValTok{3}\NormalTok{) , }\AttributeTok{col =}\DecValTok{2}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{\textquotesingle{}bottomright\textquotesingle{}}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Série original\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}3{-}MM\textquotesingle{}}\NormalTok{),  }\AttributeTok{fill =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{), }\AttributeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{)}
+\FunctionTok{ts.plot}\NormalTok{(nascidos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. nascidos vivos\textquotesingle{}}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{( }\FunctionTok{ma}\NormalTok{(nascidos,}\DecValTok{5}\NormalTok{) , }\AttributeTok{col =}\DecValTok{2}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{\textquotesingle{}bottomright\textquotesingle{}}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Série original\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}5{-}MM\textquotesingle{}}\NormalTok{),  }\AttributeTok{fill =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{), }\AttributeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{)}
+\FunctionTok{ts.plot}\NormalTok{(nascidos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. nascidos vivos\textquotesingle{}}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{( }\FunctionTok{ma}\NormalTok{(nascidos,}\DecValTok{7}\NormalTok{) , }\AttributeTok{col =}\DecValTok{2}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{\textquotesingle{}bottomright\textquotesingle{}}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Série original\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}7{-}MM\textquotesingle{}}\NormalTok{),  }\AttributeTok{fill =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{), }\AttributeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{)}
+\FunctionTok{ts.plot}\NormalTok{(nascidos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. nascidos vivos\textquotesingle{}}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{( }\FunctionTok{ma}\NormalTok{(nascidos,}\DecValTok{9}\NormalTok{) , }\AttributeTok{col =}\DecValTok{2}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{\textquotesingle{}bottomright\textquotesingle{}}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Série original\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}9{-}MM\textquotesingle{}}\NormalTok{),  }\AttributeTok{fill =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{), }\AttributeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
-\begin{frame}
-    O terceiro valor suavizado se refere a 2000.
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.9\linewidth]{FigurasAulas/GIF/mediamovel-2}
-    \end{figure}
-\end{frame}
+\begin{figure}[H]
 
-\begin{frame}
-    Até chegar em 20013 (2015-$h$).
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.9\linewidth]{FigurasAulas/GIF/mediamovel-15}
-    \end{figure}
-\end{frame}
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-15-1.pdf}
 
-\begin{frame}
-    \begin{figure}
-\centering
-\includegraphics[width=0.9\linewidth]{FigurasAulas/nascimento_menor_media_movel}
-\caption{Esquerda: erro estimado (valor real menos o suavizado). Direita: correlograma do erro.}
-\label{fig:nascimento_menor_media_movel}
+}
+
 \end{figure}
 
-\end{frame}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(oo)}
+\end{Highlighting}
+\end{Shaded}
 
-\begin{frame}{Nível do Lago Huron}
-    \begin{center}
-        \includegraphics[width=0.7\linewidth]{lakehuron}
-    \end{center}
-\end{frame}
+Considere a estimativa obtida pela média móvel de ordem 3.
 
-\begin{frame}{Nível do Lago Huron }
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.7\linewidth]{lakehuron_media_movel}
-        \caption{Série Nível do Lago Huron suavizada, utilizando $h=2$ e $h=6$ (Método das médias móveis).}
-        \label{fig:lakehuron_media_movel}
-    \end{figure}
-\end{frame}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tendencia }\OtherTok{\textless{}{-}} \FunctionTok{ma}\NormalTok{(nascidos, }\DecValTok{3}\NormalTok{)}
+\NormalTok{tendencia}
+\end{Highlighting}
+\end{Shaded}
 
-\begin{frame}{Suavização via método do núcleo}
-    \begin{itemize}
-        \item O método anterior pode ser descrito como 
-        
-        $$\tilde{y}_t = \sum_{i=1}^{T} w_t(i)y_t,$$
-        onde
-        $$w_t(i)=\left\{\begin{array}{ll}
-        \frac{1}{2h+1},&t-h\leq i \leq t+h \\
-        0,&\hbox{ caso contrário.}
-        \end{array}\right.$$
-        
-        \item O método de suavização pode ser considerado uma generalização das médias móveis, onde os pesos das observações decaem gradualmente a medida que $i$ se afasta de $t$.
-     \end{itemize}
-\end{frame}
+\begin{verbatim}
+Time Series:
+Start = 1994 
+End = 2021 
+Frequency = 1 
+ [1]       NA 48286.00 51049.33 54120.67 58429.00 62287.67 66645.00 69523.00
+ [9] 70558.00 70922.33 71861.33 73472.33 74180.33 74694.33 74742.67 74982.33
+[17] 75373.00 75941.33 77559.00 79206.67 80094.33 79315.00 78288.67 77618.67
+[25] 77925.00 77114.67 77237.00       NA
+\end{verbatim}
 
-\begin{frame}
-    \begin{itemize}     
-        \item Considere que 
-        $$\tilde{y}_t = \sum_{i=1}^{T} w_t(i)y_i,$$
-        onde $w_t(i)$ são os pesos da $i$-ésima observação para $y_t$, com $\sum_{i=1}^{T}w_t(i)=1$.
-        \item Seja $K(.)$ uma função núcleo, como por exemplo (o núcleo gaussiano):
-        $$K(y)=\frac{1}{\sqrt{2\pi}}e^{-\frac{y^2}{2}}.$$
-        \item O método da suavização via método do núcleo consiste em fazer
-        $$w_t(i)=\frac{K\left(\frac{t-i}{b}\right)}{\sum_{j=1}^TK\left(\frac{t-j}{b}\right)},$$
-        onde a largura da banda $b$ atua controla o nível de suavização.
-    \end{itemize}
-\end{frame}
+Vamos estimar o ruído da série (e eliminar as coordenadas vazias)
 
-\begin{frame}
-    \begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{FigurasAulas/smooth_kernel}
-\caption{Pesos para três filtros considerando $t=5$. Em cinza: pesos das médias móveis; Em preto e roxo: pesos do método do núcleo com $b=1$ e $b=2$, respectivamente.}
-\label{fig:smooth_kernel}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ruido }\OtherTok{\textless{}{-}}\NormalTok{ nascidos }\SpecialCharTok{{-}}\NormalTok{ tendencia}
+\NormalTok{ruido }\OtherTok{\textless{}{-}}\NormalTok{ ruido[}\FunctionTok{is.na}\NormalTok{(ruido) }\SpecialCharTok{==}\NormalTok{ F]}
+\end{Highlighting}
+\end{Shaded}
+
+Abaixo, apresentamos as principais estatísticas sobre os resíduos. A
+série histórica dos resíduos oscila em torno de zero e não há motivos
+para suspeitar de que sua variância é constante. O correlograma
+apresenta autocorrelações baixas, como o esperado em um ruído branco. O
+teste de Shapiro-Wilks não dá evidências contra normalidade, o que
+suporta a hipótese de ruído branco gaussiano. O teste de Box-Pierce
+apresenta um p-valor de 0,04 e, em conjunto com as demais evidências,
+vamos considerá-lo significativo ao nível de 4\%.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(ruido)}
+\FunctionTok{abline}\NormalTok{( }\AttributeTok{h =} \DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{( }\AttributeTok{h =} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{sd}\NormalTok{(ruido), }\AttributeTok{lty=}\DecValTok{2}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{( }\AttributeTok{h =} \SpecialCharTok{{-}}\DecValTok{2}\SpecialCharTok{*}\FunctionTok{sd}\NormalTok{(ruido), }\AttributeTok{lty=}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-18-1.pdf}
+
+}
+
 \end{figure}
 
-\end{frame}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(ruido)}
+\end{Highlighting}
+\end{Shaded}
 
-\begin{frame}{Nível do Lago Huron}
-    \begin{center}
-        \includegraphics[width=0.7\linewidth]{lakehuron}
-    \end{center}
-\end{frame}
+\begin{figure}[H]
 
-\begin{frame}{Nível do Lago Huron }
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.7\linewidth]{lakehuron_kernel}
-        \caption{Nível do Lago Huron a duas suavizações utilizando $h=2$ e $h=6$ (Método do núcleo).
-            \textcolor{blue}{Exercício: reproduzir este gráfico, adicionando mais valores para $h$}. }
-        \label{fig:lakehuron_nucleo}
-    \end{figure}
-\end{frame}
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-18-2.pdf}
 
-\begin{frame}{Testes para tendência}
-    Os seguintes testes de hipóteses podem ser utilizados para detectar tendências:
-    \begin{itemize}
-        \item Wald-Wolfwitz
-        \item Cox-Stuart
-        \item Mann-Kendall
-    \end{itemize}
-\end{frame}
+}
 
-\begin{frame}{O teste de Wald-Wolfowitz}
-    \begin{itemize}
-        \item Considere a amostra $y_1,\ldots,y_n$.
-        \item Considere a hipótese $H_0$:  $H_0$: $\{y_t\}$ é uma amostra de variáveis independentes e estacionárias.
-        \item Seja $m$ a mediana amostral.
-        \item Faça
-        $$s_t = \left\{\begin{array}{ll}
-        "-",&\hbox{ se $y_t < m$} \\
-        "+",&\hbox{ se $y_t > m$}  \end{array}\right.$$
-        \item O que devemos esperar de $s_1,\ldots,s_n$ se $H_0$ for verdadeira/falsa?              
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \begin{figure}
-\centering
-\includegraphics[width=0.9\linewidth]{FigurasAulas/waldwolfowitz-1}
-\caption{Existe uma tendência monótona. Neste caso, o número de sequências de "+" e "-" consecutivos será baixo. Neste exemplo, existem apenas duas sequência.}
-\label{fig:waldwolfowitz-1}
 \end{figure}
-\end{frame}
 
-\begin{frame}
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.9\linewidth]{FigurasAulas/wald_wolfowitz_2}
-        \caption{Não parece haver tendência monótona. Neste caso, o número de sequências de "+" e "-" consecutivos será alto. Neste exemplo, existem 9 sequências.}
-    \end{figure}    
-\end{frame}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(ruido)}
+\end{Highlighting}
+\end{Shaded}
 
-\begin{frame}
-    \begin{itemize}
-        \item O teste de Wald-Wolfwitz tem como estatística de teste o número de sequências consecutivas com o mesmo símbolo.
-        \item A distribuição desta estatística sob a hipótese nula é tabela.
-        \item Para grandes amostras, o teste é feito utilizando a distribuição normal. 
-    \end{itemize}
-\end{frame}
+\begin{verbatim}
 
-\begin{frame}{O teste de Cox-Stuart}
-    \begin{itemize}
-        \item Considere a amostra $y_1,\ldots,y_n$.
-        \item Considere a hipótese $H_0$: não há tendência monótona.
-        \item Construa os pares $(y_1,y_{1+c}),(y_2,y_{2+c}),\ldots,(y_{n-c},y_{n})$, onde
-        $c=n/2$ se $n$ for par e $c=(n+1)/2$ se $n$ for ímpar.
-        \item Faça
-        $$s_t = \left\{\begin{array}{ll}
-        "-",&\hbox{ se $y_t < y_{t+c}$} \\
-        "+",&\hbox{ se $y_t > y_{t+c}$}  \end{array}\right.$$
-        \item O que devemos esperar de $s_1,\ldots,s_n$ se $H_0$ for verdadeira/falsa?              
-    \end{itemize}
-\end{frame}
+    Shapiro-Wilk normality test
 
-\begin{frame}
-    \begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{FigurasAulas/coxstuart0}
-\caption{Neste exemplo $H_0$ é falsa. Neste caso, esperamos observar um número elevado de sinais do mesmo tipo.}
+data:  ruido
+W = 0.9711, p-value = 0.6521
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(ruido)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Pierce test
+
+data:  ruido
+X-squared = 4.1804, df = 1, p-value = 0.04089
+\end{verbatim}
+
+\(\blacksquare\)
+
+\end{example}
+
+Até o momento, foi considerado que a ordem da média móvel é escrita como
+\(m=2h+1\), ou seja, a ordem é sempre ímpar. Sem Para definir a média
+móvel para uma ordem par, perda de generalidade, assuma que \(m=4\).
+Como não é possível escolher um número igual de vizinhos à \(y_t\),
+tem-se duas possibilidades para \(\mathcal{V}(4)_t\):
+\[\mathcal{V}'(4)_t=\{y_{t-1},y_t,y_{t+1},y_{t+2}\}\] e
+\[\mathcal{V}''(4)_t=\{y_{t-2},y_{t-1},y_t,y_{t+1}\}.\] Para cada
+possibilidade, tem-se \[\hat{T}'(t)=\frac{1}{4}\sum_{i=t-1}^{t+2}y_{i}\]
+e \[\hat{T}''(t)=\frac{1}{4}\sum_{i=t-2}^{t+1}y_{i}.\] A média móvel
+2-MM será definida por \[\hat{T}(t)=\frac{T'(t)+T''(t)}{2}\] Observe que
+a média agora é ponderada, uma vez que
+
+\[\hat{T}(t)=\frac{y_{t-2}}{8}+\frac{y_{t-1}}{4}+\frac{y_{t}}{4}+\frac{y_{t+1}}{4}+\frac{y_{t+2}}{8}.\]
+
+Para o caso de \(m=2h\) com \(h=1,2,\ldots\), defini-se \(m\)-MM por
+\[\begin{align}\hat{T}(t)&=\frac{1}{2}\left[\frac{1}{m}\sum_{i=t-h}^{t+h-1}y_i+\frac{1}{m}\sum_{i=t-h+1}^{t+h}y_i\right]\\&=\frac{y_{t-h}}{2m}+\frac{1}{m}\sum_{i=t-h+1}^{t+h-1}y_i+\frac{y_{t+h}}{2m}.\end{align}\]
+Note que o argumento de \(\hat{T}(t)\) é aproximadamente não viciado
+para \(m\) pequeno não se altera, uma vez que os pesos para os tempos
+\(t-j\) e \(t+j\) são simétricos
+
+O estimador para tendência conhecido como média móvel ponderada de ordem
+\(m\) é dado por
+
+\[\hat{T}(t)=\sum_{i=t-h}^{t+h} w_i y_{i},\] com \(w_i>0\),
+\(w_{t-j}=w_{t+j}\) e \(\sum_{i=t-h}^{t+h}w_i=1\). O método tradicional
+é obtido fazendo \(w_i=1/m\).
+
+Por último, como as primeiras e últimas observações são removidas, esses
+métodos não são os mais recomendados.
+
+\textbf{Outras médias móveis}
+
+É importante ressaltar que os métodos estatísticos são ferramentas
+universais e que geralmente sofrem modificações ao serem aplicados em
+outras áreas. Deste modo, existem outras definições de médias móveis que
+podem causar confusão.
+
+Em epidemiologia por exemplo, a média móvel de ordem \(m\) é definida
+por \[\hat{T}(t)=\frac{1}{m}\sum_{j=1}^m y_{t-j+1}\] ou seja, a soma dos
+valores mais recentes em relação à \(t\). Observe que o contexto é
+diferente: em uma epidemia por exemplo, deseja-se estimar \(T(t)\) onde
+\(t\) é o tempo mais recente e, em geral, se utiliza o 7-MM tirando a
+média dos últimos 7 dias. A mesma lógica vale para o mercado financeiro,
+que tira a média dos últimos 5 dias de preço de fechamento.
+
+Ainda no mercado financeiro, o importante é captar a mudança da
+tendência o mais rápido possível. Deste modo, utiliza-se uma média móvel
+ponderada definida por
+\[\hat{T}(t)=\frac{2}{m(m+1)}\sum_{j=1}^m(m-j+1)y_{t-j+1}.\] Na
+definição acima, o último preço da ação, dado por \(y_t\), é o valor
+mais imporante e por isso recebe o maior peso. Note que os pesos não são
+simétricos.
+
+\hypertarget{suavizauxe7uxe3o-do-gruxe1fico-de-dispersuxe3o-estimada-localmente-loess}{%
+\section{Suavização do gráfico de dispersão estimada localmente
+(loess)}\label{suavizauxe7uxe3o-do-gruxe1fico-de-dispersuxe3o-estimada-localmente-loess}}
+
+No método de suavisação do gráfico de dispersão, deseja-se estimar
+\(f(x)=E(y|x)\), através da coleção \((y_1,x_1),\ldots,(y_n,x_n)\), para
+um valor qualquer de \(x\).
+
+A estimativa \(\hat{f}\) para o ponto \(x'\) é calculada considerando os
+seguintes passos:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Fixe um valor inteiro positivo \(q\leq n\).
+\item
+  Dentro do conjunto \(x_1,\ldots,x_n,\) encontre os \(q\) valores mais
+  próximos de \(x'\) (via distância euclidiana). Denote este conjunto
+  por \(\mathcal{V}\) e denote por \(d\) a maior distância encontrada.
+\item
+  Para cada \(x_1,\ldots,x_n\) seja
+  \[v_j(x')=\left\{\begin{array}{ll}\left(1-\left| \frac{x_j-x'}{d}\right|^3\right)^3&,\;\;\hbox{se }|x_j-x|\leq d\\ 0,&\hbox{caso contrário}\end{array}\right.\]
+  o peso associado à \(x_j\) (valores próximos de \(x'\) receberão o
+  peso máximo e valores afastados recebem menor peso)
+\item
+  Ajuste o modelo de regressão ponderado, minimizando
+  \[\sum_{i=1}^n v_i(x')\left(y_i - \sum_{j=0}^p \beta_jx^j\right)^2\]
+\item
+  Estime \(f(x')\) por \[\hat{f}(x')=\sum_{j=0}^p \hat{\beta}_jx^j \]
+\end{enumerate}
+
+Oberve que este método pode ser utilizado para estimar a tendência da
+série. Abaixo, vamos analisar a série de taxa de desemprego mensal,
+entre março de 2002 e dezembro de 2015.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}https://www.dropbox.com/s/rmgymzsic99qawd/desemprego.csv?dl=1\textquotesingle{}}
+
+\NormalTok{banco }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(url, }\AttributeTok{sep =} \StringTok{\textquotesingle{};\textquotesingle{}}\NormalTok{, }\AttributeTok{h =}\NormalTok{ F)}
+
+\NormalTok{desemprego}\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{( banco}\SpecialCharTok{$}\NormalTok{V2, }\AttributeTok{start =} \FunctionTok{c}\NormalTok{(}\DecValTok{2002}\NormalTok{,}\DecValTok{3}\NormalTok{), }\AttributeTok{frequency=}\DecValTok{12}\NormalTok{)}
+
+\FunctionTok{ts.plot}\NormalTok{(desemprego, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}Taxa de desemprego\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-19-1.pdf}
+
+}
+
 \end{figure}
-\end{frame}
 
-\begin{frame}
-    \begin{figure}
-        \centering
-        \includegraphics[width=1\linewidth]{FigurasAulas/coxstuart1}
-        \caption{Neste exemplo $H_0$ é verdadeira. Neste caso, esperamos observar um número de sinais do mesmo tipo próximo de $c/2$.}
-    \end{figure}
-\end{frame}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(desemprego, }\AttributeTok{lag =} \DecValTok{30}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
-\%
+\begin{figure}[H]
 
-\begin{frame}{Testes de correlação}
-%   \begin{frame}
-%       \item Considere uma amostra $y_1,\ldots,y_n$
-%       \item Os testes do tipo correlação servem para identificar se existe correlação significativa entre $(x_t,t)$ onde
-%       $x_t=y_t$ no Teste de Pearson e $x_t=\hbox{posto}(y_t)$ no Teste de Spearman.
-%       \item A diferença entre os testes está na distribuição dos dados: o primeiro assume normalidade e o segundo é um teste não paramétrico.
-%       \item Para ambos os testes a hipótese nula é a de que a correlação é igual a zero.
-%   \end{frame}
-%\end{frame}
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-19-2.pdf}
 
-\begin{frame}
-    \begin{itemize}
-        \item O teste de Cox-Stuart tem como estatística o número de sinais positivos.
-        \item Este teste pode ser visto como um teste do sinal 
-        \item Para grandes amostras, o teste é feito utilizando a distribuição normal. 
-    \end{itemize}
-\end{frame}
+}
 
-\begin{frame}{Testes de Mann-Kendall}
-    \begin{itemize}
-        \item Considere uma amostra $y_1,\ldots,y_n$
-        \item Considere a hipótese nula de que os dados não apresentam tendência.
-            \item Para $j>i$ faça
-            $$s_t = \left\{\begin{array}{ll}
-            "-",&\hbox{ se $y_i < y_{j}$} \\
-            "+",&\hbox{ se $y_i > y_{j}$}  \end{array}\right.$$
-            \item O que devemos esperar de $s_1,\ldots,s_n$ se $H_0$ for verdadeira/falsa?              
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \begin{figure}
-        \centering
-        \includegraphics[width=1\linewidth]{FigurasAulas/mannkendall0}
-        \caption{Neste exemplo $H_0$ é falsa. Neste caso, esperamos observar um número extremo de sinais do mesmo tipo. De fato, de 45 pares, 39 são negativos}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
-    \begin{figure}
-        \centering
-        \includegraphics[width=1\linewidth]{FigurasAulas/mannkendall1}
-        \caption{Neste exemplo $H_0$ é verdadeira. Neste caso, esperamos observar um número próximo de sinais do mesmo tipo. Neste caso, de 45, 21 são negativos}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
-    \begin{itemize}
-        \item A estatística do teste de Mann-Kendall é a soma dos sinais ( `+` é representado +1 e `-` por $-1$).
-        \item Para grandes amostras, o teste é feito utilizando a distribuição normal. 
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Exemplo - Acidentes aéreos}
-    \begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{FigurasAulas/acidentes_aereos_series_acf}
-\caption{Série do número mensal de acidentes aéreos. A inspeção visual da série pode deixar dúvidas sobre a existência de uma leve tendência, mas o correlograma não apresenta qualquer sinal desta.}
-\label{fig:acidentes_aereos_series_acf}
 \end{figure}
-\end{frame}
 
-\begin{frame}
-    \begin{center}
-        \footnotesize{
-        \begin{tabular}{llll}\hline
-            Teste & $H_0$ &$p$-valor & Decisão \\ \hline
-            Wald-Wolfowitz & Variáveis independentes de & 0,1524 & Não há evidências  \\
-            & uma amostra estacionária & & contra $H_0$\\ 
-            &&&\\           
-            Cox-Stuart & Não há tendência monótona & 0,1083   & Não há evidências  \\
-             & & & contra $H_0$ \\ 
-             &&&\\
-             Mann-Kendall & Não há tendência na série  & 0,012 & Rejeitamos $H_0$ \\ \hline
-        \end{tabular}}
-    \end{center}
-\end{frame}
+Vamos estimar a tendência
 
-\begin{frame}
-    \begin{itemize}
-        \item Realizamos 3 testes de hipóteses, sendo que 2 não rejeitaram $H_0$.
-        \item Como todo teste de hipóteses é feito para rejeitar $H_0$, sabemos o teste de Mann-Kendall ainda estaria rejeitando $H_0$ com um nível de confiança menor que 1,3\%.
-        \item Isto nos leva a investigar um pouco melhor estes dados.
-        \item O próximo gráfico mostra a estimativa da tendência utilizando o método do núcleo.
-    \end{itemize}
-\end{frame}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# criando a variável regressora}
+\NormalTok{tempo }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{:} \FunctionTok{length}\NormalTok{(desemprego)}
 
-\begin{frame}
-    \begin{figure}
-\centering
-\includegraphics[width=0.7\linewidth]{FigurasAulas/acidentes_aereos_filtro}
-\caption{Valores suavizados para a série de acidentes aéreos. Podemos verificar que é plausível a existência de uma leve tendência de decrescimento.}
-\label{fig:acidentes_aereos_filtro}
+\CommentTok{\# aplicando o loess}
+\NormalTok{lw }\OtherTok{\textless{}{-}} \FunctionTok{loess}\NormalTok{( desemprego }\SpecialCharTok{\textasciitilde{}}\NormalTok{ tempo)}
+
+\CommentTok{\# transformando o valor predito em uma série temporal}
+
+\NormalTok{fit }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(lw}\SpecialCharTok{$}\NormalTok{fitted, }\AttributeTok{start =} \FunctionTok{start}\NormalTok{(desemprego), }\AttributeTok{frequency =} \FunctionTok{frequency}\NormalTok{(desemprego) )}
+
+\CommentTok{\# gráfico da tendência estimada}
+
+\FunctionTok{ts.plot}\NormalTok{( desemprego, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}Taxa de desemprego\textquotesingle{}}\NormalTok{ , }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(fit, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{col =} \StringTok{\textquotesingle{}tomato\textquotesingle{}}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{\textquotesingle{}topright\textquotesingle{}}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Observado\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}Ajustado\textquotesingle{}}\NormalTok{),}\AttributeTok{fill=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\StringTok{\textquotesingle{}tomato\textquotesingle{}}\NormalTok{), }\AttributeTok{bty=}\StringTok{\textquotesingle{}n\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-20-1.pdf}
+
+}
+
 \end{figure}
-\end{frame}
 
-\begin{frame}
-    \begin{figure}
-\centering
-\includegraphics[width=0.7\linewidth]{FigurasAulas/acidentes_aereos_residuos_autocorrelacao}
-\caption{Gráficos dos resíduos.}
-\label{fig:acidentes_aereos_residuos_autocorrelacao}
+Vamos eliminar a tendência estimada e avaliar o restante.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{yt }\OtherTok{\textless{}{-}}\NormalTok{ desemprego }\SpecialCharTok{{-}}\NormalTok{ fit}
+
+\FunctionTok{ts.plot}\NormalTok{(yt)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-21-1.pdf}
+
+}
+
 \end{figure}
-\end{frame}
 
-\begin{frame}
-    \begin{itemize}
-        \item Após retirar a tendência estimada, todos os $p$-valores foram maiores que 0,25, não provendo qualquer evidência contra as hipóteses nulas.
-        \item Seja $y_t$ o número de acidentes por mês. Concluímos então que
-        $$y_t = \tilde{y}_t + \varepsilon_t,$$
-        onde $\varepsilon_t$ é um ruído branco.
-        \item Note que na aula prática 1 conseguimos ajustar um modelo binomial negativo para estes dados, assumindo que a amostra era iid.
-        \item Qual das duas abordagens é mais interessante?
-    \end{itemize}
-\end{frame}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(yt)}
+\end{Highlighting}
+\end{Shaded}
 
-\begin{frame}
-    \begin{itemize}
-        \item Estamos interessados na habilidade de dizer qual é o valor de $y_{T+1}$.
-        \item Podemos então comparar como os modelos conseguem predizer os valores, usando o EQM
-        \item Para o caso iid, um bom preditor para $y_j$ é a média amostral $\bar{y}_T$
-        $$\bar{y}_T=\frac{1}{T}\sum_{t=1}^{T}y_t,$$
-        o EQM é dado por
-        $$\frac{1}{T}\sum_{i=1}^T( y_t - \bar{y}_T)^2.$$
-        Obtivemos $EQM = 31,4$.
-\end{itemize}
-\end{frame}
+\begin{figure}[H]
 
-\begin{frame}
-    \begin{itemize}
-        \item Para o segundo modelo (com tendência) a predição para $y_t$ é dada por $\tilde{y}_{t}$. Neste caso, o EQM é dado por
-        $$\frac{1}{T}\sum_{i=1}^T(y_t - \tilde{y}_t)^2.$$
-        Obtivemos $EQM = 26,89$.
-        \item Podemos optar pelo modelo com menor EQM. Contudo isto é apenas um critério. Talvez um especialista pudesse apontar melhor o motivo de uma leve tendência de decrescimento, ou considerar que isto foi obra do acaso.
-    \end{itemize}
-\end{frame}
+{\centering \includegraphics{tendencia_files/figure-pdf/unnamed-chunk-21-2.pdf}
+
+}
+
+\end{figure}
+
+Fica claro o comportamento sazonal, o que implica que o restante não é
+uma série estacionária.
 
 \bookmarksetup{startatroot}
 

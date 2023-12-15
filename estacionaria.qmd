@@ -4,7 +4,7 @@ Uma coleção do tipo $\{x(t),t\in\mathcal{T}\}$, $\mathcal{T}\subseteq \mathbb{
 
 Um processo estocástico é dito ser fortemente estacionário se sua distribuição é invariante ao índice. Portanto, para qualquer $t_1,\ldots,t_k$, a distribuição de $x(t_1),\ldots,x(t_k)$ é a mesma de $x(t_1+h),\ldots,x(t_k+h)$.  
 
-::: {#exm-serie_estacionaria_1}
+:::{#exm-serie_estacionaria_1}
 Se $x(t)\sim \hbox{Normal}(0,1)$ e $x(t)$ é independente de $x(s)$ para todo $t\neq s$, então, para qualquer $t_1,\ldots,t_k$,
 
 $$\begin{align}P(x(t_1)<x_1,\ldots,x(t_k)<x_k)&=\prod_{i=1}^k P(x(t_i)<x_i)=\prod_{i=1}^k P(x(t_i+h)<x_i)\\&=P(x(t_1+h)<x_1,\ldots,x(t_k+h)<x_k)\end{align}$$
@@ -36,7 +36,7 @@ $\blacksquare$
 :::
 				
 
-::: {#exm-fracamente1}
+:::{#exm-fracamente1}
 Considere o processo estocástico $\{x(t),t\in\mathbb{N}\}$, onde 
 $$x(t) = \varepsilon(t) +\frac{1}{2}\varepsilon(t-1)
 $$
@@ -79,7 +79,7 @@ $$\begin{align}Var(\bar{x})&=Cov(\bar{x}_n,\bar{x}_n)=Cov\left(\sum_{i=1}^n \fra
 Note que, diferente do caso independente e identicamente distribuído, $\bar{x}$ não é necessariamente um estimador adequado, conforme pode ser constatado no exemplo abaixo.
 
 
-::: {#exm-estationario_nao_ergodico}
+:::{#exm-estationario_nao_ergodico}
 Seja $x_t$ um processo onde $x_0\sim\hbox{Normal}(0,\nu)$ e $x_t=x_0$ para todo $t>0$. Como
 
 $$\begin{align}
@@ -105,7 +105,7 @@ quando $n\rightarrow\infty$.
 
 A partir deste momento será considerado que toda série temporal estacionária é ergódica e, portanto $\bar{x}$ é um estimador para $\mu$. 
 
-::: {#exm-estationario_nao_ergodico_conclusao}
+:::{#exm-estationario_nao_ergodico_conclusao}
 
 Considere novamente o processo no @estationario_nao_ergodico. Como
 $\bar{x}_n=x_0$, tem-se que, para $\varepsilon>0$ arbitrário, $\bar{x}\sim\hbox{Normal}(0,\nu)$ e 
@@ -117,7 +117,7 @@ $\blacksquare$
 
 ## Ruído branco
 
-::: {#def-ruido_branco}
+:::{#def-ruido_branco}
 A série estacionária $x_t$ é dita ser um ruído branco se $E(x_t)=0$, $Var(x_t)=\nu$ e
 		$$\begin{equation}
 		Cov(x_t,x_s)=0,

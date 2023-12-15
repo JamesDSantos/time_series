@@ -204,6 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#médias-móveis" id="toc-médias-móveis" class="nav-link" data-scroll-target="#médias-móveis"><span class="header-section-number">6.4.1</span> Médias Móveis</a></li>
   </ul></li>
+  <li><a href="#suavização-do-gráfico-de-dispersão-estimada-localmente-loess" id="toc-suavização-do-gráfico-de-dispersão-estimada-localmente-loess" class="nav-link" data-scroll-target="#suavização-do-gráfico-de-dispersão-estimada-localmente-loess"><span class="header-section-number">6.5</span> Suavização do gráfico de dispersão estimada localmente (loess)</a></li>
   </ul>
 </nav>
     </div>
@@ -230,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="o-que-é-tendência" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="o-que-é-tendência"><span class="header-section-number">6.1</span> O que é tendência?</h2>
 <p>Diz-se que uma série temporal observada possui tendência quando ela exibe um padrão de crescimento ou decrescimento em médio/longo prazo.</p>
-<p>A <a href="#fig-fabMes">Figure&nbsp;<span>6.1</span></a> mostra a série do número mensal de acidentes com aeronaves, construída através dos dados diários mantidos pela Força Aérea Brasileira. Note uma tendência de decrescimento na série até meados de 2016, substituída então por uma tendência de crescimento.</p>
+<p>A <a href="#fig-fabMes">Figure&nbsp;<span class="quarto-unresolved-ref">fig-fabMes</span></a> mostra a série do número mensal de acidentes com aeronaves, construída através dos dados diários mantidos pela Força Aérea Brasileira. Note uma tendência de decrescimento na série até meados de 2016, substituída então por uma tendência de crescimento.</p>
 <div>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://www.dropbox.com/scl/fi/kq4jwbovu94u857238sus/N-mensal-de-acidentes-com-aeronaves-2013jan.csv?rlkey=n5pa45e7ht33houmiawdkjb09&amp;dl=1'</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -394,6 +395,7 @@ X-squared = 0.02156, df = 1, p-value = 0.8833</code></pre>
 <section id="seleção-de-modelos-lineares" class="level3" data-number="6.3.2">
 <h3 data-number="6.3.2" class="anchored" data-anchor-id="seleção-de-modelos-lineares"><span class="header-section-number">6.3.2</span> Seleção de modelos lineares</h3>
 <p>O valor do Critério de Informação de Akaike (AIC) é dado por <span class="math inline">\(-2L(\hat{\theta})+2k\)</span> onde <span class="math inline">\(L\)</span> é a função de verossimilhança e <span class="math inline">\(\hat{\theta}\)</span> e <span class="math inline">\(k\)</span> são o estimador de máxima verossimilhança para <span class="math inline">\(\theta\)</span> e sua dimensão, respectivamente. O modelo com menor AIC é considerado mais adequado.</p>
+<div class="{exm-LakeHuronPoly}">
 <p>Considere o nível anual, em pés, do Lago Huron. Essa série já vem carregada no <code>R</code> sob o nome <code>LakeHuron</code>.</p>
 <div>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(LakeHuron, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'Nível (pés)'</span>)</span>
@@ -494,6 +496,7 @@ data:  res
 X-squared = 50.973, df = 1, p-value = 9.365e-13</code></pre>
 </div>
 </div>
+</div>
 </section>
 </section>
 <section id="métodos-não-paramétricos-para-estimação-da-tendência" class="level2" data-number="6.4">
@@ -502,11 +505,186 @@ X-squared = 50.973, df = 1, p-value = 9.365e-13</code></pre>
 <p>Os métodos não paramétricos independem da distribuição do ruído, sendo úteis para a análise exploratória.</p>
 <section id="médias-móveis" class="level3" data-number="6.4.1">
 <h3 data-number="6.4.1" class="anchored" data-anchor-id="médias-móveis"><span class="header-section-number">6.4.1</span> Médias Móveis</h3>
-<p>O método das médias móveis consiste em obter <span class="math inline">\(\hat{T}(t)\)</span> através da média da série considerando os valores <span class="math inline">\(\{y_{t-h},\ldots,y_t,\ldots,y_{t+h}\}\)</span>, para <span class="math inline">\(h&gt;0\)</span>, ou seja <span class="math display">\[\hat{T}_h(t)=\frac{1}{2h+1}\sum_{ i = t-h}^{t+h}y_i,\;h&lt;t&lt;n-h\]</span>. A constante <span class="math inline">\(h\)</span> é denominada <em>largura da banda</em>. Para compreender melhor esse estimador, considere que a relação entre pontos vizinhos é aproximadamente linear, ou seja, para qualquer <span class="math inline">\(t\in\mathcal{V}_t=\{t-h,\ldots,t+h\}\)</span> existem <span class="math inline">\(a_\mathcal{V}\)</span> e <span class="math inline">\(b_\mathcal{V}\)</span> tais que <span class="math display">\[y_t\approx a_\mathcal{V}+b_\mathcal{V}t+\varepsilon_t,\]</span> onde <span class="math inline">\(t\)</span> é uma série temporal estacionária e ergódica. Então <span class="math display">\[\begin{align}E(\hat{T}(t))&amp;=\frac{a_\mathcal{V}+b_\mathcal{V}(t-h)+\cdots+a_\mathcal{V}+b_\mathcal{V}t+\cdots+a_\mathcal{V}+b_\mathcal{V}(t+h)}{2h+1}\\&amp;=a_\mathcal{V}+b_\mathcal{V}t\end{align}\]</span> <span class="math display">\[Var(\hat{T}(t))=\frac{\nu}{2h+1}+\frac{2}{2h+1}\sum_{j=1}^{2h}j\gamma(j)\]</span> Observe que, como <span class="math inline">\(T(.)\)</span> é determinística e os ruídos são estacionários e ergódicos, então <span class="math inline">\(Var(\hat{T})\)</span> eventualmente vão para zero quando <span class="math inline">\(h\rightarrow \infty\)</span>. Contudo, <span class="math inline">\(T(.)\)</span> é localmente linear, logo <span class="math inline">\(\hat{T}\)</span> é um estimador razoável para valores baixos de <span class="math inline">\(h\)</span>.</p>
-%
+<p>O método das médias móveis consiste em obter <span class="math inline">\(\hat{T}(t)\)</span> através da média da série considerando os valores vizinhos à <span class="math inline">\(y_t\)</span>. Para o tempo <span class="math inline">\(t\)</span> e <span class="math inline">\(m=2h+1\)</span>, com <span class="math inline">\(h=1,2,\ldots\)</span>, considere o conjunto <span class="math inline">\(\mathcal{V}(m)_t=\{t-h,\ldots,t+h\}\)</span>. Defini-se a média móvel de ordem <span class="math inline">\(m\)</span> (notamção <span class="math inline">\(m\)</span>-MM) como <span class="math display">\[\hat{T}_h(t)=\frac{1}{m}\sum_{ i = t-h}^{t+h}y_i,\;h&lt;t&lt;n-h\]</span>.</p>
+<p>Para compreender melhor esse estimador, considere que a relação entre pontos vizinhos é aproximadamente linear, ou seja, para qualquer <span class="math inline">\(t\in\mathcal{V}(m)_t\)</span> existem <span class="math inline">\(a_\mathcal{V}\)</span> e <span class="math inline">\(b_\mathcal{V}\)</span> tais que <span class="math display">\[y_t\approx a_\mathcal{V}+b_\mathcal{V}t+\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é considerado uma série temporal estacionária e ergódica. Então <span class="math display">\[\begin{align}E(\hat{T}(t))&amp;=\frac{a_\mathcal{V}+b_\mathcal{V}(t-h)+\cdots+a_\mathcal{V}+b_\mathcal{V}t+\cdots+a_\mathcal{V}+b_\mathcal{V}(t+h)}{m}\\&amp;=a_\mathcal{V}+b_\mathcal{V}t\end{align}\]</span> <span class="math display">\[Var(\hat{T}(t))=\frac{\nu}{m}+\frac{2}{m}\sum_{j=1}^{2h}j\gamma(j)\]</span> Observe que, como <span class="math inline">\(T(.)\)</span> é determinística e os ruídos são estacionários e ergódicos, então <span class="math inline">\(Var(\hat{T}(t))\)</span> converge para zero quando <span class="math inline">\(m\rightarrow \infty\)</span>. Contudo, <span class="math inline">\(T(.)\)</span> é localmente linear, logo <span class="math inline">\(\hat{T}\)</span> é um estimador razoável para valores baixos de <span class="math inline">\(h\)</span>. Este é um exemplo típico de <em>trade off</em> entre víes e variância, onde não é possível minimizar os dois simultaneamente.</p>
+<p>Utilizaremos a função <code>ma(x,m)</code>, do pacote <code>forecast</code> para encontrar <span class="math inline">\(m-\)</span>MM para a série `x</p>
+<div id="exm-NACIDOSMA" class="theorem example">
+<p><span class="theorem-title"><strong>Example 6.2 </strong></span>Abaixo, apresentamos a série anual histórica de nascidos vivos no Amazonas desde 1994 até 2021.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">47780</span>, <span class="dv">47966</span>, <span class="dv">49112</span>, <span class="dv">56070</span>, <span class="dv">57180</span>, <span class="dv">62037</span>,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="dv">67646</span>, <span class="dv">70252</span>, <span class="dv">70671</span>, <span class="dv">70751</span>, <span class="dv">71345</span>, <span class="dv">73488</span>, <span class="dv">75584</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="dv">73469</span>, <span class="dv">75030</span>, <span class="dv">75729</span>, <span class="dv">74188</span>, <span class="dv">76202</span>, <span class="dv">77434</span>, <span class="dv">79041</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="dv">81145</span>, <span class="dv">80097</span>, <span class="dv">76703</span>, <span class="dv">78066</span>, <span class="dv">78087</span>, <span class="dv">77622</span>, <span class="dv">75635</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="dv">78454</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>nascidos <span class="ot">&lt;-</span> <span class="fu">ts</span>(x, <span class="at">start =</span><span class="dv">1994</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: forecast</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'forecast' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>oo <span class="ot">&lt;-</span> <span class="fu">par</span>( <span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">3</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'3-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">5</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'5-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">7</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'7-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">9</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'9-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(oo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Considere a estimativa obtida pela média móvel de ordem 3.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>tendencia <span class="ot">&lt;-</span> <span class="fu">ma</span>(nascidos, <span class="dv">3</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>tendencia</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 1994 
+End = 2021 
+Frequency = 1 
+ [1]       NA 48286.00 51049.33 54120.67 58429.00 62287.67 66645.00 69523.00
+ [9] 70558.00 70922.33 71861.33 73472.33 74180.33 74694.33 74742.67 74982.33
+[17] 75373.00 75941.33 77559.00 79206.67 80094.33 79315.00 78288.67 77618.67
+[25] 77925.00 77114.67 77237.00       NA</code></pre>
+</div>
+</div>
+<p>Vamos estimar o ruído da série (e eliminar as coordenadas vazias)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ruido <span class="ot">&lt;-</span> nascidos <span class="sc">-</span> tendencia</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>ruido <span class="ot">&lt;-</span> ruido[<span class="fu">is.na</span>(ruido) <span class="sc">==</span> F]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Abaixo, apresentamos as principais estatísticas sobre os resíduos. A série histórica dos resíduos oscila em torno de zero e não há motivos para suspeitar de que sua variância é constante. O correlograma apresenta autocorrelações baixas, como o esperado em um ruído branco. O teste de Shapiro-Wilks não dá evidências contra normalidade, o que suporta a hipótese de ruído branco gaussiano. O teste de Box-Pierce apresenta um p-valor de 0,04 e, em conjunto com as demais evidências, vamos considerá-lo significativo ao nível de 4%.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ruido)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">h =</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(ruido), <span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">h =</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(ruido), <span class="at">lty=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(ruido)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(ruido)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
 
+data:  ruido
+W = 0.9711, p-value = 0.6521</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(ruido)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Pierce test
 
+data:  ruido
+X-squared = 4.1804, df = 1, p-value = 0.04089</code></pre>
+</div>
+</div>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>Até o momento, foi considerado que a ordem da média móvel é escrita como <span class="math inline">\(m=2h+1\)</span>, ou seja, a ordem é sempre ímpar. Sem Para definir a média móvel para uma ordem par, perda de generalidade, assuma que <span class="math inline">\(m=4\)</span>. Como não é possível escolher um número igual de vizinhos à <span class="math inline">\(y_t\)</span>, tem-se duas possibilidades para <span class="math inline">\(\mathcal{V}(4)_t\)</span>: <span class="math display">\[\mathcal{V}'(4)_t=\{y_{t-1},y_t,y_{t+1},y_{t+2}\}\]</span> e <span class="math display">\[\mathcal{V}''(4)_t=\{y_{t-2},y_{t-1},y_t,y_{t+1}\}.\]</span> Para cada possibilidade, tem-se <span class="math display">\[\hat{T}'(t)=\frac{1}{4}\sum_{i=t-1}^{t+2}y_{i}\]</span> e <span class="math display">\[\hat{T}''(t)=\frac{1}{4}\sum_{i=t-2}^{t+1}y_{i}.\]</span> A média móvel 2-MM será definida por <span class="math display">\[\hat{T}(t)=\frac{T'(t)+T''(t)}{2}\]</span> Observe que a média agora é ponderada, uma vez que</p>
+<p><span class="math display">\[\hat{T}(t)=\frac{y_{t-2}}{8}+\frac{y_{t-1}}{4}+\frac{y_{t}}{4}+\frac{y_{t+1}}{4}+\frac{y_{t+2}}{8}.\]</span></p>
+<p>Para o caso de <span class="math inline">\(m=2h\)</span> com <span class="math inline">\(h=1,2,\ldots\)</span>, defini-se <span class="math inline">\(m\)</span>-MM por <span class="math display">\[\begin{align}\hat{T}(t)&amp;=\frac{1}{2}\left[\frac{1}{m}\sum_{i=t-h}^{t+h-1}y_i+\frac{1}{m}\sum_{i=t-h+1}^{t+h}y_i\right]\\&amp;=\frac{y_{t-h}}{2m}+\frac{1}{m}\sum_{i=t-h+1}^{t+h-1}y_i+\frac{y_{t+h}}{2m}.\end{align}\]</span> Note que o argumento de <span class="math inline">\(\hat{T}(t)\)</span> é aproximadamente não viciado para <span class="math inline">\(m\)</span> pequeno não se altera, uma vez que os pesos para os tempos <span class="math inline">\(t-j\)</span> e <span class="math inline">\(t+j\)</span> são simétricos</p>
+<p>O estimador para tendência conhecido como média móvel ponderada de ordem <span class="math inline">\(m\)</span> é dado por</p>
+<p><span class="math display">\[\hat{T}(t)=\sum_{i=t-h}^{t+h} w_i y_{i},\]</span> com <span class="math inline">\(w_i&gt;0\)</span>, <span class="math inline">\(w_{t-j}=w_{t+j}\)</span> e <span class="math inline">\(\sum_{i=t-h}^{t+h}w_i=1\)</span>. O método tradicional é obtido fazendo <span class="math inline">\(w_i=1/m\)</span>.</p>
+<p>Por último, como as primeiras e últimas observações são removidas, esses métodos não são os mais recomendados.</p>
+<div class="alert alert-danger">
+<p><strong>Outras médias móveis</strong></p>
+<p>É importante ressaltar que os métodos estatísticos são ferramentas universais e que geralmente sofrem modificações ao serem aplicados em outras áreas. Deste modo, existem outras definições de médias móveis que podem causar confusão.</p>
+<p>Em epidemiologia por exemplo, a média móvel de ordem <span class="math inline">\(m\)</span> é definida por <span class="math display">\[\hat{T}(t)=\frac{1}{m}\sum_{j=1}^m y_{t-j+1}\]</span> ou seja, a soma dos valores mais recentes em relação à <span class="math inline">\(t\)</span>. Observe que o contexto é diferente: em uma epidemia por exemplo, deseja-se estimar <span class="math inline">\(T(t)\)</span> onde <span class="math inline">\(t\)</span> é o tempo mais recente e, em geral, se utiliza o 7-MM tirando a média dos últimos 7 dias. A mesma lógica vale para o mercado financeiro, que tira a média dos últimos 5 dias de preço de fechamento.</p>
+<p>Ainda no mercado financeiro, o importante é captar a mudança da tendência o mais rápido possível. Deste modo, utiliza-se uma média móvel ponderada definida por <span class="math display">\[\hat{T}(t)=\frac{2}{m(m+1)}\sum_{j=1}^m(m-j+1)y_{t-j+1}.\]</span> Na definição acima, o último preço da ação, dado por <span class="math inline">\(y_t\)</span>, é o valor mais imporante e por isso recebe o maior peso. Note que os pesos não são simétricos.</p>
+</div>
 </section>
+</section>
+<section id="suavização-do-gráfico-de-dispersão-estimada-localmente-loess" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="suavização-do-gráfico-de-dispersão-estimada-localmente-loess"><span class="header-section-number">6.5</span> Suavização do gráfico de dispersão estimada localmente (loess)</h2>
+<p>No método de suavisação do gráfico de dispersão, deseja-se estimar <span class="math inline">\(f(x)=E(y|x)\)</span>, através da coleção <span class="math inline">\((y_1,x_1),\ldots,(y_n,x_n)\)</span>, para um valor qualquer de <span class="math inline">\(x\)</span>.</p>
+<p>A estimativa <span class="math inline">\(\hat{f}\)</span> para o ponto <span class="math inline">\(x'\)</span> é calculada considerando os seguintes passos:</p>
+<ol type="1">
+<li><p>Fixe um valor inteiro positivo <span class="math inline">\(q\leq n\)</span>.</p></li>
+<li><p>Dentro do conjunto <span class="math inline">\(x_1,\ldots,x_n,\)</span> encontre os <span class="math inline">\(q\)</span> valores mais próximos de <span class="math inline">\(x'\)</span> (via distância euclidiana). Denote este conjunto por <span class="math inline">\(\mathcal{V}\)</span> e denote por <span class="math inline">\(d\)</span> a maior distância encontrada.</p></li>
+<li><p>Para cada <span class="math inline">\(x_1,\ldots,x_n\)</span> seja <span class="math display">\[v_j(x')=\left\{\begin{array}{ll}\left(1-\left| \frac{x_j-x'}{d}\right|^3\right)^3&amp;,\;\;\hbox{se }|x_j-x|\leq d\\ 0,&amp;\hbox{caso contrário}\end{array}\right.\]</span> o peso associado à <span class="math inline">\(x_j\)</span> (valores próximos de <span class="math inline">\(x'\)</span> receberão o peso máximo e valores afastados recebem menor peso)</p></li>
+<li><p>Ajuste o modelo de regressão ponderado, minimizando <span class="math display">\[\sum_{i=1}^n v_i(x')\left(y_i - \sum_{j=0}^p \beta_jx^j\right)^2\]</span></p></li>
+<li><p>Estime <span class="math inline">\(f(x')\)</span> por <span class="math display">\[\hat{f}(x')=\sum_{j=0}^p \hat{\beta}_jx^j \]</span></p></li>
+</ol>
+<p>Oberve que este método pode ser utilizado para estimar a tendência da série. Abaixo, vamos analisar a série de taxa de desemprego mensal, entre março de 2002 e dezembro de 2015.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://www.dropbox.com/s/rmgymzsic99qawd/desemprego.csv?dl=1'</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>banco <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url, <span class="at">sep =</span> <span class="st">';'</span>, <span class="at">h =</span> F)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>desemprego<span class="ot">&lt;-</span> <span class="fu">ts</span>( banco<span class="sc">$</span>V2, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2002</span>,<span class="dv">3</span>), <span class="at">frequency=</span><span class="dv">12</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(desemprego, <span class="at">ylab =</span> <span class="st">'Taxa de desemprego'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(desemprego, <span class="at">lag =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Vamos estimar a tendência</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># criando a variável regressora</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> <span class="fu">length</span>(desemprego)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># aplicando o loess</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>lw <span class="ot">&lt;-</span> <span class="fu">loess</span>( desemprego <span class="sc">~</span> tempo)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co"># transformando o valor predito em uma série temporal</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ts</span>(lw<span class="sc">$</span>fitted, <span class="at">start =</span> <span class="fu">start</span>(desemprego), <span class="at">frequency =</span> <span class="fu">frequency</span>(desemprego) )</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="co"># gráfico da tendência estimada</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>( desemprego, <span class="at">ylab =</span> <span class="st">'Taxa de desemprego'</span> , <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(fit, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">'tomato'</span>)</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topright'</span>, <span class="fu">c</span>(<span class="st">'Observado'</span>,<span class="st">'Ajustado'</span>),<span class="at">fill=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="st">'tomato'</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Vamos eliminar a tendência estimada e avaliar o restante.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>yt <span class="ot">&lt;-</span> desemprego <span class="sc">-</span> fit</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(yt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(yt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Fica claro o comportamento sazonal, o que implica que o restante não é uma série estacionária.</p>
+
+
 </section>
 
 </main> <!-- /main -->
