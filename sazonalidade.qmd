@@ -1,0 +1,421 @@
+# Sazonalidade
+
+
+## Padrão sazonal
+
+Padrões que surgem sistematicamente ao longo do tempo são denominados sazonais. Exemplos: flutuações de temperatura entre estações, início e fim do semestre letivo, Natal, dias úteis, feriados flutuantes como a Páscoa e o Carnaval.
+
+
+Um padrão sazonal pode ser modelado através de uma função periódica.
+
+:::{#def-periodica}
+Dizemos que $s(.)$ é uma função periódica de período $p$ se
+$$s(t)=s(t + kp),\;\forall k=1,2,\ldots.$$
+:::
+
+:::{#exm-periodica}
+A função 
+$$s(t)=\left\{ \begin{align}
+-1, &\;\;t=1,4,7,\ldots\\
+0, &\;\; t=2,5,8,\ldots\\
+1,&\;\;t=3,6,9,\ldots
+\end{align}
+\right.
+$$
+é periódica e possui período $p=3$.
+:::
+
+:::{#exm-periodica2}
+A função 
+$$s(t)=\cos\left(2\pi\frac{t}{4}\right)$$
+é periódica (com $p=4$). De fato, para $k=1,2,3,\ldots,$
+$$\begin{align*}
+	g(t+4k) &= \cos\left(2\pi\frac{t+4k}{4}\right)=\cos\left( \pi\frac{t}{4}+2\pi k\right)\\
+	&=\cos\left( 2\pi\frac{t}{4}\right)\underbrace{\cos\left(2\pi k\right)}_\text{1} - \sin\left( \pi\frac{t}{4}\right)\underbrace{\sin\left(2\pi k\right)}_\text{0}\\
+	&=\cos\left(2\pi\frac{t}{4}\right) = g(t).	
+\end{align*}$$
+:::
+
+Seja $s(.)$ uma função periódica. Então, uma série temporal sazonal aditiva é descrita como 
+
+$$x_t=s(t)+\varepsilon_t,$$
+onde $\varepsilon_t$ é um ruído estacionário.
+
+<div class='alert alert-success'>
+**Atenção.** Ao criar um objeto do tipo `ts` no `R`, o argumento `frequency` é considerado o período do padrão sazonal. A maioria das funções voltadas para padrões sazonais acessam essa informação no objeto.
+</div>
+
+## Gráficos sazonal de subséries
+
+Seja $x_t$ uma série sazonal de período $p$. Para construir um gráfico sazonal de subséries:
+
+- Faça $p$ subséries:
+		$$\begin{align*}
+		&x_1,x_{1+p},x_{1+2p},\ldots \\
+		&x_{2},x_{2+p},x_{2+2p},\ldots\\
+		&\cdots\\
+		&x_{p},x_{2p},x_{3p},\ldots\\		
+		\end{align*}$$
+- Calcule a média de cada subsérie.
+
+- Faça um gráfico de cada subsérie, cada um com uma linha horizontal com o valor de sua respectiva média.
+
+<div class='alert alert-success'>
+Observe que, para um padrão sazonal, a subsérie
+$$x_{i},x_{i+p},x_{i+2p},\ldots$$
+é equivalente à
+$$s(i)+\varepsilon_i,s(i)+\varepsilon_{i+p},s(i)+\varepsilon_{i+2p},\ldots$$
+e, supondo que $\varepsilon_t$ é um ruído granco ergódico, teremos que
+$$\hat{s}(i)=\frac{1}{m+1}\sum_{j=0}^m x_{i+jp}$$
+onde $m+1$ é o tamanho da amostra correspodente à subsérie.
+</div>
+
+No `R`, o comando `monthplot(x)` faz o gráfico de subséries. Considerando um padrão sazonal, cada subsérie deve oscilar em torno de uma média constante. Vejamos algus exemplos.
+
+:::{#exm-nottem1}
+
+A série abaixo (gráfico à esquerda) apresenta as temperaturas médias mensais, em Fahrenheits, no Castelo de Nottingham entre 1920 e 1939. O gráfico à direita apresenta o gráfico de subséries. Como a série possui período 12, este último gráfico já identifica cada subsérie com a inicial do mês correspondente. Note que a maioria das subséries oscila em torno da média 
+
+```{r}
+#| layout-ncol: 2
+#| fig-cap: 
+#| - "Gráfico da série de temperaturas no Castelo de Nottingham"
+#| - "Gráfico de subséries"
+#| label: fig-nottemMonthplot
+ts.plot(nottem)
+monthplot(nottem)
+```
+$\blacksquare$
+:::
+
+É possível que a tendência construa uma falta impressão sobre o comportamento sazonal. Portanto, é interessante remover a tendência da série antes de fazer o gráfico das subséries.
+
+:::{#exm-co2Monthoplot}
+
+Abaixo apresentamos a série mensal da concentração de CO$_2$, em partes por milhão, no Mauna Loa. Observe a clara tendência de crescimento e o padrão sazonal.
+
+```{r}
+ts.plot(co2)
+```
+
+O gráfico das subséries é dado abaixo. Observe que há uma tendência crescente em cada subsérie.
+
+```{r}
+monthplot(co2)
+```
+
+A tendência crescente nas subséries não nos nos permitiria trabalhar com uma função periódica. Contudo o gráfico está sendo influenciado pela tendência. Vamos removê-la e fazer o gráfico novamente.
+
+
+```{r}
+# estimação da tendência via loess
+tempo <- 1 : length(co2)
+model <- loess( co2 ~tempo)
+tend <- fitted(model)
+
+# série sem tendência e o gráfico de subséries
+plot( co2-tend)
+monthplot(co2-tend)
+```
+$\blacksquare$
+:::
+
+Também é possível que o padrão sazonal não seja bem representado por uma função periódica. Isto ocorre quando o gráfico de subséries possui tendência.
+
+
+:::{#exm-AirPassengersMonthplot}
+
+A @fig-AirPassengersMonthplot apresenta o gráfico da série `AirPassengers` e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série. 
+
+```{r}
+#| layout-ncol: 2
+#| fig-cap: 
+#| - 'Gráfico da série AirPassengers' 
+#| - 'Gráfico de subséries da série AirPassengers. Observe as tendências monótona crescente em cada subgráfico'
+#| label: fig-AirPassengersMonthplot
+ts.plot(AirPassengers)
+monthplot(AirPassengers)
+```
+
+Abaixo, vamos estimar a tendência da série e removê-la. Note que o padrão das subséries se altera, mostrando o real comportamento do padrão sazonal: é uma tendência de crescimento nos meses de verão americano (junho, julho e agosto) e um padrão de queda começando em novembro e pegando so três subsequentes meses do inverno.
+
+```{r}
+# estimação da tendência via loess
+tempo <- 1 : length(AirPassengers)
+model <- loess( AirPassengers ~tempo)
+tend <- fitted(model)
+
+# série sem tendência e o gráfico de subséries
+plot( AirPassengers-tend)
+monthplot(AirPassengers-tend)
+```
+$\blacksquare$
+
+:::
+
+## Dessazonalização
+	
+	
+Existem séries que apresentam tanto tendência quanto sazonalidade. Isso pode dificultar o estudo da tendência, uma vez que a sazonalidade interfere no movimento de subida e descida da série. Nesses casos, é interessante obter uma estimativa da parte sazonal para removê-la da série.
+
+
+Considere a série
+	$$y_t = T^\star(t)+s^\star(t)+\varepsilon_t,$$
+onde $T^\star(t)$ é a tendência e $s^\star(t)$ uma função periódica, com período igual a $p$. É sempre verdade que existe uma constante real $c$ tal que
+	$$\sum_{j=1}^p s^\star(t+j)=c$$
+para qualquer $t=0,1,\ldots$. Contudo, note que $c$ é uma constante (que, por sua vez, faz parte da tendência da série). Fazendo $T(t)=T^\star(t)+c$ e $s(t)=s^\star(t)-c$, teremos
+$$y_t = T^\star(t)+c + s^\star(t)-c+\varepsilon_t=T(t)+ s(t)+\varepsilon_t,$$
+
+e sempre podemos assumir que
+		$$\sum_{t=1}^{p}s(t)=0.$$
+		Isto é equivalente a afirmar que o efeito sazonal desaparece quando as $p$ observações são agregadas. Deste modo, o estimador para tendência $p$-MM estima a tendência sem o efeito sazonal.
+
+:::{$exm-ldeathsDess}
+Considere novamente a série com o número de óbitos por doenças pulmonares no Reino Unido. A figura abaixo mostra a série original e a tendência, estimada pela 12-MM. Observe o padrão claro de tendência decrescente.
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#| - "Em preto: número de óbitos por doenças pulmonares no Reino Unido. Em vermelho: tendência dessazonalizada"
+#| label: fig-ldeathsDess
+
+```
+:::
+	   
+## Decomposições de séries
+
+Em geral, assume-se que a série temporal admite a seguinte decomposição: 
+$$x_t=T(t)+s(t)+\varepsilon_t$$
+
+A estimação não paramétrica dos componentes da decomposição constitui-se de ferramenta exploratória essencial para a análise de séries temporais. A decomposição clássica é realizada através dos seguintes passos:
+
+- Estime a tendência dessazoanlizada, utilizando a $p$-MM, obtendo $\hat{T}$
+
+- Remova a tendência da série: $\tilde{x}_t=x_t-\hat{T}$
+
+- Encontre as $p$ subséries de $\tilde{x}$ e estime os valores de $s$ através de suas médias.
+
+- Estime os resíduos: $\hat{\varepsilon}_t=x_t-\hat{T}(t)-\hat{s}(t)$
+A @fig-ldeathsDecomposicaoClassica apresenta a decomposição clássica da série de óbitos pode doenças pulmonares no Reino Unido.
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#| - 'Decomposição da série de óbitos por doenças pulmonares no Reino Unido'
+#| label: fig-ldeathsDecomposicaoClassica
+
+plot(decompose(ldeaths))
+```
+
+Como é utilizada uma média móvel, a estimativa da tendência e do ruído é prejudicada no início e fim da série. Outro problema que este método não consegue estimar padrões sazonais que não sejam representamos por uma função periódica. Para ilustrar, apresentamos abaixo a decomposição clássica da série `AirPassengers`. Como a estimação da parte sazonal utilizou a média das subséries, as tendências sazonais vistas no @exm-AirPassengersMonthplot foram para os resíduos (identificados co)
+
+```{r}
+plot(decompose(AirPassengers))
+```
+
+
+Uma solução mais robusta é conhecida como STL, que realiza uma séries de estimativas de tendência, tanto para a geral quanto para a sazonal, utilizando o loess. Os detalhes podem ser vistos no paper original [STL](https://www.scb.se/contentassets/ca21efb41fee47d293bbee5bf7be7fb3/stl-a-seasonal-trend-decomposition-procedure-based-on-loess.pdf) Abaixo, apresentamos o STL para a série `AirPassengers`. Observe que a sazonalidade foi melhor estimada, embora ainda exista um padrão sazonal nos resíduos.
+
+```{r}
+# além da série, devemos colocar o período desejado na função 
+plot(stl(AirPassengers, 12))
+```
+
+
+## Modelo de Forma livre - ou fatores sazonais
+
+Considere uma série temporal com sazonalidade dada por uma função periódica $s(.)$ de período $p$. Sejam 
+$$\beta_j=s(t+jp).$$
+Os parâmetros $\beta_1,\ldots,\beta_p$ são denominados fatores sazonais. Note que é necessário colocar a restrição 
+		$$\beta_p = -\beta_1-\cdots -\beta_{p-1},$$
+		pois
+		$$\sum_{j=1}^p\beta_j=0$$
+		(ou seja, existem na prática $p-1$ fatores sazonais para serem estimados).
+
+:::{#exm-fatorSazonalIlustracao}
+Seja $x_t$ uma série sazonal de período $p=4$ (por, exemplo, em dados trimestrais). Então
+$$\begin{align*}
+		E(x_t)&=s(t)=\beta_1, t=1,5,9 ,\ldots,\\
+		E(x_t)&=s(t)=\beta_2, t=2,6,10,\ldots,\\
+		E(x_t)&=s(t)=\beta_3, t=3,7,11,\ldots,\\
+		E(x_t)&=s(t)=-\beta_1-\beta_2-\beta_3, t=4,8,12,\ldots,\\
+		\end{align*}$$
+:::
+
+Seja $\boldsymbol{E}_{j,m-1}$ o vetor coluna de comprimento $m-1$ que possui a $j$-ésima entrada igual a 1 e as demais iguais a zero. Por exemplo
+$$\boldsymbol{E}_{2,3}=\left(\begin{array}{c}0 \\ 1 \\ 0
+\end{array}\right).$$
+Para um período $p$ e para $j=1,\ldots,p-1$ faça
+$$\begin{align}
+		\boldsymbol{f}_{j+kp} = \boldsymbol{E}_{j,p-1}
+		\end{align}$$
+com $k=0,1,2,\ldots$. Para $s=1,2,\ldots$
+$$\begin{equation}
+		\boldsymbol{f}_{sp} = -\textbf{1}_{p-1}
+		\end{equation}$$
+
+Então,
+		$$x_t=\boldsymbol{f}_t' \boldsymbol{\beta}+\varepsilon_t,$$
+		onde $\boldsymbol{\beta}'=(\beta_1,\ldots,\beta_{p-1})$ representa os efeitos sazonais. Disto, teremos
+		$$\boldsymbol{x}=\boldsymbol{F}_n'\boldsymbol{\beta}+\boldsymbol{\varepsilon}$$
+		onde a matriz $\boldsymbol{F}_n$ é formada pelas colunas $\boldsymbol{f}_1,\ldots,\boldsymbol{f}_p$.
+		
+Portanto, a estimação de $\beta$ é feita através da teoria de modelos lineares.
+
+:::{#exm-nottemFatores}
+
+
+Considere novamente a série `nottem`, representada na figura abaixo.
+```{r}
+ts.plot(nottem)
+abline(h = mean(nottem))
+```
+Observe que a série pode ser vista como uma função periódica com um nível constante (conhecido em regressão como intecepto):
+
+$$x_t = \mu+s(t)+\varepsilon_t$$
+
+Considerando que os erros são ergódicos, podemos estimar a média $\mu$ pela média amostral. Deste modo, a série sem tendência é:
+$$\tilde{x}_t=x_t-\bar{x}=s(t)+\varepsilon_t$$
+Vamos ajustar um modelo linear para $\tilde{x}$. Para construir a matriz de regressão $\boldsymbol{F}'_n$ vamos utiliza a função `cycle` que identifica o índice do padrão sazonal associado a cada observação.
+
+```{r}
+xtil <- nottem - mean(nottem) 
+mes <- cycle(nottem)
+mes <- as.factor(mes)
+mod <- lm( xtil ~ mes - 1)
+mod
+```
+Nos resultados acima podemos notar que os meses de Novembro até Abril possuem temperaturas menores que a média. O gráfico dos efeitos sazonais é dado a seguir, mostrando que a passagem dos meses possui um padrão de onda, como um cosseno.
+```{r}
+plot.new()
+plot.window(xlim = c(0,13), ylim= c(-11,11))
+points(coefficients(mod), pch = 16)
+axis(1, at = 1:12, labels = c('J','F','M','A','M','J','J','A','S','O','N','D'))
+axis(2)
+title(ylab = 'Valor do fator sazonal',xlab='Fator sazonal')
+```
+
+
+Abaixo analisamos os resíduos do modelo. Os resíduos parecem flutuar e torno de zero com variância constante. O correlograma apresenta algumas leves autocorrelações nas defasagens 1 e 2. O teste de Shapiro-Wilks não rejeita a normalidade, mas o teste de Box-Pierce rejeita a hipótese de ruído branco. Voltaremos a este problema posteriormente.
+
+```{r}
+#| layout-ncol: 2
+#| fig-cap: 
+#| - 'Gráfico dos ressíduos'
+#| - 'Correlograma dos resíduos'
+res <- residuals(mod)
+ts.plot(res)
+acf(res)
+```
+
+
+```{r}
+shapiro.test(res)
+Box.test(res)
+```
+$\blacksquare$
+:::
+
+
+\begin{frame}{Harmônicos}
+	A função 
+	\begin{equation}
+	g(t) = A \cos\left( \omega t_i +\phi \right),
+	\end{equation}
+	é denominada harmônico. Alguns componentes importantes:
+	\begin{itemize}
+		\item $A$ é denominado amplitude e $-A < g(t) < A$.
+		\item $\phi\in (0,2\pi)$ é denominado fase.
+		\item O período (ou comprimento de onda) é $p = 2\pi/\omega$.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\begin{itemize}
+		\item $\omega$ é denominada frequência angular, medida em radianos.
+		\item Embora $\omega\in(0,2\pi)$, podemos notar que, para $\omega<\pi$
+		$$A\cos(\omega t + \phi ) = A\cos\left( (2\pi + \omega) t + \phi \right).$$
+		Portanto, faremos $\omega\in(0,\pi)$.
+		\item Neste caso, a maior frequência será $\omega$ gerando o período $p = 2$. Para tempos equidistantes, este é o menor período detectável.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{FigurasAulas/harmonico1}
+	\caption{Harmônico com $A=1$, $\phi=0$ e $p=4$.}
+	\label{fig:harmonico1}
+	\end{figure}	
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{FigurasAulas/harmonico1_amplitudes}
+		\caption{Em cinza: harmônico com $A=1$, $\phi=0$ e $p=4$. Em preto: mesmo harmônico, exceto por $A=2$.}
+		\label{fig:harmonico1_amp}
+		\end{figure}	
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{FigurasAulas/harmonico1_fases}
+		\caption{Em cinza: harmônico com $A=1$, $\phi=0$ e $p=4$. Em preto: mesmo harmônico, exceto por $\phi=2$.}
+		\label{fig:harmonico1_fase}
+	\end{figure}	
+\end{frame}
+
+		
+
+\begin{frame}{Regressão harmônica simples}
+    O modelo de regressão harmônica simples é dado por
+	\begin{equation}
+	y_t = A \cos\left( \omega t_i +\phi \right) + \varepsilon_t,
+	\end{equation}
+	onde $\varepsilon_t$ é um ruído branco.
+\end{frame}
+
+\begin{frame}
+	Como $\omega$ é constante ($\omega = 2\pi/p$) , este modelo pode ser linearizado:
+	\begin{align}
+	A\cos\left(\omega t_i + \phi \right)&=A\left[ \cos(\omega t_i)\cos(\phi) - \sin(\omega t_i)\sin(\phi)\right]\\
+	&= \underbrace{A\cos(\phi)}_\text{$\beta_1$} \cos(\omega t_i) \underbrace{-A\sin(\phi)}_\text{$\beta_2$}\sin(\omega t_i).
+	\end{align}
+	Note que sempre é possível recuperar os parâmetros originais:
+	\begin{align*}
+	\left\{
+	\begin{array}{l}
+	\beta_1 = A\cos(\phi) \\
+	\beta_2 = -A\sin(\phi) \\
+	\end{array}\right.	\Rightarrow		
+	\left\{
+	\begin{array}{l}
+	\beta_1^2 = A^2\cos(\phi)^2 \\
+	\beta_2^2 = A^2\sin(\phi)^2 \\
+	\end{array}\right.	\Rightarrow					
+	\left\{
+	\begin{array}{l}
+	A = \sqrt{\beta_1^2 + \beta_2^2}\\
+	\phi = \cos^{-1}\left(\frac{\beta_1}{A}\right) \\
+	\end{array}\right.
+	\end{align*}
+\end{frame}
+
+\begin{frame}
+		Fazendo 
+		\begin{align}
+		\boldsymbol{\beta}' &= (A\cos(\phi), - A\sin(\phi)) \\
+		\boldsymbol{f}_t' &= (\cos(\omega t_i), \sin(\omega t_i))
+		\end{align}
+		teremos
+		$$\boldsymbol{f}_t'\boldsymbol{\beta}=A\cos(\omega t_i + \phi).$$
+		Portanto, podemos escrever:
+		\begin{equation}
+		y_t = \boldsymbol{f}_t'\boldsymbol{\beta}+\varepsilon_t
+		\end{equation}
+	Considerando $\varepsilon_t\sim\hbox{Normal}(0,\nu)$ teremos
+	$$\boldsymbol{y}|\boldsymbol{\beta},\nu\sim\hbox{Normal}( \boldsymbol{F}_T'\boldsymbol{\beta},\nu\textbf{I}_T).$$
+\end{frame}
