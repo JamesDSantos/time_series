@@ -1,0 +1,164 @@
+# Previsão para modelos lineares
+
+## O valor ajustado como previsão
+Seja $\mathcal{D}_t=\{y_1,\ldots,y_t\}$ a série temporal observada. Portanto, para qualquer $h>0$, o valor $y_{t+h}$ é desconhecido. Inferências pontuais sobre esse valor são denominadas previsões, sendo denotadas por $\hat{y}_t(h)$, onde o valor de $h$ é denominado horizonte (de previsão).
+
+Considere que a série temporal $y_t$ pode ser escrita como um modelo linear. Então, pelo princípio da substituição, o valor ajustado $\hat{y}_{t+h}=\boldsymbol{f}_{t+h}'\hat{\boldsymbol{\beta}}$ é um estimador para $y_{t+h}$ e, portanto, $\hat{y}_t(h)=\hat{y}_{t+h}$ uma previsão para o valor da série no horizonte $h$.
+
+Como $\hat{\boldsymbol{\beta}}\sim N(\boldsymbol{\beta},(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\nu)$, teremos que
+$$\hat{y}_{t+h}\sim N(\boldsymbol{f}_{t+h}'\boldsymbol{\beta},\nu\boldsymbol{f}_{t+h}'(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\boldsymbol{f}_{t+h})$$
+Como
+$$\frac{\hat{y}_{t+h}-\boldsymbol{f}_{t+h}'\boldsymbol{\beta}}{\sqrt{\nu\boldsymbol{f}_{t+h}'(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\boldsymbol{f}_{t+h}}}\sim N(0,1)$$
+Um intervalo aproximado, de previsão $\gamma100\%$, pode ser dado por
+$$\left(\boldsymbol{f}_{t+h}'\hat{\boldsymbol{\beta}}+z_{\frac{1-\gamma}{2}}\sqrt{\hat{\nu}\boldsymbol{f}_{t+h}'(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\boldsymbol{f}_{t+h}},\boldsymbol{f}_{t+h}'\hat{\boldsymbol{\beta}}+z_{\frac{1+\gamma}{2}}\sqrt{\hat{\nu}\boldsymbol{f}_{t+h}'(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\boldsymbol{f}_{t+h}}\right)$$
+Em geral, utiliza-se $\gamma$ igual a 0,8 ou 0,9.
+
+
+
+## Aplicação na série `co2`
+
+A série `co2` apresenta a média de concentração  de carbono, em partes por milhão, em  Mauna Loa. 
+
+```{r}
+ts.plot(co2)
+```
+
+É possível observar uma tendência crescente e um padrão sazonal. A série vai até 1997. Vamos remover os anos de 1996 e 1997 para utilizá-los na previsão.
+
+```{r}
+co2_1995 <- window( co2, end = c(1995,12))
+```
+
+
+Vamos primeiramente eliminar a tendência, utilizando o loees, para estudar o padrão sazonal. Abaixo, mostramos a tendência estimada.
+
+```{r}
+require(TSA) 
+require(forecast)
+tempo <- 1:length(co2_1995)
+lw <- loess( co2_1995 ~ tempo)
+tendLoees <- lw$fitted
+ts.plot(tendLoees)
+```
+
+
+```{r}
+#| layout-ncol: 2
+#| fig-cap: 
+#| - 'Gráfico da série sem tendência'
+#| - 'Gráfico de subséries'
+
+semTend <- co2_1995 - tendLoees
+
+ts.plot(semTend)
+lines( ma(semTend, 12))
+monthplot(semTend)
+```
+
+O sinal sazonal tem um efeito de $\pm 4$ somados à tendência. O primeiro gráfico acima mostra a série subtraída da estimativa via loees, junto com uma média móvel de ordem 12, que oscila em torno de zero, o que são indícios de que a tendência foi removida. O gráfico de subséries apresenta comportamento estacionário para alguns meses. Outro parecem ter uma tendência, como abril, por exemplo. Contudo, o valor desse efeito é baixo se comparado com a tendência geral, o que nos permite assumir uma funçao periódica para a sazonalidade.  
+
+Abaixo apresentamos o periodograma. A frequência fundamental representa um período de 12 meses e a segunda frequência relevante mostra a necessidade do harmônico de ordem 2.
+
+```{r}
+per <- periodogram(semTend)
+tail( 1/per$freq[ order(per$spec)] , 3)
+```
+
+Agora, vamos considerar apenas a tendência estimada, procurando por um polinômio de ordem adequada.
+
+```{r}
+aic <- NULL
+for(i in 1:15){
+mod <- lm( tendLoees ~ poly( tempo, i ,raw = T))
+aic[i] <- AIC(mod)  
+}
+ts.plot(aic, type = 'o')
+```
+
+Vamos construir o modelo final. Para poder utilizar esse modelo para fazer previsões, precisamos construir a matriz de regressão, utilizando o comando `model,frame`, antes de construir o objeto `lm`. Essa matriz foi denominada por `X` abaixo.
+
+```{r}
+ordemP <- 7
+X <- model.matrix(~poly(tempo, ordemP, raw = T)+ harmonic(co2_1995, 2))
+modFinal <- lm( co2_1995 ~  X)
+ts.plot(co2_1995)
+lines(ts(modFinal$fitted.values, start = start(co2), frequency = frequency(co2)), lwd = 2, col =2)
+```
+
+
+Abaixo, criamos a matriz de regressão com com os tempos correspondentes aos anos de 1996 e 1997. Note que vamos utilizar o nome `X` novamente.
+
+```{r}
+# criando a matriz para previsão
+n <- length(tempo)
+tempoPrev <- (tempo[n]+1):(tempo[n]+24)
+tempoPrev <- ts(tempoPrev, frequency = 12)
+X <- model.matrix( ~ poly( tempoPrev,ordemP, raw = T) + harmonic(tempoPrev,2))
+```
+
+Agora, vamos utilizar a função `predict` e conjunto coma matriz criada anteriormente, para obter os valores previstos. Também vamos obter o intervalo de previsão de 95\%.
+
+```{r}
+pred <- predict(modFinal, data.frame(X), interval = 'prediction', level = .95)
+pred <- ts(pred, start = c(1996,1), frequency = 12)
+head(pred)
+```
+
+Abaixo, mostramos os valores previstos e os observados.
+
+```{r}
+ts.plot(co2, xlim = c(1994,1998), ylim = c(350,370))
+lines(pred[,1], lwd =2, col =2)
+```
+
+Abaixo, o mesmo gráfico mas com intervalo de previsão de 90%.
+
+```{r}
+require(scales)
+ts.plot(co2, xlim = c(1994,1998), ylim = c(350,370), type = 'p')
+polygon( 1996+c(0:23,23:0)/12, c(pred[,2],pred[24:1,3]), col = alpha('lightpink',.3), border = 'lightpink')
+lines(pred[,1], lwd =2, col =2)
+
+```
+
+Note que o modelo conseguiu prever o ano de 1996 de modo satisfatório e os cinco primeiros meses de 1997. Este modelo parece ser adequado para previsões com o horizonte de doze meses.
+
+Vale ressaltar que este modelo não satisfaz a hipótese de ruído branco. Os gráficos dos resíduos revelam ainda características típicas de séries estacionárias.
+
+```{r}
+res <- rstudent(modFinal)
+ts.plot(res)
+acf(res)
+shapiro.test(res)
+Box.test( res, type = 'Ljung-Box')
+```
+
+
+
+## Avaliando a qualidade da previsão
+
+Considere que o objetivo principal da análise é a previsão. Um modelo pode falhar em alguma suposição, como normalidade dos erros, mas ainda sim produzir boas previsões. Por isso, é importante conseguir medir o quão bom é o modelo, o que implica estudar a diferença entre o previsto e o realizado. Vamos definir o erro de previsão por
+
+$$u_{t} =\hat{y}_{t-1}(1)-y_{t}$$
+
+Fixamos um valor $J$ para separar as últimas $J$ observações
+		$$y_{t-J+1},\ldots,y_{t},$$
+e,  partir destas observações, calculamos a performance de previsão segundo alguma métrica a ser minimizada. As métricas mais comuns são:
+
+- MAD (desvio médio absoluto):
+		$$MAD = \frac{1}{J}\sum_{i=t-J+1}^t |u_i|$$
+- EQM (erro quadrático médio):
+		$$EQM = \frac{1}{J}\sum_{i=t-J+1}^t (u_i)^2$$
+- MAPE (erro percentual médio)
+		$$MAPE = \frac{1}{J}\sum_{i=t-J+1}^t \frac{|u_i|}{y_i}\times 100\%$$
+- SMAPE (erro simétrico percentual médio)
+		$$SMAPE = \frac{1}{J}\sum_{i=t-J+1}^t 2\frac{|u_i|}{y_i+\hat{y}_{i-1}(1)}\times 100\%$$
+- MedAPE (erro percentual mediano)
+		$$MedAPE = mediana\left(\frac{|u_i|}{y_i}\right) \times 100\%,\;\;i=t-J+1,\ldots,t.$$
+- MASE (erro escalonado médio)
+		$$MASE = 100\%\times\frac{1}{J} \frac{\sum_{i = t-J+1}^t|u_i|}{\frac{1}{J-1}\sum_{i=t-J+2}^t |y_i - y_{i-1}|}.$$
+
+O MASE tem uma interpretação muito interessante: se $MASE>100\%$, então o modelo é pior do que simplesmente fazer
+	$$y_{t-1}(1)=y_{t-1},$$ 
+	ou seja, prever $y_t$ como sendo igual a $y_{t-1}$. Isto é considerado um "modelo ingênuo" (*naïve model*), sendo considerado o modelo de previsão mais básico.
+

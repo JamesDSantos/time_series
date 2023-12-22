@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 21.6) (preloaded format=xelatex 2022.1.11)  21 DEC 2023 17:22
+This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 21.6) (preloaded format=xelatex 2022.1.11)  22 DEC 2023 12:08
 entering extended mode
 **./index.tex
 (index.tex
@@ -656,9 +656,9 @@ Package: amsthm 2020/05/29 v2.20.6
 Package: xpatch 2020/03/25 v0.3a Extending etoolbox patching commands
 )
 Class scrreprt Info: amsthm's \deferred@thm@head patched.
-\c@example=\count322
-\c@theorem=\count323
-\c@definition=\count324
+\c@theorem=\count322
+\c@definition=\count323
+\c@example=\count324
 (C:\Users\jam_d\AppData\Local\Programs\MiKTeX\tex/latex/caption\subcaption.sty
 Package: subcaption 2020/10/07 v1.3j Sub-captions (AR)
 \c@subfigure=\count325

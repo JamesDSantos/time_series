@@ -182,12 +182,12 @@
 \floatname{codelisting}{Listing}
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \usepackage{amsthm}
-\theoremstyle{definition}
-\newtheorem{example}{Example}[chapter]
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter]
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
+\theoremstyle{definition}
+\newtheorem{example}{Example}[chapter]
 \theoremstyle{remark}
 \AtBeginDocument{\renewcommand*{\proofname}{Proof}}
 \newtheorem*{remark}{Remark}
@@ -229,7 +229,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, enhanced, sharp corners, interior hidden, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, frame hidden]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, borderline west={3pt}{0pt}{shadecolor}, frame hidden, enhanced, breakable, boxrule=0pt, sharp corners]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -3573,6 +3573,466 @@ W = 0.98919, p-value = 0.06944
 data:  res2
 X-squared = 10.905, df = 1, p-value = 0.0009591
 \end{verbatim}
+
+\bookmarksetup{startatroot}
+
+\hypertarget{previsuxe3o-para-modelos-lineares}{%
+\chapter{Previsão para modelos
+lineares}\label{previsuxe3o-para-modelos-lineares}}
+
+\hypertarget{o-valor-ajustado-como-previsuxe3o}{%
+\section{O valor ajustado como
+previsão}\label{o-valor-ajustado-como-previsuxe3o}}
+
+Seja \(\mathcal{D}_t=\{y_1,\ldots,y_t\}\) a série temporal observada.
+Portanto, para qualquer \(h>0\), o valor \(y_{t+h}\) é desconhecido.
+Inferências pontuais sobre esse valor são denominadas previsões, sendo
+denotadas por \(\hat{y}_t(h)\), onde o valor de \(h\) é denominado
+horizonte (de previsão).
+
+Considere que a série temporal \(y_t\) pode ser escrita como um modelo
+linear. Então, pelo princípio da substituição, o valor ajustado
+\(\hat{y}_{t+h}=\boldsymbol{f}_{t+h}'\hat{\boldsymbol{\beta}}\) é um
+estimador para \(y_{t+h}\) e, portanto, \(\hat{y}_t(h)=\hat{y}_{t+h}\)
+uma previsão para o valor da série no horizonte \(h\).
+
+Como
+\(\hat{\boldsymbol{\beta}}\sim N(\boldsymbol{\beta},(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\nu)\),
+teremos que
+\[\hat{y}_{t+h}\sim N(\boldsymbol{f}_{t+h}'\boldsymbol{\beta},\nu\boldsymbol{f}_{t+h}'(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\boldsymbol{f}_{t+h})\]
+Como
+\[\frac{\hat{y}_{t+h}-\boldsymbol{f}_{t+h}'\boldsymbol{\beta}}{\sqrt{\nu\boldsymbol{f}_{t+h}'(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\boldsymbol{f}_{t+h}}}\sim N(0,1)\]
+Um intervalo aproximado, de previsão \(\gamma100\%\), pode ser dado por
+\[\left(\boldsymbol{f}_{t+h}'\hat{\boldsymbol{\beta}}+z_{\frac{1-\gamma}{2}}\sqrt{\hat{\nu}\boldsymbol{f}_{t+h}'(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\boldsymbol{f}_{t+h}},\boldsymbol{f}_{t+h}'\hat{\boldsymbol{\beta}}+z_{\frac{1+\gamma}{2}}\sqrt{\hat{\nu}\boldsymbol{f}_{t+h}'(\boldsymbol{F}_n\boldsymbol{F}_n')^{-1}\boldsymbol{f}_{t+h}}\right)\]
+Em geral, utiliza-se \(\gamma\) igual a 0,8 ou 0,9.
+
+\hypertarget{aplicauxe7uxe3o-na-suxe9rie-co2}{%
+\section{\texorpdfstring{Aplicação na série
+\texttt{co2}}{Aplicação na série co2}}\label{aplicauxe7uxe3o-na-suxe9rie-co2}}
+
+A série \texttt{co2} apresenta a média de concentração de carbono, em
+partes por milhão, em Mauna Loa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(co2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-1-1.pdf}
+
+}
+
+\end{figure}
+
+É possível observar uma tendência crescente e um padrão sazonal. A série
+vai até 1997. Vamos remover os anos de 1996 e 1997 para utilizá-los na
+previsão.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{co2\_1995 }\OtherTok{\textless{}{-}} \FunctionTok{window}\NormalTok{( co2, }\AttributeTok{end =} \FunctionTok{c}\NormalTok{(}\DecValTok{1995}\NormalTok{,}\DecValTok{12}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+Vamos primeiramente eliminar a tendência, utilizando o loees, para
+estudar o padrão sazonal. Abaixo, mostramos a tendência estimada.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(TSA) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Carregando pacotes exigidos: TSA
+\end{verbatim}
+
+\begin{verbatim}
+Warning: package 'TSA' was built under R version 4.3.2
+\end{verbatim}
+
+\begin{verbatim}
+
+Attaching package: 'TSA'
+\end{verbatim}
+
+\begin{verbatim}
+The following objects are masked from 'package:stats':
+
+    acf, arima
+\end{verbatim}
+
+\begin{verbatim}
+The following object is masked from 'package:utils':
+
+    tar
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(forecast)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Carregando pacotes exigidos: forecast
+\end{verbatim}
+
+\begin{verbatim}
+Warning: package 'forecast' was built under R version 4.3.1
+\end{verbatim}
+
+\begin{verbatim}
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+\end{verbatim}
+
+\begin{verbatim}
+Registered S3 methods overwritten by 'forecast':
+  method       from
+  fitted.Arima TSA 
+  plot.Arima   TSA 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tempo }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(co2\_1995)}
+\NormalTok{lw }\OtherTok{\textless{}{-}} \FunctionTok{loess}\NormalTok{( co2\_1995 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ tempo)}
+\NormalTok{tendLoees }\OtherTok{\textless{}{-}}\NormalTok{ lw}\SpecialCharTok{$}\NormalTok{fitted}
+\FunctionTok{ts.plot}\NormalTok{(tendLoees)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-3-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{semTend }\OtherTok{\textless{}{-}}\NormalTok{ co2\_1995 }\SpecialCharTok{{-}}\NormalTok{ tendLoees}
+
+\FunctionTok{ts.plot}\NormalTok{(semTend)}
+\FunctionTok{lines}\NormalTok{( }\FunctionTok{ma}\NormalTok{(semTend, }\DecValTok{12}\NormalTok{))}
+\FunctionTok{monthplot}\NormalTok{(semTend)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-4-1.pdf}
+
+}
+
+\caption{Gráfico da série sem tendência}
+
+}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.50\linewidth}
+
+{\centering 
+
+\raisebox{-\height}{
+
+\includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-4-2.pdf}
+
+}
+
+\caption{Gráfico de subséries}
+
+}
+
+\end{minipage}%
+
+\end{figure}
+
+O sinal sazonal tem um efeito de \(\pm 4\) somados à tendência. O
+primeiro gráfico acima mostra a série subtraída da estimativa via loees,
+junto com uma média móvel de ordem 12, que oscila em torno de zero, o
+que são indícios de que a tendência foi removida. O gráfico de subséries
+apresenta comportamento estacionário para alguns meses. Outro parecem
+ter uma tendência, como abril, por exemplo. Contudo, o valor desse
+efeito é baixo se comparado com a tendência geral, o que nos permite
+assumir uma funçao periódica para a sazonalidade.
+
+Abaixo apresentamos o periodograma. A frequência fundamental representa
+um período de 12 meses e a segunda frequência relevante mostra a
+necessidade do harmônico de ordem 2.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{per }\OtherTok{\textless{}{-}} \FunctionTok{periodogram}\NormalTok{(semTend)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-5-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tail}\NormalTok{( }\DecValTok{1}\SpecialCharTok{/}\NormalTok{per}\SpecialCharTok{$}\NormalTok{freq[ }\FunctionTok{order}\NormalTok{(per}\SpecialCharTok{$}\NormalTok{spec)] , }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1]  6.00000 12.16216 11.84211
+\end{verbatim}
+
+Agora, vamos considerar apenas a tendência estimada, procurando por um
+polinômio de ordem adequada.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aic }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{15}\NormalTok{)\{}
+\NormalTok{mod }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{( tendLoees }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{( tempo, i ,}\AttributeTok{raw =}\NormalTok{ T))}
+\NormalTok{aic[i] }\OtherTok{\textless{}{-}} \FunctionTok{AIC}\NormalTok{(mod)  }
+\NormalTok{\}}
+\FunctionTok{ts.plot}\NormalTok{(aic, }\AttributeTok{type =} \StringTok{\textquotesingle{}o\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-6-1.pdf}
+
+}
+
+\end{figure}
+
+Vamos construir o modelo final. Para poder utilizar esse modelo para
+fazer previsões, precisamos construir a matriz de regressão, utilizando
+o comando \texttt{model,frame}, antes de construir o objeto \texttt{lm}.
+Essa matriz foi denominada por \texttt{X} abaixo.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ordemP }\OtherTok{\textless{}{-}} \DecValTok{7}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{poly}\NormalTok{(tempo, ordemP, }\AttributeTok{raw =}\NormalTok{ T)}\SpecialCharTok{+} \FunctionTok{harmonic}\NormalTok{(co2\_1995, }\DecValTok{2}\NormalTok{))}
+\NormalTok{modFinal }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{( co2\_1995 }\SpecialCharTok{\textasciitilde{}}\NormalTok{  X)}
+\FunctionTok{ts.plot}\NormalTok{(co2\_1995)}
+\FunctionTok{lines}\NormalTok{(}\FunctionTok{ts}\NormalTok{(modFinal}\SpecialCharTok{$}\NormalTok{fitted.values, }\AttributeTok{start =} \FunctionTok{start}\NormalTok{(co2), }\AttributeTok{frequency =} \FunctionTok{frequency}\NormalTok{(co2)), }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{col =}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-7-1.pdf}
+
+}
+
+\end{figure}
+
+Abaixo, criamos a matriz de regressão com com os tempos correspondentes
+aos anos de 1996 e 1997. Note que vamos utilizar o nome \texttt{X}
+novamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# criando a matriz para previsão}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(tempo)}
+\NormalTok{tempoPrev }\OtherTok{\textless{}{-}}\NormalTok{ (tempo[n]}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}\SpecialCharTok{:}\NormalTok{(tempo[n]}\SpecialCharTok{+}\DecValTok{24}\NormalTok{)}
+\NormalTok{tempoPrev }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(tempoPrev, }\AttributeTok{frequency =} \DecValTok{12}\NormalTok{)}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{( }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{( tempoPrev,ordemP, }\AttributeTok{raw =}\NormalTok{ T) }\SpecialCharTok{+} \FunctionTok{harmonic}\NormalTok{(tempoPrev,}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+Agora, vamos utilizar a função \texttt{predict} e conjunto coma matriz
+criada anteriormente, para obter os valores previstos. Também vamos
+obter o intervalo de previsão de 95\%.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(modFinal, }\FunctionTok{data.frame}\NormalTok{(X), }\AttributeTok{interval =} \StringTok{\textquotesingle{}prediction\textquotesingle{}}\NormalTok{, }\AttributeTok{level =}\NormalTok{ .}\DecValTok{95}\NormalTok{)}
+\NormalTok{pred }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(pred, }\AttributeTok{start =} \FunctionTok{c}\NormalTok{(}\DecValTok{1996}\NormalTok{,}\DecValTok{1}\NormalTok{), }\AttributeTok{frequency =} \DecValTok{12}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+              fit      lwr      upr
+Jan 1996 361.6882 360.7432 362.6331
+Feb 1996 362.5388 361.5834 363.4943
+Mar 1996 363.5099 362.5435 364.4763
+Apr 1996 364.6676 363.6897 365.6456
+May 1996 365.4696 364.4787 366.4605
+Jun 1996 365.1953 364.1894 366.2011
+\end{verbatim}
+
+Abaixo, mostramos os valores previstos e os observados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(co2, }\AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\DecValTok{1994}\NormalTok{,}\DecValTok{1998}\NormalTok{), }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{350}\NormalTok{,}\DecValTok{370}\NormalTok{))}
+\FunctionTok{lines}\NormalTok{(pred[,}\DecValTok{1}\NormalTok{], }\AttributeTok{lwd =}\DecValTok{2}\NormalTok{, }\AttributeTok{col =}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-10-1.pdf}
+
+}
+
+\end{figure}
+
+Abaixo, o mesmo gráfico mas com intervalo de previsão de 90\%.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(scales)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Carregando pacotes exigidos: scales
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(co2, }\AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\DecValTok{1994}\NormalTok{,}\DecValTok{1998}\NormalTok{), }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{350}\NormalTok{,}\DecValTok{370}\NormalTok{), }\AttributeTok{type =} \StringTok{\textquotesingle{}p\textquotesingle{}}\NormalTok{)}
+\FunctionTok{polygon}\NormalTok{( }\DecValTok{1996}\SpecialCharTok{+}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\SpecialCharTok{:}\DecValTok{23}\NormalTok{,}\DecValTok{23}\SpecialCharTok{:}\DecValTok{0}\NormalTok{)}\SpecialCharTok{/}\DecValTok{12}\NormalTok{, }\FunctionTok{c}\NormalTok{(pred[,}\DecValTok{2}\NormalTok{],pred[}\DecValTok{24}\SpecialCharTok{:}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{]), }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{\textquotesingle{}lightpink\textquotesingle{}}\NormalTok{,.}\DecValTok{3}\NormalTok{), }\AttributeTok{border =} \StringTok{\textquotesingle{}lightpink\textquotesingle{}}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(pred[,}\DecValTok{1}\NormalTok{], }\AttributeTok{lwd =}\DecValTok{2}\NormalTok{, }\AttributeTok{col =}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-11-1.pdf}
+
+}
+
+\end{figure}
+
+Note que o modelo conseguiu prever o ano de 1996 de modo satisfatório e
+os cinco primeiros meses de 1997. Este modelo parece ser adequado para
+previsões com o horizonte de doze meses.
+
+Vale ressaltar que este modelo não satisfaz a hipótese de ruído branco.
+Os gráficos dos resíduos revelam ainda características típicas de séries
+estacionárias.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res }\OtherTok{\textless{}{-}} \FunctionTok{rstudent}\NormalTok{(modFinal)}
+\FunctionTok{ts.plot}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-12-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{tendencia_sazonalidade_files/figure-pdf/unnamed-chunk-12-2.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Shapiro-Wilk normality test
+
+data:  res
+W = 0.99684, p-value = 0.5439
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{( res, }\AttributeTok{type =} \StringTok{\textquotesingle{}Ljung{-}Box\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Ljung test
+
+data:  res
+X-squared = 233.31, df = 1, p-value < 2.2e-16
+\end{verbatim}
+
+\hypertarget{avaliando-a-qualidade-da-previsuxe3o}{%
+\section{Avaliando a qualidade da
+previsão}\label{avaliando-a-qualidade-da-previsuxe3o}}
+
+Considere que o objetivo principal da análise é a previsão. Um modelo
+pode falhar em alguma suposição, como normalidade dos erros, mas ainda
+sim produzir boas previsões. Por isso, é importante conseguir medir o
+quão bom é o modelo, o que implica estudar a diferença entre o previsto
+e o realizado. Vamos definir o erro de previsão por
+
+\[u_{t} =\hat{y}_{t-1}(1)-y_{t}\]
+
+Fixamos um valor \(J\) para separar as últimas \(J\) observações
+\[y_{t-J+1},\ldots,y_{t},\] e, partir destas observações, calculamos a
+performance de previsão segundo alguma métrica a ser minimizada. As
+métricas mais comuns são:
+
+\begin{itemize}
+\tightlist
+\item
+  MAD (desvio médio absoluto):
+  \[MAD = \frac{1}{J}\sum_{i=t-J+1}^t |u_i|\]
+\item
+  EQM (erro quadrático médio):
+  \[EQM = \frac{1}{J}\sum_{i=t-J+1}^t (u_i)^2\]
+\item
+  MAPE (erro percentual médio)
+  \[MAPE = \frac{1}{J}\sum_{i=t-J+1}^t \frac{|u_i|}{y_i}\times 100\%\]
+\item
+  SMAPE (erro simétrico percentual médio)
+  \[SMAPE = \frac{1}{J}\sum_{i=t-J+1}^t 2\frac{|u_i|}{y_i+\hat{y}_{i-1}(1)}\times 100\%\]
+\item
+  MedAPE (erro percentual mediano)
+  \[MedAPE = mediana\left(\frac{|u_i|}{y_i}\right) \times 100\%,\;\;i=t-J+1,\ldots,t.\]
+\item
+  MASE (erro escalonado médio)
+  \[MASE = 100\%\times\frac{1}{J} \frac{\sum_{i = t-J+1}^t|u_i|}{\frac{1}{J-1}\sum_{i=t-J+2}^t |y_i - y_{i-1}|}.\]
+\end{itemize}
+
+O MASE tem uma interpretação muito interessante: se \(MASE>100\%\),
+então o modelo é pior do que simplesmente fazer \[y_{t-1}(1)=y_{t-1},\]
+ou seja, prever \(y_t\) como sendo igual a \(y_{t-1}\). Isto é
+considerado um ``modelo ingênuo'' (\emph{naïve model}), sendo
+considerado o modelo de previsão mais básico.
 
 \bookmarksetup{startatroot}
 
