@@ -316,76 +316,65 @@ Box.test(res)
 $\blacksquare$
 :::
 
-
-\begin{frame}{Harmônicos}
-	A função 
-	\begin{equation}
-	g(t) = A \cos\left( \omega t_i +\phi \right),
-	\end{equation}
-	é denominada harmônico. Alguns componentes importantes:
-	\begin{itemize}
-		\item $A$ é denominado amplitude e $-A < g(t) < A$.
-		\item $\phi\in (0,2\pi)$ é denominado fase.
-		\item O período (ou comprimento de onda) é $p = 2\pi/\omega$.
-	\end{itemize}
-\end{frame}
+## Regressão harmônica simples
 
 
-\begin{frame}
-	\begin{itemize}
-		\item $\omega$ é denominada frequência angular, medida em radianos.
-		\item Embora $\omega\in(0,2\pi)$, podemos notar que, para $\omega<\pi$
-		$$A\cos(\omega t + \phi ) = A\cos\left( (2\pi + \omega) t + \phi \right).$$
-		Portanto, faremos $\omega\in(0,\pi)$.
-		\item Neste caso, a maior frequência será $\omega$ gerando o período $p = 2$. Para tempos equidistantes, este é o menor período detectável.
-	\end{itemize}
-\end{frame}
+### A função harmônica
 
-\begin{frame}
-\begin{figure}
-	\centering
-	\includegraphics[width=0.7\linewidth]{FigurasAulas/harmonico1}
-	\caption{Harmônico com $A=1$, $\phi=0$ e $p=4$.}
-	\label{fig:harmonico1}
-	\end{figure}	
-\end{frame}
+A função 
+$$\begin{equation}
+	s(t) = A \cos\left( 2\pi \omega t_i +\phi \right),
+\end{equation}$$
+é denominada harmônico, onde $A$ e $\phi\in(0,2\pi)$ são denominados amplitude e fase. Essa função é periódica, com período igual a 
+$p = 1/\omega$ onde $\omega$ é denominado frequência (angular). 
 
-\begin{frame}
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.7\linewidth]{FigurasAulas/harmonico1_amplitudes}
-		\caption{Em cinza: harmônico com $A=1$, $\phi=0$ e $p=4$. Em preto: mesmo harmônico, exceto por $A=2$.}
-		\label{fig:harmonico1_amp}
-		\end{figure}	
-\end{frame}
+```{r}
+#| layout-ncol: 2
+#| fig-cap: 
+#| - 'A amplitude representa o valor máximo e mínimo do harmônico. No gráfico estão representados harmônicos de período 12 com diferentes amplitudes. Linha cheia: A=1. Linha tracejada: A=0,5'
+#| - 'A fase tem papel de locação, deslocando da onda mas mantendo sua forma. No gráfico estão representados harmônicos de período 12 com diferentes fases. Linha cheia: $\phi=2$. Linha tracejada: $\phi=4$'
+#| - 'A frequência representa o número de voltas por unidade de tempo. No gráfico estão representados harmônicos com frequências diferentes. Linha cheia: $\omega=1/12$ (padrão anual). Linha tracejada: $\omega=1/6$ (padrão semestral)'
 
-\begin{frame}
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.7\linewidth]{FigurasAulas/harmonico1_fases}
-		\caption{Em cinza: harmônico com $A=1$, $\phi=0$ e $p=4$. Em preto: mesmo harmônico, exceto por $\phi=2$.}
-		\label{fig:harmonico1_fase}
-	\end{figure}	
-\end{frame}
+curve( cos( 2*pi/12 *x), 0,24, lwd = 2, ylab = '')
+curve( .5*cos( 2*pi/12 *x), add = T, lty = 2,lwd = 2)
 
-		
 
-\begin{frame}{Regressão harmônica simples}
-    O modelo de regressão harmônica simples é dado por
-	\begin{equation}
-	y_t = A \cos\left( \omega t_i +\phi \right) + \varepsilon_t,
-	\end{equation}
-	onde $\varepsilon_t$ é um ruído branco.
-\end{frame}
+curve( cos( 2*pi/12 *x+2), 0,24, lwd = 2, ylab = '')
+curve( cos( 2*pi/12 *x + 4), add = T, lty = 2,lwd = 2)
 
-\begin{frame}
-	Como $\omega$ é constante ($\omega = 2\pi/p$) , este modelo pode ser linearizado:
-	\begin{align}
-	A\cos\left(\omega t_i + \phi \right)&=A\left[ \cos(\omega t_i)\cos(\phi) - \sin(\omega t_i)\sin(\phi)\right]\\
-	&= \underbrace{A\cos(\phi)}_\text{$\beta_1$} \cos(\omega t_i) \underbrace{-A\sin(\phi)}_\text{$\beta_2$}\sin(\omega t_i).
-	\end{align}
-	Note que sempre é possível recuperar os parâmetros originais:
-	\begin{align*}
+curve( cos( 2*pi/12 *x), 0,24, lwd = 2, ylab = '')
+curve( cos( 2*pi/6 *x), add = T, lty = 2,lwd = 2)
+
+```
+
+
+
+<div class='alert alert-danger'>
+**Cuidado.** Período é o tempo necessário para que o padrão sazonal se repita, dando uma volta completa. Já a frequência é o número de  vezes que o padrão se repete por unidade de tempo. Por exemplo, para $p=12$ (meses), $\omega=1/12$ implica que cada unidade do tempo (mês) representa um doze ávos de uma volta. 
+
+Entretanto, quando criamos um objeto do tipo `ts` alimentamos o argumento `frequency` com o valor do período. A aparente confusão ocorre porque o argumento `frequency` se refere ao número de observações (ou seja, frequência) por unidade de tempo. 
+
+Também é possível escrever um objeto `ts` atribuíndo o valor $\omega$ através do argumento `deltat`. Por exemplo, para um período de 12 meses, usamos `deltat=1/12`.   
+</div>
+
+Pela definição, como $\omega=1/p$, teremos que $\omega\in(0,1)$. Assuma que $a=\omega+1/2$, onde $\omega\in(0,1/2)$. Então, podemos notar que
+$$\begin{align}A\cos(2\pi\omega t + \phi ) &= A\cos\left( 2\pi\left(a-\frac{1}{2}\right) t + \phi \right)\\
+&=A\cos(2\pi at+\phi)\cos\left(\pi t\right)\\
+&=A^\star\cos(2\pi a t + \phi).\end{align}$$
+onde $A^\star=A\cos(\pi t)$. Na prática, é impossível distinguir entre $(A,\omega)$ e $(A^\star, a)$. Para permitir a existência da identificabilidade, vamos assumir que $A>0$ e $\omega\in(0,1/2)$. Isto implica que o menor período detectátvel é $p = 2$.
+
+
+### O modelo de regressão harmônica simples
+
+O modelo de regressão harmônica simples é dado por
+$$y_t = A \cos\left( 2\pi\omega t_i +\phi \right) + \varepsilon_t,$$
+onde $\varepsilon_t$ é um ruído branco. Como $\omega$ é considerado conhecido, este modelo pode ser linearizado:
+$$A\cos\left(2\pi\omega t_i + \phi \right)=A\left[ \cos(2\pi\omega t_i)\cos(\phi) - \sin(2\pi\omega t_i)\sin(\phi)\right]$$
+e, fazendo
+$\beta_1=A\cos(\phi)}$ e $\beta_2 =-A\sin(\phi)$, teremos que 
+$$y_t=\beta_1\cos(2\pi\omega t_i)+\beta_2\sin(2\pi\omega)+\varepsilon_t$$
+Note que sempre é possível recuperar os parâmetros originais:
+$$\begin{align*}
 	\left\{
 	\begin{array}{l}
 	\beta_1 = A\cos(\phi) \\
@@ -401,21 +390,207 @@ $\blacksquare$
 	A = \sqrt{\beta_1^2 + \beta_2^2}\\
 	\phi = \cos^{-1}\left(\frac{\beta_1}{A}\right) \\
 	\end{array}\right.
-	\end{align*}
-\end{frame}
+	\end{align*}$$
 
-\begin{frame}
-		Fazendo 
-		\begin{align}
-		\boldsymbol{\beta}' &= (A\cos(\phi), - A\sin(\phi)) \\
+
+Fazendo 
+$$\begin{align}
+		\boldsymbol{\beta}' &= (\beta_1, \beta_2) \\
 		\boldsymbol{f}_t' &= (\cos(\omega t_i), \sin(\omega t_i))
-		\end{align}
-		teremos
+		\end{align}$$
+teremos
 		$$\boldsymbol{f}_t'\boldsymbol{\beta}=A\cos(\omega t_i + \phi).$$
-		Portanto, podemos escrever:
-		\begin{equation}
+Portanto, podemos escrever:
+$$\begin{equation}
 		y_t = \boldsymbol{f}_t'\boldsymbol{\beta}+\varepsilon_t
-		\end{equation}
-	Considerando $\varepsilon_t\sim\hbox{Normal}(0,\nu)$ teremos
-	$$\boldsymbol{y}|\boldsymbol{\beta},\nu\sim\hbox{Normal}( \boldsymbol{F}_T'\boldsymbol{\beta},\nu\textbf{I}_T).$$
-\end{frame}
+		\end{equation}$$
+Considerando $\varepsilon_t\sim\hbox{Normal}(0,\nu)$ teremos
+	$$\boldsymbol{y}|\boldsymbol{\beta},\nu\sim\hbox{Normal}( \boldsymbol{F}_n'\boldsymbol{\beta},\nu\textbf{I}_T).$$
+
+:::{#exm-nottemHarmonico1}
+
+Considere novamente a série `nottem`. A função `harmonic` do pacote `TSA` constrói a matriz necessária para compor o modelo de regressão harmônica simples.
+
+```{r}
+require(TSA)
+har <- harmonic(nottem)
+mod <- lm( nottem ~ har)
+mod
+```
+
+Note que não removemos a média da série, logo a mesma está sendo estimada pelo intercepto $\mu$. O gráfico do harmônico gerado é mostrado abaixo.
+
+```{r}
+param <- coefficients(mod)
+curve( param[1]+ param[2]*cos(2*pi*x/12) + param[3]*sin(2*pi*x/12),1,12, ylab = 'Harmônico estimado', lwd = 2, xlab = 'Mês')
+```
+Em relação aos resíduos do modelo, temos
+```{r}
+#| layout-ncol: 2
+#| fig-cap: 
+#| - 'Resíduos da regressão harmônica simples'
+#| - 'Correlograma dos resíduos'
+
+res <- residuals(mod)
+ts.plot(res)
+stats::acf(res)
+```
+
+No gráfico dos resíduos podemos ver uma série oscilando em torno de zero com o que parecer ser uma variância constante. Já no correlograma podemos notar autocorrelações significativas na defasagem um em algumas outras, o que elimina a hipótese de ruído branco (o teste de Box-Pierce tem p-valor < 10^{-5}, confirmando a nossa suspeita). 
+$\blacksquare$
+:::
+
+## Periodograma
+
+Considere o modelo de regressão harmônica simples com frequência desconhecida. Então, considerando os parâmetros $\boldsymbol{\theta}=\{\beta_1,\beta_2,\nu,\omega\}$ e um ruído branco gaussiano, sabemos que a função de verossimilhança pode ser resscrita como 
+
+$$L(\boldsymbol{\theta})\varpropto  \left(\frac{1}{\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\left[(\boldsymbol{\beta}-\hat{\boldsymbol{\beta}}(\omega))'\boldsymbol{F}\boldsymbol{F}'(\boldsymbol{\beta}-\hat{\boldsymbol{\beta}}(\omega)) + R(\omega)\right]\right\}$$
+obs: como $\boldsymbol{F}$ depende de $\omega$, tanto $\hat{\boldsymbol{\beta}}$ quanto $R$ dependem de $\omega$ e, por isso, estão escritos como função da frequência. 
+
+Como
+$$\begin{align*}\boldsymbol{F}_n\boldsymbol{F}_n'&=\left(\begin{array}{cc}
+\sum_{t=1}^{n}\cos(2\pi\omega t) ^2 & \sum_{t=1}^{n}\cos(2\pi\omega t)\sin(2\pi\omega t) \\
+\sum_{t=1}^{n}\cos(2\pi\omega t)\sin(2\pi\omega t) & \sum_{t=1}^{n}\sin(2\pi\omega t)^2
+	\end{array}\right) \\&=\left(\begin{array}{cc}n/2 & 0 \\ 0 & n/2\end{array}\right)=\frac{n}{2}\textbf{I}_2
+	\end{align*}$$
+	e
+$$\begin{align*}
+	R(\omega) &= \left(\boldsymbol{y}- \boldsymbol{F}_n'\hat{\boldsymbol{\beta}}(\omega)\right)'\left(\boldsymbol{y}- \boldsymbol{F}_n'\hat{\boldsymbol{\beta}(\omega)}\right)=\boldsymbol{y}'\boldsymbol{y}-\hat{\boldsymbol{\beta}}(\omega)'(\boldsymbol{F}_n\boldsymbol{F}_n')\hat{\boldsymbol{\beta}}(\omega)\\
+	&=\boldsymbol{y}'\boldsymbol{y}-\frac{n}{2}\hat{\boldsymbol{\beta}}(\omega)'\hat{\boldsymbol{\beta}}(\omega)
+	\end{align*}$$
+
+Considere a função de verossimilhança perfilada de $\omega$: 
+$$\begin{align*}
+	L(\omega|\hat{\boldsymbol{\beta}}(\omega))&\propto \exp\left\{\frac{1}{2\nu}R(\omega)\right\}\propto\exp\left\{\frac{n}{4\nu}\hat{\boldsymbol{\beta}}(\omega)'\hat{\boldsymbol{\beta}}(\omega)\right\} 	\end{align*}$$
+	Faça $I(\omega)=\frac{n}{2}\hat{\boldsymbol{\beta}}(\omega)'\hat{\boldsymbol{\beta}}(\omega)$. Então,
+$$\begin{align*}
+	L(\omega|\hat{\boldsymbol{\beta}}(\omega))&\propto \exp\left\{\frac{1}{2\nu}I(\omega)\right\}\end{align*}$$
+	É fácil notar que, quanto maior for o valor de $I(\omega)$, maior será a função de verossimilhança perfilada.
+	
+	
+:::{#def-periodograma}	
+O gráfico $(\omega, I(\omega))$ é denominado periodograma e serve para nos auxiliar a encontrar as frequências mais importantes da série. $I(\omega)$ também é conhecido como espectro (ou densidade espectral).
+:::		
+
+
+
+
+Como
+$$\hat{\boldsymbol{\beta}}'\hat{\boldsymbol{\beta}}=\hat{\beta}_1^2 + \hat{\beta}_2^2,$$
+		logo,
+		$$I(\omega)=\frac{n}{2}\left[\hat{\beta}_1^2 + \hat{\beta}_2^2\right]=\frac{n}{2}\hat{A^2}$$
+No periodograma, restringimos a busca nos valores $\omega_k = k / n$, com $1\leq k <n/2$. Se tivermos um pico na frequência $\omega_k$, então podemos estimar o período como sendo:
+		$$p=\frac{1}{\omega_k}=\frac{n}{k}.$$
+
+:::{#exem-nottemPeriodograma}
+
+Utilizamos a função `periogogram` do pacote `TSA` para fazer o periodograma. Abaixo, apresentamos o periodograma da série `nottem`.
+
+```{r}
+p <-periodogram(nottem)
+```
+Note que o periodograma possui um pico dominante. Abaixo, mostramos que este pico é o período 12.
+
+```{r}
+# encontrando em qual coordenada ocorre o maior valor do periodograma
+k <- which(p$spec == max(p$spec))
+
+# identificando a frequência correspondente
+omega <- p$freq[k]
+
+# identificando o período da série
+1/omega
+```
+
+No @exm-nottemHarmonico1 aplicamos uma regressão harmônica simples e descobrimos que o ruído resultante não era branco e gaussiano. Abaixo, mostramos o periodograma dos resíduos obtidos nesse exemplo.
+
+```{r}
+p2 <- periodogram(res)
+```
+
+Observe que uma nova frequência dominante surge. Vamos identificá-la.
+
+```{r}
+# encontrando em qual coordenada ocorre o maior valor do periodograma
+k <- which(p2$spec == max(p2$spec))
+
+# identificando a frequência correspondente
+omega <- p2$freq[k]
+
+# identificando o período da série
+1/omega
+```
+Portanto, ainda existe um padrão sazonal, de período6, para ser explicado nessa série.
+
+## Regressão Harmônica
+
+Na série `nottem`, vimos que o periodograma apontou que o período deveria ser $12$. Este primeiro período encontrado será denominado 'fundamental'. Após ajustarmos uma regressão harmônica simples, com $p=12$, os resíduos mostraram outra componente sazonal com período $p'=6$. 
+
+Na verdade, é comum termos períodos que são frações do período fundamental. Após identificar a frequência (ou período) fundamental, teremos as seguintes frequências para explorar:
+				$$\omega_k= \frac{k}{p},$$
+				com $1\leq k < \lfloor p/2 \rfloor$, onde $\lfloor a \rfloor$ é a parte inteira de $a$. 					
+
+O harmônico gerado por $\omega_k$, dado por
+$$\begin{equation}
+		A_k\cos( 2\pi\omega_k t+\phi_k)
+\end{equation}$$
+é denominado harmônico de ordem $k$. 
+
+- O harmônico de ordem 1 completa um ciclo em $p$ unidades de tempo.
+- O harmônico de ordem 2 completa um ciclo em $p/2$ unidades de tempo.
+- O harmônico de ordem $k$ completa um ciclo em $p/k$ unidades de tempo.
+
+	Podemos lidar com os diversos harmônicos de modo bastante direto:
+$$\begin{equation}
+	y_t = \sum_{k=1}^{m }A_k\cos(\omega_k t + \phi_k) + \varepsilon_t
+	\end{equation}$$
+	ou ainda, utilizando os resultados já discutidos,
+$$\begin{align}
+		y_t &= \sum_{k=1}^{m }A_k\left[\cos(\omega_k t)\cos(\phi_k) -\sin(\omega_k t)\sin(\phi_k)\right] + \varepsilon_t\\
+		&= \sum_{k=1}^{m }\left[\beta_{k,1}\cos(\omega_k t)+\beta_{k,2}\sin(\omega_k t)\right] + \varepsilon_t,
+		\end{align}$$
+		onde
+$$\begin{align}
+		m = \left\{\begin{array}{ll}
+\lfloor p/2 \rfloor, & \hbox{se $p$ é ímpar} \\
+p/2-1, & \hbox{se $p$ é par}
+		\end{array}\right.
+		\end{align}$$
+Fazendo
+$$\begin{equation}
+	\boldsymbol{f}_t'=\left(\cos(w_1 t), \sin(w_1 t),\ldots,\cos(w_{m} t), \sin(w_{m} t) \right)
+	\end{equation}$$
+	e
+$$\begin{equation}
+	\boldsymbol{\beta}'=\left(\beta_{1,1},\beta_{1,2},\ldots,\beta_{m,1},\beta_{m,2}\right)
+	\end{equation}$$
+	teremos
+	$$y_t= \boldsymbol{f}_t'\boldsymbol{\beta} + \varepsilon_t,$$
+	e o tradicional modelo linear:
+	$$\boldsymbol{y}= \boldsymbol{F}_t'\boldsymbol{\beta} + \boldsymbol{\varepsilon}.$$
+:::{#exm-nottemRegressoaHarmonica}
+Já vimos que a função `harm(x)` gera a matriz necesária para ajusta a regressão harmônica simples para a série temporal $x$. Ela possui um argumento, denotado por `m` e cujo *default* é um, que gera uma regressão harmônica com `m` harmônicos.
+
+Abaixo, mostramos os resultados para a regressão harmônica simples e com os dois primeiros harmônicos para a série `nottem`. Note que o AIC deste último sugere que os dois primeiros harmônicos deve ser utilizados
+
+```{r}
+simples  <- lm( nottem ~harmonic(nottem) )
+doisHarm <- lm( nottem ~harmonic(nottem, 2))
+
+AIC(simples)
+AIC(doisHarm)
+```
+
+Os resíduos do modelo com dois harmônicos são explorados abaixo. A série dos resíduos parece flutuar em torno de zero com variância constante, enquanto que o correlograma exibe uma pequena autocorrelação na defasagem um. O teste de Shapiro-Wilks aceita a normalidade, mas o teste de Ljung-Box rejeita a hipótese de ruído branco.
+
+```{r}
+res2 <- residuals(doisHarm)
+ts.plot(res2)
+acf(res2)
+shapiro.test(res2)
+Box.test(res2, type = 'Ljung-Box')
+```
+
+:::
+
+

@@ -204,6 +204,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#dessazonalização" id="toc-dessazonalização" class="nav-link" data-scroll-target="#dessazonalização"><span class="header-section-number">7.3</span> Dessazonalização</a></li>
   <li><a href="#decomposições-de-séries" id="toc-decomposições-de-séries" class="nav-link" data-scroll-target="#decomposições-de-séries"><span class="header-section-number">7.4</span> Decomposições de séries</a></li>
   <li><a href="#modelo-de-forma-livre---ou-fatores-sazonais" id="toc-modelo-de-forma-livre---ou-fatores-sazonais" class="nav-link" data-scroll-target="#modelo-de-forma-livre---ou-fatores-sazonais"><span class="header-section-number">7.5</span> Modelo de Forma livre - ou fatores sazonais</a></li>
+  <li><a href="#regressão-harmônica-simples" id="toc-regressão-harmônica-simples" class="nav-link" data-scroll-target="#regressão-harmônica-simples"><span class="header-section-number">7.6</span> Regressão harmônica simples</a>
+  <ul class="collapse">
+  <li><a href="#a-função-harmônica" id="toc-a-função-harmônica" class="nav-link" data-scroll-target="#a-função-harmônica"><span class="header-section-number">7.6.1</span> A função harmônica</a></li>
+  <li><a href="#o-modelo-de-regressão-harmônica-simples" id="toc-o-modelo-de-regressão-harmônica-simples" class="nav-link" data-scroll-target="#o-modelo-de-regressão-harmônica-simples"><span class="header-section-number">7.6.2</span> O modelo de regressão harmônica simples</a></li>
+  </ul></li>
+  <li><a href="#periodograma" id="toc-periodograma" class="nav-link" data-scroll-target="#periodograma"><span class="header-section-number">7.7</span> Periodograma</a></li>
   </ul>
 </nav>
     </div>
@@ -338,7 +344,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Também é possível que o padrão sazonal não seja bem representado por uma função periódica. Isto ocorre quando o gráfico de subséries possui tendência.</p>
 <div id="exm-AirPassengersMonthplot" class="theorem example">
-<p><span class="theorem-title"><strong>Example 7.5 </strong></span>A <span class="quarto-unresolved-ref">?fig-AirPassengersMonthplot</span> apresenta o gráfico da série <code>AirPassengers</code> e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série.</p>
+<p><span class="theorem-title"><strong>Example 7.5 </strong></span>A <a href="#fig-AirPassengersMonthplot">Figure&nbsp;<span class="quarto-unresolved-ref">fig-AirPassengersMonthplot</span></a> apresenta o gráfico da série <code>AirPassengers</code> e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série.</p>
 <div>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(AirPassengers)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -403,7 +409,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Estime a tendência dessazoanlizada, utilizando a <span class="math inline">\(p\)</span>-MM, obtendo <span class="math inline">\(\hat{T}\)</span></p></li>
 <li><p>Remova a tendência da série: <span class="math inline">\(\tilde{x}_t=x_t-\hat{T}\)</span></p></li>
 <li><p>Encontre as <span class="math inline">\(p\)</span> subséries de <span class="math inline">\(\tilde{x}\)</span> e estime os valores de <span class="math inline">\(s\)</span> através de suas médias.</p></li>
-<li><p>Estime os resíduos: <span class="math inline">\(\hat{\varepsilon}_t=x_t-\hat{T}(t)-\hat{s}(t)\)</span> A <a href="#fig-ldeathsDecomposicaoClassica">Figure&nbsp;<span>7.5</span></a> apresenta a decomposição clássica da série de óbitos pode doenças pulmonares no Reino Unido.</p></li>
+<li><p>Estime os resíduos: <span class="math inline">\(\hat{\varepsilon}_t=x_t-\hat{T}(t)-\hat{s}(t)\)</span> A <a href="#fig-ldeathsDecomposicaoClassica">Figure&nbsp;<span class="quarto-unresolved-ref">fig-ldeathsDecomposicaoClassica</span></a> apresenta a decomposição clássica da série de óbitos pode doenças pulmonares no Reino Unido.</p></li>
 </ul>
 <div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">decompose</span>(ldeaths))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -420,7 +426,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Como é utilizada uma média móvel, a estimativa da tendência e do ruído é prejudicada no início e fim da série. Outro problema que este método não consegue estimar padrões sazonais que não sejam representamos por uma função periódica. Para ilustrar, apresentamos abaixo a decomposição clássica da série <code>AirPassengers</code>. Como a estimação da parte sazonal utilizou a média das subséries, as tendências sazonais vistas no <a href="#exm-AirPassengersMonthplot">Example&nbsp;<span>7.5</span></a> foram para os resíduos (identificados co)</p>
+<p>Como é utilizada uma média móvel, a estimativa da tendência e do ruído é prejudicada no início e fim da série. Outro problema que este método não consegue estimar padrões sazonais que não sejam representamos por uma função periódica. Para ilustrar, apresentamos abaixo a decomposição clássica da série <code>AirPassengers</code>. Como a estimação da parte sazonal utilizou a média das subséries, as tendências sazonais vistas no <a href="#exm-AirPassengersMonthplot">Example&nbsp;<span class="quarto-unresolved-ref">exm-AirPassengersMonthplot</span></a> foram para os resíduos (identificados co)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">decompose</span>(AirPassengers))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -542,6 +548,295 @@ X-squared = 13.109, df = 1, p-value = 0.0002939</code></pre>
 </div>
 </div>
 <p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+</section>
+<section id="regressão-harmônica-simples" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="regressão-harmônica-simples"><span class="header-section-number">7.6</span> Regressão harmônica simples</h2>
+<section id="a-função-harmônica" class="level3" data-number="7.6.1">
+<h3 data-number="7.6.1" class="anchored" data-anchor-id="a-função-harmônica"><span class="header-section-number">7.6.1</span> A função harmônica</h3>
+<p>A função <span class="math display">\[\begin{equation}
+    s(t) = A \cos\left( 2\pi \omega t_i +\phi \right),
+\end{equation}\]</span> é denominada harmônico, onde <span class="math inline">\(A\)</span> e <span class="math inline">\(\phi\in(0,2\pi)\)</span> são denominados amplitude e fase. Essa função é periódica, com período igual a <span class="math inline">\(p = 1/\omega\)</span> onde <span class="math inline">\(\omega\)</span> é denominado frequência (angular).</p>
+<div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( <span class="fu">cos</span>( <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">/</span><span class="dv">12</span> <span class="sc">*</span>x), <span class="dv">0</span>,<span class="dv">24</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">''</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( .<span class="dv">5</span><span class="sc">*</span><span class="fu">cos</span>( <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">/</span><span class="dv">12</span> <span class="sc">*</span>x), <span class="at">add =</span> T, <span class="at">lty =</span> <span class="dv">2</span>,<span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( <span class="fu">cos</span>( <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">/</span><span class="dv">12</span> <span class="sc">*</span>x<span class="sc">+</span><span class="dv">2</span>), <span class="dv">0</span>,<span class="dv">24</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">''</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( <span class="fu">cos</span>( <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">/</span><span class="dv">12</span> <span class="sc">*</span>x <span class="sc">+</span> <span class="dv">4</span>), <span class="at">add =</span> T, <span class="at">lty =</span> <span class="dv">2</span>,<span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( <span class="fu">cos</span>( <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">/</span><span class="dv">12</span> <span class="sc">*</span>x), <span class="dv">0</span>,<span class="dv">24</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">''</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( <span class="fu">cos</span>( <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">/</span><span class="dv">6</span> <span class="sc">*</span>x), <span class="at">add =</span> T, <span class="at">lty =</span> <span class="dv">2</span>,<span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">A amplitude representa o valor máximo e mínimo do harmônico. No gráfico estão representados harmônicos de período 12 com diferentes amplitudes. Linha cheia: A=1. Linha tracejada: A=0,5</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">A fase tem papel de locação, deslocando da onda mas mantendo sua forma. No gráfico estão representados harmônicos de período 12 com diferentes fases. Linha cheia: <span class="math inline">\(\phi=2\)</span>. Linha tracejada: <span class="math inline">\(\phi=4\)</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">A frequência representa o número de voltas por unidade de tempo. No gráfico estão representados harmônicos com frequências diferentes. Linha cheia: <span class="math inline">\(\omega=1/12\)</span> (padrão anual). Linha tracejada: <span class="math inline">\(\omega=1/6\)</span> (padrão semestral)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="alert alert-danger">
+<p><strong>Cuidado.</strong> Período é o tempo necessário para que o padrão sazonal se repita, dando uma volta completa. Já a frequência é o número de vezes que o padrão se repete por unidade de tempo. Por exemplo, para <span class="math inline">\(p=12\)</span> (meses), <span class="math inline">\(\omega=1/12\)</span> implica que cada unidade do tempo (mês) representa um doze ávos de uma volta.</p>
+<p>Entretanto, quando criamos um objeto do tipo <code>ts</code> alimentamos o argumento <code>frequency</code> com o valor do período. A aparente confusão ocorre porque o argumento <code>frequency</code> se refere ao número de observações (ou seja, frequência) por unidade de tempo.</p>
+<p>Também é possível escrever um objeto <code>ts</code> atribuíndo o valor <span class="math inline">\(\omega\)</span> através do argumento <code>deltat</code>. Por exemplo, para um período de 12 meses, usamos <code>deltat=1/12</code>.</p>
+</div>
+<p>Pela definição, como <span class="math inline">\(\omega=1/p\)</span>, teremos que <span class="math inline">\(\omega\in(0,1)\)</span>. Assuma que <span class="math inline">\(a=\omega+1/2\)</span>, onde <span class="math inline">\(\omega\in(0,1/2)\)</span>. Então, podemos notar que <span class="math display">\[\begin{align}A\cos(2\pi\omega t + \phi ) &amp;= A\cos\left( 2\pi\left(a-\frac{1}{2}\right) t + \phi \right)\\
+&amp;=A\cos(2\pi at+\phi)\cos\left(\pi t\right)\\
+&amp;=A^\star\cos(2\pi a t + \phi).\end{align}\]</span> onde <span class="math inline">\(A^\star=A\cos(\pi t)\)</span>. Na prática, é impossível distinguir entre <span class="math inline">\((A,\omega)\)</span> e <span class="math inline">\((A^\star, a)\)</span>. Para permitir a existência da identificabilidade, vamos assumir que <span class="math inline">\(A&gt;0\)</span> e <span class="math inline">\(\omega\in(0,1/2)\)</span>. Isto implica que o menor período detectátvel é <span class="math inline">\(p = 2\)</span>.</p>
+</section>
+<section id="o-modelo-de-regressão-harmônica-simples" class="level3" data-number="7.6.2">
+<h3 data-number="7.6.2" class="anchored" data-anchor-id="o-modelo-de-regressão-harmônica-simples"><span class="header-section-number">7.6.2</span> O modelo de regressão harmônica simples</h3>
+<p>O modelo de regressão harmônica simples é dado por <span class="math display">\[y_t = A \cos\left( 2\pi\omega t_i +\phi \right) + \varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco. Como <span class="math inline">\(\omega\)</span> é considerado conhecido, este modelo pode ser linearizado: <span class="math display">\[A\cos\left(2\pi\omega t_i + \phi \right)=A\left[ \cos(2\pi\omega t_i)\cos(\phi) - \sin(2\pi\omega t_i)\sin(\phi)\right]\]</span> e, fazendo <span class="math inline">\(\beta_1=A\cos(\phi)}\)</span> e <span class="math inline">\(\beta_2 =-A\sin(\phi)\)</span>, teremos que <span class="math display">\[y_t=\beta_1\cos(2\pi\omega t_i)+\beta_2\sin(2\pi\omega)+\varepsilon_t\]</span> Note que sempre é possível recuperar os parâmetros originais: <span class="math display">\[\begin{align*}
+    \left\{
+    \begin{array}{l}
+    \beta_1 = A\cos(\phi) \\
+    \beta_2 = -A\sin(\phi) \\
+    \end{array}\right.  \Rightarrow     
+    \left\{
+    \begin{array}{l}
+    \beta_1^2 = A^2\cos(\phi)^2 \\
+    \beta_2^2 = A^2\sin(\phi)^2 \\
+    \end{array}\right.  \Rightarrow                 
+    \left\{
+    \begin{array}{l}
+    A = \sqrt{\beta_1^2 + \beta_2^2}\\
+    \phi = \cos^{-1}\left(\frac{\beta_1}{A}\right) \\
+    \end{array}\right.
+    \end{align*}\]</span></p>
+<p>Fazendo <span class="math display">\[\begin{align}
+        \boldsymbol{\beta}' &amp;= (\beta_1, \beta_2) \\
+        \boldsymbol{f}_t' &amp;= (\cos(\omega t_i), \sin(\omega t_i))
+        \end{align}\]</span> teremos <span class="math display">\[\boldsymbol{f}_t'\boldsymbol{\beta}=A\cos(\omega t_i + \phi).\]</span> Portanto, podemos escrever: <span class="math display">\[\begin{equation}
+        y_t = \boldsymbol{f}_t'\boldsymbol{\beta}+\varepsilon_t
+        \end{equation}\]</span> Considerando <span class="math inline">\(\varepsilon_t\sim\hbox{Normal}(0,\nu)\)</span> teremos <span class="math display">\[\boldsymbol{y}|\boldsymbol{\beta},\nu\sim\hbox{Normal}( \boldsymbol{F}_n'\boldsymbol{\beta},\nu\textbf{I}_T).\]</span></p>
+<div id="exm-nottemHarmonico1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 7.8 </strong></span>Considere novamente a série <code>nottem</code>. A função <code>harmonic</code> do pacote <code>TSA</code> constrói a matriz necessária para compor o modelo de regressão harmônica simples.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(TSA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: TSA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'TSA' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'TSA'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    acf, arima</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:utils':
+
+    tar</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>har <span class="ot">&lt;-</span> <span class="fu">harmonic</span>(nottem)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span> har)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>mod</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = nottem ~ har)
+
+Coefficients:
+   (Intercept)  harcos(2*pi*t)  harsin(2*pi*t)  
+        49.040         -11.473          -1.391  </code></pre>
+</div>
+</div>
+<p>Note que não removemos a média da série, logo a mesma está sendo estimada pelo intercepto <span class="math inline">\(\mu\)</span>. O gráfico do harmônico gerado é mostrado abaixo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>param <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(mod)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( param[<span class="dv">1</span>]<span class="sc">+</span> param[<span class="dv">2</span>]<span class="sc">*</span><span class="fu">cos</span>(<span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>x<span class="sc">/</span><span class="dv">12</span>) <span class="sc">+</span> param[<span class="dv">3</span>]<span class="sc">*</span><span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>x<span class="sc">/</span><span class="dv">12</span>),<span class="dv">1</span>,<span class="dv">12</span>, <span class="at">ylab =</span> <span class="st">'Harmônico estimado'</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">'Mês'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Em relação aos resíduos do modelo, temos</p>
+<div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">acf</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Resíduos da regressão harmônica simples</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Correlograma dos resíduos</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>No gráfico dos resíduos podemos ver uma série oscilando em torno de zero com o que parecer ser uma variância constante. Já no correlograma podemos notar autocorrelações significativas na defasagem um em algumas outras, o que elimina a hipótese de ruído branco (o teste de Box-Pierce tem p-valor &lt; 10^{-5}, confirmando a nossa suspeita). <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+</section>
+</section>
+<section id="periodograma" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="periodograma"><span class="header-section-number">7.7</span> Periodograma</h2>
+<p>Considere o modelo de regressão harmônica simples com frequência desconhecida. Então, considerando os parâmetros <span class="math inline">\(\boldsymbol{\theta}=\{\beta_1,\beta_2,\nu,\omega\}\)</span> e um ruído branco gaussiano, sabemos que a função de verossimilhança pode ser resscrita como</p>
+<p><span class="math display">\[L(\boldsymbol{\theta})\varpropto  \left(\frac{1}{\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\left[(\boldsymbol{\beta}-\hat{\boldsymbol{\beta}}(\omega))'\boldsymbol{F}\boldsymbol{F}'(\boldsymbol{\beta}-\hat{\boldsymbol{\beta}}(\omega)) + R(\omega)\right]\right\}\]</span> obs: como <span class="math inline">\(\boldsymbol{F}\)</span> depende de <span class="math inline">\(\omega\)</span>, tanto <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> quanto <span class="math inline">\(R\)</span> dependem de <span class="math inline">\(\omega\)</span> e, por isso, estão escritos como função da frequência.</p>
+<p>Como <span class="math display">\[\begin{align*}\boldsymbol{F}_n\boldsymbol{F}_n'&amp;=\left(\begin{array}{cc}
+\sum_{t=1}^{n}\cos(2\pi\omega t) ^2 &amp; \sum_{t=1}^{n}\cos(2\pi\omega t)\sin(2\pi\omega t) \\
+\sum_{t=1}^{n}\cos(2\pi\omega t)\sin(2\pi\omega t) &amp; \sum_{t=1}^{n}\sin(2\pi\omega t)^2
+    \end{array}\right) \\&amp;=\left(\begin{array}{cc}n/2 &amp; 0 \\ 0 &amp; n/2\end{array}\right)=\frac{n}{2}\textbf{I}_2
+    \end{align*}\]</span> e <span class="math display">\[\begin{align*}
+    R(\omega) &amp;= \left(\boldsymbol{y}- \boldsymbol{F}_n'\hat{\boldsymbol{\beta}}(\omega)\right)'\left(\boldsymbol{y}- \boldsymbol{F}_n'\hat{\boldsymbol{\beta}(\omega)}\right)=\boldsymbol{y}'\boldsymbol{y}-\hat{\boldsymbol{\beta}}(\omega)'(\boldsymbol{F}_n\boldsymbol{F}_n')\hat{\boldsymbol{\beta}}(\omega)\\
+    &amp;=\boldsymbol{y}'\boldsymbol{y}-\frac{n}{2}\hat{\boldsymbol{\beta}}(\omega)'\hat{\boldsymbol{\beta}}(\omega)
+    \end{align*}\]</span></p>
+<p>Considere a função de verossimilhança perfilada de <span class="math inline">\(\omega\)</span>: <span class="math display">\[\begin{align*}
+    L(\omega|\hat{\boldsymbol{\beta}}(\omega))&amp;\propto \exp\left\{\frac{1}{2\nu}R(\omega)\right\}\propto\exp\left\{\frac{n}{4\nu}\hat{\boldsymbol{\beta}}(\omega)'\hat{\boldsymbol{\beta}}(\omega)\right\}  \end{align*}\]</span> Faça <span class="math inline">\(I(\omega)=\frac{n}{2}\hat{\boldsymbol{\beta}}(\omega)'\hat{\boldsymbol{\beta}}(\omega)\)</span>. Então, <span class="math display">\[\begin{align*}
+    L(\omega|\hat{\boldsymbol{\beta}}(\omega))&amp;\propto \exp\left\{\frac{1}{2\nu}I(\omega)\right\}\end{align*}\]</span> É fácil notar que, quanto maior for o valor de <span class="math inline">\(I(\omega)\)</span>, maior será a função de verossimilhança perfilada.</p>
+<div id="def-periodograma" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 7.2 </strong></span>O gráfico <span class="math inline">\((\omega, I(\omega))\)</span> é denominado periodograma e serve para nos auxiliar a encontrar as frequências mais importantes da série. <span class="math inline">\(I(\omega)\)</span> também é conhecido como espectro (ou densidade espectral).</p>
+</div>
+<p>Como <span class="math display">\[\hat{\boldsymbol{\beta}}'\hat{\boldsymbol{\beta}}=\hat{\beta}_1^2 + \hat{\beta}_2^2,\]</span> logo, <span class="math display">\[I(\omega)=\frac{n}{2}\left[\hat{\beta}_1^2 + \hat{\beta}_2^2\right]=\frac{n}{2}\hat{A^2}\]</span> No periodograma, restringimos a busca nos valores <span class="math inline">\(\omega_k = k / n\)</span>, com <span class="math inline">\(1\leq k &lt;n/2\)</span>. Se tivermos um pico na frequência <span class="math inline">\(\omega_k\)</span>, então podemos estimar o período como sendo: <span class="math display">\[p=\frac{1}{\omega_k}=\frac{n}{k}.\]</span></p>
+<div id="exem-nottemPeriodograma">
+<p>Utilizamos a função <code>periogogram</code> do pacote <code>TSA</code> para fazer o periodograma. Abaixo, apresentamos o periodograma da série <code>nottem</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span><span class="fu">periodogram</span>(nottem)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note que o periodograma possui um pico dominante. Abaixo, mostramos que este pico é o período 12.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># encontrando em qual coordenada ocorre o maior valor do periodograma</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">which</span>(p<span class="sc">$</span>spec <span class="sc">==</span> <span class="fu">max</span>(p<span class="sc">$</span>spec))</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando a frequência correspondente</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>omega <span class="ot">&lt;-</span> p<span class="sc">$</span>freq[k]</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando o período da série</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span>omega</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12</code></pre>
+</div>
+</div>
+<p>No <a href="#exm-nottemHarmonico1">Example&nbsp;<span class="quarto-unresolved-ref">exm-nottemHarmonico1</span></a> aplicamos uma regressão harmônica simples e descobrimos que o ruído resultante não era branco e gaussiano. Abaixo, mostramos o periodograma dos resíduos obtidos nesse exemplo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">periodogram</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Observe que uma nova frequência dominante surge. Vamos identificá-la.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># encontrando em qual coordenada ocorre o maior valor do periodograma</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">which</span>(p2<span class="sc">$</span>spec <span class="sc">==</span> <span class="fu">max</span>(p2<span class="sc">$</span>spec))</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando a frequência correspondente</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>omega <span class="ot">&lt;-</span> p2<span class="sc">$</span>freq[k]</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando o período da série</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span>omega</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+</div>
+<p>Portanto, ainda existe um padrão sazonal, de período6, para ser explicado nessa série.</p>
+<section id="regressão-harmônica" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="regressão-harmônica"><span class="header-section-number">7.8</span> Regressão Harmônica</h2>
+<p>Na série <code>nottem</code>, vimos que o periodograma apontou que o período deveria ser <span class="math inline">\(12\)</span>. Este primeiro período encontrado será denominado ‘fundamental’. Após ajustarmos uma regressão harmônica simples, com <span class="math inline">\(p=12\)</span>, os resíduos mostraram outra componente sazonal com período <span class="math inline">\(p'=6\)</span>.</p>
+<p>Na verdade, é comum termos períodos que são frações do período fundamental. Após identificar a frequência (ou período) fundamental, teremos as seguintes frequências para explorar: <span class="math display">\[\omega_k= \frac{k}{p},\]</span> com <span class="math inline">\(1\leq k &lt; \lfloor p/2 \rfloor\)</span>, onde <span class="math inline">\(\lfloor a \rfloor\)</span> é a parte inteira de <span class="math inline">\(a\)</span>.</p>
+<p>O harmônico gerado por <span class="math inline">\(\omega_k\)</span>, dado por <span class="math display">\[\begin{equation}
+        A_k\cos( 2\pi\omega_k t+\phi_k)
+\end{equation}\]</span> é denominado harmônico de ordem <span class="math inline">\(k\)</span>.</p>
+<ul>
+<li><p>O harmônico de ordem 1 completa um ciclo em <span class="math inline">\(p\)</span> unidades de tempo.</p></li>
+<li><p>O harmônico de ordem 2 completa um ciclo em <span class="math inline">\(p/2\)</span> unidades de tempo.</p></li>
+<li><p>O harmônico de ordem <span class="math inline">\(k\)</span> completa um ciclo em <span class="math inline">\(p/k\)</span> unidades de tempo.</p>
+<p>Podemos lidar com os diversos harmônicos de modo bastante direto: <span class="math display">\[\begin{equation}
+  y_t = \sum_{k=1}^{m }A_k\cos(\omega_k t + \phi_k) + \varepsilon_t
+  \end{equation}\]</span> ou ainda, utilizando os resultados já discutidos, <span class="math display">\[\begin{align}
+      y_t &amp;= \sum_{k=1}^{m }A_k\left[\cos(\omega_k t)\cos(\phi_k) -\sin(\omega_k t)\sin(\phi_k)\right] + \varepsilon_t\\
+      &amp;= \sum_{k=1}^{m }\left[\beta_{k,1}\cos(\omega_k t)+\beta_{k,2}\sin(\omega_k t)\right] + \varepsilon_t,
+      \end{align}\]</span> onde <span class="math display">\[\begin{align}
+      m = \left\{\begin{array}{ll}
+\lfloor p/2 \rfloor, &amp; \hbox{se $p$ é ímpar} \\
+p/2-1, &amp; \hbox{se $p$ é par}
+      \end{array}\right.
+      \end{align}\]</span> Fazendo <span class="math display">\[\begin{equation}
+  \boldsymbol{f}_t'=\left(\cos(w_1 t), \sin(w_1 t),\ldots,\cos(w_{m} t), \sin(w_{m} t) \right)
+  \end{equation}\]</span> e <span class="math display">\[\begin{equation}
+  \boldsymbol{\beta}'=\left(\beta_{1,1},\beta_{1,2},\ldots,\beta_{m,1},\beta_{m,2}\right)
+  \end{equation}\]</span> teremos <span class="math display">\[y_t= \boldsymbol{f}_t'\boldsymbol{\beta} + \varepsilon_t,\]</span> e o tradicional modelo linear: <span class="math display">\[\boldsymbol{y}= \boldsymbol{F}_t'\boldsymbol{\beta} + \boldsymbol{\varepsilon}.\]</span> :::{#exm-nottemRegressoaHarmonica} Já vimos que a função <code>harm(x)</code> gera a matriz necesária para ajusta a regressão harmônica simples para a série temporal <span class="math inline">\(x\)</span>. Ela possui um argumento, denotado por <code>m</code> e cujo <em>default</em> é um, que gera uma regressão harmônica com <code>m</code> harmônicos.</p></li>
+</ul>
+<p>Abaixo, mostramos os resultados para a regressão harmônica simples e com os dois primeiros harmônicos para a série <code>nottem</code>. Note que o AIC deste último sugere que os dois primeiros harmônicos deve ser utilizados</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>simples  <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span><span class="fu">harmonic</span>(nottem) )</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>doisHarm <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span><span class="fu">harmonic</span>(nottem, <span class="dv">2</span>))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(simples)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1134.345</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(doisHarm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1091.866</code></pre>
+</div>
+</div>
+<p>Os resíduos do modelo com dois harmônicos são explorados abaixo. A série dos resíduos parece flutuar em torno de zero com variância constante, enquanto que o correlograma exibe uma pequena autocorrelação na defasagem um. O teste de Shapiro-Wilks aceita a normalidade, mas o teste de Ljung-Box rejeita a hipótese de ruído branco.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(doisHarm)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-25-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  res2
+W = 0.98919, p-value = 0.06944</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res2, <span class="at">type =</span> <span class="st">'Ljung-Box'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Ljung test
+
+data:  res2
+X-squared = 10.905, df = 1, p-value = 0.0009591</code></pre>
+</div>
+</div>
+</section>
 </div>
 
 
