@@ -1,0 +1,342 @@
+# Métodos de suavização exponencial
+
+## Introdução 
+Considere uma série temporal com a decomposição
+$$y_t=\hbox{sinal}_t+\hbox{ruído}_t$$
+Seja $\mathcal{D}_t$ a série observada. Para qualquer $0<k\leq t$ o valor suavizado $\tilde{y}_t(k)$ correspode a uma estimativa do sinal considerando a amostra $\mathcal{D}_t$. 
+Neste momento é interessante que você note a distinção entre as seguintes notações:
+
+- para $h>0$, $\hat{y}_t(h)$ é a previsão para o tempo $t+h$.
+
+- para $0<k\leq t$, $\tilde{y}_t(k)$ é o valor suavizado para o sinal no tempo $k$.
+
+Os métodos de suavização (ou alizamento) que serão estudados nesta seção são modelos semi-paramétricos com o objetivo de estimar o valor suavizado do sinal.
+
+
+
+## Suavização exponencial simples
+
+### Definição do método
+
+Considere uma série temporal
+		$$y_t = \mu_t+\varepsilon_t$$
+onde o nível $\mu_t$ é o sinal e $\varepsilon_t$ um ruído branco. Como
+$$E(y_t|\mathcal{D}_{t-1})=\mu_t,$$
+pelo método dos momentos, $y_t$ é um estimador para $\mu_t$ (e, **depois observado**, $y_t$ se torna estimativa para o sinal no tempo $t$). 
+
+Vamos adicionar a restrição de que $\mu_t\approx \mu_{t+1}$, ou seja, a série flutua em torno de pequenas oscilações no nível. Com isso, dada a amostra $\mathcal{D}_t$, teremos 
+
+$$\hat{y}_{t-1}(1)=E(y_{t}|\mathcal{D}_{t-1})=\mu_{t}\approx \mu_{t-1}$$
+A vantagem da aproximação é que podemos estimar $\mu_{t-1}$, uma vez que temos a amostra $\mathcal{D}_{t-1}$. Deste modo, **antes de observar** $y_t$,  
+$$\hat{y}_{t-1}(1)=\tilde{\mu}_{t-1}$$
+é um estimador para $\mu_t$, com $t>1$. 
+
+Deste modo, temos duas fontes de informação sobre o nível: a observação $y_t$ e o valor suavizado $\tilde{\mu}_{t-1}$, que representa a previsão $\hat{y}_{t-1}(1)$. O método de suavização exponencial simples consiste em ponderar essas fontes, criando a seguinte estimativa ponderada para o sinal:
+
+$$\tilde{\mu}_t=\alpha y_t + (1-\alpha)\hat{y}_{t-1}(1),$$
+onde $\alpha\in(0,1)$. Também pode-se escrever o método da seguinte forma:
+
+$$\tilde{\mu}_t=\alpha y_t + (1-\alpha)\tilde{\mu}_{t-1}.$$
+Tal forma nos permite entender o nome exponencial, uma vez que
+
+$$\begin{align}\tilde{\mu}_t&=\alpha y_t + (1-\alpha)\tilde{\mu}_{t-1}\\&=\alpha y_t + \alpha(1-\alpha)y_{t-1}+(1-\alpha)^2 \tilde{\mu}_{t-2}\\&=\sum_{j=1}^{t-1}\alpha(1-\alpha)^jy_{t-j}+(1-\alpha)^t\tilde{\mu}_0\end{align}$$
+
+Exceto por $\tilde{\mu}_0$, o método consiste em uma média móvel ponderada, onde os pesos decrescem exponencialmente. O papel de $\alpha$ também fica mais evidente: um valor próximo de 1 dá mais peso para as informações mais recentes. 
+
+### Estimação dos parâmetros
+
+Observe que os parâmetros do modelo são $\theta_0=(\tilde{\mu}_0$, $\alpha$,$\nu$). Para estimá-los, assuma que os erros de previsão são um ruído branco gaussiano, com $e_t\sim\hbox{Normal}(0,\nu)$. Como
+$$e_t=y_t-\hat{y}_{t-1}(1)=y_t-\tilde{\mu}_{t-1}$$
+Deste modo,
+$$\begin{align}
+L(\theta_0)&=\prod_{i=1}^t \frac{1}{\sqrt{2\pi\nu}}\exp\left\{-\frac{e_i^2}{2\nu}\right\}\\&=\left(\frac{1}{2\pi\nu}\right)^{\frac{t}{2}}\exp\left\{-\frac{1}{2\nu}\left(\sum_{i=1}^t(y_i-\tilde{\mu}_{i-1}\right)^2\right\}\end{align}$$
+onde $\tilde{\mu}_{i}$ é obtida recursivamente.
+O parâmetros então podem ser calculados via maximização da função de verossimilhança (tal procedimento deve ser realizado numericamente).
+
+
+### Previsão
+
+Para a amostra $\mathcal{D}_t$, a distribuição de $y_{t+1}$, pode ser obtida notando que
+
+$$y_{t+1}=\tilde{\mu}_t+e_{t+1},$$
+ou seja, $y_{t+1}|\mathcal{D}_t\sim\hbox{Normal}(\tilde{\mu}_t,\nu)$. Antes de apresentar o caso geral, note que a equação
+$$\tilde{\mu}_t=\alpha y_t + (1-\alpha)\hat{y}_{t-1}(1)$$
+pode ser reescrita como 
+$$\tilde{\mu}_t=\tilde{\mu}_{t-1}+\alpha e_t.$$
+
+Então, para $h>0$ 
+$$\begin{align}
+\hat{y}_{t+h}&=\tilde{\mu}_{t+h-1}+e_{t+h}=\tilde{\mu}_{t+h-2}+\alpha e_{t+h-1}+e_{t+h}\\
+&=\cdots = \tilde{\mu}_t+e_{t+h}+\alpha\sum_{j=1}^{h-1}e_{t+j}
+\end{align}$$
+Logo,
+$$\hat{y}_{t+h}|\mathcal{D}_t\sim\hbox{Normal}\left(\tilde{\mu}_t,\nu[1+\alpha^2(h-1)]\right)$$
+Portanto, a previsão é constante.
+
+
+### Aplicação: nível do Nilo
+
+Considere novamente a série `Nile`, cujos valores representam o fluxo anual do rio Nilo entre 1871 e 1970. Note que a série aparenta oscilar em torno de um nível constante após 1898.
+
+```{r}
+ts.plot(Nile, ylab = expression(Fluxo~em~10^8~m^3) , lwd = 2)
+```
+
+Vamos utilizar a função `ets(y, model)`, do pacote `forecast`, onde `y` é a série temporal e `model='ANN'` representa o modelo de suavização exponencial.  
+
+```{r}
+require(forecast)
+mod <- ets(Nile, 'ANN')
+mod
+```
+Acima podemos ver as estimativas dos parâmetros: $\hat{\alpha}=0.2455$, $\tilde{\mu}_0=1110.6869$ e $\nu=144.2318^2$. 
+
+Como de costume, devemos verificar se existem evidências para assumir que o modelo é adequado analisando os resíduos, que podem ser acessados no item `$residuals`.
+
+```{r}
+res <- mod$residuals
+op <- par(mfrow=c(2,1))
+ts.plot(res)
+acf(res)
+shapiro.test(res)
+Box.test(res)
+par(op)
+```
+
+Os resíduos oscilam em torno de zero e o correlograma não mostra evidências contra a hipótese de ruído branco. O teste Shapiro-Wilks não rejeita a normalidade e o de Box-Pierce não rejeita a hipótese de ruído branco. Portanto, vamos considerar que o modelo é adequado.
+
+Os valores suavizados $\tilde{\mu}_0,\ldots,\tilde{\mu}_t$ podem ser acessados na lista `$states`, conforme vemos abaixo.
+
+```{r}
+ts.plot(Nile, ylab = expression(Fluxo~em~10^8~m^3) , lwd = 2)
+
+lines(mod$states, col ='tomato', lwd = 3)
+```
+
+Por último, podemos realizar previsões com a função `forecast` conforme ilustramos abaixo para os 5 anos à frente (observe que a previsão é constante, mas, como esperado, sua variância aumenta linearmente ao longo do tempo).
+
+```{r}
+plot( forecast(mod, 5))
+
+```
+
+
+## Suavização Exponencial de Holt
+
+### Definição 
+
+Considere agora um modelo da forma
+$$y_t = T(t) + \varepsilon_t,$$
+onde $T(t)$ é uma componente de tendência. Nesse caso, 
+$$\mu_t=E(y_t|\mathcal{D}_t)=T(t)$$
+Como vimos anteriormente, a suaziação no tempo $t$ pode ser feita ponderando a observação $y_t$ com sua respectiva previsão para no tempo $t-1$:
+
+$$\tilde{\mu}_t=\alpha y_t + (1-\alpha)\hat{y}_{t-1}(1).$$
+Como $T(t)$ é localmente linear, então é natural assumir um modelo de previsão da seguinte forma:
+$$y_t(h)= \tilde{\mu}_t+ h\tilde{b}_t,$$
+onde $\tilde{b}_t$ é a inclinação da tendência no tempo $t$. Então,  
+
+$$\begin{align*}
+	\tilde{\mu}_t &= \alpha y_t + (1-\alpha)\hat{y}_{t-1}(1) \\ 
+	&=\alpha y_t + (1-\alpha)\left( \tilde{\mu}_{t-1} + \tilde{b}_{t-1}\right).
+	\end{align*}$$
+
+A equação acima mostra a evolução de $\tilde{\mu}_t$, mas não há atualização para $\tilde{b}_t$. Com este objetivo, vamos ponderar duas fontes de informação sobre a inclinação. A primeira está no fato de que, como a tendência é localmente linear, é esperado que
+$$\tilde{b}_t\approx \tilde{b}_{t-1}.$$
+A segunda pode ser obtida através dos níveis $\tilde{\mu}_t$ e $\tilde{\mu}_{t-1}$. Uma vez que a relação entre esses dois é aproximadamente linear, sua diferençanos dá noção sobre a inclinação (crescimento/decrescimento) como mostra a figura abaixo.
+
+```{r echo = FALSE}
+op <- par( cex = 1.2)
+plot.new()
+plot.window( xlim = c(0,1), ylim = c(0,1))
+axis(1, at = c(0,.3,.7,1), labels = c('','t-1','t',''))
+axis(2, at = c(0,.3,.7,1), labels = c('',expression(tilde(mu)[t-1]),expression(tilde(mu)[t]),''))
+points(c(.3,.7),c(.3,.7), pch = 16)
+abline(0,1, lwd = 2)
+segments( 0,.3,.3,.3, lty = 2, lwd = 2)
+segments( 0,.7,.7,.7, lty = 2, lwd = 2)
+segments( .3,0,.3,.3, lty = 2, lwd = 2)
+segments( .7,0,.7,.7, lty = 2, lwd = 2)
+
+par(op)
+```
+
+
+O valor da inclinação da reta formada por $a_t$ e $\tilde{\mu}_{t-1}$ é dado por
+	$$\frac{\tilde{\mu}_t - \tilde{\mu}_{t-1}}{t - (t-1)} = \tilde{\mu}_t - \tilde{\mu}_{t-1}.$$
+Combinando este com a última inclinação suavizada, teremos
+	$$\tilde{b}_t = \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{\mu}_{t-1},$$	
+	onde $\beta\in(0,1)$ é a constante de suavização da tendência.
+
+Combinando as últimas equações teremos o modelo de suavização exponencial de Holt:
+
+$$\begin{align*}
+	\tilde{\mu}_t &= \alpha y_t + (1-\alpha)\left( \tilde{\mu}_{t-1} + \tilde{b}_{t-1}\right) \\
+	\tilde{b}_t &= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{b}_{t-1}.
+	\end{align*}$$
+
+### Estimação dos parâmetros	
+
+Os parâmetros deste modelo são $\theta_0=(\tilde{\mu}_0,\tilde{b}_0, \alpha,\beta)$. Vamos assumir que os erros de previsão, dados por $e_t=y_t-\hat{y}_{t-1}(1)$, são um ruído branco gaussiano com variância $\nu$. Então,
+$$L(\theta_0)=\left(\frac{1}{2\pi\nu}\right)^{\frac{t}{2}}\exp\left\{-\frac{1}{2\nu}\left(y_t-\tilde{\mu}_t-\tilde{b}_t\right)^2\right\}$$
+
+A estimação é feita maximizando a função de verossimilhança numericamente.
+
+### Previsão
+
+Considere a amostra $\mathcal{D}_t$. É imediato que $$y_{t+1}|\mathcal{D}_t\sim\hbox{Normal}(\tilde{\mu}_t+\tilde{b}_t,\nu).$$ 
+
+Antes de apresentar o caso geral, note que
+
+$$\begin{align*}
+	\tilde{\mu}_t &= \alpha y_t + (1-\alpha)\left( \tilde{\mu}_{t-1} + \tilde{b}_{t-1}\right) \\
+	\tilde{b}_t &= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{b}_{t-1}.
+	\end{align*}$$
+pode ser reescrita como
+$$\begin{align*}
+	\tilde{\mu}_t &= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha\left( y_t-\tilde{\mu}_{t-1} - \tilde{b}_{t-1}\right)= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha e_t\\
+	\tilde{b}_t &= \tilde{b}_{t-1}+\beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}-\tilde{b}_{t-1}).
+	\end{align*}$$	
+A partir da primeira equação acima, deduzimos que $\tilde{\mu}_t-\tilde{\mu}_{t-1}-\tilde{b}_{t-1}=\alpha e_t$. Substituindo essa informação na segunda equação teremos
+$$\begin{align*}
+	\tilde{\mu}_t &= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha e_t\\
+	\tilde{b}_t &= \tilde{b}_{t-1}+\alpha\beta e_t.
+	\end{align*}$$	
+ou, em forma matricial,
+$$\left(\begin{array}{c}\tilde{\mu}_t\\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_t,$$
+
+logo, há uma transformação linear evoluindo as componentes do sinal do tempo $t-1$ para o tempo $t$. 
+
+Note ainda que é possível escrever a equação do modelo em forma matricial:
+$$y_{t+h}=\tilde{\mu}_{t+h-1}+\tilde{b}_{t+h-1}+e_{t+h-1}=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{c}\tilde{\mu}_{t+h-1}\\ \tilde{b}_{t+h-1}\end{array}\right)+e_{t+h}$$
+Utilizando a evolução do sinal, teremos que
+$$y_{t+h}=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t+h-1}\\ \tilde{b}_{t+h-1}\end{array}\right)+(\begin{array}{cc}1&1\end{array})\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_{t+h-1}+e_{t+h}$$
+
+e, para $h>1$, aplicando a evolução recursivamente, encontramos
+$$\begin{align}y_{t+h}&=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)^{h-1}\left(\begin{array}{c}\tilde{\mu}_{t}\\ \tilde{b}_{t}\end{array}\right)\\&+(\begin{array}{cc}1&1\end{array})\sum_{j=0}^{h-2}\left(\begin{array}{cc}1&1\\0&1\end{array}\right)^j\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_{t+h-1-j}+e_{t+h}\end{align}$$
+Por último, utilizando o resultado
+$$\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)^{r}=\left(\begin{array}{cc}1 & r \\ 0 & 1\end{array}\right),$$
+para $r>0$. Teremos
+$$\begin{align}y_{t+h}&=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{cc}1 & h-1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t}\\ \tilde{b}_{t}\end{array}\right)\\&+\sum_{j=0}^{h-2}(\begin{array}{cc}1&1\end{array})\left(\begin{array}{cc}1&j\\0&1\end{array}\right)\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_{t+h-1-j}+e_{t+h}\\
+&=\tilde{\mu}_t+h\tilde{b}_t+\sum_{j=0}^{h-2}(\alpha+\alpha\beta(j+1) )e_{t+h-1-j}+e_{t+h}\end{align}$$
+logo, a distribuição da previsão com horizonte $h$ é dada por
+
+$$y_{t+h}|\mathcal{D}_t\sim\hbox{Normal}\left(\tilde{\mu}_t+h\tilde{b}_t, \nu\sigma^2_h\right),$$
+onde
+$$\sigma^2_h = 1+(h-1)\left(\alpha^2 + \alpha\beta h + \frac{\beta^2}{6}h(2h-1)\right).$$
+
+### Aplicação: ocorrências aeronáuticas
+
+Voltemos ao conjunto de dados com o número mensal de ocorrências aeronáuticas, mantido pela Força Aérea Brasileira.
+
+```{r}
+url <- 'https://www.dropbox.com/scl/fi/kq4jwbovu94u857238sus/N-mensal-de-acidentes-com-aeronaves-2013jan.csv?rlkey=n5pa45e7ht33houmiawdkjb09&dl=1'
+
+
+x <- read.csv(url, h = T)
+ocorrenciasFAB <- ts( x, start = c(2013,1), frequency=12)
+ts.plot(ocorrenciasFAB, lwd = 2, xlab = 'Ano', ylab = 'No. ocorrências aeronáuticas')
+```
+
+Vamos utilizar a função `ets(y, model)`, do pacote `forecast`, onde `y` é a série temporal e `model='AAN'` representa o modelo de suavização exponencial de Holt. Vamos adicionar o argumento `damped=FALSE`  - estudaremos esse argumento na seção sobre amortecimento. 
+
+```{r}
+require(forecast)
+mod <- ets(ocorrenciasFAB, 'AAN', damped = FALSE)
+mod
+```
+
+Acima podemos ver as estimativas dos parâmetros: $\hat{\alpha}=0.0651$, $\hat{\beta}=0,0117$,  $\tilde{\mu}_0=61,6314$, $\tilde{b}_0=-0,9175$ e $\nu=7,7512^2$. 
+
+Como de costume, devemos verificar se existem evidências para assumir que o modelo é adequado analisando os resíduos, que podem ser acessados no item `$residuals`.
+
+```{r}
+res <- mod$residuals
+op <- par(mfrow=c(2,1))
+ts.plot(res)
+acf(res)
+shapiro.test(res)
+Box.test(res)
+par(op)
+```
+
+Os resíduos oscilam em torno de zero e o correlograma não mostra evidências contra a hipótese de ruído branco. O teste Shapiro-Wilks não rejeita a normalidade e o de Box-Pierce não rejeita a hipótese de ruído branco. Portanto, vamos considerar que o modelo é adequado.
+
+Os valores suavizados $\tilde{\mu}_0,\ldots,\tilde{\mu}_t$ podem ser acessados na lista `$states`, na primeira coluna, conforme vemos abaixo.
+
+```{r}
+ts.plot(ocorrenciasFAB, ylab = 'No. ocorrências aeronáuticas mensal' , lwd = 2)
+
+lines(mod$states[,1], col ='tomato', lwd = 3)
+```
+
+
+
+A segunda coluna de `$states` mostra os valores suavizados para a inclinação. É interessante observar o gráfico desses valores contra a linha horizontal em zero, para entender os regimes de crescimento e decrescimento da série. Abaixo mostramos o curioso padrão dessa série: a inclinação começou desacelerando desde  de o começo do registro até março de 2017. Desde então, a inclinação se oscila em torno de um nível constante.
+
+
+```{r}
+ts.plot(mod$states[,2], col ='tomato', lwd = 3, ylab = 'Inclinação suavizada')
+abline(h=0, lty = 2)
+abline(v = 2017+3/12, lty = 2)
+```
+Por último, podemos realizar previsões com a função `forecast` conforme ilustramos abaixo para os 6 meses à frente, completando o ano de 2023.
+
+```{r}
+prev <- forecast(mod, 6)
+plot( prev)
+```
+
+
+## Suavização Exponencial de Holt-Winters
+
+### Definição 
+Considere o modelo
+	$$y_t = T(t) + s(t)+\varepsilon_t,$$
+onde $T(t)$ e $s(t)$ são componentes de tendência e sazonalidade, com período $p$, respectivamente. Identificando $T(t)$ como $\mu_t$, teremos que $E(y_t|\mathcal{D}_{t-1})=\mu_t+s_t$, logo $y_t-\tilde{s}_t$ é uma fonte de informação para $\mu_t$.	
+
+Considere ainda que $T(t)$ é localmente liner. Então, as previsões em curto prazo podem ser feitas através de 
+	
+$$\hat{y}_t(h) = \tilde{\mu}_t + h \tilde{b}_t + \tilde{s}_{t+h}.$$
+Então 
+Outra fonte de informação sobre $\mu_t$ é a a previsão $\hat{y}_{t-1}(1)$ livre de sazonalidade, dada por
+	$$\hat{y}_{t-1}(1)-\tilde{s}_{t}=\tilde{\mu}_{t-1} + \tilde{b}_{t-1}.$$
+Deste modo, o sinal $\mu_t$ pode ser suavizado de modo análogo ao que foi feito no modelo de suavização exponencial simples, ponderando as duas fontes de informação:
+$$\begin{align*}
+     \tilde{\mu}_t &= \alpha ( y_t - \tilde{s}_t) + (1-\alpha) (\hat{y}_{t-1}(1) -\tilde{s}_{t})\\
+     &= \alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}).
+	\end{align*}$$
+
+Uma vez que temos o valor suavizado do nível, podemos suavizar a inclinação exatamente como foi feito no modelo de Holt:
+$$\tilde{b}_t = \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta) \tilde{b}_{t-1}.$$
+	
+Vamos agora reunir duas fontes de informação sobre a componente sazonal. Primero, podemos descontar o sinal de tendência da série, obtendo assim informações sobre a sazonalidade: 	$$y_t - \mu_t\approx s_t.$$
+
+Vamos considerar que a componente sazonal é razoavelmente estável, ou seja  $s_{t-p}\approx s_t$ (é a mesma consideração feita no modelo de suavização exponencial). Portanto, podemos suavizar $s_t$ através da seguinte média ponderada
+$$\begin{align*}
+	\tilde{s}_t = \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p},
+	\end{align*}$$
+onde $\beta\in(0,1)$ é o suavizador sazonal.
+
+O modelo de Holt-Winters é dado por
+$$\begin{align*}
+	\tilde{\mu}_t &=\alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}) \\
+	\tilde{s}_t &= \beta (y_t - \tilde{\mu}_t) + (1-\beta) \tilde{s}_{t-p},\\
+	\tilde{b}_t &= \gamma (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\gamma) \tilde{b}_{t-1}
+	\end{align*}$$
+
+### Estimação
+
+Em geral, a suavização começa após os $p$ primeiro valores observados. Fazemos 
+	\begin{align*}
+	m_{1}&=\frac{1}{p}\sum_{t=1}^p y_t\\
+	g_{t}&=(y_t- m_1),t=1,\ldots,p \\
+	b_1 &= \frac{1}{p}\sum_{t=1}^{p}(y_{t+p} - y_t)	
+	\end{align*}
+\end{frame}
+
+### Previsão 
+
+\begin{frame}{Leitura}
+	Capítulo 4 do \cite{morettin2006analise}.	
+\end{frame}

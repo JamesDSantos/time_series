@@ -1,0 +1,23 @@
+# Modelos de Espaço Estado lineares
+
+Um modelo de espaço de é composto, para cada tempo $t$, por duas equações
+
+$$\begin{align}
+y_t &= F_t(\theta_t)+\varepsilon_t\\
+\theta_t&=G_t(\theta_{t-1})+w_t
+\end{align}$$
+onde $\varepsilon_t$ e $w_t$ são ruídos brancos e $F_t(.)$ e $G_t(.)$ são funções conhecidas. 
+
+Os modelos lineares vistos até o momento possuem a seguinte forma em equações de espaço estado:
+$$\begin{align}
+y_t &= \boldsymbol{F}_t\theta_t+\varepsilon_t\\
+\theta_t&=\theta_{t-1}
+\end{align}$$
+onde $\boldsymbol{F}$ é uma matriz conhecida e, geralmente, $\varepsilon\sim\hbox{Normal}(0,\nu)$.
+
+Modelos de espaço estados são ditos lineares quando $F_t$ e $G_t$ são matrizes. Nesse caso, se os ruídos forem gaussianos, então o modelo também é denominado linear dinâmico. Considere o caso particular, no qual $F_t=F$, $G_t=G$ e $\varepsilon_t\sim \hbox{Normal}(0,\nu)$ e $\omega\sim\hbox{Normal}(0,\lambda)$. Então,
+$$y_{t+1}=F'\theta_{t+1}+\varepsilon_{t+1}=F'G\theta_t+F'w_{t+1}+\varepsilon_{t+1}$$
+ou seja $y_{t+1}|\mathcal{D}_t\sim\hbox{N}(F'\theta_t,\nu + \lambda F'F)$. Para $h>1$, 
+$$y_{t+h}=F'G^h\theta_{t}+\sum_{k=1}^h F'G^{k-1}\omega_{t+k-1}+\varepsilon_{t+h},$$
+logo,  $$y_{t+h}|\theta_t,\mathcal{D}_t\sim\hbox{Normal}\left(F'G^h \theta_t,\nu+\lambda\sum_{k=1}^hF'G^{k-1}G'^{k-1}F\right)$$
+

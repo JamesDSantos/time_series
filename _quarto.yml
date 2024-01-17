@@ -16,6 +16,7 @@ book:
     - tendencia.qmd
     - sazonalidade.qmd
     - tendencia_sazonalidade.qmd
+    - suave_exponencial.qmd
     - references.qmd
 
 bibliography: references.bib
