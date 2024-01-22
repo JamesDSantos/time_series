@@ -231,18 +231,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#previsão" id="toc-previsão"><span class="header-section-number">9.2.3</span> Previsão</a></li>
   <li><a href="#aplicação-nível-do-nilo" id="toc-aplicação-nível-do-nilo"><span class="header-section-number">9.2.4</span> Aplicação: nível do Nilo</a></li>
   </ul></li>
-  <li><a href="#suavização-exponencial-de-holt" id="toc-suavização-exponencial-de-holt"><span class="header-section-number">9.3</span> Suavização Exponencial de Holt</a>
+  <li><a href="#modelo-de-inovações-de-espaço-estado" id="toc-modelo-de-inovações-de-espaço-estado"><span class="header-section-number">9.3</span> Modelo de inovações de espaço estado</a></li>
+  <li><a href="#suavização-exponencial-de-holt" id="toc-suavização-exponencial-de-holt"><span class="header-section-number">9.4</span> Suavização Exponencial de Holt</a>
   <ul>
-  <li><a href="#definição" id="toc-definição"><span class="header-section-number">9.3.1</span> Definição</a></li>
-  <li><a href="#estimação-dos-parâmetros-1" id="toc-estimação-dos-parâmetros-1"><span class="header-section-number">9.3.2</span> Estimação dos parâmetros</a></li>
-  <li><a href="#previsão-1" id="toc-previsão-1"><span class="header-section-number">9.3.3</span> Previsão</a></li>
-  <li><a href="#aplicação-ocorrências-aeronáuticas" id="toc-aplicação-ocorrências-aeronáuticas"><span class="header-section-number">9.3.4</span> Aplicação: ocorrências aeronáuticas</a></li>
+  <li><a href="#definição" id="toc-definição"><span class="header-section-number">9.4.1</span> Definição</a></li>
+  <li><a href="#aplicação-ocorrências-aeronáuticas" id="toc-aplicação-ocorrências-aeronáuticas"><span class="header-section-number">9.4.2</span> Aplicação: ocorrências aeronáuticas</a></li>
   </ul></li>
-  <li><a href="#suavização-exponencial-de-holt-winters" id="toc-suavização-exponencial-de-holt-winters"><span class="header-section-number">9.4</span> Suavização Exponencial de Holt-Winters</a>
+  <li><a href="#suavização-exponencial-de-holt-winters" id="toc-suavização-exponencial-de-holt-winters"><span class="header-section-number">9.5</span> Suavização Exponencial de Holt-Winters</a>
   <ul>
-  <li><a href="#definição-1" id="toc-definição-1"><span class="header-section-number">9.4.1</span> Definição</a></li>
-  <li><a href="#estimação" id="toc-estimação"><span class="header-section-number">9.4.2</span> Estimação</a></li>
-  <li><a href="#previsão-2" id="toc-previsão-2"><span class="header-section-number">9.4.3</span> Previsão</a></li>
+  <li><a href="#definição-1" id="toc-definição-1"><span class="header-section-number">9.5.1</span> Definição</a></li>
+  <li><a href="#aplicação-para-a-série-co2" id="toc-aplicação-para-a-série-co2"><span class="header-section-number">9.5.2</span> Aplicação para a série <code>co2</code></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -373,10 +371,36 @@ X-squared = 1.7244, df = 1, p-value = 0.1891</code></pre>
 </div>
 </section>
 </section>
-<section id="suavização-exponencial-de-holt" class="level2" data-number="9.3">
-<h2 data-number="9.3"><span class="header-section-number">9.3</span> Suavização Exponencial de Holt</h2>
-<section id="definição" class="level3" data-number="9.3.1">
-<h3 data-number="9.3.1"><span class="header-section-number">9.3.1</span> Definição</h3>
+<section id="modelo-de-inovações-de-espaço-estado" class="level2" data-number="9.3">
+<h2 data-number="9.3"><span class="header-section-number">9.3</span> Modelo de inovações de espaço estado</h2>
+<p>Para o modelo de suavização exponencial, vimos que</p>
+<p><span class="math display">\[\begin{align}
+y_t&amp;=\mu_{t-1}+e_t\\
+\mu_{t}&amp;=\mu_{t-1}+\alpha e_t.
+\end{align}\]</span> Todos os modelos deste tópico podem ser escritos da forma de um modelo de espaço estado <span class="math display">\[\begin{align}
+y_t&amp;=F&#39;\theta_{t-1}+e_t\\
+\theta_{t}&amp;=G\theta_{t-1}+\psi e_t.
+\end{align}\]</span> onde <span class="math inline">\(F&#39;\)</span> e <span class="math inline">\(G\)</span> são matrizes de dimensão condizente e <span class="math inline">\(\theta_t\)</span> é um vetor denominado estado, que contém os parâmetros que evoluem no modelo. Por exemplo, para o modelo de suavização exponencial <span class="math display">\[\begin{align}
+\theta_t&amp;=\mu_t\\
+F&#39;&amp;=1\\
+G&amp;=1\\
+\psi&amp;=\alpha
+\end{align}\]</span></p>
+<p>O modelo de espaço estado para inovações é completamente especificado através do estado inicial <span class="math inline">\(\theta_0\)</span>, dos parâmetros <span class="math inline">\(\psi\)</span> e <span class="math inline">\(\nu\)</span> e, quando aplicável, dos parâmetros contidos em <span class="math inline">\(G\)</span> ou <span class="math inline">\(F&#39;\)</span>. Como os erros de previsão são considerandos ruídos brancos gaussianos, para a amostra <span class="math inline">\(\mathcal{D}_n\)</span>, a função de verossimilhança desses parâmetros é <span class="math inline">\(L=\prod_{i=1}^n \frac{1}{\sqrt{2\pi\nu}}\exp\left\{-\frac{e_i^2}{2\nu}\right\}=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{i=1}^n(y_i-F&#39;\theta_{i-1})^2\right\},\)</span> e as estimativas de máxima verossimilhança podem ser obtidas maximizando <span class="math inline">\(L\)</span> numericamente.</p>
+<p>Considerando a amostra <span class="math inline">\(\mathcal{D_t}\)</span>, ddistribuição de <span class="math inline">\(y_{t+h}\)</span>, com <span class="math inline">\(h&gt;0\)</span>, pode ser encontrada notando que <span class="math display">\[\begin{align}
+y_{t+h}&amp;=F&#39;\theta_{t+h-1}+e_{t+h}=F&#39;G\theta_{t+h-2}+F&#39;e_{t+h-1} + e_{t+h}\\
+&amp;=\cdots\\
+&amp;=F&#39;G^{h-1}\theta_t+F&#39;\sum_{j=1}^{h-1}G^{j-1}e_{t+h-j}+e_{t+h}
+\end{align}\]</span></p>
+<p>Como <span class="math inline">\(y_{t+h}\)</span> pode ser escrito como combinação linear de ruídos gaussianos, teremos que a distribuição para a previsão de horizonte <span class="math inline">\(h\)</span> tem distribuição normal com média e variância dadas por <span class="math display">\[\begin{align}
+E(y_{t+h}|\mathcal{D}_t)&amp;=F&#39;G^{h-1}\theta_t\\
+Var(y_{t+h}|\mathcal{D}_t)&amp;=\nu\left[1+F&#39;G_nGn&#39;F\right]
+\end{align},\]</span> onde <span class="math display">\[G_n=\sum_{j=1}^{h-1}G^{j-1}.\]</span></p>
+</section>
+<section id="suavização-exponencial-de-holt" class="level2" data-number="9.4">
+<h2 data-number="9.4"><span class="header-section-number">9.4</span> Suavização Exponencial de Holt</h2>
+<section id="definição" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1"><span class="header-section-number">9.4.1</span> Definição</h3>
 <p>Considere agora um modelo da forma <span class="math display">\[y_t = T(t) + \varepsilon_t,\]</span> onde <span class="math inline">\(T(t)\)</span> é uma componente de tendência. Nesse caso, <span class="math display">\[\mu_t=E(y_t|\mathcal{D}_t)=T(t)\]</span> Como vimos anteriormente, a suaziação no tempo <span class="math inline">\(t\)</span> pode ser feita ponderando a observação <span class="math inline">\(y_t\)</span> com sua respectiva previsão para no tempo <span class="math inline">\(t-1\)</span>:</p>
 <p><span class="math display">\[\tilde{\mu}_t=\alpha y_t + (1-\alpha)\hat{y}_{t-1}(1).\]</span> Como <span class="math inline">\(T(t)\)</span> é localmente linear, então é natural assumir um modelo de previsão da seguinte forma: <span class="math display">\[y_t(h)= \tilde{\mu}_t+ h\tilde{b}_t,\]</span> onde <span class="math inline">\(\tilde{b}_t\)</span> é a inclinação da tendência no tempo <span class="math inline">\(t\)</span>. Então,</p>
 <p><span class="math display">\[\begin{align*}
@@ -396,20 +420,7 @@ onde <span class="math inline">\(\beta\in(0,1)\)</span> é a constante de suaviz
     \tilde{\mu}_t &amp;= \alpha y_t + (1-\alpha)\left( \tilde{\mu}_{t-1} + \tilde{b}_{t-1}\right) \\
     \tilde{b}_t &amp;= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{b}_{t-1}.
     \end{align*}\]</span></p>
-</section>
-<section id="estimação-dos-parâmetros-1" class="level3" data-number="9.3.2">
-<h3 data-number="9.3.2"><span class="header-section-number">9.3.2</span> Estimação dos parâmetros</h3>
-<p>Os parâmetros deste modelo são <span class="math inline">\(\theta_0=(\tilde{\mu}_0,\tilde{b}_0, \alpha,\beta)\)</span>. Vamos assumir que os erros de previsão, dados por <span class="math inline">\(e_t=y_t-\hat{y}_{t-1}(1)\)</span>, são um ruído branco gaussiano com variância <span class="math inline">\(\nu\)</span>. Então, <span class="math display">\[L(\theta_0)=\left(\frac{1}{2\pi\nu}\right)^{\frac{t}{2}}\exp\left\{-\frac{1}{2\nu}\left(y_t-\tilde{\mu}_t-\tilde{b}_t\right)^2\right\}\]</span></p>
-<p>A estimação é feita maximizando a função de verossimilhança numericamente.</p>
-</section>
-<section id="previsão-1" class="level3" data-number="9.3.3">
-<h3 data-number="9.3.3"><span class="header-section-number">9.3.3</span> Previsão</h3>
-<p>Considere a amostra <span class="math inline">\(\mathcal{D}_t\)</span>. É imediato que <span class="math display">\[y_{t+1}|\mathcal{D}_t\sim\hbox{Normal}(\tilde{\mu}_t+\tilde{b}_t,\nu).\]</span></p>
-<p>Antes de apresentar o caso geral, note que</p>
-<p><span class="math display">\[\begin{align*}
-    \tilde{\mu}_t &amp;= \alpha y_t + (1-\alpha)\left( \tilde{\mu}_{t-1} + \tilde{b}_{t-1}\right) \\
-    \tilde{b}_t &amp;= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{b}_{t-1}.
-    \end{align*}\]</span> pode ser reescrita como <span class="math display">\[\begin{align*}
+<p>O conjunto de equações acima pode ser reescrito como pode ser reescrita como <span class="math display">\[\begin{align*}
     \tilde{\mu}_t &amp;= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha\left( y_t-\tilde{\mu}_{t-1} - \tilde{b}_{t-1}\right)= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha e_t\\
     \tilde{b}_t &amp;= \tilde{b}_{t-1}+\beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}-\tilde{b}_{t-1}).
     \end{align*}\]</span><br />
@@ -418,14 +429,18 @@ A partir da primeira equação acima, deduzimos que <span class="math inline">\(
     \tilde{b}_t &amp;= \tilde{b}_{t-1}+\alpha\beta e_t.
     \end{align*}\]</span><br />
 ou, em forma matricial, <span class="math display">\[\left(\begin{array}{c}\tilde{\mu}_t\\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 &amp; 1 \\ 0 &amp; 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_t,\]</span></p>
-<p>logo, há uma transformação linear evoluindo as componentes do sinal do tempo <span class="math inline">\(t-1\)</span> para o tempo <span class="math inline">\(t\)</span>.</p>
-<p>Note ainda que é possível escrever a equação do modelo em forma matricial: <span class="math display">\[y_{t+h}=\tilde{\mu}_{t+h-1}+\tilde{b}_{t+h-1}+e_{t+h-1}=(\begin{array}{cc}1&amp;1\end{array})\left(\begin{array}{c}\tilde{\mu}_{t+h-1}\\ \tilde{b}_{t+h-1}\end{array}\right)+e_{t+h}\]</span> Utilizando a evolução do sinal, teremos que <span class="math display">\[y_{t+h}=(\begin{array}{cc}1&amp;1\end{array})\left(\begin{array}{cc}1 &amp; 1 \\ 0 &amp; 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t+h-1}\\ \tilde{b}_{t+h-1}\end{array}\right)+(\begin{array}{cc}1&amp;1\end{array})\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_{t+h-1}+e_{t+h}\]</span></p>
-<p>e, para <span class="math inline">\(h&gt;1\)</span>, aplicando a evolução recursivamente, encontramos <span class="math display">\[\begin{align}y_{t+h}&amp;=(\begin{array}{cc}1&amp;1\end{array})\left(\begin{array}{cc}1 &amp; 1 \\ 0 &amp; 1\end{array}\right)^{h-1}\left(\begin{array}{c}\tilde{\mu}_{t}\\ \tilde{b}_{t}\end{array}\right)\\&amp;+(\begin{array}{cc}1&amp;1\end{array})\sum_{j=0}^{h-2}\left(\begin{array}{cc}1&amp;1\\0&amp;1\end{array}\right)^j\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_{t+h-1-j}+e_{t+h}\end{align}\]</span> Por último, utilizando o resultado <span class="math display">\[\left(\begin{array}{cc}1 &amp; 1 \\ 0 &amp; 1\end{array}\right)^{r}=\left(\begin{array}{cc}1 &amp; r \\ 0 &amp; 1\end{array}\right),\]</span> para <span class="math inline">\(r&gt;0\)</span>. Teremos <span class="math display">\[\begin{align}y_{t+h}&amp;=(\begin{array}{cc}1&amp;1\end{array})\left(\begin{array}{cc}1 &amp; h-1 \\ 0 &amp; 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t}\\ \tilde{b}_{t}\end{array}\right)\\&amp;+\sum_{j=0}^{h-2}(\begin{array}{cc}1&amp;1\end{array})\left(\begin{array}{cc}1&amp;j\\0&amp;1\end{array}\right)\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_{t+h-1-j}+e_{t+h}\\
-&amp;=\tilde{\mu}_t+h\tilde{b}_t+\sum_{j=0}^{h-2}(\alpha+\alpha\beta(j+1) )e_{t+h-1-j}+e_{t+h}\end{align}\]</span> logo, a distribuição da previsão com horizonte <span class="math inline">\(h\)</span> é dada por</p>
+<p>Note ainda que é possível escrever a equação do modelo em forma matricial: <span class="math display">\[y_{t+h}=\tilde{\mu}_{t+h-1}+\tilde{b}_{t+h-1}+e_{t+h-1}=(\begin{array}{cc}1&amp;1\end{array})\left(\begin{array}{c}\tilde{\mu}_{t+h-1}\\ \tilde{b}_{t+h-1}\end{array}\right)+e_{t+h}\]</span> Pode-se então mostrar que este modelo possui a seguinte especificação como modelo de espaço estado:</p>
+<p><span class="math display">\[\begin{align}
+F&#39;&amp;=(1\;\; 1)\\
+G&amp;=\left(\begin{array}{cc} 1 &amp; 1 \\ 0 &amp; 1\\ \end{array}\right)\\
+\theta_t&#39;&amp;=(\tilde{\mu}_t\;\;\tilde{b}_t)\\
+\psi&#39;&amp;=(\alpha\;\;\alpha\beta)
+\end{align}\]</span></p>
+<p>Deste modo, os parâmetros <span class="math inline">\(\alpha,\beta,\tilde{\mu}_0\)</span> e <span class="math inline">\(\tilde{b}_0\)</span> podem ser obtidos via método de estimação da máxima verossimilhança. Logo, a distribuição da previsão com horizonte <span class="math inline">\(h\)</span> é dada por</p>
 <p><span class="math display">\[y_{t+h}|\mathcal{D}_t\sim\hbox{Normal}\left(\tilde{\mu}_t+h\tilde{b}_t, \nu\sigma^2_h\right),\]</span> onde <span class="math display">\[\sigma^2_h = 1+(h-1)\left(\alpha^2 + \alpha\beta h + \frac{\beta^2}{6}h(2h-1)\right).\]</span></p>
 </section>
-<section id="aplicação-ocorrências-aeronáuticas" class="level3" data-number="9.3.4">
-<h3 data-number="9.3.4"><span class="header-section-number">9.3.4</span> Aplicação: ocorrências aeronáuticas</h3>
+<section id="aplicação-ocorrências-aeronáuticas" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2"><span class="header-section-number">9.4.2</span> Aplicação: ocorrências aeronáuticas</h3>
 <p>Voltemos ao conjunto de dados com o número mensal de ocorrências aeronáuticas, mantido pela Força Aérea Brasileira.</p>
 <div class="cell">
 <div class="sourceCode" id="cb16"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">&#39;https://www.dropbox.com/scl/fi/kq4jwbovu94u857238sus/N-mensal-de-acidentes-com-aeronaves-2013jan.csv?rlkey=n5pa45e7ht33houmiawdkjb09&amp;dl=1&#39;</span></span>
@@ -520,13 +535,13 @@ X-squared = 3.2409, df = 1, p-value = 0.07182</code></pre>
 </div>
 </section>
 </section>
-<section id="suavização-exponencial-de-holt-winters" class="level2" data-number="9.4">
-<h2 data-number="9.4"><span class="header-section-number">9.4</span> Suavização Exponencial de Holt-Winters</h2>
-<section id="definição-1" class="level3" data-number="9.4.1">
-<h3 data-number="9.4.1"><span class="header-section-number">9.4.1</span> Definição</h3>
+<section id="suavização-exponencial-de-holt-winters" class="level2" data-number="9.5">
+<h2 data-number="9.5"><span class="header-section-number">9.5</span> Suavização Exponencial de Holt-Winters</h2>
+<section id="definição-1" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1"><span class="header-section-number">9.5.1</span> Definição</h3>
 <p>Considere o modelo <span class="math display">\[y_t = T(t) + s(t)+\varepsilon_t,\]</span> onde <span class="math inline">\(T(t)\)</span> e <span class="math inline">\(s(t)\)</span> são componentes de tendência e sazonalidade, com período <span class="math inline">\(p\)</span>, respectivamente. Identificando <span class="math inline">\(T(t)\)</span> como <span class="math inline">\(\mu_t\)</span>, teremos que <span class="math inline">\(E(y_t|\mathcal{D}_{t-1})=\mu_t+s_t\)</span>, logo <span class="math inline">\(y_t-\tilde{s}_t\)</span> é uma fonte de informação para <span class="math inline">\(\mu_t\)</span>.</p>
 <p>Considere ainda que <span class="math inline">\(T(t)\)</span> é localmente liner. Então, as previsões em curto prazo podem ser feitas através de</p>
-<p><span class="math display">\[\hat{y}_t(h) = \tilde{\mu}_t + h \tilde{b}_t + \tilde{s}_{t+h}.\]</span> Então Outra fonte de informação sobre <span class="math inline">\(\mu_t\)</span> é a a previsão <span class="math inline">\(\hat{y}_{t-1}(1)\)</span> livre de sazonalidade, dada por <span class="math display">\[\hat{y}_{t-1}(1)-\tilde{s}_{t}=\tilde{\mu}_{t-1} + \tilde{b}_{t-1}.\]</span> Deste modo, o sinal <span class="math inline">\(\mu_t\)</span> pode ser suavizado de modo análogo ao que foi feito no modelo de suavização exponencial simples, ponderando as duas fontes de informação: <span class="math display">\[\begin{align*}
+<p><span class="math display">\[\hat{y}_t(h) = \tilde{\mu}_t + h \tilde{b}_t + \tilde{s}_{t+h}.\]</span> Então Outra fonte de informação sobre <span class="math inline">\(\mu_t\)</span> é a previsão <span class="math inline">\(\hat{y}_{t-1}(1)\)</span> livre de sazonalidade, dada por <span class="math display">\[\hat{y}_{t-1}(1)-\tilde{s}_{t}=\tilde{\mu}_{t-1} + \tilde{b}_{t-1}.\]</span> Deste modo, o sinal <span class="math inline">\(\mu_t\)</span> pode ser suavizado de modo análogo ao que foi feito no modelo de suavização exponencial simples, ponderando as duas fontes de informação: <span class="math display">\[\begin{align*}
      \tilde{\mu}_t &amp;= \alpha ( y_t - \tilde{s}_t) + (1-\alpha) (\hat{y}_{t-1}(1) -\tilde{s}_{t})\\
      &amp;= \alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}).
     \end{align*}\]</span></p>
@@ -537,20 +552,68 @@ X-squared = 3.2409, df = 1, p-value = 0.07182</code></pre>
     \end{align*}\]</span> onde <span class="math inline">\(\beta\in(0,1)\)</span> é o suavizador sazonal.</p>
 <p>O modelo de Holt-Winters é dado por <span class="math display">\[\begin{align*}
     \tilde{\mu}_t &amp;=\alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}) \\
-    \tilde{s}_t &amp;= \beta (y_t - \tilde{\mu}_t) + (1-\beta) \tilde{s}_{t-p},\\
-    \tilde{b}_t &amp;= \gamma (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\gamma) \tilde{b}_{t-1}
+        \tilde{b}_t &amp;= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta) \tilde{b}_{t-1}
+,\\
+    \tilde{s}_t &amp;= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}.
     \end{align*}\]</span></p>
+<p>Agora, considere a condição inicial <span class="math display">\[\sum_{j=1}^p \tilde{s}_{j-p}=0.\]</span> A suavização de Holt-Winter não mantém a propriedade de soma zero da componente sazonal, uma vez que</p>
+<p><span class="math display">\[\sum_{j=1}^p \tilde{s}_{j}=\sum_{j=1}^p\gamma(y_j-\tilde{\mu}_j)+(1-\gamma)\sum_{j=1}^t\tilde{s}_{j-p}=\sum_{j=1}^p\gamma(y_j-\tilde{\mu}_j)\neq 0\]</span> A solução, conhecida como normalização de Roberts-McKenzie, consiste em subtrair, da componente sazonal, o termo <span class="math display">\[a_t=\frac{\beta}{p}(y_t-\tilde{\mu}_t-\tilde{s}_t),\]</span> ou seja, <span class="math display">\[\begin{align}\tilde{s}_t &amp;= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}-a_t.
+\end{align}\]</span> Desse modo, <span class="math display">\[\begin{align}\sum_{j=1}^p \tilde{s}_{j}&amp;=\sum_{j=1}^p\gamma(y_j-\tilde{\mu}_j)+(1-\gamma)\sum_{j=1}^t\tilde{s}_{j-p}-\sum_{j=1}^p a_j\\&amp;=\sum_{j=1}^p\tilde{s}_{j-p}\end{align}\]</span></p>
+<p>Portanto, para garantir que <span class="math display">\[\sum_{j=1}^p s_{t+j}=0,\]</span> basta que a soma dos parâmetros iniciais, <span class="math inline">\(\tilde{s}_{1-p},\ldots,\tilde{s}_0\)</span>, seja nula. Portanto, o modelo de Holt-Winter com a normalização de Roberts-McKenzie é <span class="math display">\[\begin{align*}
+    \tilde{\mu}_t &amp;=\alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}) \\
+        \tilde{b}_t &amp;= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta) \tilde{b}_{t-1}
+,\\
+    \tilde{s}_t &amp;= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}-\frac{\gamma}{p}(y_t-\tilde{\mu}_{t-1}-\tilde{s}_{t}).
+    \end{align*}\]</span></p>
+<p>Como esperado, esse modelo pode ser reescrito na forma dse espaço estado, considerando o erro de previsão <span class="math inline">\(e_t=y_t-\tilde{\mu}_{t-1}-\tilde{b}_{t-1}-\tilde{s}_{t-p}\)</span>. As duas primeiras equações de estado são as mesmas do modelo de Holt: <span class="math display">\[\left(\begin{array}{c} \tilde{\mu}_t \\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 &amp; 1 \\ 0 &amp; 1\end{array}\right)\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c} \alpha \\ \alpha\beta\end{array}\right)e_t=G_{\hbox{Holt}}\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\psi_{\hbox{Holt}}e_t\]</span> Já a terceira equação do modelo, com a normalização de Roberts-McKenzie, pode ser escrita como <span class="math display">\[\tilde{s}_t=\tilde{s}_{t-p}+\gamma\left(1-\frac{1}{p}\right)e_t.\]</span> Note que essa mesma equação pode ser escrita como <span class="math display">\[\left(\begin{array}{c}\tilde{s}_t\\ \tilde{s}_{t-1} \\ \vdots \\ s_{t-p+1}\end{array}\right)=\underbrace{\left(\begin{array}{c} 0_{p-1&#39;} &amp; 1 \\ \textbf{I}_{p-1} &amp; 0_{p-1} \end{array}\right)}_{P}\left(\begin{array}{c}\tilde{s}_{t-1}\\ \tilde{s}_{t-2} \\ \vdots \\ s_{t-p}\end{array}\right)+\left(\begin{array}{c}1\\ 0 \\ \vdots \\ 0\end{array}\right)\gamma\left(1-\frac{1}{p}\right) e_t\]</span> A matriz <span class="math inline">\(P\)</span> dada acima é uma matriz do tipo permutação. Essa em particular coloca o elemento da última coordenada na primeira e faz com que todos os outros elementos seja alocados uma coordenada à frente. Fazendo <span class="math inline">\(\theta_0&#39;=(\tilde{\mu}_0,\tilde{b}_0,\tilde{s}_{1-p},\ldots,\tilde{s}_0)\)</span> teremos que o modelo de Holt-Winter com correção de Roberts-McKenzie na forma de espaço estado é dado por</p>
+<p><span class="math display">\[\begin{align}
+y_t&amp;=\left(\begin{array}{cc|cccc}1&amp;1&amp;1&amp;0&amp;\cdots&amp;0\end{array}\right)\theta_{t-1}+e_t\\
+\theta_t&amp;=\left(\begin{array}{cc}G_{\hbox{Holt}} &amp; 0_{2\times p}\\
+0_{p\times 2} &amp; P\end{array}\right)\theta_{t-1}+\left(\begin{array}{c}\alpha \\ \alpha\beta \\ \hline \gamma^*1_p \end{array}\right)e_t\end{align}\]</span> onde <span class="math inline">\(\gamma^*=\gamma(1-p^{-1})\)</span>.</p>
 </section>
-<section id="estimação" class="level3" data-number="9.4.2">
-<h3 data-number="9.4.2"><span class="header-section-number">9.4.2</span> Estimação</h3>
-<p>Em geral, a suavização começa após os <span class="math inline">\(p\)</span> primeiro valores observados. Fazemos <span class="math display">\[\begin{align*}
-    m_{1}&amp;=\frac{1}{p}\sum_{t=1}^p y_t\\
-    g_{t}&amp;=(y_t- m_1),t=1,\ldots,p \\
-    b_1 &amp;= \frac{1}{p}\sum_{t=1}^{p}(y_{t+p} - y_t)
-    \end{align*}\]</span> \end{frame}</p>
-</section>
-<section id="previsão-2" class="level3" data-number="9.4.3">
-<h3 data-number="9.4.3"><span class="header-section-number">9.4.3</span> Previsão</h3>
+<section id="aplicação-para-a-série-co2" class="level3" data-number="9.5.2">
+<h3 data-number="9.5.2"><span class="header-section-number">9.5.2</span> Aplicação para a série <code>co2</code></h3>
+<p>Considere novamente a série <code>co2</code>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb28"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">ets</span>(co2, <span class="at">model =</span> <span class="st">&#39;AAA&#39;</span>)</span></code></pre></div>
+</div>
+<p>Abaixo, segue os gráfico da decomposição através do modelo de Holt-Winter com a normalização.</p>
+<div class="cell">
+<div class="sourceCode" id="cb29"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(co2, mod<span class="sc">$</span>states[,<span class="dv">1</span>][<span class="sc">-</span><span class="dv">1</span>], mod<span class="sc">$</span>states[,<span class="dv">2</span>][<span class="sc">-</span><span class="dv">1</span>], mod<span class="sc">$</span>states[,<span class="dv">3</span>][<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(x) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;Série original&#39;</span>,<span class="st">&#39;Nível&#39;</span>, <span class="st">&#39;Inclinação&#39;</span>,<span class="st">&#39;Sazonalidade&#39;</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(x)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672" /></p>
+</div>
+</div>
+<p>A análise dos resíduos, mostrada abaixo, mostram que o modelo está bam ajustado ao conjunto de dados.</p>
+<div class="cell">
+<div class="sourceCode" id="cb30"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> mod<span class="sc">$</span>residuals</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672" /></p>
+</div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid" width="672" /></p>
+</div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  res
+W = 0.99742, p-value = 0.6848</code></pre>
+</div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Pierce test
+
+data:  res
+X-squared = 2.8016, df = 1, p-value = 0.09417</code></pre>
+</div>
+</div>
 <div id="quarto-navigation-envelope" class="hidden">
 <p><span class="hidden" data-render-id="quarto-int-sidebar-title">Séries Temporais</span> <span class="hidden" data-render-id="quarto-int-navbar-title">Séries Temporais</span> <span class="hidden" data-render-id="quarto-int-next">References</span> <span class="hidden" data-render-id="quarto-int-prev"><span class="chapter-number">8</span>  <span class="chapter-title">Previsão para modelos lineares</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/index.html">Prefácio</span> <span class="hidden" data-render-id="quarto-int-sidebar:/intro.html"><span class="chapter-number">1</span>  <span class="chapter-title">Introdução</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/estacionaria.html"><span class="chapter-number">2</span>  <span class="chapter-title">Séries Estacionárias</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/acf.html"><span class="chapter-number">3</span>  <span class="chapter-title">Defasagens e autocorrelação</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/ts_window_date.html"><span class="chapter-number">4</span>  <span class="chapter-title">Criando séries no <code>R</code></span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/modelo_linear.html"><span class="chapter-number">5</span>  <span class="chapter-title">Revisão sobre o modelo linear</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/tendencia.html"><span class="chapter-number">6</span>  <span class="chapter-title">Tendência</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/sazonalidade.html"><span class="chapter-number">7</span>  <span class="chapter-title">Sazonalidade</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/tendencia_sazonalidade.html"><span class="chapter-number">8</span>  <span class="chapter-title">Previsão para modelos lineares</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/suave_exponencial.html"><span class="chapter-number">9</span>  <span class="chapter-title">Métodos de suavização exponencial</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/references.html">References</span> <span class="hidden" data-render-id="quarto-breadcrumbs-07743997edf81315bd69c61fb3dec573"><span class="chapter-number">9</span>  <span class="chapter-title">Métodos de suavização exponencial</span></span></p>
 </div>

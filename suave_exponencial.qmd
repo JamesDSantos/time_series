@@ -121,6 +121,47 @@ plot( forecast(mod, 5))
 ```
 
 
+## Modelo de inovações de espaço estado
+
+Para o modelo de suavização exponencial, vimos que
+
+$$\begin{align}
+y_t&=\mu_{t-1}+e_t\\
+\mu_{t}&=\mu_{t-1}+\alpha e_t.
+\end{align}$$
+Todos os modelos deste tópico podem ser escritos da forma de um modelo de espaço estado
+$$\begin{align}
+y_t&=F'\theta_{t-1}+e_t\\
+\theta_{t}&=G\theta_{t-1}+\psi e_t.
+\end{align}$$
+onde $F'$ e $G$ são matrizes de dimensão condizente e $\theta_t$ é um vetor denominado estado, que contém os parâmetros que evoluem no modelo. Por exemplo, para o modelo de suavização exponencial
+$$\begin{align}
+\theta_t&=\mu_t\\
+F'&=1\\
+G&=1\\
+\psi&=\alpha
+\end{align}$$
+
+O modelo de espaço estado para inovações é completamente especificado através do estado inicial $\theta_0$, dos parâmetros $\psi$ e $\nu$ e, quando aplicável, dos parâmetros contidos em $G$ ou $F'$. Como os erros de previsão são considerandos ruídos brancos gaussianos, para a amostra $\mathcal{D}_n$, a função de verossimilhança desses parâmetros é
+$L=\prod_{i=1}^n \frac{1}{\sqrt{2\pi\nu}}\exp\left\{-\frac{e_i^2}{2\nu}\right\}=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{i=1}^n(y_i-F'\theta_{i-1})^2\right\},$
+e as estimativas de máxima verossimilhança podem ser obtidas maximizando $L$ numericamente.
+
+Considerando a amostra $\mathcal{D_t}$, ddistribuição de $y_{t+h}$, com $h>0$, pode ser encontrada notando que
+$$\begin{align}
+y_{t+h}&=F'\theta_{t+h-1}+e_{t+h}=F'G\theta_{t+h-2}+F'e_{t+h-1} + e_{t+h}\\
+&=\cdots\\
+&=F'G^{h-1}\theta_t+F'\sum_{j=1}^{h-1}G^{j-1}e_{t+h-j}+e_{t+h}
+\end{align}$$
+
+Como $y_{t+h}$ pode ser escrito como combinação linear de ruídos gaussianos, teremos que a distribuição para a previsão de horizonte $h$ tem distribuição normal com média e variância dadas por
+$$\begin{align}
+E(y_{t+h}|\mathcal{D}_t)&=F'G^{h-1}\theta_t\\
+Var(y_{t+h}|\mathcal{D}_t)&=\nu\left[1+F'G_nGn'F\right]
+\end{align},$$
+onde
+$$G_n=\sum_{j=1}^{h-1}G^{j-1}.$$
+
+
 ## Suavização Exponencial de Holt
 
 ### Definição 
@@ -175,23 +216,7 @@ $$\begin{align*}
 	\tilde{b}_t &= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{b}_{t-1}.
 	\end{align*}$$
 
-### Estimação dos parâmetros	
-
-Os parâmetros deste modelo são $\theta_0=(\tilde{\mu}_0,\tilde{b}_0, \alpha,\beta)$. Vamos assumir que os erros de previsão, dados por $e_t=y_t-\hat{y}_{t-1}(1)$, são um ruído branco gaussiano com variância $\nu$. Então,
-$$L(\theta_0)=\left(\frac{1}{2\pi\nu}\right)^{\frac{t}{2}}\exp\left\{-\frac{1}{2\nu}\left(y_t-\tilde{\mu}_t-\tilde{b}_t\right)^2\right\}$$
-
-A estimação é feita maximizando a função de verossimilhança numericamente.
-
-### Previsão
-
-Considere a amostra $\mathcal{D}_t$. É imediato que $$y_{t+1}|\mathcal{D}_t\sim\hbox{Normal}(\tilde{\mu}_t+\tilde{b}_t,\nu).$$ 
-
-Antes de apresentar o caso geral, note que
-
-$$\begin{align*}
-	\tilde{\mu}_t &= \alpha y_t + (1-\alpha)\left( \tilde{\mu}_{t-1} + \tilde{b}_{t-1}\right) \\
-	\tilde{b}_t &= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{b}_{t-1}.
-	\end{align*}$$
+O conjunto de equações acima pode ser reescrito como
 pode ser reescrita como
 $$\begin{align*}
 	\tilde{\mu}_t &= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha\left( y_t-\tilde{\mu}_{t-1} - \tilde{b}_{t-1}\right)= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha e_t\\
@@ -205,21 +230,18 @@ $$\begin{align*}
 ou, em forma matricial,
 $$\left(\begin{array}{c}\tilde{\mu}_t\\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_t,$$
 
-logo, há uma transformação linear evoluindo as componentes do sinal do tempo $t-1$ para o tempo $t$. 
-
 Note ainda que é possível escrever a equação do modelo em forma matricial:
 $$y_{t+h}=\tilde{\mu}_{t+h-1}+\tilde{b}_{t+h-1}+e_{t+h-1}=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{c}\tilde{\mu}_{t+h-1}\\ \tilde{b}_{t+h-1}\end{array}\right)+e_{t+h}$$
-Utilizando a evolução do sinal, teremos que
-$$y_{t+h}=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t+h-1}\\ \tilde{b}_{t+h-1}\end{array}\right)+(\begin{array}{cc}1&1\end{array})\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_{t+h-1}+e_{t+h}$$
+Pode-se então mostrar que este modelo possui a seguinte especificação como modelo de espaço estado:
 
-e, para $h>1$, aplicando a evolução recursivamente, encontramos
-$$\begin{align}y_{t+h}&=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)^{h-1}\left(\begin{array}{c}\tilde{\mu}_{t}\\ \tilde{b}_{t}\end{array}\right)\\&+(\begin{array}{cc}1&1\end{array})\sum_{j=0}^{h-2}\left(\begin{array}{cc}1&1\\0&1\end{array}\right)^j\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_{t+h-1-j}+e_{t+h}\end{align}$$
-Por último, utilizando o resultado
-$$\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)^{r}=\left(\begin{array}{cc}1 & r \\ 0 & 1\end{array}\right),$$
-para $r>0$. Teremos
-$$\begin{align}y_{t+h}&=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{cc}1 & h-1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t}\\ \tilde{b}_{t}\end{array}\right)\\&+\sum_{j=0}^{h-2}(\begin{array}{cc}1&1\end{array})\left(\begin{array}{cc}1&j\\0&1\end{array}\right)\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_{t+h-1-j}+e_{t+h}\\
-&=\tilde{\mu}_t+h\tilde{b}_t+\sum_{j=0}^{h-2}(\alpha+\alpha\beta(j+1) )e_{t+h-1-j}+e_{t+h}\end{align}$$
-logo, a distribuição da previsão com horizonte $h$ é dada por
+$$\begin{align}
+F'&=(1\;\; 1)\\
+G&=\left(\begin{array}{cc} 1 & 1 \\ 0 & 1\\ \end{array}\right)\\
+\theta_t'&=(\tilde{\mu}_t\;\;\tilde{b}_t)\\
+\psi'&=(\alpha\;\;\alpha\beta)
+\end{align}$$
+
+Deste modo, os parâmetros $\alpha,\beta,\tilde{\mu}_0$ e $\tilde{b}_0$ podem ser obtidos via método de estimação da máxima verossimilhança. Logo, a distribuição da previsão com horizonte $h$ é dada por
 
 $$y_{t+h}|\mathcal{D}_t\sim\hbox{Normal}\left(\tilde{\mu}_t+h\tilde{b}_t, \nu\sigma^2_h\right),$$
 onde
@@ -291,6 +313,7 @@ plot( prev)
 ## Suavização Exponencial de Holt-Winters
 
 ### Definição 
+
 Considere o modelo
 	$$y_t = T(t) + s(t)+\varepsilon_t,$$
 onde $T(t)$ e $s(t)$ são componentes de tendência e sazonalidade, com período $p$, respectivamente. Identificando $T(t)$ como $\mu_t$, teremos que $E(y_t|\mathcal{D}_{t-1})=\mu_t+s_t$, logo $y_t-\tilde{s}_t$ é uma fonte de informação para $\mu_t$.	
@@ -299,7 +322,7 @@ Considere ainda que $T(t)$ é localmente liner. Então, as previsões em curto p
 	
 $$\hat{y}_t(h) = \tilde{\mu}_t + h \tilde{b}_t + \tilde{s}_{t+h}.$$
 Então 
-Outra fonte de informação sobre $\mu_t$ é a a previsão $\hat{y}_{t-1}(1)$ livre de sazonalidade, dada por
+Outra fonte de informação sobre $\mu_t$ é a previsão $\hat{y}_{t-1}(1)$ livre de sazonalidade, dada por
 	$$\hat{y}_{t-1}(1)-\tilde{s}_{t}=\tilde{\mu}_{t-1} + \tilde{b}_{t-1}.$$
 Deste modo, o sinal $\mu_t$ pode ser suavizado de modo análogo ao que foi feito no modelo de suavização exponencial simples, ponderando as duas fontes de informação:
 $$\begin{align*}
@@ -321,22 +344,72 @@ onde $\beta\in(0,1)$ é o suavizador sazonal.
 O modelo de Holt-Winters é dado por
 $$\begin{align*}
 	\tilde{\mu}_t &=\alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}) \\
-	\tilde{s}_t &= \beta (y_t - \tilde{\mu}_t) + (1-\beta) \tilde{s}_{t-p},\\
-	\tilde{b}_t &= \gamma (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\gamma) \tilde{b}_{t-1}
+		\tilde{b}_t &= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta) \tilde{b}_{t-1}
+,\\
+	\tilde{s}_t &= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}.
 	\end{align*}$$
 
-### Estimação
+Agora, considere a condição inicial
+$$\sum_{j=1}^p \tilde{s}_{j-p}=0.$$
+A suavização de Holt-Winter não mantém a propriedade de soma zero da componente sazonal, uma vez que 
 
-Em geral, a suavização começa após os $p$ primeiro valores observados. Fazemos 
-	\begin{align*}
-	m_{1}&=\frac{1}{p}\sum_{t=1}^p y_t\\
-	g_{t}&=(y_t- m_1),t=1,\ldots,p \\
-	b_1 &= \frac{1}{p}\sum_{t=1}^{p}(y_{t+p} - y_t)	
-	\end{align*}
-\end{frame}
+$$\sum_{j=1}^p \tilde{s}_{j}=\sum_{j=1}^p\gamma(y_j-\tilde{\mu}_j)+(1-\gamma)\sum_{j=1}^t\tilde{s}_{j-p}=\sum_{j=1}^p\gamma(y_j-\tilde{\mu}_j)\neq 0$$
+A solução, conhecida como normalização de Roberts-McKenzie, consiste em subtrair, da componente sazonal, o termo
+$$a_t=\frac{\beta}{p}(y_t-\tilde{\mu}_t-\tilde{s}_t),$$
+ou seja,
+$$\begin{align}\tilde{s}_t &= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}-a_t.
+\end{align}$$
+Desse modo,
+$$\begin{align}\sum_{j=1}^p \tilde{s}_{j}&=\sum_{j=1}^p\gamma(y_j-\tilde{\mu}_j)+(1-\gamma)\sum_{j=1}^t\tilde{s}_{j-p}-\sum_{j=1}^p a_j\\&=\sum_{j=1}^p\tilde{s}_{j-p}\end{align}$$
 
-### Previsão 
+Portanto, para garantir que 
+$$\sum_{j=1}^p s_{t+j}=0,$$
+basta que a soma dos parâmetros iniciais, $\tilde{s}_{1-p},\ldots,\tilde{s}_0$, seja nula. Portanto, o modelo de Holt-Winter com a normalização de Roberts-McKenzie é
+$$\begin{align*}
+	\tilde{\mu}_t &=\alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}) \\
+		\tilde{b}_t &= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta) \tilde{b}_{t-1}
+,\\
+	\tilde{s}_t &= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}-\frac{\gamma}{p}(y_t-\tilde{\mu}_{t-1}-\tilde{s}_{t}).
+	\end{align*}$$
+	
+Como esperado, esse modelo pode ser reescrito na forma dse espaço estado, considerando o erro de previsão $e_t=y_t-\tilde{\mu}_{t-1}-\tilde{b}_{t-1}-\tilde{s}_{t-p}$. As duas primeiras equações de estado são as mesmas do modelo de Holt: 
+$$\left(\begin{array}{c} \tilde{\mu}_t \\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c} \alpha \\ \alpha\beta\end{array}\right)e_t=G_{\hbox{Holt}}\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\psi_{\hbox{Holt}}e_t$$
+Já a terceira equação do modelo, com a normalização de Roberts-McKenzie, pode ser escrita como
+$$\tilde{s}_t=\tilde{s}_{t-p}+\gamma\left(1-\frac{1}{p}\right)e_t.$$
+Note que essa mesma equação pode ser escrita como 
+$$\left(\begin{array}{c}\tilde{s}_t\\ \tilde{s}_{t-1} \\ \vdots \\ s_{t-p+1}\end{array}\right)=\underbrace{\left(\begin{array}{c} 0_{p-1'} & 1 \\ \textbf{I}_{p-1} & 0_{p-1} \end{array}\right)}_{P}\left(\begin{array}{c}\tilde{s}_{t-1}\\ \tilde{s}_{t-2} \\ \vdots \\ s_{t-p}\end{array}\right)+\left(\begin{array}{c}1\\ 0 \\ \vdots \\ 0\end{array}\right)\gamma\left(1-\frac{1}{p}\right) e_t$$
+A matriz $P$ dada acima é uma matriz do tipo permutação. Essa em particular coloca o elemento da última coordenada na primeira e faz com que todos os outros elementos seja alocados uma coordenada à frente. Fazendo $\theta_0'=(\tilde{\mu}_0,\tilde{b}_0,\tilde{s}_{1-p},\ldots,\tilde{s}_0)$ teremos que o modelo de Holt-Winter com correção de Roberts-McKenzie na forma de espaço estado é dado por 
 
-\begin{frame}{Leitura}
-	Capítulo 4 do \cite{morettin2006analise}.	
-\end{frame}
+$$\begin{align}
+y_t&=\left(\begin{array}{cc|cccc}1&1&1&0&\cdots&0\end{array}\right)\theta_{t-1}+e_t\\
+\theta_t&=\left(\begin{array}{cc}G_{\hbox{Holt}} & 0_{2\times p}\\
+0_{p\times 2} & P\end{array}\right)\theta_{t-1}+\left(\begin{array}{c}\alpha \\ \alpha\beta \\ \hline \gamma^*1_p \end{array}\right)e_t\end{align}$$
+onde $\gamma^*=\gamma(1-p^{-1})$.
+	
+### Aplicação para a série `co2`
+
+Considere novamente a série `co2`. 
+
+
+```{r}
+mod <- ets(co2, model = 'AAA')
+```
+Abaixo, segue os gráfico da decomposição através do modelo de Holt-Winter com a normalização.
+
+```{r}
+x <- data.frame(co2, mod$states[,1][-1], mod$states[,2][-1], mod$states[,3][-1])
+names(x) <- c('Série original','Nível', 'Inclinação','Sazonalidade')
+plot.ts(x)
+```
+A análise dos resíduos, mostrada abaixo, mostram que o modelo está bam ajustado ao conjunto de dados.
+```{r}
+res <- mod$residuals
+ts.plot(res)
+acf(res)
+shapiro.test(res)
+Box.test(res)
+```
+
+
+
+
