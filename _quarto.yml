@@ -5,18 +5,19 @@ project:
 book:
   title: "Séries Temporais"
   author: "James D Santos"
-  date: "02/12/2023"
+  date: "28/09/2023"
   chapters:
     - index.qmd
+    - summary.qmd
     - intro.qmd
-    - estacionaria.qmd
-    - acf.qmd
     - ts_window_date.qmd
+    - estacionaria.qmd
     - modelo_linear.qmd
     - tendencia.qmd
     - sazonalidade.qmd
     - tendencia_sazonalidade.qmd
     - suave_exponencial.qmd
+    - processo_linear_geral.qmd
     - references.qmd
 
 bibliography: references.bib

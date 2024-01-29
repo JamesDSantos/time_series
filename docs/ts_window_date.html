@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Séries Temporais - 4&nbsp; Criando séries no R</title>
+<title>Séries Temporais - 3&nbsp; Criando séries no R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,8 +64,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./modelo_linear.html" rel="next">
-<link href="./acf.html" rel="prev">
+<link href="./estacionaria.html" rel="next">
+<link href="./intro.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ts_window_date.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Criando séries no `R`</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ts_window_date.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Criando séries no `R`</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -143,26 +143,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./estacionaria.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./acf.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Defasagens e autocorrelação</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ts_window_date.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./estacionaria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -197,6 +197,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./processo_linear_geral.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modelos ARMA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -211,10 +217,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#a-classe-ts" id="toc-a-classe-ts" class="nav-link active" data-scroll-target="#a-classe-ts"><span class="header-section-number">4.1</span> A classe <code>ts</code></a></li>
-  <li><a href="#a-função-window" id="toc-a-função-window" class="nav-link" data-scroll-target="#a-função-window"><span class="header-section-number">4.2</span> A função <code>window</code></a></li>
-  <li><a href="#o-pacote-data.table" id="toc-o-pacote-data.table" class="nav-link" data-scroll-target="#o-pacote-data.table"><span class="header-section-number">4.3</span> O pacote <code>data.table</code></a></li>
-  <li><a href="#exercício" id="toc-exercício" class="nav-link" data-scroll-target="#exercício"><span class="header-section-number">4.4</span> Exercício</a></li>
+  <li><a href="#a-classe-ts" id="toc-a-classe-ts" class="nav-link active" data-scroll-target="#a-classe-ts"><span class="header-section-number">3.1</span> A classe <code>ts</code></a></li>
+  <li><a href="#a-função-window" id="toc-a-função-window" class="nav-link" data-scroll-target="#a-função-window"><span class="header-section-number">3.2</span> A função <code>window</code></a></li>
+  <li><a href="#o-pacote-data.table" id="toc-o-pacote-data.table" class="nav-link" data-scroll-target="#o-pacote-data.table"><span class="header-section-number">3.3</span> O pacote <code>data.table</code></a></li>
+  <li><a href="#exercício" id="toc-exercício" class="nav-link" data-scroll-target="#exercício"><span class="header-section-number">3.4</span> Exercício</a></li>
   </ul>
 </nav>
     </div>
@@ -223,7 +229,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></h1>
 </div>
 
 
@@ -239,8 +245,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 <p>Esta seção tem por objetivo mostrar algumas funções em <code>R</code> para a criação e análise exploratória de séries temporais.</p>
-<section id="a-classe-ts" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="a-classe-ts"><span class="header-section-number">4.1</span> A classe <code>ts</code></h2>
+<section id="a-classe-ts" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="a-classe-ts"><span class="header-section-number">3.1</span> A classe <code>ts</code></h2>
 <p>Para todos os efeitos, uma série temporal é um vetor numérico. O vetor abaixo armazena o número de nascidos vivos por mês na cidade de Manaus em 2021, sendo <code>x[1]</code> o mês de janeiro e assim sucessivamente.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="dv">3043</span>, <span class="dv">2902</span>, <span class="dv">3166</span>, <span class="dv">3014</span>, <span class="dv">3095</span>, <span class="dv">2955</span>, <span class="dv">3087</span>, <span class="dv">3141</span>,</span>
@@ -296,8 +302,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>A partir das informações acima, sabe-se a série <code>x</code> é mensal (<code>frequency=12</code>), que sua primeira observação data de janeiro de 2021 e a última de dezembro de 2021.</p>
 </section>
-<section id="a-função-window" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="a-função-window"><span class="header-section-number">4.2</span> A função <code>window</code></h2>
+<section id="a-função-window" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="a-função-window"><span class="header-section-number">3.2</span> A função <code>window</code></h2>
 <p>A função <code>window</code> seleciona um subconjunto da série temporal. Abaixo foram selecionados apenas os nascimentos entre Junho e Agosto e este valores foram registrados no gráfico.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">window</span>(x, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2021</span>,<span class="dv">6</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2021</span>,<span class="dv">8</span>))</span>
@@ -309,8 +315,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="o-pacote-data.table" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="o-pacote-data.table"><span class="header-section-number">4.3</span> O pacote <code>data.table</code></h2>
+<section id="o-pacote-data.table" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="o-pacote-data.table"><span class="header-section-number">3.3</span> O pacote <code>data.table</code></h2>
 <p>Assim como números e textos possuem classes específicas, as datas no ambiente <code>R</code> também possuem sua própria classe, denominada <code>Date</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 de agosto de 1998 (formato americano)</span></span>
@@ -396,8 +402,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="exercício" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="exercício"><span class="header-section-number">4.4</span> Exercício</h2>
+<section id="exercício" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="exercício"><span class="header-section-number">3.4</span> Exercício</h2>
 <div class="alert alert-warning">
 <p><strong>Exercício 1</strong></p>
 <p>A série abaixo contém a data dos óbitos maternos no Brasil a partir de 2010.</p>
@@ -646,13 +652,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./acf.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Defasagens e autocorrelação</span></span>
+      <a href="./intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introdução</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./modelo_linear.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Revisão sobre o modelo linear</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./estacionaria.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

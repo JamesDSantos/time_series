@@ -1,0 +1,571 @@
+# Modelos ARMA
+
+## O polinômio de defasagens
+
+:::{#def-}
+Considere uma sequência $\{a_t\}$. O operador defasagem é definido como $Ba_t = a_{t-1}$. Em inglês este operador é conhecido como *backshift*.
+:::	
+
+:::{#exm-example}
+Considere a série $11,6,3,7,15,8$.
+   	
+$$\begin{align*}
+   	 Ba_2 &= a_{1}=11\\
+   	 B a_6& =a_5 =15
+   	\end{align*}$$
+$\blacksquare$   	
+:::
+
+Seguem algumas propriedades fundamentais do operador defasagem	
+
+- $Bc=c$
+- $B^k a_t=a_{t-k}$.
+- $B(c+ba_{t-1})=c+bBa_t$ (operador linear)
+- $(B^m - B^n)a_t = a_{t-m}-a_{t-n}.$
+- $B^{-1}a_t = a_{t+1}$
+
+Note que o operador $B^{-1}$ leva $a_t$ para um passo a frente (como em uma previsão). É comum encontrar a definição $F=B^{-1}$, onde a letra $F$ é escolhida por causa do termo \textit{forecast} (previsão). 
+
+:::{#exm-}
+Seja $B$ o operado defasagem. Então, definimos um  polinômio de defasagens como
+$$\psi(B)=a_0+a_1B+\cdots+a_n B^n.$$
+:::
+
+Note que $\psi(B)$ é um modo sucinto para escrever 
+$$a(B)x_t=a_0x_t+a_1x_{t-1}+\cdots+a_n x_{t-n}.$$
+
+O polinômio de defasagens pode ser operado como um polinômio regular. Por exemplo, se $a(B)=1-aB$ e $b(B)=1-bB$, fazer
+$$\begin{align}
+a(B)b(B)x_t&=a(B)[(1-bB)x_t]=a(B)(x_t-bx_{t-1})\\
+&=a(B)x_t-ba(B)x_{t-1}=(1-aB)x_t-b(1-aB)x_{t-1}\\
+&=x_t-(a+b)x_{t-1}+abx_{t-2}\end{align}$$
+é equivalente a encontrar
+$$c(B)=(1-aB)(1-bB)=1-(a+b)B + abB^2$$
+e calcular 
+$$c(B)x_t=x_t-(a+b)x_{t-1}+abx_{t-2}.$$
+
+Dizemos que o polinômio de defasagens $\psi(B)$ possui inversa se existe uma função $\psi^{-1}(B)$ tal que $\psi(B)\psi^{-1}(B)x_t=x_t$.
+
+
+:::{#exm-}
+Para entender corretamente os modelos que serão propostos, é fundamental entender o que é a inversa do polinômio de defasagens. O caso mais importante, que será a chave para os demais, é o baseado no seguinte polinômio:
+$$\psi(B)=1-\phi B.$$
+
+Suponha que
+$$y_t=(1-\phi B)x_t=x_t-\phi x_{t-1 }$$
+Estamos procurando que qual situação existe $\psi^{-1}(B)$ tal que
+$$x_t=\psi^{-1}(B)y_t.$$
+Como
+$$y_{t-1}=(1-\phi B)x_{t-1}=x_{t-1}-\phi x_{t-2},$$
+teremos que
+$$y_t=x_t-\phi[y_{t-1}-\phi x_{t-2}]=x_t-\phi y_{t-1}-\phi^2x_{t-2}.$$
+Note que podemos continuar iterando as equações acima, obtendo
+$$y_t=x_t-\sum_{j=1}^{t-1} \phi^jy_{t-j}-\phi^{t}x_0.$$
+Assuma que $|\phi|<1$ e que $t$ é grande, o que implica que $\phi^t x_0$ é despresível. Então
+$$y_t=x_t-\sum_{j=1}^{t-1}\phi^j y_{t-j}=x_t-\sum_{j=1}^{t-1}\phi^j B^j y_t$$
+ou ainda
+$$\left(1-\sum_{j=1}^{t-1}\phi^j B^j\right)y_t=x_t$$
+Agora, multiplique os dois lados da equação acima por $1-\phi B$. Então
+$$(1-\phi B)\left(1-\sum_{j=1}^{t-1}\phi^j B^j\right)y_t=(1-\phi B)x_t=y_t $$
+Deste modo, 
+$$\psi^{-1}(B)=\lim_{t\rightarrow \infty }\left(1-\sum_{j=1}^{t}\phi^j B^j\right)=1-\sum_{j=1}^{\infty}\phi^j B^j$$
+
+$\blacksquare$
+:::
+
+No exemplo anterior, o fato de $|\phi|<1$ garante que a inveresa do polinômio de defasagens existem uma vez que $\lim_{t\rightarrow\infty}\sum_{j=1}^t \phi^jB^j$ é convergente.
+
+O resultado geral é baseado no seguinte teorema.
+
+:::{#prp-pgMatrix}
+Seja $T$ uma matriz quadrada qualquer e seja
+$$S_n=\sum_{j=1}^n T^j.$$
+A série $S_n$ converge quando $n\rightarrow\infty$ se e somente se todos os autovalores de $T$ são menores que um em módulo. Nesse caso, $T^j\rightarrow \textbf{0}$ quando $j\rightarrow\infty$ e
+$$S_n\rightarrow (1-T)^{-1}.$$
+:::
+
+A proposição acima é a chave para demonstrar o seguite teorema
+
+:::{#thm-}
+Seja 
+$$y_t=x_t-\sum_{j=1}^p\phi_jx_{t-j}=\left(1-\sum_{j=1}^p\phi_jB^j\right)x_t=\phi(B).$$
+Então, existe $\phi^{-1}(B)$ se e somente se o módulo das raízes de $\phi(B)$ são maiores que um.
+:::
+
+:::{.proof}
+Faremos a demonstração para o caso $p=2$, mas os mesmos passos podem ser seguidos para demonstrar o caso geral.
+
+Seja
+$$y_t=x_t-\phi_1x_{t-1}-\phi_2 x_{t-2}=(1-\phi_1B-\phi_2 B^2)x_t.$$
+Comecemos notando que
+
+$$\left(\begin{array}{c} x_t \\ x_{t-1}\end{array}\right)=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\left(\begin{array}{cc} \phi_1 & \phi_2 \\ 1 & 0\end{array}\right)\left(\begin{array}{c} x_{t-1} \\ x_{t-2}\end{array}\right)$$
+Fazendo $z_t=(x_t\;\;x_{t-1})$, teremos
+$$z_t=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\underbrace{\left(\begin{array}{cc} \phi_1 & \phi_2 \\ 1 & 0\end{array}\right)}_{A}z_{t-1}.$$
+Utilizando essa relação recursiva, teremos
+$$z_t=A^t z_{0}+\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)$$
+e, notando que $x_t=(1\;\;0)z_t$, teremos
+$$x_t=(1\;\;0)A^t z_{0}+(1\;\;0)\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)$$
+Suponha que os autovalores de $A$ são, em módulo, maiores que um. Então, pela @prp-pgMatrix, para $t$ suficientemente grande, 
+$$\begin{align}x_t&=(1\;\;0)\sum_{j=1}^\infty A^j \left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)=(1\;\;0)\sum_{j=1}^\infty A^j B^j\left(\begin{array}{c} y_{t} \\ 0\end{array}\right)\\&=\sum_{j=1}^\infty (1\;\;0)A^j B^j\left(\begin{array}{c} 1 \\ 0\end{array}\right)y_{t}=\phi^{-1}(B)y_t\end{align}$$
+Agora, observe que os autovalores de $A$ são obtidos através da solução de  
+$$\begin{align}0=&\left|\left(\begin{array}{cc}\phi_1 & \phi_2 \\ 1 & 0\end{array}\right)-\lambda \textbf{I}\right|-\lambda(\phi_1-\lambda)-\phi_2\\&=\lambda^2-\lambda \phi_1-\phi_2\\
+&=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\end{align}$$
+Fazendo $\lambda = 1/B$, teremos que a equação acima se torna
+$$0=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\equiv 1-\phi_1 B-\phi_2B^2=\phi(B)$$
+logo, se o módulo das raízes de $\phi(B)$ são maiores que um, então o módulo dos autovalores de $A$ são menores que um e, portanto, existe $\phi^{-1}(B)$.  
+:::
+
+## O modelo autorregressivo
+
+O modelo autorregressivo de ordem $p$, ou $AR(p)$, é dado por
+$$\begin{equation}
+    	y_t = \sum_{i=1}^{p}\phi_iy_{t-i} +\varepsilon_t
+\end{equation}$$
+onde $\{\varepsilon_t\}$ é um ruído branco, tipicamente Normal$(0,\nu)$. Neste modelo, a contribuição da observação $y_{t-j}$ em $y_t$ é dada por $\phi_j$, que é invariante no tempo.
+
+Utilizando o polinômio de defasagens, pode-se escrever o modelo AR($p$) como
+$$\begin{equation}
+    	\phi(B)y_t = \varepsilon_t,
+\end{equation}$$
+onde $\phi(B)=1-B\phi_1-\cdots \phi_p B^p$. Se o módulo das raízes desse polinômio são maiores que um, então existe $\phi^{-1}(B)$, ou seja
+$$y_t=\phi^{-1}(B)\varepsilon_t=\left(\sum_{j=1}^\infty \psi_jB^j\right)\varepsilon_t$$
+e o processo será estacionário, com média e variância iguais à
+$$\begin{align}E(y_t)&=\left(\sum_{j=1}^\infty \psi_jB^j\right)E(\varepsilon_t)=0\\
+Var(y_t)&=Var\left(\sum_{j=1}^\infty \psi_jB^j\varepsilon_t\right)=\nu\sum_{j=1}^\infty \psi_j^2\\
+\end{align}$$
+e a função de auto covariância é dada por
+$$\begin{align}
+\gamma(h)&=Cov(y_t,y_{t-h})\\&=Cov\left( \left(\sum_{j=1}^\infty \psi_jB^j\right)\varepsilon_t,\left(\sum_{k=1}^\infty \psi_kB^k\right)\varepsilon_{t-h}\right)\\
+&=\sum_{j=1}^\infty \sum_{k=1}^\infty \psi_j\psi_k Cov\left(   \varepsilon_{t-j},\varepsilon_{t-k-h}\right)\\
+&=\nu\sum_{j=1}^\infty \psi_j\psi_{j+h}\end{align}$${#eq-covariancia}
+
+:::{#exm-}
+Considere o processo $AR(1)$ abaixo:
+$$\begin{align*}
+	x_t(1-B\phi)&= \varepsilon_{t-1}.
+\end{align*}$$
+
+Seja $\dot{B}$ a raiz do polinômio $1-B\phi$. Temos que
+$$\begin{align*}
+	\phi(\dot{B})=0\Rightarrow 1-\phi \dot{B} =0 \Rightarrow \dot{B} =\frac{1}{\phi}
+\end{align*}$$
+
+Logo, o processo AR(1) é estacionário se 
+	$$|\dot{B}|>1\Rightarrow \left|\frac{1}{\phi}\right|>1\Rightarrow |\phi|< 1$$
+Nesse caso, já vimos que $\phi^{-1}(B)=1-\sum_{j=1}^\infty\phi^j B^j$.
+Então, pela equação (@eq-covariancia), identificando $\psi_^_j=\phi^j$,teremos que
+
+$$\gamma(h)=\nu\sum_{j=1}^\infty \phi^j\phi^{j+h}=\nu\phi^h\frac{\phi^2}{1-\phi^2} $$
+Assim, a função de autocorrelação é dada por
+$$\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi^h.$$
+
+:::
+
+
+\begin{frame}{Função de autocorrelação para o $AR(1)$ }
+	
+	A partir deste momento, vamos supor que as condições de estacionaridade estão satisfeitas. Sabemos que
+	$$x_{t}= \phi x_{t-1}+\varepsilon_t.$$
+	Multiplicando os dois lados da equação acima por $x_{t-1}$ teremos
+	$$x_{t}x_{t-1}= \phi x_{t-1}^2+x_{t-1}\varepsilon_t.$$
+	Aplicando a esperança dos dois lados da equação teremos
+	$$E(x_{t}x_{t-1})= \phi E(x_{t-1}^2)+E(x_{t-1})E(\varepsilon_t).$$
+	Reconhecendo o lado esquerdo como a auto covariância (defasagem 1), e $E(x_{t-1}^2)=\gamma(0)$ temos que
+	$$\gamma(1)= \phi \gamma(0).$$
+	e 
+	$$\rho(1)=\frac{\gamma(1)}{\gamma(0)}=\phi.$$
+Note então que um processo autorregressivo de ordem 1 pode ser identificado pela sua função de autocorrelação:
+
+- Se $\phi\in(0,1)$, então $\rho(h)$ decai exponencialmente para zero
+
+- Se $\in(-1,0)$, então $\rho(h)$ decai exponencialmente para zero, mas alternando o sinal. 
+
+\end{frame}
+
+\begin{frame}	
+	Note que é possível obter a autocorrelação de defasagem 2 a partir do resultado  anterior. Primeiro, multiplique a
+	equação do modelo AR(1) por $x_{t-2}$ dos dois lados:
+		$$x_{t}x_{t-2}= \phi x_{t-1}x_{t-2} + x_{t-2}\varepsilon_t.$$
+	Agora, aplique a esperança dos dois lados	
+	$$E(x_{t}x_{t-2})= \phi E(x_{t-1}x_{t-2}) + E(x_{t-2}\varepsilon_t).$$
+	Reconhecendo o lado esquerdo como a auto covariância de defasagem 2, temos que
+	$$\gamma(2)= \phi \gamma(1).$$
+	Mas $\gamma(1)=\gamma(0)\phi$. Portanto,
+	$\gamma(2)= \phi^2 \gamma(0),$
+	e
+	$$\rho(2)= \phi^2,$$
+\end{frame}
+
+\begin{frame}
+	Suponha que (hipótese de indução)
+	$$\gamma(h-1)=\phi^{h-1}\nu.$$
+	Multiplicando os dois lados a equação do $AR(1)$ por $x_{t-h}$ temos
+	$$x_t x_{t-h}= \phi x_{t-1}x_{t-h} + x_{t-h}\varepsilon_t$$
+	e aplicando a esperança temos
+	$$E(x_t x_{t-h})= \phi E(x_{t-1}x_{t-h}) + E(x_{t-h}\varepsilon_t).$$
+	A primeira esperança é $\gamma(h)$ e a segunda é $\gamma(h-1)$. Portanto
+	$$\gamma(h)=\phi\gamma(h-1)=\phi\times \phi^{h-1} \gamma(0) = \phi^h \gamma(0).$$
+	Portanto, a hipótese de indução é verdadeira e
+	$$\rho(h)=\phi^h.$$
+\end{frame}
+
+\begin{frame}
+	Como a série é estacionária, temos que $|\phi|<1$.  Isto implica que
+	\begin{itemize}
+		\item O correlograma deve cai rapidamente para 0.
+		\item Se $\phi>0$ a queda no correlograma é exponencial.
+		\item Se $\phi<0$ a queda também é exponencial, mas o sinal das autocorrelações se alternam.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{FigurasAulas/acf_ar1_parte1}
+\caption{Função de autocorrelação teórica para alguns valores de $\phi$.}
+\label{fig:acf_ar1_parte1}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\linewidth]{FigurasAulas/acf_ar1_parte2}
+		\caption{Função de autocorrelação teórica para alguns valores de $\phi$.}
+		\label{fig:acf_ar1_parte2}
+	\end{figure}
+\end{frame}
+
+
+
+\begin{frame}{Função de autocorrelação para o $AR(p)$}
+	Consideremos o processo 
+	$$x_t = \sum_{j=1}^p\phi_j x_{t-j}+\varepsilon_t.$$
+	Multiplicando ambos os lados por $x_{t-h}$, com $h>p$, calculando as esperanças e dividindo por $\nu$ teremos
+	\begin{equation}
+	\rho(h)=\sum_{j=1}^p\phi_j \rho(h-j).\label{eq::acf_arp}
+	\end{equation}
+		Obtendo $\rho(1),\ldots,\rho(p)$ as demais autocorrelações podem ser obtidas recursivamente.
+\end{frame}
+
+
+
+\begin{frame}{Exemplo: autocorrelação para o $AR(2)$}
+	Considere o processo $AR(2)$ abaixo:
+	$$x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon.$$
+	Multiplicando a equação acima por $x_{t-1}$ em ambos os lados teremos
+	$$x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon x_{t-1}.$$
+	Calculando o valor esperado, temos
+	\begin{align*}
+	\gamma(1)&=\phi_1E(x_{t-1}^2)+\phi_2E(x_{t-2}x_{t-1})+E(\varepsilon x_{t-1})\\
+	&=\phi_1\gamma(0) + \phi_2\gamma(1).
+	\end{align*}
+	Portanto,
+	$$\rho(1)=\frac{\gamma(1)}{\gamma(0)}=\frac{\phi_1}{1-\phi_2}.$$
+\end{frame}
+
+\begin{frame}
+	De modo análogo, teremos
+	$$x_{t-2}\times x_{t}=x_{t-2}\left(\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon y_{t-1}\right).$$
+	Aplicando a esperança, teremos
+	\begin{align*}
+	\gamma(2)&=\phi_1 \gamma(1)+\phi_2\gamma(0) = \phi_1 \frac{\gamma(0)}{1-\phi_2}+\phi_2\gamma(0)
+	\end{align*}
+	e
+	$$\rho(2)=\frac{\phi_1^2}{1-\phi_2} + \phi_2.$$
+\end{frame}
+
+
+\begin{frame}
+	Utilizando a Equação (\ref{eq::acf_arp}) podemos obter as próximas autocorrelações. Por exemplo
+	$$\rho(3) = \phi_1\rho(2)+ \phi_2\rho(1)= \frac{\phi_1^3}{1-\phi_2} + \phi_1\phi_2\left(1 + \frac{1}{1-\phi_2}\right).$$	
+\end{frame}
+
+\begin{frame}{Comportamento das autocorrelações em um $AR(p)$}
+	Segue que a solução geral da Equação (\ref{eq::acf_arp}), é dada por 
+	$$\rho(h)=\sum_{j=1}^{p}\alpha_j^h c_j$$
+	onde $\alpha_j=\ell_j^{-1}$ e $c_j$ é um polinômio com grau igual a multiplicidade da raiz menos um.
+	
+	Notas:
+	\begin{itemize}
+		\item As raízes reais se comportam de acordo com o que já foi visto no $AR(1)$.
+		\item As raízes complexas tem comportamento sazonal decaindo exponencialmente. 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\textbf{Caso particular: AR(2) -} Existem três possibilidades:
+	\begin{itemize}
+		\item Existem duas raízes reais contínuas:
+		$$\rho(h)=c_1\alpha_1^h + c_2\alpha_2^h.$$
+		Neste caso, a ACF decai exponencialmente (seguindo o comportamento da raiz dominante).
+		\item Existe uma única raiz real (multiplicidade 2):
+		$$\rho(h)=  (c_1+c_2)\alpha^h.$$
+		Neste caso, a ACF também decai exponencialmente.
+		\item Existem duas raízes complexas conjugadas. Neste caso, $\alpha_1=re^{\omega \textit{i}}$ e $\alpha_2=re^{-\omega \textit{i}}$ e
+		\begin{align*}
+		\rho(h)& = c_1\alpha_1^h + c_2\alpha_2^h  = c_1\left( re^{\omega \textit{i}} \right)^h + c_2\left( re^{-\omega \textit{i}} \right)^h\\
+		&= c_1r^h\left( \cos(\omega h) + i\sin(\omega h) \right) + r^hc_2\left( \cos(\omega h) + i\sin(-\omega h) \right)\\
+		&= r^h(c_1+c_2)\cos(\omega h)
+		\end{align*}
+		e o processo exibirá comportamento sazonal com período $1/\omega$, caindo exponencialmente.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\begin{center}
+\includegraphics[width=1\linewidth]{FigurasAulas/acf_teorica_ar2}
+\end{center}
+\end{frame}
+
+\begin{frame}{Função de autocorrelação parcial (PACF)}
+	\begin{itemize}
+		\item 	Consideremos novamente o processo $AR(1)$. Vimos que
+		$$\rho(h)=\phi^h.$$
+		\item Isto implica que $Cor(x_{t+2},x_t)=\phi^2$.
+		\item Note que esta correlação só existe por causa da relação entre os pares $(x_t,x_{t+1})$ e $(x_{t+1},x_{t+2})$. De fato
+		$$Cov(x_t,x_{t+2}|x_{t+1})=0.$$			
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\begin{defi}[Autocorrelação parcial]
+	A função de autocorrelação parcial de defasagem $h$ é dada por
+	$$\phi_{hh}=\frac{Cov\left(x_{t+h},x_t|x_{t+1},\ldots x_{t+h-1}\right)}{\sqrt{Var\left(x_t|x_{t+1},\ldots x_{t+h-1}\right)Var\left(x_{t+h}|x_{t+1},\ldots x_{t+h-1}\right)}}$$
+\end{defi}
+
+Intuitivamente, a função de autocorrelação parcial calcula a correlação entre $x_t$ e $x_{t+h}$ eliminando a dependência linear entre os valores intermediários $x_s$, $t<s<t+h$.
+\end{frame}
+
+\begin{frame}
+	\begin{teo}
+		Seja $\{x_t\}$ um processo estocástico estacionário. A função de autocorrelação parcial $\phi_{hh}$ para $h\geq 2$
+		é igual ao coeficiente $\alpha_h$, obtido pelo melhor preditor linear (BLUE) de $x_t$ baseado nas observações $x_{t-1},\ldots,x_{t-h}$:
+		\begin{equation}
+		\tilde{x}_t = \phi_{1k}x_{t-1}+\cdots+\phi_{kk}x_{t-h}.
+		\end{equation}
+	\end{teo}
+	
+	\begin{teo}
+		Para um $AR(p)$, $\phi_{kk}=0$ para $k>p$.
+	\end{teo}
+\end{frame}
+
+\begin{frame}{Gráfico da função de autocorrelação parcial}
+	\begin{itemize}
+		\item É um gráfico de $(h,\phi_{hh})$.
+		\item Um $AR(p)$ possui apenas $p$ autocorrelações parciais não nulas.
+		\item Para determinar se devemos levar em consideração determinado valor de $\phi_{hh}$, verificamos se este está fora do intervalo
+		$$(-\frac{1,96}{\sqrt{n}}\;\;;\;\;\frac{1,96}{\sqrt{n}}).$$
+		\item O número de autocorrelações parciais fora do intervalo devem nos dar uma noção da ordem do modelo.
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{Exemplo: PIB Brasileiro}
+\begin{center}
+\includegraphics[width=1\linewidth]{FigurasAulas/PIB Brasileiro/PIB_imagem"}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/pib_polinomioFinal"}
+\caption{Ajustamos um modelo polinomial de ordem 4 para explicar a tendência desta série.}
+\label{fig:pib_polinomioFinal}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/polinomio_acf_residuos"}
+\caption{Correlograma dos resíduos. O comportamento quase sazonal (senoidal decaindo rapidamente) é consistente com um modelo autoregressivo com raízes complexas.}
+\label{fig:polinomio_acf_residuos}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/polinomio_residuos_pacf"}
+\caption{Autocorrelação parcial estimada. Note que a sexta autocorrelação é significativa, dando evidências de que o modelo se trata de um $AR(6)$.}
+\label{fig:polinomio_residuos_pacf}
+\end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+	Recapitulando: seja $\{y_t\}$ a série do PIB do Brasil, com $t=1$ equivalendo ao ano de 1960. Ao ajustar o polinômio de grau 4 calculamos os resíduos
+	$$y_t - \sum_{j=0}^4 \hat{\beta}_j t^j = a_t,$$
+	onde existem evidências de que $a_t$ é um $AR(6)$, ou seja,
+	$$a_t = \varepsilon_t + \sum_{k=1}^{6}\phi_j a_{t-j},$$
+	onde $\varepsilon_t$ é um ruído branco.
+\end{frame}
+
+
+\begin{frame}
+	Obtivemos as seguintes estimativas para $\phi_1,\ldots,\phi_6$:
+	$$0,7486\;\;\;-0,1845\;\;\;-0,1276\;\;\;-0,0202\;\;\;0,1369\;\;\;-0,3766.$$
+	Assim, o polinômio característico é dado por
+	$$\phi(B)=1-0,748B+0,184B^2+0,127B^3+0,020B^4-0,136B^5+0,376B^6.$$
+	As raízes deste polinômio são
+	$$0,9536\pm 0,4979i \;\;\; -1,0551\pm 0,7139i\;\;\; - 1,0551\pm 0,7139i.$$
+    Seus respectivos módulos são
+    $$1,0758\;\;\; 1,2740\;\;\;1,1888$$
+    e como todos são maiores que 1, temos que o $AR(6)$ é estacionário.
+\end{frame}
+
+
+\begin{frame}
+	\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/final_residuos_acf"}
+\caption{Gráficos dos resíduos obtidos após ajustar o modelo AR(6). Note que o resultado se comporta como um ruído branco.}
+\label{fig:final_residuos_acf}
+\end{figure}
+\end{frame}
+	
+
+\begin{frame}
+	Após algumas manipulações, é possível mostrar que a série o PIB do Brasil pode ser modelada por
+	\begin{align*}
+	y_t = \varepsilon_t + \underbrace{\sum_{k=1}^6 \hat{\phi}_k y_{t-k}}_{\text{parte estacionária}} + \underbrace{\sum_{j=1}^{4}\hat{\beta}_j\left[t^j -\sum_{k=1}^{6}\hat{\phi}_k(t-k)^j\right]}_{\text{parte não estacionária}}
+	\end{align*}
+\end{frame}
+
+
+\begin{frame}{Leitura}
+	\begin{itemize}
+		\item Seção 5.5.2 de \cite{morettin2006analise}.
+		\item Seção 3.2 de \cite{box2015time}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Estimando os parâmetros do modelo AR($p$)}
+	Existem alguns métodos clássicos para a estimação dos parâmetros auto regressivos. Discutiremos dois métodos:
+	\begin{itemize}
+		\item Estimação de Yule-Walker
+		\item Estimação por máxima verossimilhança condicional
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Estimação de Yule-Walker}
+	Considere o processo $AR(p)$:
+	$$x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t.$$
+	Multiplicando ambos os lados por $x_{t-h}$, com $h>0$ teremos
+	$$x_tx_{t-h} = \sum_{j=1}^p \phi_j x_{t-j}x_{t-h}+\varepsilon_tx_{t-h}.$$
+	Aplicando o valor esperado dos dois lados, teremos
+	$$\gamma(h) = \sum_{j=1}^p \phi_j \gamma( h-j).$$
+\end{frame}
+
+\begin{frame}
+Considerando ainda as equações:
+$$x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t,$$
+podemos multiplicar ambos os lados por $x_t$ (ou seja $x_{t-h}$, com $h=0$). Após aplicar a esperança
+teremos
+	$$E(x_t^2) = \sum_{j=1}^p \phi_j E(x_{t-j}x_{t})+E(\varepsilon_tx_{t}).$$
+Aqui há um detalhe importante:	
+$$E(\varepsilon_tx_{t})=E\left(\varepsilon_t\left[\sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t\right]\right)=E(\varepsilon_t^2)=\nu$$
+\end{frame}
+
+\begin{frame}
+	Portanto,
+	\begin{align}\label{eq:autocovarianca-AR}	
+	\gamma(h)=\left\{\begin{array}{ll}
+	\sum_{j=1}^p \phi_j \gamma( h-j),&\;\;\hbox{se }h>0\\
+	\sum_{j=1}^p \phi_j \gamma( j)+\nu,&\;\;\hbox{se }h=0 \\
+	\end{array}\right.
+	\end{align}
+\end{frame}
+
+\begin{frame}
+O método de estimação de Yule-Walker consiste em substituir $\gamma(1),\ldots,\gamma(p)$ pelas auto covariâncias amostrais:
+\begin{align*}
+\hat{\gamma}(1) &= \phi_1\hat{\gamma}(0) + \phi_1\hat{\gamma}(-1) + \cdots + \phi_p\hat{\gamma}(1-p) \\ 
+\hat{\gamma}(2) &= \phi_1\hat{\gamma}(1) + \phi_1\hat{\gamma}(0)  + \cdots + \phi_p\hat{\gamma}(2-p) \\ 
+\vdots &= \vdots \\
+\hat{\gamma}(p) &= \phi_1\hat{\gamma}(p-1) + \phi_1\hat{\gamma}(p-2)  + \cdots + \phi_p\hat{\gamma}(0)
+\end{align*} 
+Nota: lembre-se que $\gamma(-i)=\gamma(i)$. 
+\end{frame}
+
+\begin{frame}
+	Podemos escrever o sistema na forma matricial:
+	\begin{align*}
+	\underbrace{\left(
+	\begin{array}{cccc}
+\hat{\gamma}(0) & \hat{\gamma}(-1) & \cdots & \hat{\gamma}(1-p) \\ 
+\hat{\gamma}(1) & \hat{\gamma}(0)  & \cdots & \hat{\gamma}(2-p) \\ 
+         \vdots & \vdots               & \ddots                & \vdots\\
+\hat{\gamma}(p-1) & \hat{\gamma}(p-2) &  \cdots & \hat{\gamma}(0)	
+	\end{array}\right)}_{\hat{\bm{\Gamma}}}
+	\underbrace{\left( \begin{array}{c} \hat{\phi}_1 \\ \hat{\phi}_2 \\ \vdots \\ \hat{\phi}_p   \end{array}\right)}_{\hat{\bm{\phi}}}=
+	\underbrace{\left( \begin{array}{c} \hat{\gamma}(1) \\ \hat{\gamma}(2) \\ \vdots \\ \hat{\gamma}(p)   \end{array}\right)}_{\hat{\bm{\gamma}}}.
+	\end{align*}
+	e os estimadores de Yule-Walker para os parâmetros autoregressivos são dados por
+	$$\hat{\bm{\phi}}=\hat{\bm{\Gamma}}^{-1}\hat{\bm{\gamma}}.$$ 
+\end{frame}
+
+\begin{frame}
+	Voltando para a Equação (\ref{eq:autocovarianca-AR}), temos que
+	$$\gamma(0)=\sum_{j=1}^{p}\phi_j \gamma(j)+\nu$$
+	Portanto, um estimador para $\nu$ é dado por
+	$$\hat{\nu}=  
+  \hat{\gamma(0)}=\sum_{j=1}^{p}\hat{\phi_j}\hat{\gamma(j)}$$
+\end{frame}
+
+\begin{frame}{Estimador de máxima verossimilhança condicional}
+	\begin{itemize}
+		\item Observe que
+		$$y_t|y_{1:t-1}\sim y_t|y_{t-p:t-1},$$
+		ou seja, $\{y_t\}$ é uma cadeia de Markov de ordem $p$.
+		\item Deste modo, para $T>p$,
+		\begin{align*}
+		f(y_{1:T})&=f\left(y_T|y_{1:T-1}\right)f\left(y_{1:T-1}\right)=f\left(y_T|y_{T-p:T-1}\right)f\left(y_{1:T-1}\right)\\
+		&=\prod_{t=p+1}^{T}f\left(y_t|y_{t-p:t:-1}\right)\times f(y_{1:p}).
+		\end{align*}
+		\item É comum considerar que os primeiros $p$ valores da série são constantes, produzindo a seguinte verossimilhança condicional:
+		$$f(\bm{y}|y_{1:p})=\prod_{t=p+1}^{T}f\left(y_t|y_{t-p:t:-1}\right).$$
+	\end{itemize}
+\end{frame}       
+
+\begin{frame}
+	Fazendo
+	\begin{align}
+	\bm{f}_t'&=\left(y_{t-1},\ldots,y_{t-p}\right)\\
+	\bm{\phi}'&=\left(\phi_{1},\ldots,\phi_{p}\right)		
+	\end{align}
+	teremos
+	$$y_t=\phi_1y_{t-1}+\cdots \phi_p y_{t-p} +\varepsilon_t= \underbrace{(y_{t-1}\;\cdots\;y_{t-p})}_{\bm{f}_t'}\underbrace{\left(\begin{array}{c}\phi_1 \\ \vdots \\ \phi_p\end{array}\right)}_{\bm{\phi}} + \varepsilon_{t},$$
+	ou seja,
+	$$y_t|y_{t-p:t-1}\sim\hbox{Normal}\left(\bm{f}_t'\bm{\phi}, \nu\right),$$
+	logo,
+	$$f(\bm{y}|y_{1:p})\propto \left(\frac{1}{\nu}\right)^{\frac{T}{2}}\exp\left\{ -\frac{1}{2\nu}\left(\bm{y}-\bm{F}'\bm{\phi}\right)'\left(\bm{y}-\bm{F}'\bm{\phi}\right) \right\},$$
+	onde $\bm{F}'=\left(\bm{f}_{p+1}',\ldots,\bm{f}_{T}'\right)$
+\end{frame}
+
+\begin{frame}{Ilustrando com o AR(2)}
+	
+	O modelo AR(2) é dado por:
+	$$y_t = \phi_1 y_{t-1}+\phi_2 y_{t-2} + \varepsilon_t,$$
+		onde $\varepsilon\sim\hbox{Normal}(0,\nu)$.
+	
+	Portanto, $y_t|y_{t-1},y_{t-2}\sim\hbox{Normal}( \phi_1 y_{t-1} + \phi_2 y_{t-2}, \nu)$, ou seja, dado $y_{t-1}$ e $y_{t-2}$, 
+	
+	$$ y_t = \underbrace{ \left(  y_{t-1} \;\; y_{t-2}   \right) }_\text{$\bm{f}_t'$}\underbrace{\left(\begin{array}{c}\phi_1 \\ \phi_2
+		\end{array}\right)}_\text{$\bm{\phi}$}+\varepsilon_t= \bm{f}_t'\bm{\phi}+\varepsilon_t$$
+	Como o usual, o estimador de máxima verossimilhança (condicional) será dado por
+	$$\bm{\hat{\phi}}=(\bm{F}\bm{F}')^{-1}\bm{F}\bm{y}.$$
+	
+	
+	
+\end{frame}
+
+

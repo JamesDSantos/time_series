@@ -182,12 +182,14 @@
 \floatname{codelisting}{Listing}
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \usepackage{amsthm}
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[chapter]
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[chapter]
 \theoremstyle{definition}
 \newtheorem{example}{Example}[chapter]
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[chapter]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
 \theoremstyle{remark}
 \AtBeginDocument{\renewcommand*{\proofname}{Proof}}
 \newtheorem*{remark}{Remark}
@@ -225,11 +227,11 @@
 
 \title{Séries Temporais}
 \author{James D Santos}
-\date{2023-02-12}
+\date{2025-04-09}
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, borderline west={3pt}{0pt}{shadecolor}, frame hidden, enhanced, breakable, boxrule=0pt, sharp corners]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, boxrule=0pt, interior hidden, frame hidden, sharp corners, enhanced, borderline west={3pt}{0pt}{shadecolor}]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -251,6 +253,23 @@ disciplina Séries Temporais, no Bacharelado de Estatística.
 Considere-as um rascunho, e portanto, sujeita a erros.
 
 Dúvidas e sugestões podem ser enviadas para o e-mail james@ufam.edu.br
+
+\bookmarksetup{startatroot}
+
+\hypertarget{summary}{%
+\chapter{Summary}\label{summary}}
+
+In summary, this book has no content whatsoever.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1} \SpecialCharTok{+} \DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 2
+\end{verbatim}
 
 \bookmarksetup{startatroot}
 
@@ -429,537 +448,6 @@ Unido}\label{mortes-por-doenuxe7as-pulmonares-no-reino-unido}}
 \end{minipage}%
 
 \end{figure}
-
-\bookmarksetup{startatroot}
-
-\hypertarget{suxe9ries-estacionuxe1rias}{%
-\chapter{Séries Estacionárias}\label{suxe9ries-estacionuxe1rias}}
-
-Uma coleção do tipo \(\{x(t),t\in\mathcal{T}\}\),
-\(\mathcal{T}\subseteq \mathbb{R}\), onde \(x(t)\) é uma variável
-aleatória para cada \(t\) fixado, é denominada processo estocástico.
-
-Um processo estocástico é dito ser fortemente estacionário se sua
-distribuição é invariante ao índice. Portanto, para qualquer
-\(t_1,\ldots,t_k\), a distribuição de \(x(t_1),\ldots,x(t_k)\) é a mesma
-de \(x(t_1+h),\ldots,x(t_k+h)\).
-
-\begin{example}[]\protect\hypertarget{exm-serie_estacionaria_1}{}\label{exm-serie_estacionaria_1}
-
-Se \(x(t)\sim \hbox{Normal}(0,1)\) e \(x(t)\) é independente de \(x(s)\)
-para todo \(t\neq s\), então, para qualquer \(t_1,\ldots,t_k\),
-
-\[\begin{align}P(x(t_1)<x_1,\ldots,x(t_k)<x_k)&=\prod_{i=1}^k P(x(t_i)<x_i)=\prod_{i=1}^k P(x(t_i+h)<x_i)\\&=P(x(t_1+h)<x_1,\ldots,x(t_k+h)<x_k)\end{align}\]
-logo, \(\{x(t),t\in \mathbb{R}\}\) é um processo fortemente
-estacionário. \(\blacksquare\)
-
-\end{example}
-
-\begin{theorem}[]\protect\hypertarget{thm-exm_estacionaria2}{}\label{thm-exm_estacionaria2}
-
-Seja \(\{x(t),t\in\mathbb{N}\}\) um processo estocástico com
-\[x(t)= x_{(t-1)}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),\]
-para \(t=1,2,\ldots\) com a condição de que
-\(x_0\sim\hbox{Normal}(0,1)\) e que
-\(Cov(\varepsilon_t,\varepsilon_s)=0\;\;\forall s\neq t\). Então,
-\[x_t=x_{t-1}+\varepsilon_{t}=\cdots=x_0+\sum_{j=1}^t\varepsilon_t\sim\hbox{Normal}(0,t+1).\]
-Como \(x_t\sim\hbox{Normal}(0,t+1)\) e, para qualquer \(h>0\),
-\(x_{t+h}\sim\hbox{Normal}(0,t+h+1)\), temos que este processo não é
-fortemente estacionário. \(\blacksquare\)
-
-\end{theorem}
-
-\begin{definition}[]\protect\hypertarget{def-fracamente}{}\label{def-fracamente}
-
-Um processo estocástico \(\{y_t\}\) é dito ser fracamente estacionário
-(ou de segunda ordem) se \[\begin{align*}
-    E(y_t)&=\mu,\\
-    Var(y_t)&=\nu,\\ 
-    Cov(y_t,y_s)&=E(y_ty_s)-E(y_t)E(y_s)=\gamma(t-s)
-    \end{align*}\] onde \(\mu\) e \(\nu\) são constantes independentes
-de \(t\) e \(\gamma(t-s)\) depende de \(t\) e \(s\) somente através da
-diferença \(|t-s|\). \(\blacksquare\)
-
-\end{definition}
-
-\begin{example}[]\protect\hypertarget{exm-fracamente1}{}\label{exm-fracamente1}
-
-Considere o processo estocástico \(\{x(t),t\in\mathbb{N}\}\), onde
-\[x(t) = \varepsilon(t) +\frac{1}{2}\varepsilon(t-1)
-\] onde \(\varepsilon(t)\sim\hbox{Normal}(0,\nu)\) para \(t=1,\ldots\),
-\(\varepsilon(t)\) é independente de \(\varepsilon(s)\) para todo
-\(s\neq t\) e \(\varepsilon(0)=0\). Então: \[\begin{align}
-E(x(t))&=E(\varepsilon(t))+\frac{1}{2}E(\varepsilon(t-1))=0\\
-Var(x(t))&=Var(\varepsilon(t))+\frac{1}{4}Var(\varepsilon(t-1))=\frac{5}{4}\nu
-\end{align}
-\] e \[\begin{align}
-          Cov(x(t),x(t+h))&=Cov\left(\varepsilon(t)+\frac{1}{2}\varepsilon(t-1),\varepsilon(t+h)+\frac{1}{2}\varepsilon(t+h-1)\right)\\
-          &=Cov\left(\varepsilon(t),\varepsilon(t+h)\right)+\frac{1}{2}Cov\left(\varepsilon(t),\varepsilon(t+h-1)\right)\\
-          &+\frac{1}{2}Cov\left(\varepsilon(t-1),\varepsilon(t+h)\right)+\frac{1}{4}Cov\left(\varepsilon(t-1),\varepsilon(t+h-1)\right)\\
-          &=\left\{ \begin{array}{ll}
-          \frac{4}{5}\nu,&\; h = 0 \\         
-          \frac{1}{2}\nu,&\; |h|=1,\\
-          0,&\;\hbox{caso contrário.}
-          \end{array} \right.
-    \end{align}\] Portanto, o processo é fracamente estacionáriao.
-\(\blacksquare\)
-
-\end{example}
-
-Quando \(\mathcal{T}=\{t\in D\subseteq \mathbb{Z}\}\), utiliza-se a
-notação \(x(t)=x_t\). Além disso, se \(t\) pode ser interpretado como
-tempo, \(x_t\) é uma série temporal. Uma série temporal é dita ser
-estacionária se ela é fracamente estacionária e o mesmo princípio se
-aplica nessas notas de aula.
-
-\hypertarget{processo-estacionuxe1rio-erguxf3dico}{%
-\section{Processo estacionário
-ergódico}\label{processo-estacionuxe1rio-erguxf3dico}}
-
-Seja \(x_1,x_2,\ldots,x_n\) uma série temporal estacionária. Então, a
-média \(\mu\) pode ser estimada por \(\bar{x}_n\), uma vez que
-\(E(\bar{x})=\mu\). A variância essa estatística é
-
-\[\begin{align}Var(\bar{x})&=Cov(\bar{x}_n,\bar{x}_n)=Cov\left(\sum_{i=1}^n \frac{x_i}{n},\sum_{j=1}^n\frac{x_j}{n}\right)=\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^nCov(x_i,x_j)\\
-&=\frac{1}{n^2}\left[\sum_{i=1}^nCov(x_i,x_i)+2\sum_{i=1}^n\sum_{j\neq i}Cov(x_i,x_j)\right]\\
-&=\frac{1}{n^2}\left[n\nu+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right]=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\gamma(h)
-\end{align}\]
-
-Note que, diferente do caso independente e identicamente distribuído,
-\(\bar{x}\) não é necessariamente um estimador adequado, conforme pode
-ser constatado no exemplo abaixo.
-
-\begin{example}[]\protect\hypertarget{exm-estationario_nao_ergodico}{}\label{exm-estationario_nao_ergodico}
-
-Seja \(x_t\) um processo onde \(x_0\sim\hbox{Normal}(0,\nu)\) e
-\(x_t=x_0\) para todo \(t>0\). Como
-
-\[\begin{align}
-E(x_t)&=E(E(x_t|x_0))=E(x_0)=0\\
-Var(x_t)&=E(Var(x_t|x_0))+Var(E(x_t|x_0))=E(0)+Var(x_0)=\nu\\
-Cov(x_t,x_{t-h})&=E( Cov(x_t,x_{t-h}|x_0))+Cov( E(x_t|x_0),E(x_{t-h}|x_0))\\
-&=E(0)+Cov(x_0,x_0)=Var(x_0)=\nu
-\end{align}\] e, portanto, o processo é fracamente estacionário.
-Contudo,
-\[Var(\bar{x})=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,\]
-portanto, o erro padrão não decai com o aumento do tamanho da amostra.
-
-\(\blacksquare\)
-
-\end{example}
-
-A partir do exemplo acima, fica claro que \(\bar{x}\) nem sempre será um
-estimador adequado para uma série estacionária.
-
-\begin{definition}[]\protect\hypertarget{def-ergodica}{}\label{def-ergodica}
-
-Uma série temporal estacionária é dita ser ergódica para a média se
-\[\sum_{i=1}^n\frac{x_1}{n}\stackrel{p}{\rightarrow} \mu,\] quando
-\(n\rightarrow\infty\).
-
-\end{definition}
-
-A partir deste momento será considerado que toda série temporal
-estacionária é ergódica e, portanto \(\bar{x}\) é um estimador para
-\(\mu\).
-
-\begin{example}[]\protect\hypertarget{exm-estationario_nao_ergodico_conclusao}{}\label{exm-estationario_nao_ergodico_conclusao}
-
-Considere novamente o processo no
-(\textbf{estationario\_nao\_ergodico?}). Como \(\bar{x}_n=x_0\), tem-se
-que, para \(\varepsilon>0\) arbitrário,
-\(\bar{x}\sim\hbox{Normal}(0,\nu)\) e
-\[P(|\bar{x}_n-0|>\varepsilon)=2P(x_0>\varepsilon)=2\int_{-\infty}^\varepsilon \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}d\nu>\frac{1}{2}\]
-logo, \(\bar{x}\) não converge em probabilidade para \(0\) e, portanto,
-o processo não é ergódico na média. \(\blacksquare\)
-
-\end{example}
-
-\hypertarget{ruuxeddo-branco}{%
-\section{Ruído branco}\label{ruuxeddo-branco}}
-
-\begin{definition}[]\protect\hypertarget{def-ruido_branco}{}\label{def-ruido_branco}
-
-A série estacionária \(x_t\) é dita ser um ruído branco se \(E(x_t)=0\),
-\(Var(x_t)=\nu\) e \[\begin{equation}
-        Cov(x_t,x_s)=0,
-        \end{equation}\] para todo \(t\neq s\). \(\blacksquare\)
-
-\end{definition}
-
-É imediato que o ruído branco é uma série temporal estacionária. Além
-disso, pela Desigualdade de Chebyshev, para qualquer \(\varepsilon>0\),
-
-\[P\left(|\bar{x}_n|\geq\varepsilon\right)\leq \frac{E(\bar{x}_n^2)}{\varepsilon^2}=\frac{Var(\bar{x}_n)}{\varepsilon^2}=\frac{\nu}{n\varepsilon^2}\]
-logo \(\lim_{n}P(|\bar{x}_n|\leq \varepsilon)=0\) e
-\(\bar{x}_n\stackrel{p}{\rightarrow}0\). Portanto, o ruído branco é
-ergódico.
-
-Considere agora a série temporal \(y_t=\mu+x_t\), onde \(x_t\) é um
-ruído branco. Então
-\[\bar{y}_n=\mu+\bar{x}_n\stackrel{p}{\rightarrow}\mu\] e \(\bar{y}_n\)
-é um estimador para \(\mu\).
-
-Em certos momentos, será considerado que \(x_t\) e \(x_s\), para todo
-\(t\neq s\) são independentes (essa é uma condição mais forte, pois
-implica em \(Cov(x_t,x_s)=0\)). Esse processo é denominado ruído branco
-independente.
-
-Por último, também será considerado a possibilidade de que
-\(x_t\sim\hbox{Normal}(0,\nu)\), com \(x_t\) e \(x_s\) indepentens para
-todo \(t\neq s\). Esse processo será denominado é denominado ruído
-branco gaussiano.
-
-\bookmarksetup{startatroot}
-
-\hypertarget{defasagens-e-autocorrelauxe7uxe3o}{%
-\chapter{Defasagens e
-autocorrelação}\label{defasagens-e-autocorrelauxe7uxe3o}}
-
-\hypertarget{gruxe1fico-de-defasagens}{%
-\section{Gráfico de Defasagens}\label{gruxe1fico-de-defasagens}}
-
-Denomina-se por \textbf{defasagem} \(h\) (\emph{lag}, em inglês), um
-atraso em \(h\) nos índices da série temporal. A tabela abaixo ilustra
-algumas defasagens para a série \(x_1,\ldots,x_5\)
-
-\begin{longtable}[]{@{}llll@{}}
-\toprule\noalign{}
-Série original & \(h=1\) & \(h=2\) & \(h=3\) \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\(x_1\) & & & \\
-\(x_2\) & \(x_1\) & & \\
-\(x_3\) & \(x_2\) & \(x_1\) & \\
-\(x_4\) & \(x_3\) & \(x_2\) & \(x_1\) \\
-\(x_5\) & \(x_4\) & \(x_3\) & \(x_2\) \\
-\end{longtable}
-
-Conforme dito anteriormente, a existência de uma estrutura de
-dependência entre \(x_t\) e \(x_{t-h}\) permite que a série observada
-seja utilizada para realizar previsões. Uma ferramenta exploratória
-interessante para analisar esse tipo de estrutura é gráfico de
-defasagens (no inglês \emph{lag plot}). Trata-se de um diagrama de
-dispersão entre a série original e a série defasada, para algum \(h\)
-fixado. Abaixo apresenta-se a série de embarques e desembraques no
-aeroporo Eduardo Gomes para as 4 primeiras defasagens. Os números
-representam a ordem (temporal) dos pares do diagrama e a linha cinza
-pontilha é a reta \(y=x\).
-
-\includegraphics{acf_files/figure-pdf/unnamed-chunk-1-1.pdf}
-
-Abaixo, a figura mostra o gráfico de defasagens para \(h=1,2,3,12\)
-considerando a série de mortes por doenças pulmonares no Reino Unido.
-
-\includegraphics{acf_files/figure-pdf/unnamed-chunk-2-1.pdf}
-
-\hypertarget{a-funuxe7uxe3o-de-autocorrelauxe7uxe3o}{%
-\section{A função de
-autocorrelação}\label{a-funuxe7uxe3o-de-autocorrelauxe7uxe3o}}
-
-\begin{definition}[]\protect\hypertarget{def-autocovariancia}{}\label{def-autocovariancia}
-
-A função de autocovariância da série temporal \(x_t\) é dada por
-\[\begin{equation}
-          \gamma(s,t) = Cov(x_t,x_s)=E\left[(x_t-\mu_t)(x_s-\mu_s)\right],
-        \end{equation}\] para todo \(s,t\) com \(\mu_j=E(y_j)\) e sua
-respectiva função de autocorrelção é dada por \[\begin{equation}
-        \rho(s,t)=\frac{\gamma(s,t)}{\sqrt{\gamma(s,s)\gamma(t,t)}}
-        \end{equation}\]
-
-\end{definition}
-
-\begin{example}[]\protect\hypertarget{exm-acf1}{}\label{exm-acf1}
-
-Considere a série temporal
-\[x_t= x_{t-1}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),\]
-para \(t=1,2,\ldots\) com a condição de que \(x_0=0\) e que
-\(Cov(\varepsilon_t,\varepsilon_s)=0\;\;\forall s\neq t\). É imediato
-que \[\begin{equation}
-    x_{t}=\sum_{j=1}^{t}\varepsilon_{j},
-    \end{equation}\] o que implica em \(x_t\sim\hbox{Normal}(0,t)\).
-Portanto, \[\begin{align}
-        E(x_t)&=0\\
-        Var(x_t)&=t.
-        \end{align}\] Além disso, \[\begin{align*}
-    \gamma(t,t-h)&=Cov(x_t,x_{t-h})=Cov\left(\sum_{i=1}^{t}\varepsilon_{i},\sum_{j=1}^{t-h}\varepsilon_{j}\right)\\
-    &=\sum_{i=1}^{t}\sum_{j=1}^{t-h}Cov\left(\varepsilon_{i},\varepsilon_{j}\right)=\sum_{i=1}^{t-h}Cov(\varepsilon_i,\varepsilon_i)\\
-    &=t-h
-    \end{align*}\] e \[\begin{equation}
-    \rho(t,t-h)=\frac{\gamma(t,t-h)}{\sqrt{\gamma(t,t)\gamma(t-h,t-h)}}=\frac{t-h}{\sqrt{t(t-h)}}=\sqrt{1-\frac{h}{t}}
-    \end{equation}\] A figura abaixo mostra o gráfico da função de
-autocorrelação desse processo, considerando uma série de tamanho 100.
-Note que a série é mais dependente dos valores atuais, embora ainda
-possua uma autocorrelação alta para defasagens elevadas.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{curve}\NormalTok{( }\FunctionTok{sqrt}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{x}\SpecialCharTok{/}\DecValTok{100}\NormalTok{),}\DecValTok{0}\NormalTok{,}\DecValTok{99}\NormalTok{, }\AttributeTok{xlab=} \StringTok{\textquotesingle{}Defasagem\textquotesingle{}}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}Autocorrelação\textquotesingle{}}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-
-\begin{minipage}[t]{\linewidth}
-
-{\centering 
-
-\raisebox{-\height}{
-
-\includegraphics{acf_files/figure-pdf/unnamed-chunk-3-1.pdf}
-
-}
-
-\caption{Função de autocorrelação do Exemplo Example~\ref{exm-acf1},
-para t=100}
-
-}
-
-\end{minipage}%
-
-\end{figure}
-
-\(\blacksquare\)
-
-\end{example}
-
-Para uma série estacionária, tem-se que \(E(x_t)=\mu\) para todo \(t\),
-logo \[\begin{equation}
-        \gamma(t-s) = Cov(y_t,y_s)=E\left[(y_t-\mu)(y_s-\mu)\right].
-\end{equation}\] Fazendo \(h=t-s\), tem-se \[\begin{equation}
-            \gamma(h)=Cov(y_t,y_{t-h}).
-        \end{equation}\]
-
-A função de autocorrelação (ACF) para um processo estacionário é
-\[\begin{equation}
-                \rho(h)=\frac{\gamma(h)}{\gamma(0)}
-\end{equation}\] e ela mede a dependência linear entre \(y_t\) e os
-valores defasados da série.Sempre será verdade que \(\rho\in[-1,1]\),
-\(\rho(h)=\rho(-h)\) e, se \(y_{t+h}\) é independente de \(y_t\), então
-\(\rho(h)=0\).
-
-\begin{example}[]\protect\hypertarget{exm-acf2}{}\label{exm-acf2}
-
-Considere a série temporal \[\begin{align}
-    x_t = \varepsilon_t +\frac{1}{2}\varepsilon_{t-1} \label{exer1}
-    \end{align}\] onde \(\varepsilon_t\sim\hbox{Normal}(0,\nu)\) para
-\(t=1,\ldots\), \(\varepsilon_t\) é independente de \(\varepsilon_s\)
-para todo \(s\neq t\) e \(\varepsilon_0=0\). Como \[\begin{align}
-    E(x_t)&=E(\varepsilon_t)+\frac{1}{2}E(\varepsilon_{t-1})=0\\
-    Var(x_t)&=Var(\varepsilon_t)+\frac{1}{4}Var(\varepsilon_{t-1})=\frac{5}{4}\nu\\
-    \gamma(h)&=\left\{ \begin{array}{ll}
-    \frac{5}{4}\nu,&\; h = 0 \\       
-    \frac{1}{2}\nu,&\; |h|=1,\\
-    0,&\;\hbox{caso contrário.}
-    \end{array} \right.
-    \end{align}
-\]\\
-tem-se que, \[\begin{align}
-    \rho(h)&=\frac{\gamma(h)}{\gamma(0)}=\left\{ \begin{array}{ll}
-    1,&\; h = 0 \\        
-    \frac{2}{5},&\; |h|=1,\\
-    0,&\;\hbox{caso contrário.}
-    \end{array} \right.
-    \end{align}\] \(\blacksquare\)
-
-\end{example}
-
-\begin{example}[]\protect\hypertarget{exm-acf_ruido_branco}{}\label{exm-acf_ruido_branco}
-
-Seja \(x_t\) um ruído branco. Então \[\gamma(h)=\nu I(h=0),\] e
-\[\rho(h)=\frac{\gamma(h)}{\gamma(0)}=I(h=0),\] onde \(I(A)\) é a função
-indicadora da ocorrência do evento \(A\).
-
-\end{example}
-
-\hypertarget{a-funuxe7uxe3o-de-autocorrelauxe7uxe3o-estimada-e-o-correlograma}{%
-\section{A função de autocorrelação estimada e o
-correlograma}\label{a-funuxe7uxe3o-de-autocorrelauxe7uxe3o-estimada-e-o-correlograma}}
-
-Considere uma série temporal \(x_1,\ldots,x_n\). Supondo que ela é
-proveniente de uma série estacionária (ergódico), pode-se estimar
-\(\gamma(h)\) pelo método da substituição: \[\begin{align}
-                        \widehat{\gamma(h)}&=\frac{1}{n}\sum_{i=1}^{n-h}\left(x_{i+h} - \bar{x}\right)\left(x_{i} - \bar{x}\right)
-                        \end{align}\] e \(\rho\) por\\
-\[\begin{equation}
-        \hat{\rho}(h)=\frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}
-        \end{equation}\]
-
-É importante notar que tanto \(\gamma(h)\) quanto \(\rho(h)\) são
-invariantes a transformações de locação. Por exemplo, seja \(\gamma(h)\)
-a função de autocovariância de \(x_t\) e considere \(y_t=x_t+a\). Então
-\(E(y_t)=\mu+a\) e
-\[E[(y_t-\mu-a)(y_{t-h}-\mu-a)]=E[(x_t-\mu)(x_{t-h}-\mu)]=\gamma(h).\]
-
-O correlograma é um gráfico cartesiano construído a partir dos pontos
-\((h, \hat{\rho})\). A partir de cada ponto é desenhada uma linha,
-semelhante a um gráfico de barras. Como \(\hat{\rho}(0)=1\), a
-implementação desta função em softwares estatísticos pode variar com
-\(h=0\) ou em 1. Por exemplo, a função \texttt{acf} do pacote
-\texttt{stats} começa na defasagem 0, enquanto a função \texttt{Acf} do
-pacote \texttt{forecast} (ou ainda a \texttt{acf} do pacote
-\texttt{TSA}) começam na defasagem 1.
-
-\begin{example}[]\protect\hypertarget{exm-afogamentos}{}\label{exm-afogamentos}
-
-A série abaixo representa o número anual de óbitos por afogamento na
-cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do
-Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o
-código internacional de doenças (CID10) W70 - Afogamento e submersão
-conseqüentes a queda dentro de águas naturais.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}https://docs.google.com/spreadsheets/d/13MdzvZB5U85MkLy97ZRytkylikJu7rJoC1WL0XjKw{-}c/edit?usp=sharing\textquotesingle{}}
-
-\FunctionTok{require}\NormalTok{(data.table)}
-\NormalTok{dados }\OtherTok{\textless{}{-}} \FunctionTok{fread}\NormalTok{(url)}
-\NormalTok{afogamentos }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{( dados[,}\DecValTok{2}\NormalTok{], }\AttributeTok{start =} \DecValTok{1996}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{ts.plot}\NormalTok{(afogamentos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{main =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }\AttributeTok{xlab =} \StringTok{\textquotesingle{}Ano\textquotesingle{}}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. óbitos por afogamento\textquotesingle{}}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-
-\begin{minipage}[t]{\linewidth}
-
-{\centering 
-
-\raisebox{-\height}{
-
-\includegraphics{acf_files/figure-pdf/unnamed-chunk-5-1.pdf}
-
-}
-
-\caption{Número anual de óbitos por afogamento em Manaus.}
-
-}
-
-\end{minipage}%
-
-\end{figure}
-
-A figura abaixo mostra o correlograma dessa série. Observe que as
-autocorrelações amostrais observadas são baixas. Esse tipo de
-comportamento é esperado em um ruído branco. Como a série não oscila em
-torno de zero, um modelo razoável seria \[y_t=\mu+\varepsilon_t,\] onde
-\(\varepsilon_t\) é um ruído branco. Nesse caso, \(\bar{y}_n=1,88\) é
-uma estimativa para \(\mu\).
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{acf}\NormalTok{(afogamentos, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{main =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }\AttributeTok{xlab =} \StringTok{\textquotesingle{}Defasagem\textquotesingle{}}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}Autocorrelação\textquotesingle{}}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-
-\begin{minipage}[t]{\linewidth}
-
-{\centering 
-
-\raisebox{-\height}{
-
-\includegraphics{acf_files/figure-pdf/fig-acf_afogamentos-1.pdf}
-
-}
-
-\caption{\label{fig-acf_afogamentos}Correlograma para o número anual de
-óbitos por afogamento em Manaus.}
-
-}
-
-\end{minipage}%
-
-\end{figure}
-
-\(\blacksquare\)
-
-\end{example}
-
-Sem perda de generalidade, assuma que \(x_t\) é um processo estacionário
-com \(\mu=0\). Para uma defasagem \(h>0\), considere a hipótese
-\(H_0:\rho(h)=0\). Sob \(H_0\), o processo estacionário é um ruído
-branco e a distribuição da função de autocorrelação amostral é
-\(N(0,1/n)\). Portanto, uma região de rejeição ao níve de 5\% de
-significância para um teste baseado nessa distribuição é\\
-\[R={\hat{\rho}(h): \hat{\rho}(h)|>\frac{2}{\sqrt{n}},\] Este é o valor
-da linha pontilhada que aparece no correlograma na
-Figure~\ref{fig-acf_afogamentos}.
-
-\hypertarget{testes-para-a-autocorrelauxe7uxe3o}{%
-\section{Testes para a
-autocorrelação}\label{testes-para-a-autocorrelauxe7uxe3o}}
-
-Na seção anterior mostrou-se como testar \(H_0:\rho(h)=0\), para um
-\(h\) fixado. Como várias autocorrelações para diferentes defasagens são
-avaliadas simultaneamente, o correto seria testar
-\(H_0: \rho(h)=0\;\;\forall h=1,\ldots,q\), onde \(q\) é o valor máximo
-da defasagem a ser testado. Considerando a região de rejeição dada
-anteriormente, pela desigualdade de Bonferroni,
-
-\[\begin{align}P(\hbox{Rejeitar }H_0|H_0\hbox{ é verdadeira})&=P\left(\cup_{h=1}^q\left\{ \hat{\rho}(h)>\frac{2}{\sqrt{n}}\right\}| H_0\hbox{ é verdade}\right)\\
-&\leq \sum_{h=1}^qP\left( \hat{\rho}(h)>\frac{2}{\sqrt{n}}| H_0\hbox{ é verdade}\right)\\ &<q\alpha\end{align}\]
-
-Portanto, a probabilidade de cometer o erro tipo 1 pode aumentar na
-medida que testamos mais de uma defasagem.
-
-Como alternativa, considere a mesma hipótese nula. Se todas as
-autocorrelaçãoes, de defasagens 1 até \(q\), são baixas, não há
-evidências contra \(H_0\). Com esse espírito o teste de Ljung-Box (1978)
-utiliza a estatística
-\[Q_{LB}=n(n+2)\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}\] e rejeita
-\(H_0\) se \(Q_{LB}>\chi^2_{1-\alpha,q}\), onde \(\chi^2_{\lambda,n}\) é
-o quantil \(\lambda\) da distribuição \(\chi^2_n\).
-
-O teste de Box-Pierce (1970) possui o mesmo objetivo e tem a mesma regra
-de decisão, mudando apenas a estatística de teste para
-
-\[Q_{BP}=n\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}.\]
-
-\begin{example}[]\protect\hypertarget{exm-afogamentos_testes}{}\label{exm-afogamentos_testes}
-
-Para a série de óbitos anuais por afogamentos em Manaus, tem-se que os
-teste Ljung-Box e Box-Pierce não rejeitam a hipótese de ruído branco.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{Box.test}\NormalTok{(afogamentos, }\AttributeTok{type =} \StringTok{\textquotesingle{}Ljung{-}Box\textquotesingle{}}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-
-    Box-Ljung test
-
-data:  afogamentos
-X-squared = 2.2888, df = 1, p-value = 0.1303
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{Box.test}\NormalTok{(afogamentos, }\AttributeTok{type =} \StringTok{\textquotesingle{}Box{-}Pierce\textquotesingle{}}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-
-    Box-Pierce test
-
-data:  afogamentos
-X-squared = 2.0345, df = 1, p-value = 0.1538
-\end{verbatim}
-
-\(\blacksquare\)
-
-\end{example}
 
 \bookmarksetup{startatroot}
 
@@ -1316,6 +804,186 @@ A série abaixo contém a data dos óbitos maternos no Brasil a partir de
 Crie uma série temporal com o número de óbitos mensal e faça um gráfico.
 Crie uma janela para colocar no gráfico o período da pandemia de
 COVID-19.
+
+\bookmarksetup{startatroot}
+
+\hypertarget{suxe9ries-estacionuxe1rias}{%
+\chapter{Séries Estacionárias}\label{suxe9ries-estacionuxe1rias}}
+
+Uma coleção do tipo \(\{x(t),t\in\mathcal{T}\}\),
+\(\mathcal{T}\subseteq \mathbb{R}\), onde \(x(t)\) é uma variável
+aleatória para cada \(t\) fixado, é denominada processo estocástico.
+
+Um processo estocástico é dito ser fortemente estacionário se sua
+distribuição é invariante ao índice. Portanto, para qualquer
+\(t_1,\ldots,t_k\), a distribuição de \(x(t_1),\ldots,x(t_k)\) é a mesma
+de \(x(t_1+h),\ldots,x(t_k+h)\).
+
+\begin{example}[]\protect\hypertarget{exm-serie_estacionaria_1}{}\label{exm-serie_estacionaria_1}
+
+Se \(x(t)\sim \hbox{Normal}(0,1)\) e \(x(t)\) é independente de \(x(s)\)
+para todo \(t\neq s\), então, para qualquer \(t_1,\ldots,t_k\),
+
+\[\begin{align}P(x(t_1)<x_1,\ldots,x(t_k)<x_k)&=\prod_{i=1}^k P(x(t_i)<x_i)=\prod_{i=1}^k P(x(t_i+h)<x_i)\\&=P(x(t_1+h)<x_1,\ldots,x(t_k+h)<x_k)\end{align}\]
+logo, \(\{x(t),t\in \mathbb{R}\}\) é um processo fortemente
+estacionário. \(\blacksquare\)
+
+\end{example}
+
+\begin{theorem}[]\protect\hypertarget{thm-exm_estacionaria2}{}\label{thm-exm_estacionaria2}
+
+Seja \(\{x(t),t\in\mathbb{N}\}\) um processo estocástico com
+\[x(t)= x_{(t-1)}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),\]
+para \(t=1,2,\ldots\) com a condição de que
+\(x_0\sim\hbox{Normal}(0,1)\) e que
+\(Cov(\varepsilon_t,\varepsilon_s)=0\;\;\forall s\neq t\). Então,
+\[x_t=x_{t-1}+\varepsilon_{t}=\cdots=x_0+\sum_{j=1}^t\varepsilon_t\sim\hbox{Normal}(0,t+1).\]
+Como \(x_t\sim\hbox{Normal}(0,t+1)\) e, para qualquer \(h>0\),
+\(x_{t+h}\sim\hbox{Normal}(0,t+h+1)\), temos que este processo não é
+fortemente estacionário. \(\blacksquare\)
+
+\end{theorem}
+
+\begin{definition}[]\protect\hypertarget{def-fracamente}{}\label{def-fracamente}
+
+Um processo estocástico \(\{y_t\}\) é dito ser fracamente estacionário
+(ou de segunda ordem) se \[\begin{align*}
+    E(y_t)&=\mu,\\
+    Var(y_t)&=\nu,\\ 
+    Cov(y_t,y_s)&=E(y_ty_s)-E(y_t)E(y_s)=\gamma(t-s)
+    \end{align*}\] onde \(\mu\) e \(\nu\) são constantes independentes
+de \(t\) e \(\gamma(t-s)\) depende de \(t\) e \(s\) somente através da
+diferença \(|t-s|\). \(\blacksquare\)
+
+\end{definition}
+
+\begin{example}[]\protect\hypertarget{exm-fracamente1}{}\label{exm-fracamente1}
+
+Considere o processo estocástico \(\{x(t),t\in\mathbb{N}\}\), onde
+\[x(t) = \varepsilon(t) +\frac{1}{2}\varepsilon(t-1)
+\] onde \(\varepsilon(t)\sim\hbox{Normal}(0,\nu)\) para \(t=1,\ldots\),
+\(\varepsilon(t)\) é independente de \(\varepsilon(s)\) para todo
+\(s\neq t\) e \(\varepsilon(0)=0\). Então: \[\begin{align}
+E(x(t))&=E(\varepsilon(t))+\frac{1}{2}E(\varepsilon(t-1))=0\\
+Var(x(t))&=Var(\varepsilon(t))+\frac{1}{4}Var(\varepsilon(t-1))=\frac{5}{4}\nu
+\end{align}
+\] e \[\begin{align}
+          Cov(x(t),x(t+h))&=Cov\left(\varepsilon(t)+\frac{1}{2}\varepsilon(t-1),\varepsilon(t+h)+\frac{1}{2}\varepsilon(t+h-1)\right)\\
+          &=Cov\left(\varepsilon(t),\varepsilon(t+h)\right)+\frac{1}{2}Cov\left(\varepsilon(t),\varepsilon(t+h-1)\right)\\
+          &+\frac{1}{2}Cov\left(\varepsilon(t-1),\varepsilon(t+h)\right)+\frac{1}{4}Cov\left(\varepsilon(t-1),\varepsilon(t+h-1)\right)\\
+          &=\left\{ \begin{array}{ll}
+          \frac{4}{5}\nu,&\; h = 0 \\         
+          \frac{1}{2}\nu,&\; |h|=1,\\
+          0,&\;\hbox{caso contrário.}
+          \end{array} \right.
+    \end{align}\] Portanto, o processo é fracamente estacionáriao.
+\(\blacksquare\)
+
+\end{example}
+
+Quando \(\mathcal{T}=\{t\in D\subseteq \mathbb{Z}\}\), utiliza-se a
+notação \(x(t)=x_t\). Além disso, se \(t\) pode ser interpretado como
+tempo, \(x_t\) é uma série temporal. Uma série temporal é dita ser
+estacionária se ela é fracamente estacionária e o mesmo princípio se
+aplica nessas notas de aula.
+
+\hypertarget{processo-estacionuxe1rio-erguxf3dico}{%
+\section{Processo estacionário
+ergódico}\label{processo-estacionuxe1rio-erguxf3dico}}
+
+Seja \(x_1,x_2,\ldots,x_n\) uma série temporal estacionária. Então, a
+média \(\mu\) pode ser estimada por \(\bar{x}_n\), uma vez que
+\(E(\bar{x})=\mu\). A variância essa estatística é
+
+\[\begin{align}Var(\bar{x})&=Cov(\bar{x}_n,\bar{x}_n)=Cov\left(\sum_{i=1}^n \frac{x_i}{n},\sum_{j=1}^n\frac{x_j}{n}\right)=\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^nCov(x_i,x_j)\\
+&=\frac{1}{n^2}\left[\sum_{i=1}^nCov(x_i,x_i)+2\sum_{i=1}^n\sum_{j\neq i}Cov(x_i,x_j)\right]\\
+&=\frac{1}{n^2}\left[n\nu+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right]=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\gamma(h)
+\end{align}\]
+
+Note que, diferente do caso independente e identicamente distribuído,
+\(\bar{x}\) não é necessariamente um estimador adequado, conforme pode
+ser constatado no exemplo abaixo.
+
+\begin{example}[]\protect\hypertarget{exm-estationario_nao_ergodico}{}\label{exm-estationario_nao_ergodico}
+
+Seja \(x_t\) um processo onde \(x_0\sim\hbox{Normal}(0,\nu)\) e
+\(x_t=x_0\) para todo \(t>0\). Como
+
+\[\begin{align}
+E(x_t)&=E(E(x_t|x_0))=E(x_0)=0\\
+Var(x_t)&=E(Var(x_t|x_0))+Var(E(x_t|x_0))=E(0)+Var(x_0)=\nu\\
+Cov(x_t,x_{t-h})&=E( Cov(x_t,x_{t-h}|x_0))+Cov( E(x_t|x_0),E(x_{t-h}|x_0))\\
+&=E(0)+Cov(x_0,x_0)=Var(x_0)=\nu
+\end{align}\] e, portanto, o processo é fracamente estacionário.
+Contudo,
+\[Var(\bar{x})=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,\]
+portanto, o erro padrão não decai com o aumento do tamanho da amostra.
+
+\(\blacksquare\)
+
+\end{example}
+
+A partir do exemplo acima, fica claro que \(\bar{x}\) nem sempre será um
+estimador adequado para uma série estacionária.
+
+\begin{definition}[]\protect\hypertarget{def-ergodica}{}\label{def-ergodica}
+
+Uma série temporal estacionária é dita ser ergódica para a média se
+\[\sum_{i=1}^n\frac{x_1}{n}\stackrel{p}{\rightarrow} \mu,\] quando
+\(n\rightarrow\infty\).
+
+\end{definition}
+
+A partir deste momento será considerado que toda série temporal
+estacionária é ergódica e, portanto \(\bar{x}\) é um estimador para
+\(\mu\).
+
+\begin{example}[]\protect\hypertarget{exm-estationario_nao_ergodico_conclusao}{}\label{exm-estationario_nao_ergodico_conclusao}
+
+Considere novamente o processo no
+(\textbf{estationario\_nao\_ergodico?}). Como \(\bar{x}_n=x_0\), tem-se
+que, para \(\varepsilon>0\) arbitrário,
+\(\bar{x}\sim\hbox{Normal}(0,\nu)\) e
+\[P(|\bar{x}_n-0|>\varepsilon)=2P(x_0>\varepsilon)=2\int_{-\infty}^\varepsilon \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}d\nu>\frac{1}{2}\]
+logo, \(\bar{x}\) não converge em probabilidade para \(0\) e, portanto,
+o processo não é ergódico na média. \(\blacksquare\)
+
+\end{example}
+
+\hypertarget{ruuxeddo-branco}{%
+\section{Ruído branco}\label{ruuxeddo-branco}}
+
+\begin{definition}[]\protect\hypertarget{def-ruido_branco}{}\label{def-ruido_branco}
+
+A série estacionária \(x_t\) é dita ser um ruído branco se \(E(x_t)=0\),
+\(Var(x_t)=\nu\) e \[\begin{equation}
+        Cov(x_t,x_s)=0,
+        \end{equation}\] para todo \(t\neq s\). \(\blacksquare\)
+
+\end{definition}
+
+É imediato que o ruído branco é uma série temporal estacionária. Além
+disso, pela Desigualdade de Chebyshev, para qualquer \(\varepsilon>0\),
+
+\[P\left(|\bar{x}_n|\geq\varepsilon\right)\leq \frac{E(\bar{x}_n^2)}{\varepsilon^2}=\frac{Var(\bar{x}_n)}{\varepsilon^2}=\frac{\nu}{n\varepsilon^2}\]
+logo \(\lim_{n}P(|\bar{x}_n|\leq \varepsilon)=0\) e
+\(\bar{x}_n\stackrel{p}{\rightarrow}0\). Portanto, o ruído branco é
+ergódico.
+
+Considere agora a série temporal \(y_t=\mu+x_t\), onde \(x_t\) é um
+ruído branco. Então
+\[\bar{y}_n=\mu+\bar{x}_n\stackrel{p}{\rightarrow}\mu\] e \(\bar{y}_n\)
+é um estimador para \(\mu\).
+
+Em certos momentos, será considerado que \(x_t\) e \(x_s\), para todo
+\(t\neq s\) são independentes (essa é uma condição mais forte, pois
+implica em \(Cov(x_t,x_s)=0\)). Esse processo é denominado ruído branco
+independente.
+
+Por último, também será considerado a possibilidade de que
+\(x_t\sim\hbox{Normal}(0,\nu)\), com \(x_t\) e \(x_s\) indepentens para
+todo \(t\neq s\). Esse processo será denominado é denominado ruído
+branco gaussiano.
 
 \bookmarksetup{startatroot}
 
@@ -4033,6 +3701,1445 @@ então o modelo é pior do que simplesmente fazer \[y_{t-1}(1)=y_{t-1},\]
 ou seja, prever \(y_t\) como sendo igual a \(y_{t-1}\). Isto é
 considerado um ``modelo ingênuo'' (\emph{naïve model}), sendo
 considerado o modelo de previsão mais básico.
+
+\bookmarksetup{startatroot}
+
+\hypertarget{muxe9todos-de-suavizauxe7uxe3o-exponencial}{%
+\chapter{Métodos de suavização
+exponencial}\label{muxe9todos-de-suavizauxe7uxe3o-exponencial}}
+
+\hypertarget{introduuxe7uxe3o-1}{%
+\section{Introdução}\label{introduuxe7uxe3o-1}}
+
+Considere uma série temporal com a decomposição
+\[y_t=\hbox{sinal}_t+\hbox{ruído}_t\] Seja \(\mathcal{D}_t\) a série
+observada. Para qualquer \(0<k\leq t\) o valor suavizado
+\(\tilde{sinal}_k\) correspode a uma estimativa do sinal considerando a
+amostra \(\mathcal{D}_t\).
+
+Os métodos de suavização (ou alisamento) que serão estudados aqui são
+formulados considerando a seguinte lógica:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Obtenha uma previsão para o sinal no tempo \(t-1\)
+\item
+  Obtenha uma estimativa para o sinal no tempo \(t\)
+\item
+  Calcule o valor suavizado através de uma combinação linear convexa dos
+  resultados obtidos em 1. e 2.
+\end{enumerate}
+
+Considere que função de previsão para \(y_t\) é
+\[\hat{y}_{t-1}(1)=F(\theta_{t-1})\] onde \(\theta_t\) é o valor
+suavizado dos parâmetros envolvidos no tempo \(t\). Assuma que o erro de
+previsão é aditivo, ou seja,
+\[e_t=y_t-\hat{y}_{t-1}(1)=y_t-F(\theta_{t-1}).\] Como a suavização de
+\(\theta_t\) é obtida utilizando \(\hat{y}_{t-1}\) e \(\theta_{t-1}\),
+os modelos clássicos de suavização exponencial podem ser escritos da
+forma de equações de espaço estado com inovações, ou seja,
+\[\begin{align}y_t&=F(\theta_{t-1})+\Phi(\theta_{t-1}) e_t\\
+\theta_t&= G(\theta_{t-1})+\psi(\theta_{t-1})e_t
+\end{align}\] onde \(\theta_t\) é denominado \emph{estado}, \(\psi(.)\)
+e \(\Phi(.)\) são funções escalares, \(F(.)\) e \(G(.)\) são funções
+vetoriais.
+
+Ao assumir que \(e_t\) é um ruido branco gaussiano, a função de
+verossimilhança para \(\theta_0\) e os demais parâmetros fixos é
+\[L=\prod_{i=1}^n\frac{1}{\sqrt{2\pi\nu}}\exp\left\{-\frac{1}{2\nu}\left(\frac{y_i-F(\theta_{t-1})}{\Psi(\theta_{t-1})}\right)^2\right\}\]
+e suas estimativas, de máxima verossimilhança, são obtidas por
+maximização numérica de \(\log L\).
+
+Considerando a amostra \(\mathcal{D}_t\), note que o valor \(\theta_t\)
+já foi obtido. Podemos escrever
+\[y_{t+h}=F(\theta_{t+h-1})+\Psi(\theta_{t+h-1})e_{t+h}\] e, utilizando
+diversas vezes a relação recursiva entre os estados, podemos escrever
+\(y_{t+h}\) como função de \(\theta_t\) e dos erros
+\(e_{t+h},\ldots, e_{t+1}\). Com isso, podemo encontrar a distribuição
+de \(y_{t+h}\).
+
+Um caso particular importante é dado quando \(F(.)\), \(G(.)\), são
+lineares,\(\Psi(.)=1\) e \(\psi(.)\) não depende de \(\theta_t\). Nesse
+caso, o modelo de espaço estado é dado por:
+
+\[\begin{align}y_t&=F'\theta_{t-1}+e_t\\
+\theta_t&= G\theta_{t-1}+\psi e_t
+\end{align}\]
+
+Nesse caso\[\begin{align}
+y_{t+h}&=F'\theta_{t+h-1}+e_{t+h}=F'G\theta_{t+h-2}+F'\psi e_{t+h-1} + e_{t+h}\\
+&=\cdots\\
+&=F'G^{h-1}\theta_t+\sum_{j=1}^{h-1}F'G^{j-1}\psi e_{t+h-j}+e_{t+h}
+\end{align}\]
+
+Como \(y_{t+h}\) pode ser escrito como combinação linear de ruídos
+gaussianos, teremos que a distribuição para a previsão de horizonte
+\(h\) tem distribuição normal com média e variância dadas por
+\[\begin{align}
+E(y_{t+h}|\mathcal{D}_t)&=F'G^{h-1}\theta_t\\
+Var(y_{t+h}|\mathcal{D}_t)&=\nu\left[1+\sum_{j=1}^{h-1}F'G^{j-1}\psi\psi'G'^{j-1}F\right]
+\end{align}\]
+
+\hypertarget{suavizauxe7uxe3o-exponencial-simples}{%
+\section{Suavização exponencial
+simples}\label{suavizauxe7uxe3o-exponencial-simples}}
+
+\hypertarget{definiuxe7uxe3o-do-muxe9todo}{%
+\subsection{Definição do método}\label{definiuxe7uxe3o-do-muxe9todo}}
+
+Considere uma série temporal \[y_t = \mu_t+\varepsilon_t\] onde o nível
+\(\mu_t\) é o sinal e \(\varepsilon_t\) um ruído branco. Como
+\[E(y_t|\mathcal{D}_{t-1})=\mu_t,\] pelo método dos momentos, \(y_t\) é
+um estimador para \(\mu_t\) (e, \textbf{depois observado}, \(y_t\) se
+torna estimativa para o sinal no tempo \(t\)).
+
+Vamos adicionar a restrição de que \(\mu_t\approx \mu_{t+1}\), ou seja,
+a série flutua em torno de pequenas oscilações no nível. Com isso, dada
+a amostra \(\mathcal{D}_t\), teremos
+
+\[\hat{y}_{t-1}(1)=E(y_{t}|\mathcal{D}_{t-1})=\mu_{t}\approx \mu_{t-1}\]
+A vantagem da aproximação é que podemos estimar \(\mu_{t-1}\), uma vez
+que temos a amostra \(\mathcal{D}_{t-1}\). Deste modo, \textbf{antes de
+observar} \(y_t\),\\
+\[\hat{y}_{t-1}(1)=\tilde{\mu}_{t-1}\] é um estimador para \(\mu_t\),
+com \(t>1\).
+
+Deste modo, temos duas fontes de informação sobre o nível: a observação
+\(y_t\) e o valor suavizado \(\tilde{\mu}_{t-1}\), que representa a
+previsão \(\hat{y}_{t-1}(1)\). O método de suavização exponencial
+simples consiste em ponderar essas fontes, criando a seguinte estimativa
+ponderada para o sinal:
+
+\[\tilde{\mu}_t=\alpha y_t + (1-\alpha)\hat{y}_{t-1}(1),\] onde
+\(\alpha\in(0,1)\). Também pode-se escrever o método da seguinte forma:
+
+\[\tilde{\mu}_t=\alpha y_t + (1-\alpha)\tilde{\mu}_{t-1}.\] Tal forma
+nos permite entender o nome exponencial, uma vez que
+
+\[\begin{align}\tilde{\mu}_t&=\alpha y_t + (1-\alpha)\tilde{\mu}_{t-1}\\&=\alpha y_t + \alpha(1-\alpha)y_{t-1}+(1-\alpha)^2 \tilde{\mu}_{t-2}\\&=\sum_{j=1}^{t-1}\alpha(1-\alpha)^jy_{t-j}+(1-\alpha)^t\tilde{\mu}_0\end{align}\]
+
+Esse modelo pode ser escrito na seguinte forma de espaço estado:
+\[\begin{align}
+y_t&=\tilde{\mu}_{t-1}+e_t\\
+\tilde{\mu}_{t}&=\tilde{\mu}_{t-1}+\alpha e_t
+\end{align}\] logo, identificando \(F=1, G=1,\psi=\alpha\), teremos que
+\[y_{t+h}|\mathcal{D}_t\sim\hbox{Normal}\left(\tilde{\mu}_t,\nu[1+\alpha^2(h-1)]\right)\]
+
+\hypertarget{aplicauxe7uxe3o-nuxedvel-do-nilo}{%
+\subsection{Aplicação: nível do
+Nilo}\label{aplicauxe7uxe3o-nuxedvel-do-nilo}}
+
+Considere novamente a série \texttt{Nile}, cujos valores representam o
+fluxo anual do rio Nilo entre 1871 e 1970. Note que a série aparenta
+oscilar em torno de um nível constante após 1898.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(Nile, }\AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(Fluxo}\SpecialCharTok{\textasciitilde{}}\NormalTok{em}\SpecialCharTok{\textasciitilde{}}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{8}\SpecialCharTok{\textasciitilde{}}\NormalTok{m}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{) , }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-1-1.pdf}
+
+}
+
+\end{figure}
+
+Vamos utilizar a função \texttt{ets(y,\ model)}, do pacote
+\texttt{forecast}, onde \texttt{y} é a série temporal e
+\texttt{model=\textquotesingle{}ANN\textquotesingle{}} representa o
+modelo de suavização exponencial.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(forecast)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Carregando pacotes exigidos: forecast
+\end{verbatim}
+
+\begin{verbatim}
+Warning: package 'forecast' was built under R version 4.3.1
+\end{verbatim}
+
+\begin{verbatim}
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod }\OtherTok{\textless{}{-}} \FunctionTok{ets}\NormalTok{(Nile, }\StringTok{\textquotesingle{}ANN\textquotesingle{}}\NormalTok{)}
+\NormalTok{mod}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ETS(A,N,N) 
+
+Call:
+ ets(y = Nile, model = "ANN") 
+
+  Smoothing parameters:
+    alpha = 0.2455 
+
+  Initial states:
+    l = 1110.6869 
+
+  sigma:  144.2318
+
+     AIC     AICc      BIC 
+1458.781 1459.031 1466.597 
+\end{verbatim}
+
+Acima podemos ver as estimativas dos parâmetros:
+\(\hat{\alpha}=0.2455\), \(\tilde{\mu}_0=1110.6869\) e
+\(\nu=144.2318^2\).
+
+Como de costume, devemos verificar se existem evidências para assumir
+que o modelo é adequado analisando os resíduos, que podem ser acessados
+no item \texttt{\$residuals}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res }\OtherTok{\textless{}{-}}\NormalTok{ mod}\SpecialCharTok{$}\NormalTok{residuals}
+\FunctionTok{ts.plot}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-3-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-3-2.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Shapiro-Wilk normality test
+
+data:  res
+W = 0.99304, p-value = 0.8902
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Pierce test
+
+data:  res
+X-squared = 1.7244, df = 1, p-value = 0.1891
+\end{verbatim}
+
+Os resíduos oscilam em torno de zero e o correlograma não mostra
+evidências contra a hipótese de ruído branco. O teste Shapiro-Wilks não
+rejeita a normalidade e o de Box-Pierce não rejeita a hipótese de ruído
+branco. Portanto, vamos considerar que o modelo é adequado.
+
+Os valores suavizados \(\tilde{\mu}_0,\ldots,\tilde{\mu}_t\) podem ser
+acessados na lista \texttt{\$states}, conforme vemos abaixo.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(Nile, }\AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(Fluxo}\SpecialCharTok{\textasciitilde{}}\NormalTok{em}\SpecialCharTok{\textasciitilde{}}\DecValTok{10}\SpecialCharTok{\^{}}\DecValTok{8}\SpecialCharTok{\textasciitilde{}}\NormalTok{m}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{) , }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{lines}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{states, }\AttributeTok{col =}\StringTok{\textquotesingle{}tomato\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-4-1.pdf}
+
+}
+
+\end{figure}
+
+Por último, podemos realizar previsões com a função \texttt{forecast}
+conforme ilustramos abaixo para os 5 anos à frente (observe que a
+previsão é constante, mas, como esperado, sua variância aumenta
+linearmente ao longo do tempo).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{( }\FunctionTok{forecast}\NormalTok{(mod, }\DecValTok{5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-5-1.pdf}
+
+}
+
+\end{figure}
+
+\hypertarget{suavizauxe7uxe3o-exponencial-de-holt}{%
+\section{Suavização Exponencial de
+Holt}\label{suavizauxe7uxe3o-exponencial-de-holt}}
+
+Considere agora um modelo da forma \[y_t = T(t) + \varepsilon_t,\] onde
+\(T(t)\) é uma componente de tendência. Nesse caso,
+\[\mu_t=E(y_t|\mathcal{D}_t)=T(t)\] Como vimos anteriormente, a
+suaziação no tempo \(t\) pode ser feita ponderando a observação \(y_t\)
+com sua respectiva previsão para no tempo \(t-1\):
+
+\[\tilde{\mu}_t=\alpha y_t + (1-\alpha)\hat{y}_{t-1}(1).\] Como \(T(t)\)
+é localmente linear, então é natural assumir um modelo de previsão da
+seguinte forma: \[y_t(h)= \tilde{\mu}_t+ h\tilde{b}_t,\] onde
+\(\tilde{b}_t\) é a inclinação da tendência no tempo \(t\). Então,
+
+\[\begin{align*}
+    \tilde{\mu}_t &= \alpha y_t + (1-\alpha)\hat{y}_{t-1}(1) \\ 
+    &=\alpha y_t + (1-\alpha)\left( \tilde{\mu}_{t-1} + \tilde{b}_{t-1}\right).
+    \end{align*}\]
+
+A equação acima mostra a evolução de \(\tilde{\mu}_t\), mas não há
+atualização para \(\tilde{b}_t\). Com este objetivo, vamos ponderar duas
+fontes de informação sobre a inclinação. A primeira está no fato de que,
+como a tendência é localmente linear, é esperado que
+\[\tilde{b}_t\approx \tilde{b}_{t-1}.\] A segunda pode ser obtida
+através dos níveis \(\tilde{\mu}_t\) e \(\tilde{\mu}_{t-1}\). Uma vez
+que a relação entre esses dois é aproximadamente linear, sua
+diferençanos dá noção sobre a inclinação (crescimento/decrescimento)
+como mostra a figura abaixo.
+
+\includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-6-1.pdf}
+
+O valor da inclinação da reta formada por \(a_t\) e
+\(\tilde{\mu}_{t-1}\) é dado por
+\[\frac{\tilde{\mu}_t - \tilde{\mu}_{t-1}}{t - (t-1)} = \tilde{\mu}_t - \tilde{\mu}_{t-1}.\]
+Combinando este com a última inclinação suavizada, teremos
+\[\tilde{b}_t = \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{\mu}_{t-1},\]\\
+onde \(\beta\in(0,1)\) é a constante de suavização da tendência.
+
+Combinando as últimas equações teremos o modelo de suavização
+exponencial de Holt:
+
+\[\begin{align*}
+    \tilde{\mu}_t &= \alpha y_t + (1-\alpha)\left( \tilde{\mu}_{t-1} + \tilde{b}_{t-1}\right) \\
+    \tilde{b}_t &= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{b}_{t-1}.
+    \end{align*}\]
+
+O conjunto de equações acima pode ser reescrito como pode ser reescrita
+como \[\begin{align*}
+    \tilde{\mu}_t &= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha\left( y_t-\tilde{\mu}_{t-1} - \tilde{b}_{t-1}\right)= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha e_t\\
+    \tilde{b}_t &= \tilde{b}_{t-1}+\beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}-\tilde{b}_{t-1}).
+    \end{align*}\]\\
+A partir da primeira equação acima, deduzimos que
+\(\tilde{\mu}_t-\tilde{\mu}_{t-1}-\tilde{b}_{t-1}=\alpha e_t\).
+Substituindo essa informação na segunda equação teremos \[\begin{align*}
+    \tilde{\mu}_t &= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha e_t\\
+    \tilde{b}_t &= \tilde{b}_{t-1}+\alpha\beta e_t.
+    \end{align*}\]\\
+ou, em forma matricial,
+\[\left(\begin{array}{c}\tilde{\mu}_t\\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_t,\]
+
+Note ainda que é possível escrever a equação do modelo em forma
+matricial:
+\[y_{t+h}=\tilde{\mu}_{t+h-1}+\tilde{b}_{t+h-1}+e_{t+h-1}=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{c}\tilde{\mu}_{t+h-1}\\ \tilde{b}_{t+h-1}\end{array}\right)+e_{t+h}\]
+Pode-se então mostrar que este modelo possui a seguinte especificação
+como modelo de espaço estado:
+
+\[\begin{align}
+F'&=(1\;\; 1)\\
+G&=\left(\begin{array}{cc} 1 & 1 \\ 0 & 1\\ \end{array}\right)\\
+\theta_t'&=(\tilde{\mu}_t\;\;\tilde{b}_t)\\
+\psi'&=(\alpha\;\;\alpha\beta)
+\end{align}\]
+
+Desse modo, os parâmetros \(\alpha,\beta,\tilde{\mu}_0\) e
+\(\tilde{b}_0\) podem ser obtidos via método de estimação da máxima
+verossimilhança. Logo, a distribuição da previsão com horizonte \(h\) é
+dada por
+
+\[y_{t+h}|\mathcal{D}_t\sim\hbox{Normal}\left(\tilde{\mu}_t+h\tilde{b}_t, \nu\sigma^2_h\right),\]
+onde
+\[\sigma^2_h = 1+(h-1)\left(\alpha^2 + \alpha\beta h + \frac{\beta^2}{6}h(2h-1)\right).\]
+
+\hypertarget{aplicauxe7uxe3o-ocorruxeancias-aeronuxe1uticas}{%
+\subsection{Aplicação: ocorrências
+aeronáuticas}\label{aplicauxe7uxe3o-ocorruxeancias-aeronuxe1uticas}}
+
+Voltemos ao conjunto de dados com o número mensal de ocorrências
+aeronáuticas, mantido pela Força Aérea Brasileira.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}https://www.dropbox.com/scl/fi/kq4jwbovu94u857238sus/N{-}mensal{-}de{-}acidentes{-}com{-}aeronaves{-}2013jan.csv?rlkey=n5pa45e7ht33houmiawdkjb09\&dl=1\textquotesingle{}}
+
+
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(url, }\AttributeTok{h =}\NormalTok{ T)}
+\NormalTok{ocorrenciasFAB }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{( x, }\AttributeTok{start =} \FunctionTok{c}\NormalTok{(}\DecValTok{2013}\NormalTok{,}\DecValTok{1}\NormalTok{), }\AttributeTok{frequency=}\DecValTok{12}\NormalTok{)}
+\FunctionTok{ts.plot}\NormalTok{(ocorrenciasFAB, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{xlab =} \StringTok{\textquotesingle{}Ano\textquotesingle{}}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. ocorrências aeronáuticas\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-7-1.pdf}
+
+}
+
+\end{figure}
+
+Vamos utilizar a função \texttt{ets(y,\ model)}, do pacote
+\texttt{forecast}, onde \texttt{y} é a série temporal e
+\texttt{model=\textquotesingle{}AAN\textquotesingle{}} representa o
+modelo de suavização exponencial de Holt. Vamos adicionar o argumento
+\texttt{damped=FALSE} - estudaremos esse argumento na seção sobre
+amortecimento.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(forecast)}
+\NormalTok{mod }\OtherTok{\textless{}{-}} \FunctionTok{ets}\NormalTok{(ocorrenciasFAB, }\StringTok{\textquotesingle{}AAN\textquotesingle{}}\NormalTok{, }\AttributeTok{damped =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{mod}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ETS(A,A,N) 
+
+Call:
+ ets(y = ocorrenciasFAB, model = "AAN", damped = FALSE) 
+
+  Smoothing parameters:
+    alpha = 0.0651 
+    beta  = 0.0117 
+
+  Initial states:
+    l = 61.6314 
+    b = -0.9175 
+
+  sigma:  7.7512
+
+     AIC     AICc      BIC 
+1131.363 1131.863 1145.545 
+\end{verbatim}
+
+Acima podemos ver as estimativas dos parâmetros:
+\(\hat{\alpha}=0.0651\), \(\hat{\beta}=0,0117\),
+\(\tilde{\mu}_0=61,6314\), \(\tilde{b}_0=-0,9175\) e \(\nu=7,7512^2\).
+
+Como de costume, devemos verificar se existem evidências para assumir
+que o modelo é adequado analisando os resíduos, que podem ser acessados
+no item \texttt{\$residuals}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res }\OtherTok{\textless{}{-}}\NormalTok{ mod}\SpecialCharTok{$}\NormalTok{residuals}
+\FunctionTok{ts.plot}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-9-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-9-2.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Shapiro-Wilk normality test
+
+data:  res
+W = 0.99237, p-value = 0.7257
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Pierce test
+
+data:  res
+X-squared = 3.2409, df = 1, p-value = 0.07182
+\end{verbatim}
+
+Os resíduos oscilam em torno de zero e o correlograma não mostra
+evidências contra a hipótese de ruído branco. O teste Shapiro-Wilks não
+rejeita a normalidade e o de Box-Pierce não rejeita a hipótese de ruído
+branco. Portanto, vamos considerar que o modelo é adequado.
+
+Os valores suavizados \(\tilde{\mu}_0,\ldots,\tilde{\mu}_t\) podem ser
+acessados na lista \texttt{\$states}, na primeira coluna, conforme vemos
+abaixo.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(ocorrenciasFAB, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No. ocorrências aeronáuticas mensal\textquotesingle{}}\NormalTok{ , }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{lines}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{states[,}\DecValTok{1}\NormalTok{], }\AttributeTok{col =}\StringTok{\textquotesingle{}tomato\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-10-1.pdf}
+
+}
+
+\end{figure}
+
+A segunda coluna de \texttt{\$states} mostra os valores suavizados para
+a inclinação. É interessante observar o gráfico desses valores contra a
+linha horizontal em zero, para entender os regimes de crescimento e
+decrescimento da série. Abaixo mostramos o curioso padrão dessa série: a
+inclinação começou desacelerando desde de o começo do registro até março
+de 2017. Desde então, a inclinação se oscila em torno de um nível
+constante.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{states[,}\DecValTok{2}\NormalTok{], }\AttributeTok{col =}\StringTok{\textquotesingle{}tomato\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{3}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}Inclinação suavizada\textquotesingle{}}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h=}\DecValTok{0}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =} \DecValTok{2017}\SpecialCharTok{+}\DecValTok{3}\SpecialCharTok{/}\DecValTok{12}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-11-1.pdf}
+
+}
+
+\end{figure}
+
+Por último, podemos realizar previsões com a função \texttt{forecast}
+conforme ilustramos abaixo para os 6 meses à frente, completando o ano
+de 2023.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prev }\OtherTok{\textless{}{-}} \FunctionTok{forecast}\NormalTok{(mod, }\DecValTok{6}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{( prev)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-12-1.pdf}
+
+}
+
+\end{figure}
+
+\hypertarget{suavizauxe7uxe3o-exponencial-de-holt-winters}{%
+\section{Suavização Exponencial de
+Holt-Winters}\label{suavizauxe7uxe3o-exponencial-de-holt-winters}}
+
+\hypertarget{definiuxe7uxe3o-1}{%
+\subsection{Definição}\label{definiuxe7uxe3o-1}}
+
+Considere o modelo \[y_t = T(t) + s(t)+\varepsilon_t,\] onde \(T(t)\) e
+\(s(t)\) são componentes de tendência e sazonalidade, com período \(p\),
+respectivamente. Identificando \(T(t)\) como \(\mu_t\), teremos que
+\(E(y_t|\mathcal{D}_{t-1})=\mu_t+s_t\), logo \(y_t-\tilde{s}_t\) é uma
+fonte de informação para \(\mu_t\).
+
+Considere ainda que \(T(t)\) é localmente liner. Então, as previsões em
+curto prazo podem ser feitas através de
+
+\[\hat{y}_t(h) = \tilde{\mu}_t + h \tilde{b}_t + \tilde{s}_{t+h}.\]
+Então Outra fonte de informação sobre \(\mu_t\) é a previsão
+\(\hat{y}_{t-1}(1)\) livre de sazonalidade, dada por
+\[\hat{y}_{t-1}(1)-\tilde{s}_{t}=\tilde{\mu}_{t-1} + \tilde{b}_{t-1}.\]
+Deste modo, o sinal \(\mu_t\) pode ser suavizado de modo análogo ao que
+foi feito no modelo de suavização exponencial simples, ponderando as
+duas fontes de informação: \[\begin{align*}
+     \tilde{\mu}_t &= \alpha ( y_t - \tilde{s}_t) + (1-\alpha) (\hat{y}_{t-1}(1) -\tilde{s}_{t})\\
+     &= \alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}).
+    \end{align*}\]
+
+Uma vez que temos o valor suavizado do nível, podemos suavizar a
+inclinação exatamente como foi feito no modelo de Holt:
+\[\tilde{b}_t = \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta) \tilde{b}_{t-1}.\]
+
+Vamos agora reunir duas fontes de informação sobre a componente sazonal.
+Primero, podemos descontar o sinal de tendência da série, obtendo assim
+informações sobre a sazonalidade: \[y_t - \mu_t\approx s_t.\]
+
+Vamos considerar que a componente sazonal é razoavelmente estável, ou
+seja \(s_{t-p}\approx s_t\) (é a mesma consideração feita no modelo de
+suavização exponencial). Portanto, podemos suavizar \(s_t\) através da
+seguinte média ponderada \[\begin{align*}
+    \tilde{s}_t = \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p},
+    \end{align*}\] onde \(\beta\in(0,1)\) é o suavizador sazonal.
+
+O modelo de Holt-Winters é dado por \[\begin{align*}
+    \tilde{\mu}_t &=\alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}) \\
+        \tilde{b}_t &= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta) \tilde{b}_{t-1}
+,\\
+    \tilde{s}_t &= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}.
+    \end{align*}\]
+
+Agora, considere a condição inicial \[\sum_{j=1}^p \tilde{s}_{j-p}=0.\]
+A suavização de Holt-Winter não mantém a propriedade de soma zero da
+componente sazonal, uma vez que
+
+\[\sum_{j=1}^p \tilde{s}_{j}=\sum_{j=1}^p\gamma(y_j-\tilde{\mu}_j)+(1-\gamma)\sum_{j=1}^t\tilde{s}_{j-p}=\sum_{j=1}^p\gamma(y_j-\tilde{\mu}_j)\neq 0\]
+A solução, conhecida como normalização de Roberts-McKenzie, consiste em
+subtrair, da componente sazonal, o termo
+\[a_t=\frac{\beta}{p}(y_t-\tilde{\mu}_t-\tilde{s}_t),\] ou seja,
+\[\begin{align}\tilde{s}_t &= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}-a_t.
+\end{align}\] Desse modo,
+\[\begin{align}\sum_{j=1}^p \tilde{s}_{j}&=\sum_{j=1}^p\gamma(y_j-\tilde{\mu}_j)+(1-\gamma)\sum_{j=1}^t\tilde{s}_{j-p}-\sum_{j=1}^p a_j\\&=\sum_{j=1}^p\tilde{s}_{j-p}\end{align}\]
+
+Portanto, para garantir que \[\sum_{j=1}^p s_{t+j}=0,\] basta que a soma
+dos parâmetros iniciais, \(\tilde{s}_{1-p},\ldots,\tilde{s}_0\), seja
+nula. Portanto, o modelo de Holt-Winter com a normalização de
+Roberts-McKenzie é \[\begin{align*}
+    \tilde{\mu}_t &=\alpha (y_t - \tilde{s}_t) + (1-\alpha) (\tilde{\mu}_{t-1}+ \tilde{b}_{t-1}) \\
+        \tilde{b}_t &= \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta) \tilde{b}_{t-1}
+,\\
+    \tilde{s}_t &= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}-\frac{\gamma}{p}(y_t-\tilde{\mu}_{t-1}-\tilde{s}_{t}).
+    \end{align*}\]
+
+Como esperado, esse modelo pode ser reescrito na forma dse espaço
+estado, considerando o erro de previsão
+\(e_t=y_t-\tilde{\mu}_{t-1}-\tilde{b}_{t-1}-\tilde{s}_{t-p}\). As duas
+primeiras equações de estado são as mesmas do modelo de Holt:
+\[\left(\begin{array}{c} \tilde{\mu}_t \\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c} \alpha \\ \alpha\beta\end{array}\right)e_t=G_{\hbox{Holt}}\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\psi_{\hbox{Holt}}e_t\]
+Já a terceira equação do modelo, com a normalização de Roberts-McKenzie,
+pode ser escrita como
+\[\tilde{s}_t=\tilde{s}_{t-p}+\gamma\left(1-\frac{1}{p}\right)e_t.\]
+Note que essa mesma equação pode ser escrita como
+\[\left(\begin{array}{c}\tilde{s}_t\\ \tilde{s}_{t-1} \\ \vdots \\ s_{t-p+1}\end{array}\right)=\underbrace{\left(\begin{array}{c} 0_{p-1'} & 1 \\ \textbf{I}_{p-1} & 0_{p-1} \end{array}\right)}_{P}\left(\begin{array}{c}\tilde{s}_{t-1}\\ \tilde{s}_{t-2} \\ \vdots \\ s_{t-p}\end{array}\right)+\left(\begin{array}{c}1\\ 0 \\ \vdots \\ 0\end{array}\right)\gamma\left(1-\frac{1}{p}\right) e_t\]
+A matriz \(P\) dada acima é uma matriz do tipo permutação. Essa em
+particular coloca o elemento da última coordenada na primeira e faz com
+que todos os outros elementos seja alocados uma coordenada à frente.
+Fazendo
+\(\theta_0'=(\tilde{\mu}_0,\tilde{b}_0,\tilde{s}_{1-p},\ldots,\tilde{s}_0)\)
+teremos que o modelo de Holt-Winter com correção de Roberts-McKenzie na
+forma de espaço estado é dado por
+
+\[\begin{align}
+y_t&=\left(\begin{array}{cc|cccc}1&1&1&0&\cdots&0\end{array}\right)\theta_{t-1}+e_t\\
+\theta_t&=\left(\begin{array}{cc}G_{\hbox{Holt}} & 0_{2\times p}\\
+0_{p\times 2} & P\end{array}\right)\theta_{t-1}+\left(\begin{array}{c}\alpha \\ \alpha\beta \\ \hline \gamma^*1_p \end{array}\right)e_t\end{align}\]
+onde \(\gamma^*=\gamma(1-p^{-1})\).
+
+\hypertarget{aplicauxe7uxe3o-para-a-suxe9rie-co2}{%
+\subsection{\texorpdfstring{Aplicação para a série
+\texttt{co2}}{Aplicação para a série co2}}\label{aplicauxe7uxe3o-para-a-suxe9rie-co2}}
+
+Considere novamente a série \texttt{co2}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod }\OtherTok{\textless{}{-}} \FunctionTok{ets}\NormalTok{(co2, }\AttributeTok{model =} \StringTok{\textquotesingle{}AAA\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Abaixo, segue os gráfico da decomposição através do modelo de
+Holt-Winter com a normalização.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(co2, mod}\SpecialCharTok{$}\NormalTok{states[,}\DecValTok{1}\NormalTok{][}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{], mod}\SpecialCharTok{$}\NormalTok{states[,}\DecValTok{2}\NormalTok{][}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{], mod}\SpecialCharTok{$}\NormalTok{states[,}\DecValTok{3}\NormalTok{][}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{])}
+\FunctionTok{names}\NormalTok{(x) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Série original\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}Nível\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Inclinação\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}Sazonalidade\textquotesingle{}}\NormalTok{)}
+\FunctionTok{plot.ts}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-14-1.pdf}
+
+}
+
+\end{figure}
+
+A análise dos resíduos, mostrada abaixo, mostram que o modelo está bam
+ajustado ao conjunto de dados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res }\OtherTok{\textless{}{-}}\NormalTok{ mod}\SpecialCharTok{$}\NormalTok{residuals}
+\FunctionTok{ts.plot}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-15-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-15-2.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Shapiro-Wilk normality test
+
+data:  res
+W = 0.99742, p-value = 0.6848
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(res)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Pierce test
+
+data:  res
+X-squared = 2.8016, df = 1, p-value = 0.09417
+\end{verbatim}
+
+\hypertarget{modelo-de-holt-amortecido}{%
+\section{Modelo de Holt amortecido}\label{modelo-de-holt-amortecido}}
+
+Considere que a previsão um passo à frente é dada por,
+\[y_{t}(1)=\tilde{\mu}_{t-1}+\phi\tilde{b}_{t-1}=(1\;\;\phi)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)\]
+onde \(\phi\in(0,1)\) tem o objetivo de amortecer a tendência dada pelo
+método de Holt, criando um previsão não linear. Com isso, teremos
+\[\begin{align}
+\tilde{\mu}_t &= \alpha y_t + (1-\alpha)(\tilde{\mu}_{t-1} + \phi\tilde{b}_{t-1})\\
+\tilde{b}_t &= \beta(\tilde{\mu}_{t} - \tilde{\mu}_{t-1})+(1-\beta) \phi\tilde{b}_{t-1}
+\end{align}\] que por sua vez pode ser reescrita como \[\begin{align}
+\left(\begin{array}{c}\tilde{\mu}_t\\ \tilde{b}_t\end{array}\right) &= \left(\begin{array}{cc}1&\phi\\ 0 &\phi\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha_t\\ \alpha\beta\end{array}\right)e_t\end{align}\]
+e, identificando a matriz acima com o termo \(\phi\) como \(G\), teremos
+que
+\[\hat{y}_{t}(h)=F'G^{h-1}\theta_{t}=\tilde{\mu}_t+(\phi+\cdots+\phi^h)\tilde{b}_t\]
+Abaixo, segue um esboço dessa função para alguns valores de \(\phi.\)
+
+\includegraphics{suave_exponencial_files/figure-pdf/unnamed-chunk-16-1.pdf}
+
+\hypertarget{modelos-com-componentes-multiplicativas}{%
+\section{Modelos com componentes
+multiplicativas}\label{modelos-com-componentes-multiplicativas}}
+
+\hypertarget{tenduxeancia-multiplicativa}{%
+\subsection{Tendência
+multiplicativa}\label{tenduxeancia-multiplicativa}}
+
+Suponha que \[\hat{y}_t(h)=\tilde{\mu}_t\tilde{b}_t^h\] o que implica
+que o logaritmo de \(y_t\) possui tendência localmente linear. Podemos
+adaptar o método de Holt, suavizando, como de costume, \(\tilde{\mu}_t\)
+por
+\[\begin{align}\tilde{\mu}_t&=\alpha y_t+(1-\alpha)\hat{y}_{t-1}(1)\\
+&=\alpha\tilde{\mu}_{t}+(1-\alpha)\tilde{\mu}_{t-1}\tilde{b}_{t-1}\end{align}\]
+
+Além disso, como o logaritmo da tendência é localmente linear, teremos
+que \[\log \tilde{\mu}_t-\log\tilde{\mu}_{t-1}\approx \log\tilde{b}_t\]
+ou ainda \[\tilde{b}_t\approx \frac{\tilde{\mu}_t}{\tilde{\mu}_{t-1}},\]
+logo, considerando que \(\tilde{b}_t\approx \tilde{b}_{t-1}\), podemos
+suavizar \(b_t\) do seguinte modo:
+\[\tilde{b}_t=\beta\frac{\tilde{\mu}_t}{\tilde{\mu}_{t-1}}+(1-\beta)\tilde{b}_{t-1}.\]
+Deste modo, o modelo com tendência multiplicativa é dado por
+\[\begin{align}
+\tilde{\mu}_t&=\alpha y_t+(1-\alpha)\tilde{\mu}_{t-1}\tilde{b}_{t-1}\\
+\tilde{b}_t&=\beta\frac{\tilde{\mu}_t}{\tilde{\mu}_{t-1}}+(1-\beta)\tilde{b}_{t-1}
+\end{align}\] e, na forma de modelo de espaço estado,
+
+\[\begin{align}
+y_t&=\tilde{\mu}_{t-1}\tilde{b}_{t-1}+e_t\\
+\tilde{\mu}_t&=\tilde{\mu}_{t-1}\tilde{b}_{t-1}+\alpha e_t\\
+\tilde{b}_t&=\tilde{b}_{t-1}+\alpha\beta\frac{e_t}{\tilde{\mu}_{t-1}}
+\end{align}\]
+
+As estimativas de máxima verossimilhança para
+\(\tilde{\mu}_0,\alpha,\nu\) são obtidas via maximização da função de
+verossimilhança, conforme visto na introdução. Já a distribuição da
+função de previsão
+
+Note que também existe uma versão deste modelo com o amortecedor.
+Supondo que
+\[\log \hat{y}_t(h)=\log(\tilde{\mu}_{t-1})+(\phi+\cdots+\phi^h)\log\tilde{b}_{t-1}\]
+teremos que a função de previsão com o amortecedor é dada por
+\[\hat{y}_t(h)=\tilde{\mu}_{t-1}\tilde{b}_{t-1}^{(\phi+\cdots+\phi^h)}\]
+que por sua vez possui a seguinte forma em espaço estado:
+
+\[\begin{align}
+y_t&=\tilde{\mu}_{t-1}\tilde{b}_{t-1}^\phi+e_t\\
+\tilde{\mu}_t&=\tilde{\mu}_{t-1}\tilde{b}_{t-1}^\phi+\alpha e_t\\
+\tilde{b}_t&=\tilde{b}_{t-1}^\phi+\alpha\beta\frac{e_t}{\tilde{\mu}_{t-1}}
+\end{align}\]
+
+\hypertarget{tenduxeancia-aditiva-e-sazonalidade-multiplicativa}{%
+\subsection{Tendência aditiva e sazonalidade
+multiplicativa}\label{tenduxeancia-aditiva-e-sazonalidade-multiplicativa}}
+
+teste
+
+\bookmarksetup{startatroot}
+
+\hypertarget{modelos-arma}{%
+\chapter{Modelos ARMA}\label{modelos-arma}}
+
+\hypertarget{o-polinuxf4mio-de-defasagens}{%
+\section{O polinômio de defasagens}\label{o-polinuxf4mio-de-defasagens}}
+
+\begin{definition}[]\protect\hypertarget{def-}{}\label{def-}
+
+Considere uma sequência \(\{a_t\}\). O operador defasagem é definido
+como \(Ba_t = a_{t-1}\). Em inglês este operador é conhecido como
+\emph{backshift}.
+
+\end{definition}
+
+\begin{example}[]\protect\hypertarget{exm-example}{}\label{exm-example}
+
+Considere a série \(11,6,3,7,15,8\).
+
+\[\begin{align*}
+     Ba_2 &= a_{1}=11\\
+     B a_6& =a_5 =15
+    \end{align*}\] \(\blacksquare\)
+
+\end{example}
+
+Seguem algumas propriedades fundamentais do operador defasagem
+
+\begin{itemize}
+\tightlist
+\item
+  \(Bc=c\)
+\item
+  \(B^k a_t=a_{t-k}\).
+\item
+  \(B(c+ba_{t-1})=c+bBa_t\) (operador linear)
+\item
+  \((B^m - B^n)a_t = a_{t-m}-a_{t-n}.\)
+\item
+  \(B^{-1}a_t = a_{t+1}\)
+\end{itemize}
+
+Note que o operador \(B^{-1}\) leva \(a_t\) para um passo a frente (como
+em uma previsão). É comum encontrar a definição \(F=B^{-1}\), onde a
+letra \(F\) é escolhida por causa do termo \textit{forecast} (previsão).
+
+\begin{example}[]\protect\hypertarget{exm-}{}\label{exm-}
+
+Seja \(B\) o operado defasagem. Então, definimos um polinômio de
+defasagens como \[\psi(B)=a_0+a_1B+\cdots+a_n B^n.\]
+
+\end{example}
+
+Note que \(\psi(B)\) é um modo sucinto para escrever
+\[a(B)x_t=a_0x_t+a_1x_{t-1}+\cdots+a_n x_{t-n}.\]
+
+O polinômio de defasagens pode ser operado como um polinômio regular.
+Por exemplo, se \(a(B)=1-aB\) e \(b(B)=1-bB\), fazer \[\begin{align}
+a(B)b(B)x_t&=a(B)[(1-bB)x_t]=a(B)(x_t-bx_{t-1})\\
+&=a(B)x_t-ba(B)x_{t-1}=(1-aB)x_t-b(1-aB)x_{t-1}\\
+&=x_t-(a+b)x_{t-1}+abx_{t-2}\end{align}\] é equivalente a encontrar
+\[c(B)=(1-aB)(1-bB)=1-(a+b)B + abB^2\] e calcular
+\[c(B)x_t=x_t-(a+b)x_{t-1}+abx_{t-2}.\]
+
+Dizemos que o polinômio de defasagens \(\psi(B)\) possui inversa se
+existe uma função \(\psi^{-1}(B)\) tal que
+\(\psi(B)\psi^{-1}(B)x_t=x_t\).
+
+\begin{example}[]\protect\hypertarget{exm-}{}\label{exm-}
+
+Para entender corretamente os modelos que serão propostos, é fundamental
+entender o que é a inversa do polinômio de defasagens. O caso mais
+importante, que será a chave para os demais, é o baseado no seguinte
+polinômio: \[\psi(B)=1-\phi B.\]
+
+Suponha que \[y_t=(1-\phi B)x_t=x_t-\phi x_{t-1 }\] Estamos procurando
+que qual situação existe \(\psi^{-1}(B)\) tal que
+\[x_t=\psi^{-1}(B)y_t.\] Como
+\[y_{t-1}=(1-\phi B)x_{t-1}=x_{t-1}-\phi x_{t-2},\] teremos que
+\[y_t=x_t-\phi[y_{t-1}-\phi x_{t-2}]=x_t-\phi y_{t-1}-\phi^2x_{t-2}.\]
+Note que podemos continuar iterando as equações acima, obtendo
+\[y_t=x_t-\sum_{j=1}^{t-1} \phi^jy_{t-j}-\phi^{t}x_0.\] Assuma que
+\(|\phi|<1\) e que \(t\) é grande, o que implica que \(\phi^t x_0\) é
+despresível. Então
+\[y_t=x_t-\sum_{j=1}^{t-1}\phi^j y_{t-j}=x_t-\sum_{j=1}^{t-1}\phi^j B^j y_t\]
+ou ainda \[\left(1-\sum_{j=1}^{t-1}\phi^j B^j\right)y_t=x_t\] Agora,
+multiplique os dois lados da equação acima por \(1-\phi B\). Então
+\[(1-\phi B)\left(1-\sum_{j=1}^{t-1}\phi^j B^j\right)y_t=(1-\phi B)x_t=y_t \]
+Deste modo,
+\[\psi^{-1}(B)=\lim_{t\rightarrow \infty }\left(1-\sum_{j=1}^{t}\phi^j B^j\right)=1-\sum_{j=1}^{\infty}\phi^j B^j\]
+
+\(\blacksquare\)
+
+\end{example}
+
+No exemplo anterior, o fato de \(|\phi|<1\) garante que a inveresa do
+polinômio de defasagens existem uma vez que
+\(\lim_{t\rightarrow\infty}\sum_{j=1}^t \phi^jB^j\) é convergente.
+
+O resultado geral é baseado no seguinte teorema.
+
+\begin{proposition}[]\protect\hypertarget{prp-pgMatrix}{}\label{prp-pgMatrix}
+
+Seja \(T\) uma matriz quadrada qualquer e seja \[S_n=\sum_{j=1}^n T^j.\]
+A série \(S_n\) converge quando \(n\rightarrow\infty\) se e somente se
+todos os autovalores de \(T\) são menores que um em módulo. Nesse caso,
+\(T^j\rightarrow \textbf{0}\) quando \(j\rightarrow\infty\) e
+\[S_n\rightarrow (1-T)^{-1}.\]
+
+\end{proposition}
+
+A proposição acima é a chave para demonstrar o seguite teorema
+
+\begin{theorem}[]\protect\hypertarget{thm-}{}\label{thm-}
+
+Seja
+\[y_t=x_t-\sum_{j=1}^p\phi_jx_{t-j}=\left(1-\sum_{j=1}^p\phi_jB^j\right)x_t=\phi(B).\]
+Então, existe \(\phi^{-1}(B)\) se e somente se o módulo das raízes de
+\(\phi(B)\) são maiores que um.
+
+\end{theorem}
+
+\begin{proof}
+
+Faremos a demonstração para o caso \(p=2\), mas os mesmos passos podem
+ser seguidos para demonstrar o caso geral.
+
+Seja \[y_t=x_t-\phi_1x_{t-1}-\phi_2 x_{t-2}=(1-\phi_1B-\phi_2 B^2)x_t.\]
+Comecemos notando que
+
+\[\left(\begin{array}{c} x_t \\ x_{t-1}\end{array}\right)=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\left(\begin{array}{cc} \phi_1 & \phi_2 \\ 1 & 0\end{array}\right)\left(\begin{array}{c} x_{t-1} \\ x_{t-2}\end{array}\right)\]
+Fazendo \(z_t=(x_t\;\;x_{t-1})\), teremos
+\[z_t=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\underbrace{\left(\begin{array}{cc} \phi_1 & \phi_2 \\ 1 & 0\end{array}\right)}_{A}z_{t-1}.\]
+Utilizando essa relação recursiva, teremos
+\[z_t=A^t z_{0}+\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)\]
+e, notando que \(x_t=(1\;\;0)z_t\), teremos
+\[x_t=(1\;\;0)A^t z_{0}+(1\;\;0)\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)\]
+Suponha que os autovalores de \(A\) são, em módulo, maiores que um.
+Então, pela Proposition~\ref{prp-pgMatrix}, para \(t\) suficientemente
+grande,
+\[\begin{align}x_t&=(1\;\;0)\sum_{j=1}^\infty A^j \left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)=(1\;\;0)\sum_{j=1}^\infty A^j B^j\left(\begin{array}{c} y_{t} \\ 0\end{array}\right)\\&=\sum_{j=1}^\infty (1\;\;0)A^j B^j\left(\begin{array}{c} 1 \\ 0\end{array}\right)y_{t}=\phi^{-1}(B)y_t\end{align}\]
+Agora, observe que os autovalores de \(A\) são obtidos através da
+solução de\\
+\[\begin{align}0=&\left|\left(\begin{array}{cc}\phi_1 & \phi_2 \\ 1 & 0\end{array}\right)-\lambda \textbf{I}\right|-\lambda(\phi_1-\lambda)-\phi_2\\&=\lambda^2-\lambda \phi_1-\phi_2\\
+&=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\end{align}\]
+Fazendo \(\lambda = 1/B\), teremos que a equação acima se torna
+\[0=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\equiv 1-\phi_1 B-\phi_2B^2=\phi(B)\]
+logo, se o módulo das raízes de \(\phi(B)\) são maiores que um, então o
+módulo dos autovalores de \(A\) são menores que um e, portanto, existe
+\(\phi^{-1}(B)\).
+
+\end{proof}
+
+\hypertarget{o-modelo-autorregressivo}{%
+\section{O modelo autorregressivo}\label{o-modelo-autorregressivo}}
+
+O modelo autorregressivo de ordem \(p\), ou \(AR(p)\), é dado por
+\[\begin{equation}
+        y_t = \sum_{i=1}^{p}\phi_iy_{t-i} +\varepsilon_t
+\end{equation}\] onde \(\{\varepsilon_t\}\) é um ruído branco,
+tipicamente Normal\((0,\nu)\). Neste modelo, a contribuição da
+observação \(y_{t-j}\) em \(y_t\) é dada por \(\phi_j\), que é
+invariante no tempo.
+
+Utilizando o polinômio de defasagens, pode-se escrever o modelo
+AR(\(p\)) como \[\begin{equation}
+        \phi(B)y_t = \varepsilon_t,
+\end{equation}\] onde \(\phi(B)=1-B\phi_1-\cdots \phi_p B^p\). Se o
+módulo das raízes desse polinômio são maiores que um, então existe
+\(\phi^{-1}(B)\), ou seja
+\[y_t=\phi^{-1}(B)\varepsilon_t=\left(\sum_{j=1}^\infty \psi_jB^j\right)\varepsilon_t\]
+e o processo será estacionário, com média e variância iguais à
+\[\begin{align}E(y_t)&=\left(\sum_{j=1}^\infty \psi_jB^j\right)E(\varepsilon_t)=0\\
+Var(y_t)&=Var\left(\sum_{j=1}^\infty \psi_jB^j\varepsilon_t\right)=\nu\sum_{j=1}^\infty \psi_j^2\\
+\end{align}\] e a função de auto covariância é dada por
+\begin{equation}\protect\hypertarget{eq-covariancia}{}{\begin{align}
+\gamma(h)&=Cov(y_t,y_{t-h})\\&=Cov\left( \left(\sum_{j=1}^\infty \psi_jB^j\right)\varepsilon_t,\left(\sum_{k=1}^\infty \psi_kB^k\right)\varepsilon_{t-h}\right)\\
+&=\sum_{j=1}^\infty \sum_{k=1}^\infty \psi_j\psi_k Cov\left(   \varepsilon_{t-j},\varepsilon_{t-k-h}\right)\\
+&=\nu\sum_{j=1}^\infty \psi_j\psi_{j+h}\end{align}}\label{eq-covariancia}\end{equation}
+
+\begin{example}[]\protect\hypertarget{exm-}{}\label{exm-}
+
+Considere o processo \(AR(1)\) abaixo: \[\begin{align*}
+    x_t(1-B\phi)&= \varepsilon_{t-1}.
+\end{align*}\]
+
+Seja \(\dot{B}\) a raiz do polinômio \(1-B\phi\). Temos que
+\[\begin{align*}
+    \phi(\dot{B})=0\Rightarrow 1-\phi \dot{B} =0 \Rightarrow \dot{B} =\frac{1}{\phi}
+\end{align*}\]
+
+Logo, o processo AR(1) é estacionário se
+\[|\dot{B}|>1\Rightarrow \left|\frac{1}{\phi}\right|>1\Rightarrow |\phi|< 1\]
+Nesse caso, já vimos que \(\phi^{-1}(B)=1-\sum_{j=1}^\infty\phi^j B^j\).
+Então, pela equação (Equation~\ref{eq-covariancia}), identificando
+\(\psi_^_j=\phi^j\),teremos que
+
+\[\gamma(h)=\nu\sum_{j=1}^\infty \phi^j\phi^{j+h}=\nu\phi^h\frac{\phi^2}{1-\phi^2} \]
+Assim, a função de autocorrelação é dada por
+\[\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi^h.\]
+
+\end{example}
+
+\begin{frame}{Função de autocorrelação para o $AR(1)$ }
+    
+    A partir deste momento, vamos supor que as condições de estacionaridade estão satisfeitas. Sabemos que
+    $$x_{t}= \phi x_{t-1}+\varepsilon_t.$$
+    Multiplicando os dois lados da equação acima por $x_{t-1}$ teremos
+    $$x_{t}x_{t-1}= \phi x_{t-1}^2+x_{t-1}\varepsilon_t.$$
+    Aplicando a esperança dos dois lados da equação teremos
+    $$E(x_{t}x_{t-1})= \phi E(x_{t-1}^2)+E(x_{t-1})E(\varepsilon_t).$$
+    Reconhecendo o lado esquerdo como a auto covariância (defasagem 1), e $E(x_{t-1}^2)=\gamma(0)$ temos que
+    $$\gamma(1)= \phi \gamma(0).$$
+    e 
+    $$\rho(1)=\frac{\gamma(1)}{\gamma(0)}=\phi.$$
+Note então que um processo autorregressivo de ordem 1 pode ser identificado pela sua função de autocorrelação:
+
+- Se $\phi\in(0,1)$, então $\rho(h)$ decai exponencialmente para zero
+
+- Se $\in(-1,0)$, então $\rho(h)$ decai exponencialmente para zero, mas alternando o sinal. 
+
+\end{frame}
+
+\begin{frame}   
+    Note que é possível obter a autocorrelação de defasagem 2 a partir do resultado  anterior. Primeiro, multiplique a
+    equação do modelo AR(1) por $x_{t-2}$ dos dois lados:
+        $$x_{t}x_{t-2}= \phi x_{t-1}x_{t-2} + x_{t-2}\varepsilon_t.$$
+    Agora, aplique a esperança dos dois lados   
+    $$E(x_{t}x_{t-2})= \phi E(x_{t-1}x_{t-2}) + E(x_{t-2}\varepsilon_t).$$
+    Reconhecendo o lado esquerdo como a auto covariância de defasagem 2, temos que
+    $$\gamma(2)= \phi \gamma(1).$$
+    Mas $\gamma(1)=\gamma(0)\phi$. Portanto,
+    $\gamma(2)= \phi^2 \gamma(0),$
+    e
+    $$\rho(2)= \phi^2,$$
+\end{frame}
+
+\begin{frame}
+    Suponha que (hipótese de indução)
+    $$\gamma(h-1)=\phi^{h-1}\nu.$$
+    Multiplicando os dois lados a equação do $AR(1)$ por $x_{t-h}$ temos
+    $$x_t x_{t-h}= \phi x_{t-1}x_{t-h} + x_{t-h}\varepsilon_t$$
+    e aplicando a esperança temos
+    $$E(x_t x_{t-h})= \phi E(x_{t-1}x_{t-h}) + E(x_{t-h}\varepsilon_t).$$
+    A primeira esperança é $\gamma(h)$ e a segunda é $\gamma(h-1)$. Portanto
+    $$\gamma(h)=\phi\gamma(h-1)=\phi\times \phi^{h-1} \gamma(0) = \phi^h \gamma(0).$$
+    Portanto, a hipótese de indução é verdadeira e
+    $$\rho(h)=\phi^h.$$
+\end{frame}
+
+\begin{frame}
+    Como a série é estacionária, temos que $|\phi|<1$.  Isto implica que
+    \begin{itemize}
+        \item O correlograma deve cai rapidamente para 0.
+        \item Se $\phi>0$ a queda no correlograma é exponencial.
+        \item Se $\phi<0$ a queda também é exponencial, mas o sinal das autocorrelações se alternam.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{FigurasAulas/acf_ar1_parte1}
+\caption{Função de autocorrelação teórica para alguns valores de $\phi$.}
+\label{fig:acf_ar1_parte1}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1\linewidth]{FigurasAulas/acf_ar1_parte2}
+        \caption{Função de autocorrelação teórica para alguns valores de $\phi$.}
+        \label{fig:acf_ar1_parte2}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Função de autocorrelação para o $AR(p)$}
+    Consideremos o processo 
+    $$x_t = \sum_{j=1}^p\phi_j x_{t-j}+\varepsilon_t.$$
+    Multiplicando ambos os lados por $x_{t-h}$, com $h>p$, calculando as esperanças e dividindo por $\nu$ teremos
+    \begin{equation}
+    \rho(h)=\sum_{j=1}^p\phi_j \rho(h-j).\label{eq::acf_arp}
+    \end{equation}
+        Obtendo $\rho(1),\ldots,\rho(p)$ as demais autocorrelações podem ser obtidas recursivamente.
+\end{frame}
+
+\begin{frame}{Exemplo: autocorrelação para o $AR(2)$}
+    Considere o processo $AR(2)$ abaixo:
+    $$x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon.$$
+    Multiplicando a equação acima por $x_{t-1}$ em ambos os lados teremos
+    $$x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon x_{t-1}.$$
+    Calculando o valor esperado, temos
+    \begin{align*}
+    \gamma(1)&=\phi_1E(x_{t-1}^2)+\phi_2E(x_{t-2}x_{t-1})+E(\varepsilon x_{t-1})\\
+    &=\phi_1\gamma(0) + \phi_2\gamma(1).
+    \end{align*}
+    Portanto,
+    $$\rho(1)=\frac{\gamma(1)}{\gamma(0)}=\frac{\phi_1}{1-\phi_2}.$$
+\end{frame}
+
+\begin{frame}
+    De modo análogo, teremos
+    $$x_{t-2}\times x_{t}=x_{t-2}\left(\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon y_{t-1}\right).$$
+    Aplicando a esperança, teremos
+    \begin{align*}
+    \gamma(2)&=\phi_1 \gamma(1)+\phi_2\gamma(0) = \phi_1 \frac{\gamma(0)}{1-\phi_2}+\phi_2\gamma(0)
+    \end{align*}
+    e
+    $$\rho(2)=\frac{\phi_1^2}{1-\phi_2} + \phi_2.$$
+\end{frame}
+
+\begin{frame}
+    Utilizando a Equação (\ref{eq::acf_arp}) podemos obter as próximas autocorrelações. Por exemplo
+    $$\rho(3) = \phi_1\rho(2)+ \phi_2\rho(1)= \frac{\phi_1^3}{1-\phi_2} + \phi_1\phi_2\left(1 + \frac{1}{1-\phi_2}\right).$$    
+\end{frame}
+
+\begin{frame}{Comportamento das autocorrelações em um $AR(p)$}
+    Segue que a solução geral da Equação (\ref{eq::acf_arp}), é dada por 
+    $$\rho(h)=\sum_{j=1}^{p}\alpha_j^h c_j$$
+    onde $\alpha_j=\ell_j^{-1}$ e $c_j$ é um polinômio com grau igual a multiplicidade da raiz menos um.
+    
+    Notas:
+    \begin{itemize}
+        \item As raízes reais se comportam de acordo com o que já foi visto no $AR(1)$.
+        \item As raízes complexas tem comportamento sazonal decaindo exponencialmente. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \textbf{Caso particular: AR(2) -} Existem três possibilidades:
+    \begin{itemize}
+        \item Existem duas raízes reais contínuas:
+        $$\rho(h)=c_1\alpha_1^h + c_2\alpha_2^h.$$
+        Neste caso, a ACF decai exponencialmente (seguindo o comportamento da raiz dominante).
+        \item Existe uma única raiz real (multiplicidade 2):
+        $$\rho(h)=  (c_1+c_2)\alpha^h.$$
+        Neste caso, a ACF também decai exponencialmente.
+        \item Existem duas raízes complexas conjugadas. Neste caso, $\alpha_1=re^{\omega \textit{i}}$ e $\alpha_2=re^{-\omega \textit{i}}$ e
+        \begin{align*}
+        \rho(h)& = c_1\alpha_1^h + c_2\alpha_2^h  = c_1\left( re^{\omega \textit{i}} \right)^h + c_2\left( re^{-\omega \textit{i}} \right)^h\\
+        &= c_1r^h\left( \cos(\omega h) + i\sin(\omega h) \right) + r^hc_2\left( \cos(\omega h) + i\sin(-\omega h) \right)\\
+        &= r^h(c_1+c_2)\cos(\omega h)
+        \end{align*}
+        e o processo exibirá comportamento sazonal com período $1/\omega$, caindo exponencialmente.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+\includegraphics[width=1\linewidth]{FigurasAulas/acf_teorica_ar2}
+\end{center}
+\end{frame}
+
+\begin{frame}{Função de autocorrelação parcial (PACF)}
+    \begin{itemize}
+        \item   Consideremos novamente o processo $AR(1)$. Vimos que
+        $$\rho(h)=\phi^h.$$
+        \item Isto implica que $Cor(x_{t+2},x_t)=\phi^2$.
+        \item Note que esta correlação só existe por causa da relação entre os pares $(x_t,x_{t+1})$ e $(x_{t+1},x_{t+2})$. De fato
+        $$Cov(x_t,x_{t+2}|x_{t+1})=0.$$         
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{defi}[Autocorrelação parcial]
+    A função de autocorrelação parcial de defasagem $h$ é dada por
+    $$\phi_{hh}=\frac{Cov\left(x_{t+h},x_t|x_{t+1},\ldots x_{t+h-1}\right)}{\sqrt{Var\left(x_t|x_{t+1},\ldots x_{t+h-1}\right)Var\left(x_{t+h}|x_{t+1},\ldots x_{t+h-1}\right)}}$$
+\end{defi}
+
+Intuitivamente, a função de autocorrelação parcial calcula a correlação entre $x_t$ e $x_{t+h}$ eliminando a dependência linear entre os valores intermediários $x_s$, $t<s<t+h$.
+\end{frame}
+
+\begin{frame}
+    \begin{teo}
+        Seja $\{x_t\}$ um processo estocástico estacionário. A função de autocorrelação parcial $\phi_{hh}$ para $h\geq 2$
+        é igual ao coeficiente $\alpha_h$, obtido pelo melhor preditor linear (BLUE) de $x_t$ baseado nas observações $x_{t-1},\ldots,x_{t-h}$:
+        \begin{equation}
+        \tilde{x}_t = \phi_{1k}x_{t-1}+\cdots+\phi_{kk}x_{t-h}.
+        \end{equation}
+    \end{teo}
+    
+    \begin{teo}
+        Para um $AR(p)$, $\phi_{kk}=0$ para $k>p$.
+    \end{teo}
+\end{frame}
+
+\begin{frame}{Gráfico da função de autocorrelação parcial}
+    \begin{itemize}
+        \item É um gráfico de $(h,\phi_{hh})$.
+        \item Um $AR(p)$ possui apenas $p$ autocorrelações parciais não nulas.
+        \item Para determinar se devemos levar em consideração determinado valor de $\phi_{hh}$, verificamos se este está fora do intervalo
+        $$(-\frac{1,96}{\sqrt{n}}\;\;;\;\;\frac{1,96}{\sqrt{n}}).$$
+        \item O número de autocorrelações parciais fora do intervalo devem nos dar uma noção da ordem do modelo.
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Exemplo: PIB Brasileiro}
+\begin{center}
+\includegraphics[width=1\linewidth]{FigurasAulas/PIB Brasileiro/PIB_imagem"}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/pib_polinomioFinal"}
+\caption{Ajustamos um modelo polinomial de ordem 4 para explicar a tendência desta série.}
+\label{fig:pib_polinomioFinal}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/polinomio_acf_residuos"}
+\caption{Correlograma dos resíduos. O comportamento quase sazonal (senoidal decaindo rapidamente) é consistente com um modelo autoregressivo com raízes complexas.}
+\label{fig:polinomio_acf_residuos}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/polinomio_residuos_pacf"}
+\caption{Autocorrelação parcial estimada. Note que a sexta autocorrelação é significativa, dando evidências de que o modelo se trata de um $AR(6)$.}
+\label{fig:polinomio_residuos_pacf}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    Recapitulando: seja $\{y_t\}$ a série do PIB do Brasil, com $t=1$ equivalendo ao ano de 1960. Ao ajustar o polinômio de grau 4 calculamos os resíduos
+    $$y_t - \sum_{j=0}^4 \hat{\beta}_j t^j = a_t,$$
+    onde existem evidências de que $a_t$ é um $AR(6)$, ou seja,
+    $$a_t = \varepsilon_t + \sum_{k=1}^{6}\phi_j a_{t-j},$$
+    onde $\varepsilon_t$ é um ruído branco.
+\end{frame}
+
+\begin{frame}
+    Obtivemos as seguintes estimativas para $\phi_1,\ldots,\phi_6$:
+    $$0,7486\;\;\;-0,1845\;\;\;-0,1276\;\;\;-0,0202\;\;\;0,1369\;\;\;-0,3766.$$
+    Assim, o polinômio característico é dado por
+    $$\phi(B)=1-0,748B+0,184B^2+0,127B^3+0,020B^4-0,136B^5+0,376B^6.$$
+    As raízes deste polinômio são
+    $$0,9536\pm 0,4979i \;\;\; -1,0551\pm 0,7139i\;\;\; - 1,0551\pm 0,7139i.$$
+    Seus respectivos módulos são
+    $$1,0758\;\;\; 1,2740\;\;\;1,1888$$
+    e como todos são maiores que 1, temos que o $AR(6)$ é estacionário.
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/final_residuos_acf"}
+\caption{Gráficos dos resíduos obtidos após ajustar o modelo AR(6). Note que o resultado se comporta como um ruído branco.}
+\label{fig:final_residuos_acf}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+    Após algumas manipulações, é possível mostrar que a série o PIB do Brasil pode ser modelada por
+    \begin{align*}
+    y_t = \varepsilon_t + \underbrace{\sum_{k=1}^6 \hat{\phi}_k y_{t-k}}_{\text{parte estacionária}} + \underbrace{\sum_{j=1}^{4}\hat{\beta}_j\left[t^j -\sum_{k=1}^{6}\hat{\phi}_k(t-k)^j\right]}_{\text{parte não estacionária}}
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Leitura}
+    \begin{itemize}
+        \item Seção 5.5.2 de \cite{morettin2006analise}.
+        \item Seção 3.2 de \cite{box2015time}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Estimando os parâmetros do modelo AR($p$)}
+    Existem alguns métodos clássicos para a estimação dos parâmetros auto regressivos. Discutiremos dois métodos:
+    \begin{itemize}
+        \item Estimação de Yule-Walker
+        \item Estimação por máxima verossimilhança condicional
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Estimação de Yule-Walker}
+    Considere o processo $AR(p)$:
+    $$x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t.$$
+    Multiplicando ambos os lados por $x_{t-h}$, com $h>0$ teremos
+    $$x_tx_{t-h} = \sum_{j=1}^p \phi_j x_{t-j}x_{t-h}+\varepsilon_tx_{t-h}.$$
+    Aplicando o valor esperado dos dois lados, teremos
+    $$\gamma(h) = \sum_{j=1}^p \phi_j \gamma( h-j).$$
+\end{frame}
+
+\begin{frame}
+Considerando ainda as equações:
+$$x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t,$$
+podemos multiplicar ambos os lados por $x_t$ (ou seja $x_{t-h}$, com $h=0$). Após aplicar a esperança
+teremos
+    $$E(x_t^2) = \sum_{j=1}^p \phi_j E(x_{t-j}x_{t})+E(\varepsilon_tx_{t}).$$
+Aqui há um detalhe importante:  
+$$E(\varepsilon_tx_{t})=E\left(\varepsilon_t\left[\sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t\right]\right)=E(\varepsilon_t^2)=\nu$$
+\end{frame}
+
+\begin{frame}
+    Portanto,
+    \begin{align}\label{eq:autocovarianca-AR}   
+    \gamma(h)=\left\{\begin{array}{ll}
+    \sum_{j=1}^p \phi_j \gamma( h-j),&\;\;\hbox{se }h>0\\
+    \sum_{j=1}^p \phi_j \gamma( j)+\nu,&\;\;\hbox{se }h=0 \\
+    \end{array}\right.
+    \end{align}
+\end{frame}
+
+\begin{frame}
+O método de estimação de Yule-Walker consiste em substituir $\gamma(1),\ldots,\gamma(p)$ pelas auto covariâncias amostrais:
+\begin{align*}
+\hat{\gamma}(1) &= \phi_1\hat{\gamma}(0) + \phi_1\hat{\gamma}(-1) + \cdots + \phi_p\hat{\gamma}(1-p) \\ 
+\hat{\gamma}(2) &= \phi_1\hat{\gamma}(1) + \phi_1\hat{\gamma}(0)  + \cdots + \phi_p\hat{\gamma}(2-p) \\ 
+\vdots &= \vdots \\
+\hat{\gamma}(p) &= \phi_1\hat{\gamma}(p-1) + \phi_1\hat{\gamma}(p-2)  + \cdots + \phi_p\hat{\gamma}(0)
+\end{align*} 
+Nota: lembre-se que $\gamma(-i)=\gamma(i)$. 
+\end{frame}
+
+\begin{frame}
+    Podemos escrever o sistema na forma matricial:
+    \begin{align*}
+    \underbrace{\left(
+    \begin{array}{cccc}
+\hat{\gamma}(0) & \hat{\gamma}(-1) & \cdots & \hat{\gamma}(1-p) \\ 
+\hat{\gamma}(1) & \hat{\gamma}(0)  & \cdots & \hat{\gamma}(2-p) \\ 
+         \vdots & \vdots               & \ddots                & \vdots\\
+\hat{\gamma}(p-1) & \hat{\gamma}(p-2) &  \cdots & \hat{\gamma}(0)   
+    \end{array}\right)}_{\hat{\bm{\Gamma}}}
+    \underbrace{\left( \begin{array}{c} \hat{\phi}_1 \\ \hat{\phi}_2 \\ \vdots \\ \hat{\phi}_p   \end{array}\right)}_{\hat{\bm{\phi}}}=
+    \underbrace{\left( \begin{array}{c} \hat{\gamma}(1) \\ \hat{\gamma}(2) \\ \vdots \\ \hat{\gamma}(p)   \end{array}\right)}_{\hat{\bm{\gamma}}}.
+    \end{align*}
+    e os estimadores de Yule-Walker para os parâmetros autoregressivos são dados por
+    $$\hat{\bm{\phi}}=\hat{\bm{\Gamma}}^{-1}\hat{\bm{\gamma}}.$$ 
+\end{frame}
+
+\begin{frame}
+    Voltando para a Equação (\ref{eq:autocovarianca-AR}), temos que
+    $$\gamma(0)=\sum_{j=1}^{p}\phi_j \gamma(j)+\nu$$
+    Portanto, um estimador para $\nu$ é dado por
+    $$\hat{\nu}=  
+  \hat{\gamma(0)}=\sum_{j=1}^{p}\hat{\phi_j}\hat{\gamma(j)}$$
+\end{frame}
+
+\begin{frame}{Estimador de máxima verossimilhança condicional}
+    \begin{itemize}
+        \item Observe que
+        $$y_t|y_{1:t-1}\sim y_t|y_{t-p:t-1},$$
+        ou seja, $\{y_t\}$ é uma cadeia de Markov de ordem $p$.
+        \item Deste modo, para $T>p$,
+        \begin{align*}
+        f(y_{1:T})&=f\left(y_T|y_{1:T-1}\right)f\left(y_{1:T-1}\right)=f\left(y_T|y_{T-p:T-1}\right)f\left(y_{1:T-1}\right)\\
+        &=\prod_{t=p+1}^{T}f\left(y_t|y_{t-p:t:-1}\right)\times f(y_{1:p}).
+        \end{align*}
+        \item É comum considerar que os primeiros $p$ valores da série são constantes, produzindo a seguinte verossimilhança condicional:
+        $$f(\bm{y}|y_{1:p})=\prod_{t=p+1}^{T}f\left(y_t|y_{t-p:t:-1}\right).$$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    Fazendo
+    \begin{align}
+    \bm{f}_t'&=\left(y_{t-1},\ldots,y_{t-p}\right)\\
+    \bm{\phi}'&=\left(\phi_{1},\ldots,\phi_{p}\right)       
+    \end{align}
+    teremos
+    $$y_t=\phi_1y_{t-1}+\cdots \phi_p y_{t-p} +\varepsilon_t= \underbrace{(y_{t-1}\;\cdots\;y_{t-p})}_{\bm{f}_t'}\underbrace{\left(\begin{array}{c}\phi_1 \\ \vdots \\ \phi_p\end{array}\right)}_{\bm{\phi}} + \varepsilon_{t},$$
+    ou seja,
+    $$y_t|y_{t-p:t-1}\sim\hbox{Normal}\left(\bm{f}_t'\bm{\phi}, \nu\right),$$
+    logo,
+    $$f(\bm{y}|y_{1:p})\propto \left(\frac{1}{\nu}\right)^{\frac{T}{2}}\exp\left\{ -\frac{1}{2\nu}\left(\bm{y}-\bm{F}'\bm{\phi}\right)'\left(\bm{y}-\bm{F}'\bm{\phi}\right) \right\},$$
+    onde $\bm{F}'=\left(\bm{f}_{p+1}',\ldots,\bm{f}_{T}'\right)$
+\end{frame}
+
+\begin{frame}{Ilustrando com o AR(2)}
+    
+    O modelo AR(2) é dado por:
+    $$y_t = \phi_1 y_{t-1}+\phi_2 y_{t-2} + \varepsilon_t,$$
+        onde $\varepsilon\sim\hbox{Normal}(0,\nu)$.
+    
+    Portanto, $y_t|y_{t-1},y_{t-2}\sim\hbox{Normal}( \phi_1 y_{t-1} + \phi_2 y_{t-2}, \nu)$, ou seja, dado $y_{t-1}$ e $y_{t-2}$, 
+    
+    $$ y_t = \underbrace{ \left(  y_{t-1} \;\; y_{t-2}   \right) }_\text{$\bm{f}_t'$}\underbrace{\left(\begin{array}{c}\phi_1 \\ \phi_2
+        \end{array}\right)}_\text{$\bm{\phi}$}+\varepsilon_t= \bm{f}_t'\bm{\phi}+\varepsilon_t$$
+    Como o usual, o estimador de máxima verossimilhança (condicional) será dado por
+    $$\bm{\hat{\phi}}=(\bm{F}\bm{F}')^{-1}\bm{F}\bm{y}.$$
+    
+    
+    
+\end{frame}
 
 \bookmarksetup{startatroot}
 

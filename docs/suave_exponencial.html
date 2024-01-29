@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<head>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
 
-<meta charset="utf-8" />
-<meta name="generator" content="quarto-1.3.450" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Séries Temporais – 9  Métodos de suavização exponencial</title>
+<title>Séries Temporais - 9&nbsp; Métodos de suavização exponencial</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -58,7 +56,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
-<!-- htmldependencies:E3FAD763 -->
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./processo_linear_geral.html" rel="next">
+<link href="./tendencia_sazonalidade.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -85,22 +101,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body>
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn"
-      data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" 
-      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
-      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <h1 class="quarto-secondary-nav-title"></h1>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" 
-      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
-      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./suave_exponencial.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Métodos de suavização exponencial</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -114,9 +125,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="/">
-      Séries Temporais
-      </a> 
+      <a href="./">Séries Temporais</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -128,84 +137,116 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Prefácio</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>1</span>  <span class='chapter-title'>Introdução</span></span></a>
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/estacionaria.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>2</span>  <span class='chapter-title'>Séries Estacionárias</span></span></a>
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/acf.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>3</span>  <span class='chapter-title'>Defasagens e autocorrelação</span></span></a>
+  <a href="./ts_window_date.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/ts_window_date.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>4</span>  <span class='chapter-title'>Criando séries no `R`</span></span></a>
+  <a href="./estacionaria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/modelo_linear.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>5</span>  <span class='chapter-title'>Revisão sobre o modelo linear</span></span></a>
+  <a href="./modelo_linear.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Revisão sobre o modelo linear</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/tendencia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>6</span>  <span class='chapter-title'>Tendência</span></span></a>
+  <a href="./tendencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Tendência</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/sazonalidade.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>7</span>  <span class='chapter-title'>Sazonalidade</span></span></a>
+  <a href="./sazonalidade.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Sazonalidade</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/tendencia_sazonalidade.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>8</span>  <span class='chapter-title'>Previsão para modelos lineares</span></span></a>
+  <a href="./tendencia_sazonalidade.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Previsão para modelos lineares</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/suave_exponencial.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class='chapter-number'>9</span>  <span class='chapter-title'>Métodos de suavização exponencial</span></span></a>
+  <a href="./suave_exponencial.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Métodos de suavização exponencial</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/references.html" class="sidebar-item-text sidebar-link">
+  <a href="./processo_linear_geral.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modelos ARMA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" ></div>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <div id="quarto-toc-target"></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introdução" id="toc-introdução" class="nav-link active" data-scroll-target="#introdução"><span class="header-section-number">9.1</span> Introdução</a></li>
+  <li><a href="#suavização-exponencial-simples" id="toc-suavização-exponencial-simples" class="nav-link" data-scroll-target="#suavização-exponencial-simples"><span class="header-section-number">9.2</span> Suavização exponencial simples</a>
+  <ul class="collapse">
+  <li><a href="#definição-do-método" id="toc-definição-do-método" class="nav-link" data-scroll-target="#definição-do-método"><span class="header-section-number">9.2.1</span> Definição do método</a></li>
+  <li><a href="#aplicação-nível-do-nilo" id="toc-aplicação-nível-do-nilo" class="nav-link" data-scroll-target="#aplicação-nível-do-nilo"><span class="header-section-number">9.2.2</span> Aplicação: nível do Nilo</a></li>
+  </ul></li>
+  <li><a href="#suavização-exponencial-de-holt" id="toc-suavização-exponencial-de-holt" class="nav-link" data-scroll-target="#suavização-exponencial-de-holt"><span class="header-section-number">9.3</span> Suavização Exponencial de Holt</a>
+  <ul class="collapse">
+  <li><a href="#aplicação-ocorrências-aeronáuticas" id="toc-aplicação-ocorrências-aeronáuticas" class="nav-link" data-scroll-target="#aplicação-ocorrências-aeronáuticas"><span class="header-section-number">9.3.1</span> Aplicação: ocorrências aeronáuticas</a></li>
+  </ul></li>
+  <li><a href="#suavização-exponencial-de-holt-winters" id="toc-suavização-exponencial-de-holt-winters" class="nav-link" data-scroll-target="#suavização-exponencial-de-holt-winters"><span class="header-section-number">9.4</span> Suavização Exponencial de Holt-Winters</a>
+  <ul class="collapse">
+  <li><a href="#definição" id="toc-definição" class="nav-link" data-scroll-target="#definição"><span class="header-section-number">9.4.1</span> Definição</a></li>
+  <li><a href="#aplicação-para-a-série-co2" id="toc-aplicação-para-a-série-co2" class="nav-link" data-scroll-target="#aplicação-para-a-série-co2"><span class="header-section-number">9.4.2</span> Aplicação para a série <code>co2</code></a></li>
+  </ul></li>
+  <li><a href="#modelo-de-holt-amortecido" id="toc-modelo-de-holt-amortecido" class="nav-link" data-scroll-target="#modelo-de-holt-amortecido"><span class="header-section-number">9.5</span> Modelo de Holt amortecido</a></li>
+  <li><a href="#modelos-com-componentes-multiplicativas" id="toc-modelos-com-componentes-multiplicativas" class="nav-link" data-scroll-target="#modelos-com-componentes-multiplicativas"><span class="header-section-number">9.6</span> Modelos com componentes multiplicativas</a>
+  <ul class="collapse">
+  <li><a href="#tendência-multiplicativa" id="toc-tendência-multiplicativa" class="nav-link" data-scroll-target="#tendência-multiplicativa"><span class="header-section-number">9.6.1</span> Tendência multiplicativa</a></li>
+  <li><a href="#tendência-aditiva-e-sazonalidade-multiplicativa" id="toc-tendência-aditiva-e-sazonalidade-multiplicativa" class="nav-link" data-scroll-target="#tendência-aditiva-e-sazonalidade-multiplicativa"><span class="header-section-number">9.6.2</span> Tendência aditiva e sazonalidade multiplicativa</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>  <span class="chapter-title">Métodos de suavização exponencial</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Métodos de suavização exponencial</span></h1>
 </div>
 
 
@@ -219,98 +260,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 </header>
-<nav id="TOC" role="doc-toc">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#introdução" id="toc-introdução"><span class="header-section-number">9.1</span> Introdução</a></li>
-  <li><a href="#suavização-exponencial-simples" id="toc-suavização-exponencial-simples"><span class="header-section-number">9.2</span> Suavização exponencial simples</a>
-  <ul>
-  <li><a href="#definição-do-método" id="toc-definição-do-método"><span class="header-section-number">9.2.1</span> Definição do método</a></li>
-  <li><a href="#estimação-dos-parâmetros" id="toc-estimação-dos-parâmetros"><span class="header-section-number">9.2.2</span> Estimação dos parâmetros</a></li>
-  <li><a href="#previsão" id="toc-previsão"><span class="header-section-number">9.2.3</span> Previsão</a></li>
-  <li><a href="#aplicação-nível-do-nilo" id="toc-aplicação-nível-do-nilo"><span class="header-section-number">9.2.4</span> Aplicação: nível do Nilo</a></li>
-  </ul></li>
-  <li><a href="#modelo-de-inovações-de-espaço-estado" id="toc-modelo-de-inovações-de-espaço-estado"><span class="header-section-number">9.3</span> Modelo de inovações de espaço estado</a></li>
-  <li><a href="#suavização-exponencial-de-holt" id="toc-suavização-exponencial-de-holt"><span class="header-section-number">9.4</span> Suavização Exponencial de Holt</a>
-  <ul>
-  <li><a href="#definição" id="toc-definição"><span class="header-section-number">9.4.1</span> Definição</a></li>
-  <li><a href="#aplicação-ocorrências-aeronáuticas" id="toc-aplicação-ocorrências-aeronáuticas"><span class="header-section-number">9.4.2</span> Aplicação: ocorrências aeronáuticas</a></li>
-  </ul></li>
-  <li><a href="#suavização-exponencial-de-holt-winters" id="toc-suavização-exponencial-de-holt-winters"><span class="header-section-number">9.5</span> Suavização Exponencial de Holt-Winters</a>
-  <ul>
-  <li><a href="#definição-1" id="toc-definição-1"><span class="header-section-number">9.5.1</span> Definição</a></li>
-  <li><a href="#aplicação-para-a-série-co2" id="toc-aplicação-para-a-série-co2"><span class="header-section-number">9.5.2</span> Aplicação para a série <code>co2</code></a></li>
-  </ul></li>
-  </ul>
-</nav>
+
 <section id="introdução" class="level2" data-number="9.1">
-<h2 data-number="9.1"><span class="header-section-number">9.1</span> Introdução</h2>
-<p>Considere uma série temporal com a decomposição <span class="math display">\[y_t=\hbox{sinal}_t+\hbox{ruído}_t\]</span> Seja <span class="math inline">\(\mathcal{D}_t\)</span> a série observada. Para qualquer <span class="math inline">\(0&lt;k\leq t\)</span> o valor suavizado <span class="math inline">\(\tilde{y}_t(k)\)</span> correspode a uma estimativa do sinal considerando a amostra <span class="math inline">\(\mathcal{D}_t\)</span>. Neste momento é interessante que você note a distinção entre as seguintes notações:</p>
-<ul>
-<li><p>para <span class="math inline">\(h&gt;0\)</span>, <span class="math inline">\(\hat{y}_t(h)\)</span> é a previsão para o tempo <span class="math inline">\(t+h\)</span>.</p></li>
-<li><p>para <span class="math inline">\(0&lt;k\leq t\)</span>, <span class="math inline">\(\tilde{y}_t(k)\)</span> é o valor suavizado para o sinal no tempo <span class="math inline">\(k\)</span>.</p></li>
-</ul>
-<p>Os métodos de suavização (ou alizamento) que serão estudados nesta seção são modelos semi-paramétricos com o objetivo de estimar o valor suavizado do sinal.</p>
+<h2 data-number="9.1" class="anchored" data-anchor-id="introdução"><span class="header-section-number">9.1</span> Introdução</h2>
+<p>Considere uma série temporal com a decomposição <span class="math display">\[y_t=\hbox{sinal}_t+\hbox{ruído}_t\]</span> Seja <span class="math inline">\(\mathcal{D}_t\)</span> a série observada. Para qualquer <span class="math inline">\(0&lt;k\leq t\)</span> o valor suavizado <span class="math inline">\(\tilde{sinal}_k\)</span> correspode a uma estimativa do sinal considerando a amostra <span class="math inline">\(\mathcal{D}_t\)</span>.</p>
+<p>Os métodos de suavização (ou alisamento) que serão estudados aqui são formulados considerando a seguinte lógica:</p>
+<ol type="1">
+<li>Obtenha uma previsão para o sinal no tempo <span class="math inline">\(t-1\)</span></li>
+<li>Obtenha uma estimativa para o sinal no tempo <span class="math inline">\(t\)</span></li>
+<li>Calcule o valor suavizado através de uma combinação linear convexa dos resultados obtidos em 1. e 2.</li>
+</ol>
+<p>Considere que função de previsão para <span class="math inline">\(y_t\)</span> é <span class="math display">\[\hat{y}_{t-1}(1)=F(\theta_{t-1})\]</span> onde <span class="math inline">\(\theta_t\)</span> é o valor suavizado dos parâmetros envolvidos no tempo <span class="math inline">\(t\)</span>. Assuma que o erro de previsão é aditivo, ou seja, <span class="math display">\[e_t=y_t-\hat{y}_{t-1}(1)=y_t-F(\theta_{t-1}).\]</span> Como a suavização de <span class="math inline">\(\theta_t\)</span> é obtida utilizando <span class="math inline">\(\hat{y}_{t-1}\)</span> e <span class="math inline">\(\theta_{t-1}\)</span>, os modelos clássicos de suavização exponencial podem ser escritos da forma de equações de espaço estado com inovações, ou seja, <span class="math display">\[\begin{align}y_t&amp;=F(\theta_{t-1})+\Phi(\theta_{t-1}) e_t\\
+\theta_t&amp;= G(\theta_{t-1})+\psi(\theta_{t-1})e_t
+\end{align}\]</span> onde <span class="math inline">\(\theta_t\)</span> é denominado <em>estado</em>, <span class="math inline">\(\psi(.)\)</span> e <span class="math inline">\(\Phi(.)\)</span> são funções escalares, <span class="math inline">\(F(.)\)</span> e <span class="math inline">\(G(.)\)</span> são funções vetoriais.</p>
+<p>Ao assumir que <span class="math inline">\(e_t\)</span> é um ruido branco gaussiano, a função de verossimilhança para <span class="math inline">\(\theta_0\)</span> e os demais parâmetros fixos é <span class="math display">\[L=\prod_{i=1}^n\frac{1}{\sqrt{2\pi\nu}}\exp\left\{-\frac{1}{2\nu}\left(\frac{y_i-F(\theta_{t-1})}{\Psi(\theta_{t-1})}\right)^2\right\}\]</span> e suas estimativas, de máxima verossimilhança, são obtidas por maximização numérica de <span class="math inline">\(\log L\)</span>.</p>
+<p>Considerando a amostra <span class="math inline">\(\mathcal{D}_t\)</span>, note que o valor <span class="math inline">\(\theta_t\)</span> já foi obtido. Podemos escrever <span class="math display">\[y_{t+h}=F(\theta_{t+h-1})+\Psi(\theta_{t+h-1})e_{t+h}\]</span> e, utilizando diversas vezes a relação recursiva entre os estados, podemos escrever <span class="math inline">\(y_{t+h}\)</span> como função de <span class="math inline">\(\theta_t\)</span> e dos erros <span class="math inline">\(e_{t+h},\ldots, e_{t+1}\)</span>. Com isso, podemo encontrar a distribuição de <span class="math inline">\(y_{t+h}\)</span>.</p>
+<p>Um caso particular importante é dado quando <span class="math inline">\(F(.)\)</span>, <span class="math inline">\(G(.)\)</span>, são lineares,<span class="math inline">\(\Psi(.)=1\)</span> e <span class="math inline">\(\psi(.)\)</span> não depende de <span class="math inline">\(\theta_t\)</span>. Nesse caso, o modelo de espaço estado é dado por:</p>
+<p><span class="math display">\[\begin{align}y_t&amp;=F'\theta_{t-1}+e_t\\
+\theta_t&amp;= G\theta_{t-1}+\psi e_t
+\end{align}\]</span></p>
+<p>Nesse caso<span class="math display">\[\begin{align}
+y_{t+h}&amp;=F'\theta_{t+h-1}+e_{t+h}=F'G\theta_{t+h-2}+F'\psi e_{t+h-1} + e_{t+h}\\
+&amp;=\cdots\\
+&amp;=F'G^{h-1}\theta_t+\sum_{j=1}^{h-1}F'G^{j-1}\psi e_{t+h-j}+e_{t+h}
+\end{align}\]</span></p>
+<p>Como <span class="math inline">\(y_{t+h}\)</span> pode ser escrito como combinação linear de ruídos gaussianos, teremos que a distribuição para a previsão de horizonte <span class="math inline">\(h\)</span> tem distribuição normal com média e variância dadas por <span class="math display">\[\begin{align}
+E(y_{t+h}|\mathcal{D}_t)&amp;=F'G^{h-1}\theta_t\\
+Var(y_{t+h}|\mathcal{D}_t)&amp;=\nu\left[1+\sum_{j=1}^{h-1}F'G^{j-1}\psi\psi'G'^{j-1}F\right]
+\end{align}\]</span></p>
 </section>
 <section id="suavização-exponencial-simples" class="level2" data-number="9.2">
-<h2 data-number="9.2"><span class="header-section-number">9.2</span> Suavização exponencial simples</h2>
+<h2 data-number="9.2" class="anchored" data-anchor-id="suavização-exponencial-simples"><span class="header-section-number">9.2</span> Suavização exponencial simples</h2>
 <section id="definição-do-método" class="level3" data-number="9.2.1">
-<h3 data-number="9.2.1"><span class="header-section-number">9.2.1</span> Definição do método</h3>
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="definição-do-método"><span class="header-section-number">9.2.1</span> Definição do método</h3>
 <p>Considere uma série temporal <span class="math display">\[y_t = \mu_t+\varepsilon_t\]</span> onde o nível <span class="math inline">\(\mu_t\)</span> é o sinal e <span class="math inline">\(\varepsilon_t\)</span> um ruído branco. Como <span class="math display">\[E(y_t|\mathcal{D}_{t-1})=\mu_t,\]</span> pelo método dos momentos, <span class="math inline">\(y_t\)</span> é um estimador para <span class="math inline">\(\mu_t\)</span> (e, <strong>depois observado</strong>, <span class="math inline">\(y_t\)</span> se torna estimativa para o sinal no tempo <span class="math inline">\(t\)</span>).</p>
 <p>Vamos adicionar a restrição de que <span class="math inline">\(\mu_t\approx \mu_{t+1}\)</span>, ou seja, a série flutua em torno de pequenas oscilações no nível. Com isso, dada a amostra <span class="math inline">\(\mathcal{D}_t\)</span>, teremos</p>
-<p><span class="math display">\[\hat{y}_{t-1}(1)=E(y_{t}|\mathcal{D}_{t-1})=\mu_{t}\approx \mu_{t-1}\]</span> A vantagem da aproximação é que podemos estimar <span class="math inline">\(\mu_{t-1}\)</span>, uma vez que temos a amostra <span class="math inline">\(\mathcal{D}_{t-1}\)</span>. Deste modo, <strong>antes de observar</strong> <span class="math inline">\(y_t\)</span>,<br />
+<p><span class="math display">\[\hat{y}_{t-1}(1)=E(y_{t}|\mathcal{D}_{t-1})=\mu_{t}\approx \mu_{t-1}\]</span> A vantagem da aproximação é que podemos estimar <span class="math inline">\(\mu_{t-1}\)</span>, uma vez que temos a amostra <span class="math inline">\(\mathcal{D}_{t-1}\)</span>. Deste modo, <strong>antes de observar</strong> <span class="math inline">\(y_t\)</span>,<br>
 <span class="math display">\[\hat{y}_{t-1}(1)=\tilde{\mu}_{t-1}\]</span> é um estimador para <span class="math inline">\(\mu_t\)</span>, com <span class="math inline">\(t&gt;1\)</span>.</p>
 <p>Deste modo, temos duas fontes de informação sobre o nível: a observação <span class="math inline">\(y_t\)</span> e o valor suavizado <span class="math inline">\(\tilde{\mu}_{t-1}\)</span>, que representa a previsão <span class="math inline">\(\hat{y}_{t-1}(1)\)</span>. O método de suavização exponencial simples consiste em ponderar essas fontes, criando a seguinte estimativa ponderada para o sinal:</p>
 <p><span class="math display">\[\tilde{\mu}_t=\alpha y_t + (1-\alpha)\hat{y}_{t-1}(1),\]</span> onde <span class="math inline">\(\alpha\in(0,1)\)</span>. Também pode-se escrever o método da seguinte forma:</p>
 <p><span class="math display">\[\tilde{\mu}_t=\alpha y_t + (1-\alpha)\tilde{\mu}_{t-1}.\]</span> Tal forma nos permite entender o nome exponencial, uma vez que</p>
 <p><span class="math display">\[\begin{align}\tilde{\mu}_t&amp;=\alpha y_t + (1-\alpha)\tilde{\mu}_{t-1}\\&amp;=\alpha y_t + \alpha(1-\alpha)y_{t-1}+(1-\alpha)^2 \tilde{\mu}_{t-2}\\&amp;=\sum_{j=1}^{t-1}\alpha(1-\alpha)^jy_{t-j}+(1-\alpha)^t\tilde{\mu}_0\end{align}\]</span></p>
-<p>Exceto por <span class="math inline">\(\tilde{\mu}_0\)</span>, o método consiste em uma média móvel ponderada, onde os pesos decrescem exponencialmente. O papel de <span class="math inline">\(\alpha\)</span> também fica mais evidente: um valor próximo de 1 dá mais peso para as informações mais recentes.</p>
+<p>Esse modelo pode ser escrito na seguinte forma de espaço estado: <span class="math display">\[\begin{align}
+y_t&amp;=\tilde{\mu}_{t-1}+e_t\\
+\tilde{\mu}_{t}&amp;=\tilde{\mu}_{t-1}+\alpha e_t
+\end{align}\]</span> logo, identificando <span class="math inline">\(F=1, G=1,\psi=\alpha\)</span>, teremos que <span class="math display">\[y_{t+h}|\mathcal{D}_t\sim\hbox{Normal}\left(\tilde{\mu}_t,\nu[1+\alpha^2(h-1)]\right)\]</span></p>
 </section>
-<section id="estimação-dos-parâmetros" class="level3" data-number="9.2.2">
-<h3 data-number="9.2.2"><span class="header-section-number">9.2.2</span> Estimação dos parâmetros</h3>
-<p>Observe que os parâmetros do modelo são <span class="math inline">\(\theta_0=(\tilde{\mu}_0\)</span>, <span class="math inline">\(\alpha\)</span>,<span class="math inline">\(\nu\)</span>). Para estimá-los, assuma que os erros de previsão são um ruído branco gaussiano, com <span class="math inline">\(e_t\sim\hbox{Normal}(0,\nu)\)</span>. Como <span class="math display">\[e_t=y_t-\hat{y}_{t-1}(1)=y_t-\tilde{\mu}_{t-1}\]</span> Deste modo, <span class="math display">\[\begin{align}
-L(\theta_0)&amp;=\prod_{i=1}^t \frac{1}{\sqrt{2\pi\nu}}\exp\left\{-\frac{e_i^2}{2\nu}\right\}\\&amp;=\left(\frac{1}{2\pi\nu}\right)^{\frac{t}{2}}\exp\left\{-\frac{1}{2\nu}\left(\sum_{i=1}^t(y_i-\tilde{\mu}_{i-1}\right)^2\right\}\end{align}\]</span> onde <span class="math inline">\(\tilde{\mu}_{i}\)</span> é obtida recursivamente. O parâmetros então podem ser calculados via maximização da função de verossimilhança (tal procedimento deve ser realizado numericamente).</p>
-</section>
-<section id="previsão" class="level3" data-number="9.2.3">
-<h3 data-number="9.2.3"><span class="header-section-number">9.2.3</span> Previsão</h3>
-<p>Para a amostra <span class="math inline">\(\mathcal{D}_t\)</span>, a distribuição de <span class="math inline">\(y_{t+1}\)</span>, pode ser obtida notando que</p>
-<p><span class="math display">\[y_{t+1}=\tilde{\mu}_t+e_{t+1},\]</span> ou seja, <span class="math inline">\(y_{t+1}|\mathcal{D}_t\sim\hbox{Normal}(\tilde{\mu}_t,\nu)\)</span>. Antes de apresentar o caso geral, note que a equação <span class="math display">\[\tilde{\mu}_t=\alpha y_t + (1-\alpha)\hat{y}_{t-1}(1)\]</span> pode ser reescrita como <span class="math display">\[\tilde{\mu}_t=\tilde{\mu}_{t-1}+\alpha e_t.\]</span></p>
-<p>Então, para <span class="math inline">\(h&gt;0\)</span> <span class="math display">\[\begin{align}
-\hat{y}_{t+h}&amp;=\tilde{\mu}_{t+h-1}+e_{t+h}=\tilde{\mu}_{t+h-2}+\alpha e_{t+h-1}+e_{t+h}\\
-&amp;=\cdots = \tilde{\mu}_t+e_{t+h}+\alpha\sum_{j=1}^{h-1}e_{t+j}
-\end{align}\]</span> Logo, <span class="math display">\[\hat{y}_{t+h}|\mathcal{D}_t\sim\hbox{Normal}\left(\tilde{\mu}_t,\nu[1+\alpha^2(h-1)]\right)\]</span> Portanto, a previsão é constante.</p>
-</section>
-<section id="aplicação-nível-do-nilo" class="level3" data-number="9.2.4">
-<h3 data-number="9.2.4"><span class="header-section-number">9.2.4</span> Aplicação: nível do Nilo</h3>
+<section id="aplicação-nível-do-nilo" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="aplicação-nível-do-nilo"><span class="header-section-number">9.2.2</span> Aplicação: nível do Nilo</h3>
 <p>Considere novamente a série <code>Nile</code>, cujos valores representam o fluxo anual do rio Nilo entre 1871 e 1970. Note que a série aparenta oscilar em torno de um nível constante após 1898.</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(Nile, <span class="at">ylab =</span> <span class="fu">expression</span>(Fluxo<span class="sc">~</span>em<span class="sc">~</span><span class="dv">10</span><span class="sc">^</span><span class="dv">8</span><span class="sc">~</span>m<span class="sc">^</span><span class="dv">3</span>) , <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(Nile, <span class="at">ylab =</span> <span class="fu">expression</span>(Fluxo<span class="sc">~</span>em<span class="sc">~</span><span class="dv">10</span><span class="sc">^</span><span class="dv">8</span><span class="sc">~</span>m<span class="sc">^</span><span class="dv">3</span>) , <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Vamos utilizar a função <code>ets(y, model)</code>, do pacote <code>forecast</code>, onde <code>y</code> é a série temporal e <code>model='ANN'</code> representa o modelo de suavização exponencial.</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Carregando pacotes exigidos: forecast</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package &#39;forecast&#39; was built under R version 4.3.1</code></pre>
+<pre><code>Warning: package 'forecast' was built under R version 4.3.1</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Registered S3 method overwritten by &#39;quantmod&#39;:
+<pre><code>Registered S3 method overwritten by 'quantmod':
   method            from
   as.zoo.data.frame zoo </code></pre>
 </div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">ets</span>(Nile, <span class="st">&#39;ANN&#39;</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mod</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">ets</span>(Nile, <span class="st">'ANN'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mod</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>ETS(A,N,N) 
 
 Call:
- ets(y = Nile, model = &quot;ANN&quot;) 
+ ets(y = Nile, model = "ANN") 
 
   Smoothing parameters:
     alpha = 0.2455 
@@ -327,14 +352,16 @@ Call:
 <p>Acima podemos ver as estimativas dos parâmetros: <span class="math inline">\(\hat{\alpha}=0.2455\)</span>, <span class="math inline">\(\tilde{\mu}_0=1110.6869\)</span> e <span class="math inline">\(\nu=144.2318^2\)</span>.</p>
 <p>Como de costume, devemos verificar se existem evidências para assumir que o modelo é adequado analisando os resíduos, que podem ser acessados no item <code>$residuals</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> mod<span class="sc">$</span>residuals</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> mod<span class="sc">$</span>residuals</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -342,7 +369,7 @@ Call:
 data:  res
 W = 0.99304, p-value = 0.8902</code></pre>
 </div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Pierce test
@@ -350,57 +377,28 @@ W = 0.99304, p-value = 0.8902</code></pre>
 data:  res
 X-squared = 1.7244, df = 1, p-value = 0.1891</code></pre>
 </div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div>
 </div>
 <p>Os resíduos oscilam em torno de zero e o correlograma não mostra evidências contra a hipótese de ruído branco. O teste Shapiro-Wilks não rejeita a normalidade e o de Box-Pierce não rejeita a hipótese de ruído branco. Portanto, vamos considerar que o modelo é adequado.</p>
 <p>Os valores suavizados <span class="math inline">\(\tilde{\mu}_0,\ldots,\tilde{\mu}_t\)</span> podem ser acessados na lista <code>$states</code>, conforme vemos abaixo.</p>
 <div class="cell">
-<div class="sourceCode" id="cb14"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(Nile, <span class="at">ylab =</span> <span class="fu">expression</span>(Fluxo<span class="sc">~</span>em<span class="sc">~</span><span class="dv">10</span><span class="sc">^</span><span class="dv">8</span><span class="sc">~</span>m<span class="sc">^</span><span class="dv">3</span>) , <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(Nile, <span class="at">ylab =</span> <span class="fu">expression</span>(Fluxo<span class="sc">~</span>em<span class="sc">~</span><span class="dv">10</span><span class="sc">^</span><span class="dv">8</span><span class="sc">~</span>m<span class="sc">^</span><span class="dv">3</span>) , <span class="at">lwd =</span> <span class="dv">2</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(mod<span class="sc">$</span>states, <span class="at">col =</span><span class="st">&#39;tomato&#39;</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(mod<span class="sc">$</span>states, <span class="at">col =</span><span class="st">'tomato'</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Por último, podemos realizar previsões com a função <code>forecast</code> conforme ilustramos abaixo para os 5 anos à frente (observe que a previsão é constante, mas, como esperado, sua variância aumenta linearmente ao longo do tempo).</p>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( <span class="fu">forecast</span>(mod, <span class="dv">5</span>))</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( <span class="fu">forecast</span>(mod, <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 </section>
-<section id="modelo-de-inovações-de-espaço-estado" class="level2" data-number="9.3">
-<h2 data-number="9.3"><span class="header-section-number">9.3</span> Modelo de inovações de espaço estado</h2>
-<p>Para o modelo de suavização exponencial, vimos que</p>
-<p><span class="math display">\[\begin{align}
-y_t&amp;=\mu_{t-1}+e_t\\
-\mu_{t}&amp;=\mu_{t-1}+\alpha e_t.
-\end{align}\]</span> Todos os modelos deste tópico podem ser escritos da forma de um modelo de espaço estado <span class="math display">\[\begin{align}
-y_t&amp;=F&#39;\theta_{t-1}+e_t\\
-\theta_{t}&amp;=G\theta_{t-1}+\psi e_t.
-\end{align}\]</span> onde <span class="math inline">\(F&#39;\)</span> e <span class="math inline">\(G\)</span> são matrizes de dimensão condizente e <span class="math inline">\(\theta_t\)</span> é um vetor denominado estado, que contém os parâmetros que evoluem no modelo. Por exemplo, para o modelo de suavização exponencial <span class="math display">\[\begin{align}
-\theta_t&amp;=\mu_t\\
-F&#39;&amp;=1\\
-G&amp;=1\\
-\psi&amp;=\alpha
-\end{align}\]</span></p>
-<p>O modelo de espaço estado para inovações é completamente especificado através do estado inicial <span class="math inline">\(\theta_0\)</span>, dos parâmetros <span class="math inline">\(\psi\)</span> e <span class="math inline">\(\nu\)</span> e, quando aplicável, dos parâmetros contidos em <span class="math inline">\(G\)</span> ou <span class="math inline">\(F&#39;\)</span>. Como os erros de previsão são considerandos ruídos brancos gaussianos, para a amostra <span class="math inline">\(\mathcal{D}_n\)</span>, a função de verossimilhança desses parâmetros é <span class="math inline">\(L=\prod_{i=1}^n \frac{1}{\sqrt{2\pi\nu}}\exp\left\{-\frac{e_i^2}{2\nu}\right\}=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{i=1}^n(y_i-F&#39;\theta_{i-1})^2\right\},\)</span> e as estimativas de máxima verossimilhança podem ser obtidas maximizando <span class="math inline">\(L\)</span> numericamente.</p>
-<p>Considerando a amostra <span class="math inline">\(\mathcal{D_t}\)</span>, ddistribuição de <span class="math inline">\(y_{t+h}\)</span>, com <span class="math inline">\(h&gt;0\)</span>, pode ser encontrada notando que <span class="math display">\[\begin{align}
-y_{t+h}&amp;=F&#39;\theta_{t+h-1}+e_{t+h}=F&#39;G\theta_{t+h-2}+F&#39;e_{t+h-1} + e_{t+h}\\
-&amp;=\cdots\\
-&amp;=F&#39;G^{h-1}\theta_t+F&#39;\sum_{j=1}^{h-1}G^{j-1}e_{t+h-j}+e_{t+h}
-\end{align}\]</span></p>
-<p>Como <span class="math inline">\(y_{t+h}\)</span> pode ser escrito como combinação linear de ruídos gaussianos, teremos que a distribuição para a previsão de horizonte <span class="math inline">\(h\)</span> tem distribuição normal com média e variância dadas por <span class="math display">\[\begin{align}
-E(y_{t+h}|\mathcal{D}_t)&amp;=F&#39;G^{h-1}\theta_t\\
-Var(y_{t+h}|\mathcal{D}_t)&amp;=\nu\left[1+F&#39;G_nGn&#39;F\right]
-\end{align},\]</span> onde <span class="math display">\[G_n=\sum_{j=1}^{h-1}G^{j-1}.\]</span></p>
-</section>
-<section id="suavização-exponencial-de-holt" class="level2" data-number="9.4">
-<h2 data-number="9.4"><span class="header-section-number">9.4</span> Suavização Exponencial de Holt</h2>
-<section id="definição" class="level3" data-number="9.4.1">
-<h3 data-number="9.4.1"><span class="header-section-number">9.4.1</span> Definição</h3>
+<section id="suavização-exponencial-de-holt" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="suavização-exponencial-de-holt"><span class="header-section-number">9.3</span> Suavização Exponencial de Holt</h2>
 <p>Considere agora um modelo da forma <span class="math display">\[y_t = T(t) + \varepsilon_t,\]</span> onde <span class="math inline">\(T(t)\)</span> é uma componente de tendência. Nesse caso, <span class="math display">\[\mu_t=E(y_t|\mathcal{D}_t)=T(t)\]</span> Como vimos anteriormente, a suaziação no tempo <span class="math inline">\(t\)</span> pode ser feita ponderando a observação <span class="math inline">\(y_t\)</span> com sua respectiva previsão para no tempo <span class="math inline">\(t-1\)</span>:</p>
 <p><span class="math display">\[\tilde{\mu}_t=\alpha y_t + (1-\alpha)\hat{y}_{t-1}(1).\]</span> Como <span class="math inline">\(T(t)\)</span> é localmente linear, então é natural assumir um modelo de previsão da seguinte forma: <span class="math display">\[y_t(h)= \tilde{\mu}_t+ h\tilde{b}_t,\]</span> onde <span class="math inline">\(\tilde{b}_t\)</span> é a inclinação da tendência no tempo <span class="math inline">\(t\)</span>. Então,</p>
 <p><span class="math display">\[\begin{align*}
@@ -410,10 +408,10 @@ Var(y_{t+h}|\mathcal{D}_t)&amp;=\nu\left[1+F&#39;G_nGn&#39;F\right]
 <p>A equação acima mostra a evolução de <span class="math inline">\(\tilde{\mu}_t\)</span>, mas não há atualização para <span class="math inline">\(\tilde{b}_t\)</span>. Com este objetivo, vamos ponderar duas fontes de informação sobre a inclinação. A primeira está no fato de que, como a tendência é localmente linear, é esperado que <span class="math display">\[\tilde{b}_t\approx \tilde{b}_{t-1}.\]</span> A segunda pode ser obtida através dos níveis <span class="math inline">\(\tilde{\mu}_t\)</span> e <span class="math inline">\(\tilde{\mu}_{t-1}\)</span>. Uma vez que a relação entre esses dois é aproximadamente linear, sua diferençanos dá noção sobre a inclinação (crescimento/decrescimento) como mostra a figura abaixo.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>O valor da inclinação da reta formada por <span class="math inline">\(a_t\)</span> e <span class="math inline">\(\tilde{\mu}_{t-1}\)</span> é dado por <span class="math display">\[\frac{\tilde{\mu}_t - \tilde{\mu}_{t-1}}{t - (t-1)} = \tilde{\mu}_t - \tilde{\mu}_{t-1}.\]</span> Combinando este com a última inclinação suavizada, teremos <span class="math display">\[\tilde{b}_t = \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{\mu}_{t-1},\]</span><br />
+<p>O valor da inclinação da reta formada por <span class="math inline">\(a_t\)</span> e <span class="math inline">\(\tilde{\mu}_{t-1}\)</span> é dado por <span class="math display">\[\frac{\tilde{\mu}_t - \tilde{\mu}_{t-1}}{t - (t-1)} = \tilde{\mu}_t - \tilde{\mu}_{t-1}.\]</span> Combinando este com a última inclinação suavizada, teremos <span class="math display">\[\tilde{b}_t = \beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}) + (1-\beta)\tilde{\mu}_{t-1},\]</span><br>
 onde <span class="math inline">\(\beta\in(0,1)\)</span> é a constante de suavização da tendência.</p>
 <p>Combinando as últimas equações teremos o modelo de suavização exponencial de Holt:</p>
 <p><span class="math display">\[\begin{align*}
@@ -423,46 +421,45 @@ onde <span class="math inline">\(\beta\in(0,1)\)</span> é a constante de suaviz
 <p>O conjunto de equações acima pode ser reescrito como pode ser reescrita como <span class="math display">\[\begin{align*}
     \tilde{\mu}_t &amp;= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha\left( y_t-\tilde{\mu}_{t-1} - \tilde{b}_{t-1}\right)= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha e_t\\
     \tilde{b}_t &amp;= \tilde{b}_{t-1}+\beta (\tilde{\mu}_t - \tilde{\mu}_{t-1}-\tilde{b}_{t-1}).
-    \end{align*}\]</span><br />
+    \end{align*}\]</span><br>
 A partir da primeira equação acima, deduzimos que <span class="math inline">\(\tilde{\mu}_t-\tilde{\mu}_{t-1}-\tilde{b}_{t-1}=\alpha e_t\)</span>. Substituindo essa informação na segunda equação teremos <span class="math display">\[\begin{align*}
     \tilde{\mu}_t &amp;= \tilde{\mu}_{t-1} + \tilde{b}_{t-1}+\alpha e_t\\
     \tilde{b}_t &amp;= \tilde{b}_{t-1}+\alpha\beta e_t.
-    \end{align*}\]</span><br />
+    \end{align*}\]</span><br>
 ou, em forma matricial, <span class="math display">\[\left(\begin{array}{c}\tilde{\mu}_t\\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 &amp; 1 \\ 0 &amp; 1\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_t,\]</span></p>
 <p>Note ainda que é possível escrever a equação do modelo em forma matricial: <span class="math display">\[y_{t+h}=\tilde{\mu}_{t+h-1}+\tilde{b}_{t+h-1}+e_{t+h-1}=(\begin{array}{cc}1&amp;1\end{array})\left(\begin{array}{c}\tilde{\mu}_{t+h-1}\\ \tilde{b}_{t+h-1}\end{array}\right)+e_{t+h}\]</span> Pode-se então mostrar que este modelo possui a seguinte especificação como modelo de espaço estado:</p>
 <p><span class="math display">\[\begin{align}
-F&#39;&amp;=(1\;\; 1)\\
+F'&amp;=(1\;\; 1)\\
 G&amp;=\left(\begin{array}{cc} 1 &amp; 1 \\ 0 &amp; 1\\ \end{array}\right)\\
-\theta_t&#39;&amp;=(\tilde{\mu}_t\;\;\tilde{b}_t)\\
-\psi&#39;&amp;=(\alpha\;\;\alpha\beta)
+\theta_t'&amp;=(\tilde{\mu}_t\;\;\tilde{b}_t)\\
+\psi'&amp;=(\alpha\;\;\alpha\beta)
 \end{align}\]</span></p>
-<p>Deste modo, os parâmetros <span class="math inline">\(\alpha,\beta,\tilde{\mu}_0\)</span> e <span class="math inline">\(\tilde{b}_0\)</span> podem ser obtidos via método de estimação da máxima verossimilhança. Logo, a distribuição da previsão com horizonte <span class="math inline">\(h\)</span> é dada por</p>
+<p>Desse modo, os parâmetros <span class="math inline">\(\alpha,\beta,\tilde{\mu}_0\)</span> e <span class="math inline">\(\tilde{b}_0\)</span> podem ser obtidos via método de estimação da máxima verossimilhança. Logo, a distribuição da previsão com horizonte <span class="math inline">\(h\)</span> é dada por</p>
 <p><span class="math display">\[y_{t+h}|\mathcal{D}_t\sim\hbox{Normal}\left(\tilde{\mu}_t+h\tilde{b}_t, \nu\sigma^2_h\right),\]</span> onde <span class="math display">\[\sigma^2_h = 1+(h-1)\left(\alpha^2 + \alpha\beta h + \frac{\beta^2}{6}h(2h-1)\right).\]</span></p>
-</section>
-<section id="aplicação-ocorrências-aeronáuticas" class="level3" data-number="9.4.2">
-<h3 data-number="9.4.2"><span class="header-section-number">9.4.2</span> Aplicação: ocorrências aeronáuticas</h3>
+<section id="aplicação-ocorrências-aeronáuticas" class="level3" data-number="9.3.1">
+<h3 data-number="9.3.1" class="anchored" data-anchor-id="aplicação-ocorrências-aeronáuticas"><span class="header-section-number">9.3.1</span> Aplicação: ocorrências aeronáuticas</h3>
 <p>Voltemos ao conjunto de dados com o número mensal de ocorrências aeronáuticas, mantido pela Força Aérea Brasileira.</p>
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">&#39;https://www.dropbox.com/scl/fi/kq4jwbovu94u857238sus/N-mensal-de-acidentes-com-aeronaves-2013jan.csv?rlkey=n5pa45e7ht33houmiawdkjb09&amp;dl=1&#39;</span></span>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://www.dropbox.com/scl/fi/kq4jwbovu94u857238sus/N-mensal-de-acidentes-com-aeronaves-2013jan.csv?rlkey=n5pa45e7ht33houmiawdkjb09&amp;dl=1'</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url, <span class="at">h =</span> T)</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>ocorrenciasFAB <span class="ot">&lt;-</span> <span class="fu">ts</span>( x, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2013</span>,<span class="dv">1</span>), <span class="at">frequency=</span><span class="dv">12</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ocorrenciasFAB, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">&#39;Ano&#39;</span>, <span class="at">ylab =</span> <span class="st">&#39;No. ocorrências aeronáuticas&#39;</span>)</span></code></pre></div>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ocorrenciasFAB, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">'Ano'</span>, <span class="at">ylab =</span> <span class="st">'No. ocorrências aeronáuticas'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Vamos utilizar a função <code>ets(y, model)</code>, do pacote <code>forecast</code>, onde <code>y</code> é a série temporal e <code>model='AAN'</code> representa o modelo de suavização exponencial de Holt. Vamos adicionar o argumento <code>damped=FALSE</code> - estudaremos esse argumento na seção sobre amortecimento.</p>
 <div class="cell">
-<div class="sourceCode" id="cb17"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">ets</span>(ocorrenciasFAB, <span class="st">&#39;AAN&#39;</span>, <span class="at">damped =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>mod</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">ets</span>(ocorrenciasFAB, <span class="st">'AAN'</span>, <span class="at">damped =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>mod</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>ETS(A,A,N) 
 
 Call:
- ets(y = ocorrenciasFAB, model = &quot;AAN&quot;, damped = FALSE) 
+ ets(y = ocorrenciasFAB, model = "AAN", damped = FALSE) 
 
   Smoothing parameters:
     alpha = 0.0651 
@@ -481,14 +478,16 @@ Call:
 <p>Acima podemos ver as estimativas dos parâmetros: <span class="math inline">\(\hat{\alpha}=0.0651\)</span>, <span class="math inline">\(\hat{\beta}=0,0117\)</span>, <span class="math inline">\(\tilde{\mu}_0=61,6314\)</span>, <span class="math inline">\(\tilde{b}_0=-0,9175\)</span> e <span class="math inline">\(\nu=7,7512^2\)</span>.</p>
 <p>Como de costume, devemos verificar se existem evidências para assumir que o modelo é adequado analisando os resíduos, que podem ser acessados no item <code>$residuals</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb19"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> mod<span class="sc">$</span>residuals</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> mod<span class="sc">$</span>residuals</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -496,7 +495,7 @@ Call:
 data:  res
 W = 0.99237, p-value = 0.7257</code></pre>
 </div>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Pierce test
@@ -504,41 +503,40 @@ W = 0.99237, p-value = 0.7257</code></pre>
 data:  res
 X-squared = 3.2409, df = 1, p-value = 0.07182</code></pre>
 </div>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div>
 </div>
 <p>Os resíduos oscilam em torno de zero e o correlograma não mostra evidências contra a hipótese de ruído branco. O teste Shapiro-Wilks não rejeita a normalidade e o de Box-Pierce não rejeita a hipótese de ruído branco. Portanto, vamos considerar que o modelo é adequado.</p>
 <p>Os valores suavizados <span class="math inline">\(\tilde{\mu}_0,\ldots,\tilde{\mu}_t\)</span> podem ser acessados na lista <code>$states</code>, na primeira coluna, conforme vemos abaixo.</p>
 <div class="cell">
-<div class="sourceCode" id="cb25"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ocorrenciasFAB, <span class="at">ylab =</span> <span class="st">&#39;No. ocorrências aeronáuticas mensal&#39;</span> , <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ocorrenciasFAB, <span class="at">ylab =</span> <span class="st">'No. ocorrências aeronáuticas mensal'</span> , <span class="at">lwd =</span> <span class="dv">2</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(mod<span class="sc">$</span>states[,<span class="dv">1</span>], <span class="at">col =</span><span class="st">&#39;tomato&#39;</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code></pre></div>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(mod<span class="sc">$</span>states[,<span class="dv">1</span>], <span class="at">col =</span><span class="st">'tomato'</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>A segunda coluna de <code>$states</code> mostra os valores suavizados para a inclinação. É interessante observar o gráfico desses valores contra a linha horizontal em zero, para entender os regimes de crescimento e decrescimento da série. Abaixo mostramos o curioso padrão dessa série: a inclinação começou desacelerando desde de o começo do registro até março de 2017. Desde então, a inclinação se oscila em torno de um nível constante.</p>
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(mod<span class="sc">$</span>states[,<span class="dv">2</span>], <span class="at">col =</span><span class="st">&#39;tomato&#39;</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">ylab =</span> <span class="st">&#39;Inclinação suavizada&#39;</span>)</span>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(mod<span class="sc">$</span>states[,<span class="dv">2</span>], <span class="at">col =</span><span class="st">'tomato'</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">ylab =</span> <span class="st">'Inclinação suavizada'</span>)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">2017</span><span class="sc">+</span><span class="dv">3</span><span class="sc">/</span><span class="dv">12</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">2017</span><span class="sc">+</span><span class="dv">3</span><span class="sc">/</span><span class="dv">12</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Por último, podemos realizar previsões com a função <code>forecast</code> conforme ilustramos abaixo para os 6 meses à frente, completando o ano de 2023.</p>
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>prev <span class="ot">&lt;-</span> <span class="fu">forecast</span>(mod, <span class="dv">6</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( prev)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>prev <span class="ot">&lt;-</span> <span class="fu">forecast</span>(mod, <span class="dv">6</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( prev)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 </section>
-<section id="suavização-exponencial-de-holt-winters" class="level2" data-number="9.5">
-<h2 data-number="9.5"><span class="header-section-number">9.5</span> Suavização Exponencial de Holt-Winters</h2>
-<section id="definição-1" class="level3" data-number="9.5.1">
-<h3 data-number="9.5.1"><span class="header-section-number">9.5.1</span> Definição</h3>
+<section id="suavização-exponencial-de-holt-winters" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="suavização-exponencial-de-holt-winters"><span class="header-section-number">9.4</span> Suavização Exponencial de Holt-Winters</h2>
+<section id="definição" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="definição"><span class="header-section-number">9.4.1</span> Definição</h3>
 <p>Considere o modelo <span class="math display">\[y_t = T(t) + s(t)+\varepsilon_t,\]</span> onde <span class="math inline">\(T(t)\)</span> e <span class="math inline">\(s(t)\)</span> são componentes de tendência e sazonalidade, com período <span class="math inline">\(p\)</span>, respectivamente. Identificando <span class="math inline">\(T(t)\)</span> como <span class="math inline">\(\mu_t\)</span>, teremos que <span class="math inline">\(E(y_t|\mathcal{D}_{t-1})=\mu_t+s_t\)</span>, logo <span class="math inline">\(y_t-\tilde{s}_t\)</span> é uma fonte de informação para <span class="math inline">\(\mu_t\)</span>.</p>
 <p>Considere ainda que <span class="math inline">\(T(t)\)</span> é localmente liner. Então, as previsões em curto prazo podem ser feitas através de</p>
 <p><span class="math display">\[\hat{y}_t(h) = \tilde{\mu}_t + h \tilde{b}_t + \tilde{s}_{t+h}.\]</span> Então Outra fonte de informação sobre <span class="math inline">\(\mu_t\)</span> é a previsão <span class="math inline">\(\hat{y}_{t-1}(1)\)</span> livre de sazonalidade, dada por <span class="math display">\[\hat{y}_{t-1}(1)-\tilde{s}_{t}=\tilde{\mu}_{t-1} + \tilde{b}_{t-1}.\]</span> Deste modo, o sinal <span class="math inline">\(\mu_t\)</span> pode ser suavizado de modo análogo ao que foi feito no modelo de suavização exponencial simples, ponderando as duas fontes de informação: <span class="math display">\[\begin{align*}
@@ -565,39 +563,39 @@ X-squared = 3.2409, df = 1, p-value = 0.07182</code></pre>
 ,\\
     \tilde{s}_t &amp;= \gamma (y_t - \tilde{\mu}_t) + (1-\gamma) \tilde{s}_{t-p}-\frac{\gamma}{p}(y_t-\tilde{\mu}_{t-1}-\tilde{s}_{t}).
     \end{align*}\]</span></p>
-<p>Como esperado, esse modelo pode ser reescrito na forma dse espaço estado, considerando o erro de previsão <span class="math inline">\(e_t=y_t-\tilde{\mu}_{t-1}-\tilde{b}_{t-1}-\tilde{s}_{t-p}\)</span>. As duas primeiras equações de estado são as mesmas do modelo de Holt: <span class="math display">\[\left(\begin{array}{c} \tilde{\mu}_t \\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 &amp; 1 \\ 0 &amp; 1\end{array}\right)\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c} \alpha \\ \alpha\beta\end{array}\right)e_t=G_{\hbox{Holt}}\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\psi_{\hbox{Holt}}e_t\]</span> Já a terceira equação do modelo, com a normalização de Roberts-McKenzie, pode ser escrita como <span class="math display">\[\tilde{s}_t=\tilde{s}_{t-p}+\gamma\left(1-\frac{1}{p}\right)e_t.\]</span> Note que essa mesma equação pode ser escrita como <span class="math display">\[\left(\begin{array}{c}\tilde{s}_t\\ \tilde{s}_{t-1} \\ \vdots \\ s_{t-p+1}\end{array}\right)=\underbrace{\left(\begin{array}{c} 0_{p-1&#39;} &amp; 1 \\ \textbf{I}_{p-1} &amp; 0_{p-1} \end{array}\right)}_{P}\left(\begin{array}{c}\tilde{s}_{t-1}\\ \tilde{s}_{t-2} \\ \vdots \\ s_{t-p}\end{array}\right)+\left(\begin{array}{c}1\\ 0 \\ \vdots \\ 0\end{array}\right)\gamma\left(1-\frac{1}{p}\right) e_t\]</span> A matriz <span class="math inline">\(P\)</span> dada acima é uma matriz do tipo permutação. Essa em particular coloca o elemento da última coordenada na primeira e faz com que todos os outros elementos seja alocados uma coordenada à frente. Fazendo <span class="math inline">\(\theta_0&#39;=(\tilde{\mu}_0,\tilde{b}_0,\tilde{s}_{1-p},\ldots,\tilde{s}_0)\)</span> teremos que o modelo de Holt-Winter com correção de Roberts-McKenzie na forma de espaço estado é dado por</p>
+<p>Como esperado, esse modelo pode ser reescrito na forma dse espaço estado, considerando o erro de previsão <span class="math inline">\(e_t=y_t-\tilde{\mu}_{t-1}-\tilde{b}_{t-1}-\tilde{s}_{t-p}\)</span>. As duas primeiras equações de estado são as mesmas do modelo de Holt: <span class="math display">\[\left(\begin{array}{c} \tilde{\mu}_t \\ \tilde{b}_t\end{array}\right)=\left(\begin{array}{cc}1 &amp; 1 \\ 0 &amp; 1\end{array}\right)\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c} \alpha \\ \alpha\beta\end{array}\right)e_t=G_{\hbox{Holt}}\left(\begin{array}{c} \tilde{\mu}_{t-1} \\ \tilde{b}_{t-1}\end{array}\right)+\psi_{\hbox{Holt}}e_t\]</span> Já a terceira equação do modelo, com a normalização de Roberts-McKenzie, pode ser escrita como <span class="math display">\[\tilde{s}_t=\tilde{s}_{t-p}+\gamma\left(1-\frac{1}{p}\right)e_t.\]</span> Note que essa mesma equação pode ser escrita como <span class="math display">\[\left(\begin{array}{c}\tilde{s}_t\\ \tilde{s}_{t-1} \\ \vdots \\ s_{t-p+1}\end{array}\right)=\underbrace{\left(\begin{array}{c} 0_{p-1'} &amp; 1 \\ \textbf{I}_{p-1} &amp; 0_{p-1} \end{array}\right)}_{P}\left(\begin{array}{c}\tilde{s}_{t-1}\\ \tilde{s}_{t-2} \\ \vdots \\ s_{t-p}\end{array}\right)+\left(\begin{array}{c}1\\ 0 \\ \vdots \\ 0\end{array}\right)\gamma\left(1-\frac{1}{p}\right) e_t\]</span> A matriz <span class="math inline">\(P\)</span> dada acima é uma matriz do tipo permutação. Essa em particular coloca o elemento da última coordenada na primeira e faz com que todos os outros elementos seja alocados uma coordenada à frente. Fazendo <span class="math inline">\(\theta_0'=(\tilde{\mu}_0,\tilde{b}_0,\tilde{s}_{1-p},\ldots,\tilde{s}_0)\)</span> teremos que o modelo de Holt-Winter com correção de Roberts-McKenzie na forma de espaço estado é dado por</p>
 <p><span class="math display">\[\begin{align}
 y_t&amp;=\left(\begin{array}{cc|cccc}1&amp;1&amp;1&amp;0&amp;\cdots&amp;0\end{array}\right)\theta_{t-1}+e_t\\
 \theta_t&amp;=\left(\begin{array}{cc}G_{\hbox{Holt}} &amp; 0_{2\times p}\\
 0_{p\times 2} &amp; P\end{array}\right)\theta_{t-1}+\left(\begin{array}{c}\alpha \\ \alpha\beta \\ \hline \gamma^*1_p \end{array}\right)e_t\end{align}\]</span> onde <span class="math inline">\(\gamma^*=\gamma(1-p^{-1})\)</span>.</p>
 </section>
-<section id="aplicação-para-a-série-co2" class="level3" data-number="9.5.2">
-<h3 data-number="9.5.2"><span class="header-section-number">9.5.2</span> Aplicação para a série <code>co2</code></h3>
+<section id="aplicação-para-a-série-co2" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="aplicação-para-a-série-co2"><span class="header-section-number">9.4.2</span> Aplicação para a série <code>co2</code></h3>
 <p>Considere novamente a série <code>co2</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">ets</span>(co2, <span class="at">model =</span> <span class="st">&#39;AAA&#39;</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">ets</span>(co2, <span class="at">model =</span> <span class="st">'AAA'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Abaixo, segue os gráfico da decomposição através do modelo de Holt-Winter com a normalização.</p>
 <div class="cell">
-<div class="sourceCode" id="cb29"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(co2, mod<span class="sc">$</span>states[,<span class="dv">1</span>][<span class="sc">-</span><span class="dv">1</span>], mod<span class="sc">$</span>states[,<span class="dv">2</span>][<span class="sc">-</span><span class="dv">1</span>], mod<span class="sc">$</span>states[,<span class="dv">3</span>][<span class="sc">-</span><span class="dv">1</span>])</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(x) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;Série original&#39;</span>,<span class="st">&#39;Nível&#39;</span>, <span class="st">&#39;Inclinação&#39;</span>,<span class="st">&#39;Sazonalidade&#39;</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(x)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(co2, mod<span class="sc">$</span>states[,<span class="dv">1</span>][<span class="sc">-</span><span class="dv">1</span>], mod<span class="sc">$</span>states[,<span class="dv">2</span>][<span class="sc">-</span><span class="dv">1</span>], mod<span class="sc">$</span>states[,<span class="dv">3</span>][<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(x) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'Nível'</span>, <span class="st">'Inclinação'</span>,<span class="st">'Sazonalidade'</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>A análise dos resíduos, mostrada abaixo, mostram que o modelo está bam ajustado ao conjunto de dados.</p>
 <div class="cell">
-<div class="sourceCode" id="cb30"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> mod<span class="sc">$</span>residuals</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> mod<span class="sc">$</span>residuals</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid" width="672" /></p>
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -605,7 +603,7 @@ y_t&amp;=\left(\begin{array}{cc|cccc}1&amp;1&amp;1&amp;0&amp;\cdots&amp;0\end{ar
 data:  res
 W = 0.99742, p-value = 0.6848</code></pre>
 </div>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Pierce test
@@ -614,17 +612,54 @@ data:  res
 X-squared = 2.8016, df = 1, p-value = 0.09417</code></pre>
 </div>
 </div>
-<div id="quarto-navigation-envelope" class="hidden">
-<p><span class="hidden" data-render-id="quarto-int-sidebar-title">Séries Temporais</span> <span class="hidden" data-render-id="quarto-int-navbar-title">Séries Temporais</span> <span class="hidden" data-render-id="quarto-int-next">References</span> <span class="hidden" data-render-id="quarto-int-prev"><span class="chapter-number">8</span>  <span class="chapter-title">Previsão para modelos lineares</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/index.html">Prefácio</span> <span class="hidden" data-render-id="quarto-int-sidebar:/intro.html"><span class="chapter-number">1</span>  <span class="chapter-title">Introdução</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/estacionaria.html"><span class="chapter-number">2</span>  <span class="chapter-title">Séries Estacionárias</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/acf.html"><span class="chapter-number">3</span>  <span class="chapter-title">Defasagens e autocorrelação</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/ts_window_date.html"><span class="chapter-number">4</span>  <span class="chapter-title">Criando séries no <code>R</code></span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/modelo_linear.html"><span class="chapter-number">5</span>  <span class="chapter-title">Revisão sobre o modelo linear</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/tendencia.html"><span class="chapter-number">6</span>  <span class="chapter-title">Tendência</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/sazonalidade.html"><span class="chapter-number">7</span>  <span class="chapter-title">Sazonalidade</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/tendencia_sazonalidade.html"><span class="chapter-number">8</span>  <span class="chapter-title">Previsão para modelos lineares</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/suave_exponencial.html"><span class="chapter-number">9</span>  <span class="chapter-title">Métodos de suavização exponencial</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/references.html">References</span> <span class="hidden" data-render-id="quarto-breadcrumbs-07743997edf81315bd69c61fb3dec573"><span class="chapter-number">9</span>  <span class="chapter-title">Métodos de suavização exponencial</span></span></p>
+</section>
+</section>
+<section id="modelo-de-holt-amortecido" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="modelo-de-holt-amortecido"><span class="header-section-number">9.5</span> Modelo de Holt amortecido</h2>
+<p>Considere que a previsão um passo à frente é dada por, <span class="math display">\[y_{t}(1)=\tilde{\mu}_{t-1}+\phi\tilde{b}_{t-1}=(1\;\;\phi)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)\]</span> onde <span class="math inline">\(\phi\in(0,1)\)</span> tem o objetivo de amortecer a tendência dada pelo método de Holt, criando um previsão não linear. Com isso, teremos <span class="math display">\[\begin{align}
+\tilde{\mu}_t &amp;= \alpha y_t + (1-\alpha)(\tilde{\mu}_{t-1} + \phi\tilde{b}_{t-1})\\
+\tilde{b}_t &amp;= \beta(\tilde{\mu}_{t} - \tilde{\mu}_{t-1})+(1-\beta) \phi\tilde{b}_{t-1}
+\end{align}\]</span> que por sua vez pode ser reescrita como <span class="math display">\[\begin{align}
+\left(\begin{array}{c}\tilde{\mu}_t\\ \tilde{b}_t\end{array}\right) &amp;= \left(\begin{array}{cc}1&amp;\phi\\ 0 &amp;\phi\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha_t\\ \alpha\beta\end{array}\right)e_t\end{align}\]</span> e, identificando a matriz acima com o termo <span class="math inline">\(\phi\)</span> como <span class="math inline">\(G\)</span>, teremos que <span class="math display">\[\hat{y}_{t}(h)=F'G^{h-1}\theta_{t}=\tilde{\mu}_t+(\phi+\cdots+\phi^h)\tilde{b}_t\]</span> Abaixo, segue um esboço dessa função para alguns valores de <span class="math inline">\(\phi.\)</span></p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="suave_exponencial_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
-<div id="quarto-meta-markdown" class="hidden">
-<p><span class="hidden" data-render-id="quarto-metatitle">Séries Temporais - <span class="chapter-number">9</span>  <span class="chapter-title">Métodos de suavização exponencial</span></span> <span class="hidden" data-render-id="quarto-twittercardtitle">Séries Temporais - <span class="chapter-number">9</span>  <span class="chapter-title">Métodos de suavização exponencial</span></span> <span class="hidden" data-render-id="quarto-ogcardtitle">Séries Temporais - <span class="chapter-number">9</span>  <span class="chapter-title">Métodos de suavização exponencial</span></span> <span class="hidden" data-render-id="quarto-metasitename">Séries Temporais</span> <span class="hidden" data-render-id="quarto-twittercarddesc"></span> <span class="hidden" data-render-id="quarto-ogcardddesc"></span></p>
 </div>
+</section>
+<section id="modelos-com-componentes-multiplicativas" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="modelos-com-componentes-multiplicativas"><span class="header-section-number">9.6</span> Modelos com componentes multiplicativas</h2>
+<section id="tendência-multiplicativa" class="level3" data-number="9.6.1">
+<h3 data-number="9.6.1" class="anchored" data-anchor-id="tendência-multiplicativa"><span class="header-section-number">9.6.1</span> Tendência multiplicativa</h3>
+<p>Suponha que <span class="math display">\[\hat{y}_t(h)=\tilde{\mu}_t\tilde{b}_t^h\]</span> o que implica que o logaritmo de <span class="math inline">\(y_t\)</span> possui tendência localmente linear. Podemos adaptar o método de Holt, suavizando, como de costume, <span class="math inline">\(\tilde{\mu}_t\)</span> por <span class="math display">\[\begin{align}\tilde{\mu}_t&amp;=\alpha y_t+(1-\alpha)\hat{y}_{t-1}(1)\\
+&amp;=\alpha\tilde{\mu}_{t}+(1-\alpha)\tilde{\mu}_{t-1}\tilde{b}_{t-1}\end{align}\]</span></p>
+<p>Além disso, como o logaritmo da tendência é localmente linear, teremos que <span class="math display">\[\log \tilde{\mu}_t-\log\tilde{\mu}_{t-1}\approx \log\tilde{b}_t\]</span> ou ainda <span class="math display">\[\tilde{b}_t\approx \frac{\tilde{\mu}_t}{\tilde{\mu}_{t-1}},\]</span> logo, considerando que <span class="math inline">\(\tilde{b}_t\approx \tilde{b}_{t-1}\)</span>, podemos suavizar <span class="math inline">\(b_t\)</span> do seguinte modo: <span class="math display">\[\tilde{b}_t=\beta\frac{\tilde{\mu}_t}{\tilde{\mu}_{t-1}}+(1-\beta)\tilde{b}_{t-1}.\]</span> Deste modo, o modelo com tendência multiplicativa é dado por <span class="math display">\[\begin{align}
+\tilde{\mu}_t&amp;=\alpha y_t+(1-\alpha)\tilde{\mu}_{t-1}\tilde{b}_{t-1}\\
+\tilde{b}_t&amp;=\beta\frac{\tilde{\mu}_t}{\tilde{\mu}_{t-1}}+(1-\beta)\tilde{b}_{t-1}
+\end{align}\]</span> e, na forma de modelo de espaço estado,</p>
+<p><span class="math display">\[\begin{align}
+y_t&amp;=\tilde{\mu}_{t-1}\tilde{b}_{t-1}+e_t\\
+\tilde{\mu}_t&amp;=\tilde{\mu}_{t-1}\tilde{b}_{t-1}+\alpha e_t\\
+\tilde{b}_t&amp;=\tilde{b}_{t-1}+\alpha\beta\frac{e_t}{\tilde{\mu}_{t-1}}
+\end{align}\]</span></p>
+<p>As estimativas de máxima verossimilhança para <span class="math inline">\(\tilde{\mu}_0,\alpha,\nu\)</span> são obtidas via maximização da função de verossimilhança, conforme visto na introdução. Já a distribuição da função de previsão</p>
+<p>Note que também existe uma versão deste modelo com o amortecedor. Supondo que <span class="math display">\[\log \hat{y}_t(h)=\log(\tilde{\mu}_{t-1})+(\phi+\cdots+\phi^h)\log\tilde{b}_{t-1}\]</span> teremos que a função de previsão com o amortecedor é dada por <span class="math display">\[\hat{y}_t(h)=\tilde{\mu}_{t-1}\tilde{b}_{t-1}^{(\phi+\cdots+\phi^h)}\]</span> que por sua vez possui a seguinte forma em espaço estado:</p>
+<p><span class="math display">\[\begin{align}
+y_t&amp;=\tilde{\mu}_{t-1}\tilde{b}_{t-1}^\phi+e_t\\
+\tilde{\mu}_t&amp;=\tilde{\mu}_{t-1}\tilde{b}_{t-1}^\phi+\alpha e_t\\
+\tilde{b}_t&amp;=\tilde{b}_{t-1}^\phi+\alpha\beta\frac{e_t}{\tilde{\mu}_{t-1}}
+\end{align}\]</span></p>
+</section>
+<section id="tendência-aditiva-e-sazonalidade-multiplicativa" class="level3" data-number="9.6.2">
+<h3 data-number="9.6.2" class="anchored" data-anchor-id="tendência-aditiva-e-sazonalidade-multiplicativa"><span class="header-section-number">9.6.2</span> Tendência aditiva e sazonalidade multiplicativa</h3>
+<p>teste</p>
+
+
 </section>
 </section>
 
 </main> <!-- /main -->
-<script id = "quarto-html-after-body" type="application/javascript">
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -859,18 +894,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a  href="/tendencia_sazonalidade.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class='chapter-number'>8</span>  <span class='chapter-title'>Previsão para modelos lineares</span></span>
+      <a href="./tendencia_sazonalidade.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Previsão para modelos lineares</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a  href="/references.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./processo_linear_geral.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modelos ARMA</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 
-</body>
 
-</html>
+
+</body></html>
