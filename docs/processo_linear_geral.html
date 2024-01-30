@@ -184,7 +184,10 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#o-polinômio-de-defasagens" id="toc-o-polinômio-de-defasagens" class="nav-link active" data-scroll-target="#o-polinômio-de-defasagens"><span class="header-section-number">10.1</span> O polinômio de defasagens</a></li>
-  <li><a href="#o-modelo-autorregressivo" id="toc-o-modelo-autorregressivo" class="nav-link" data-scroll-target="#o-modelo-autorregressivo"><span class="header-section-number">10.2</span> O modelo autorregressivo</a></li>
+  <li><a href="#o-modelo-autorregressivo" id="toc-o-modelo-autorregressivo" class="nav-link" data-scroll-target="#o-modelo-autorregressivo"><span class="header-section-number">10.2</span> O modelo autorregressivo</a>
+  <ul class="collapse">
+  <li><a href="#função-de-autocorrelação-para-o-arp" id="toc-função-de-autocorrelação-para-o-arp" class="nav-link" data-scroll-target="#função-de-autocorrelação-para-o-arp"><span class="header-section-number">10.2.1</span> Função de autocorrelação para o <span class="math inline">\(AR(p)\)</span>}</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -255,7 +258,7 @@ a(B)b(B)x_t&amp;=a(B)[(1-bB)x_t]=a(B)(x_t-bx_{t-1})\\
 <div class="proof">
 <p><span class="proof-title"><em>Proof</em>. </span>Faremos a demonstração para o caso <span class="math inline">\(p=2\)</span>, mas os mesmos passos podem ser seguidos para demonstrar o caso geral.</p>
 <p>Seja <span class="math display">\[y_t=x_t-\phi_1x_{t-1}-\phi_2 x_{t-2}=(1-\phi_1B-\phi_2 B^2)x_t.\]</span> Comecemos notando que</p>
-<p><span class="math display">\[\left(\begin{array}{c} x_t \\ x_{t-1}\end{array}\right)=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\left(\begin{array}{cc} \phi_1 &amp; \phi_2 \\ 1 &amp; 0\end{array}\right)\left(\begin{array}{c} x_{t-1} \\ x_{t-2}\end{array}\right)\]</span> Fazendo <span class="math inline">\(z_t=(x_t\;\;x_{t-1})\)</span>, teremos <span class="math display">\[z_t=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\underbrace{\left(\begin{array}{cc} \phi_1 &amp; \phi_2 \\ 1 &amp; 0\end{array}\right)}_{A}z_{t-1}.\]</span> Utilizando essa relação recursiva, teremos <span class="math display">\[z_t=A^t z_{0}+\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)\]</span> e, notando que <span class="math inline">\(x_t=(1\;\;0)z_t\)</span>, teremos <span class="math display">\[x_t=(1\;\;0)A^t z_{0}+(1\;\;0)\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)\]</span> Suponha que os autovalores de <span class="math inline">\(A\)</span> são, em módulo, maiores que um. Então, pela <a href="#prp-pgMatrix">Proposition&nbsp;<span class="quarto-unresolved-ref">prp-pgMatrix</span></a>, para <span class="math inline">\(t\)</span> suficientemente grande, <span class="math display">\[\begin{align}x_t&amp;=(1\;\;0)\sum_{j=1}^\infty A^j \left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)=(1\;\;0)\sum_{j=1}^\infty A^j B^j\left(\begin{array}{c} y_{t} \\ 0\end{array}\right)\\&amp;=\sum_{j=1}^\infty (1\;\;0)A^j B^j\left(\begin{array}{c} 1 \\ 0\end{array}\right)y_{t}=\phi^{-1}(B)y_t\end{align}\]</span> Agora, observe que os autovalores de <span class="math inline">\(A\)</span> são obtidos através da solução de<br>
+<p><span class="math display">\[\left(\begin{array}{c} x_t \\ x_{t-1}\end{array}\right)=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\left(\begin{array}{cc} \phi_1 &amp; \phi_2 \\ 1 &amp; 0\end{array}\right)\left(\begin{array}{c} x_{t-1} \\ x_{t-2}\end{array}\right)\]</span> Fazendo <span class="math inline">\(z_t=(x_t\;\;x_{t-1})\)</span>, teremos <span class="math display">\[z_t=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\underbrace{\left(\begin{array}{cc} \phi_1 &amp; \phi_2 \\ 1 &amp; 0\end{array}\right)}_{A}z_{t-1}.\]</span> Utilizando essa relação recursiva, teremos <span class="math display">\[z_t=A^t z_{0}+\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)\]</span> e, notando que <span class="math inline">\(x_t=(1\;\;0)z_t\)</span>, teremos <span class="math display">\[x_t=(1\;\;0)A^t z_{0}+(1\;\;0)\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)\]</span> Suponha que os autovalores de <span class="math inline">\(A\)</span> são, em módulo, maiores que um. Então, pela <a href="#prp-pgMatrix">Proposition&nbsp;<span>10.1</span></a>, para <span class="math inline">\(t\)</span> suficientemente grande, <span class="math display">\[\begin{align}x_t&amp;=(1\;\;0)\sum_{j=1}^\infty A^j \left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)=(1\;\;0)\sum_{j=1}^\infty A^j B^j\left(\begin{array}{c} y_{t} \\ 0\end{array}\right)\\&amp;=\sum_{j=1}^\infty (1\;\;0)A^j B^j\left(\begin{array}{c} 1 \\ 0\end{array}\right)y_{t}=\phi^{-1}(B)y_t\end{align}\]</span> Agora, observe que os autovalores de <span class="math inline">\(A\)</span> são obtidos através da solução de<br>
 <span class="math display">\[\begin{align}0=&amp;\left|\left(\begin{array}{cc}\phi_1 &amp; \phi_2 \\ 1 &amp; 0\end{array}\right)-\lambda \textbf{I}\right|-\lambda(\phi_1-\lambda)-\phi_2\\&amp;=\lambda^2-\lambda \phi_1-\phi_2\\
 &amp;=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\end{align}\]</span> Fazendo <span class="math inline">\(\lambda = 1/B\)</span>, teremos que a equação acima se torna <span class="math display">\[0=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\equiv 1-\phi_1 B-\phi_2B^2=\phi(B)\]</span> logo, se o módulo das raízes de <span class="math inline">\(\phi(B)\)</span> são maiores que um, então o módulo dos autovalores de <span class="math inline">\(A\)</span> são menores que um e, portanto, existe <span class="math inline">\(\phi^{-1}(B)\)</span>.</p>
 </div>
@@ -264,7 +267,7 @@ a(B)b(B)x_t&amp;=a(B)[(1-bB)x_t]=a(B)(x_t-bx_{t-1})\\
 <h2 data-number="10.2" class="anchored" data-anchor-id="o-modelo-autorregressivo"><span class="header-section-number">10.2</span> O modelo autorregressivo</h2>
 <p>O modelo autorregressivo de ordem <span class="math inline">\(p\)</span>, ou <span class="math inline">\(AR(p)\)</span>, é dado por <span class="math display">\[\begin{equation}
         y_t = \sum_{i=1}^{p}\phi_iy_{t-i} +\varepsilon_t
-\end{equation}\]</span> onde <span class="math inline">\(\{\varepsilon_t\}\)</span> é um ruído branco, tipicamente Normal<span class="math inline">\((0,\nu)\)</span>. Neste modelo, a contribuição da observação <span class="math inline">\(y_{t-j}\)</span> em <span class="math inline">\(y_t\)</span> é dada por <span class="math inline">\(\phi_j\)</span>, que é invariante no tempo.</p>
+\end{equation}\]</span> onde <span class="math inline">\(\{\varepsilon_t\}\)</span> é um ruído branco, tipicamente Normal<span class="math inline">\((0,\nu)\)</span>. Nesse modelo, a contribuição da observação <span class="math inline">\(y_{t-j}\)</span> em <span class="math inline">\(y_t\)</span> é dada por <span class="math inline">\(\phi_j\)</span>, que é invariante no tempo.</p>
 <p>Utilizando o polinômio de defasagens, pode-se escrever o modelo AR(<span class="math inline">\(p\)</span>) como <span class="math display">\[\begin{equation}
         \phi(B)y_t = \varepsilon_t,
 \end{equation}\]</span> onde <span class="math inline">\(\phi(B)=1-B\phi_1-\cdots \phi_p B^p\)</span>. Se o módulo das raízes desse polinômio são maiores que um, então existe <span class="math inline">\(\phi^{-1}(B)\)</span>, ou seja <span class="math display">\[y_t=\phi^{-1}(B)\varepsilon_t=\left(\sum_{j=1}^\infty \psi_jB^j\right)\varepsilon_t\]</span> e o processo será estacionário, com média e variância iguais à <span class="math display">\[\begin{align}E(y_t)&amp;=\left(\sum_{j=1}^\infty \psi_jB^j\right)E(\varepsilon_t)=0\\
@@ -280,11 +283,65 @@ Var(y_t)&amp;=Var\left(\sum_{j=1}^\infty \psi_jB^j\varepsilon_t\right)=\nu\sum_{
 <p>Seja <span class="math inline">\(\dot{B}\)</span> a raiz do polinômio <span class="math inline">\(1-B\phi\)</span>. Temos que <span class="math display">\[\begin{align*}
     \phi(\dot{B})=0\Rightarrow 1-\phi \dot{B} =0 \Rightarrow \dot{B} =\frac{1}{\phi}
 \end{align*}\]</span></p>
-<p>Logo, o processo AR(1) é estacionário se <span class="math display">\[|\dot{B}|&gt;1\Rightarrow \left|\frac{1}{\phi}\right|&gt;1\Rightarrow |\phi|&lt; 1\]</span> Nesse caso, já vimos que <span class="math inline">\(\phi^{-1}(B)=1-\sum_{j=1}^\infty\phi^j B^j\)</span>. Então, pela equação (<a href="#eq-covariancia">Equation&nbsp;<span class="quarto-unresolved-ref">eq-covariancia</span></a>), identificando <span class="math inline">\(\psi_^_j=\phi^j\)</span>,teremos que</p>
+<p>Logo, o processo AR(1) é estacionário se <span class="math display">\[|\dot{B}|&gt;1\Rightarrow \left|\frac{1}{\phi}\right|&gt;1\Rightarrow |\phi|&lt; 1\]</span> Nesse caso, já vimos que <span class="math inline">\(\phi^{-1}(B)=1-\sum_{j=1}^\infty\phi^j B^j\)</span>. Então, pela equação (<a href="#eq-covariancia">Equation&nbsp;<span>10.1</span></a>), identificando <span class="math inline">\(\psi_j=\phi^j\)</span>,teremos que</p>
 <p><span class="math display">\[\gamma(h)=\nu\sum_{j=1}^\infty \phi^j\phi^{j+h}=\nu\phi^h\frac{\phi^2}{1-\phi^2} \]</span> Assim, a função de autocorrelação é dada por <span class="math display">\[\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi^h.\]</span></p>
+<p>Note que:</p>
+<ul>
+<li><p>Se <span class="math inline">\(\phi\in(0,1)\)</span>, então <span class="math inline">\(\rho(h)\)</span> decai exponencialmente para zero</p></li>
+<li><p>Se <span class="math inline">\(\in(-1,0)\)</span>, então <span class="math inline">\(\rho(h)\)</span> decai exponencialmente para zero, mas alternando o sinal.</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
+</div>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.5 </strong></span>Considere que <span class="math inline">\(x_t\)</span> é um AR(<span class="math inline">\(2\)</span>), ou seja, <span class="math display">\[x_t=\phi_1 x_{t-1}+\phi_2 x_{t-2}+\varepsilon_t=\phi(B)\varepsilon_t,\]</span> onde <span class="math inline">\(\phi(B)=1-\phi_1B-\phi_2 B^2\)</span>. As raízes desse polinômio são <span class="math display">\[\dot{B}=\frac{1}{2\phi_2}\left[\phi_1\pm\sqrt{\phi_1^2+4\phi_2}\right]\]</span> e, considerando que <span class="math inline">\(|\dot{B}|&gt;1\)</span>, o processo será estacionário se <span class="math inline">\((\phi_1,\phi_2)\)</span> pertence ao triângulo delimitado pelos vértices (-2,-1), (0,1), (2,-1). É interessante notarmos que, se <span class="math inline">\(\phi_2&lt;0\)</span>, as raízes de <span class="math inline">\(\phi(B)\)</span> serão um par de números complexos conjugados.</p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<section id="função-de-autocorrelação-para-o-arp" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="função-de-autocorrelação-para-o-arp"><span class="header-section-number">10.2.1</span> Função de autocorrelação para o <span class="math inline">\(AR(p)\)</span>}</h3>
+<p>Consideremos o processo <span class="math display">\[x_t = \sum_{j=1}^p\phi_j x_{t-j}+\varepsilon_t.\]</span> e suponha que ele é estacionário. Multiplicando ambos os lados por <span class="math inline">\(x_{t-h}\)</span> e aplicando a esperança, teremos <span class="math display">\[\begin{align}
+E(x_{t-h}x_t)&amp;=\sum_{j=1}^p \phi_j E(x_{t-h}x_{
+t-j})
+\end{align}\]</span> e, como <span class="math inline">\(\gamma(h)=E(x_t x_{t-h})\)</span>, teremos <span class="math display">\[\begin{align}
+\gamma(h)&amp;=\sum_{j=1}^p \phi_j \gamma(h-j)
+\end{align}\]</span> Dividindo ambos os lados por <span class="math inline">\(\gamma(0)\)</span>, teremos <span class="math display">\[\begin{align}
+\rho(h)&amp;=\sum_{j=1}^p \phi_j \rho(h-j)
+\end{align}\]</span> Essa relação pode ser utilizada para encontrar a função de autocorrelação do processo sem a necessidade de encontrar a inversa de <span class="math inline">\(\phi(B)\)</span>.</p>
+<div class="{exm-}">
+<p>Considere o processo <span class="math inline">\(AR(2)\)</span> abaixo: <span class="math display">\[x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon_t.\]</span> Multiplicando a equação acima por <span class="math inline">\(x_{t-1}\)</span> em ambos os lados teremos <span class="math display">\[x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon_t x_{t-1}.\]</span> Calculando o valor esperado, temos <span class="math display">\[\begin{align*}
+    \gamma(1)&amp;=\phi_1E(x_{t-1}^2)+\phi_2E(x_{t-2}x_{t-1})+E(\varepsilon_t x_{t-1})\\
+    &amp;=\phi_1\gamma(0) + \phi_2\gamma(1).
+    \end{align*}\]</span> Dividindo ambos os lados por <span class="math inline">\(\gamma(0)\)</span> teremos <span class="math display">\[\rho(1)=\phi_1+\phi_2\rho(1),\]</span> logo, <span class="math display">\[\rho(1)=\frac{\phi_1}{1-\phi_2}
+\]</span></p>
+<p>De modo análogo, teremos <span class="math display">\[x_{t-2} x_{t}=x_{t-2}\left(\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon_{t}\right).\]</span> Aplicando a esperança, teremos <span class="math display">\[\begin{align*}
+    \gamma(2)&amp;=\phi_1 \gamma(1)+\phi_2\gamma(0).
+    \end{align*}\]</span> e dividindo os dois lados por <span class="math inline">\(\gamma(0)\)</span> teremos<br>
+<span class="math display">\[\rho(2)=\phi_1\rho(1)+\phi_2=\frac{\phi_1^2}{1-\phi_2}+\phi_2\]</span> Com os valores de <span class="math inline">\(\rho(1)\)</span> e <span class="math inline">\(\rho(2)\)</span>, podemos encontrar <span class="math inline">\(\rho(3)\)</span>:</p>
+<p><span class="math display">\[\rho(3)=\phi_1\rho(2)+\phi_2\rho(1)\]</span> e assim sucessivamente.</p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>Em geral, a função de autocorrelação do processo AR(<span class="math inline">\(p\)</span>) pode ser escrita como</p>
+<p><span class="math display">\[\rho(h)=\sum_{j=1}^p c_j\left(\frac{1}{\dot{B}_j}\right)^h\]</span> onde <span class="math inline">\(\dot{B}\)</span>, novamente, é a raiz de <span class="math inline">\(\phi(B)=1-\sum_{j=1}^p \phi_j B^j\)</span>.</p>
+<p>Vamos mostrar esse resultado para o caso <span class="math inline">\(p=2\)</span> (o caso geral é análogo). Teremos que</p>
+<p><span class="math display">\[\begin{align}
+\left(\begin{array}{c}\rho(h)\\ \rho(h-1)\end{array}\right)=\left(\begin{array}{cc}\phi_1 &amp; \phi_2 \\ 1 &amp; 0 \end{array}\right)\end{align}\]</span></p>
+<pre><code>Segue que a solução geral da Equação (\ref{eq::acf_arp}), é dada por 
+$$\rho(h)=\sum_{j=1}^{p}\alpha_j^h c_j$$
+onde $\alpha_j=\ell_j^{-1}$ e $c_j$ é um polinômio com grau igual a multiplicidade da raiz menos um.
+
+Notas:
+\begin{itemize}
+    \item As raízes reais se comportam de acordo com o que já foi visto no $AR(1)$.
+    \item As raízes complexas tem comportamento sazonal decaindo exponencialmente. 
+\end{itemize}</code></pre>
+<p>\end{frame}</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

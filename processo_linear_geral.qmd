@@ -122,7 +122,7 @@ O modelo autorregressivo de ordem $p$, ou $AR(p)$, é dado por
 $$\begin{equation}
     	y_t = \sum_{i=1}^{p}\phi_iy_{t-i} +\varepsilon_t
 \end{equation}$$
-onde $\{\varepsilon_t\}$ é um ruído branco, tipicamente Normal$(0,\nu)$. Neste modelo, a contribuição da observação $y_{t-j}$ em $y_t$ é dada por $\phi_j$, que é invariante no tempo.
+onde $\{\varepsilon_t\}$ é um ruído branco, tipicamente Normal$(0,\nu)$. Nesse modelo, a contribuição da observação $y_{t-j}$ em $y_t$ é dada por $\phi_j$, que é invariante no tempo.
 
 Utilizando o polinômio de defasagens, pode-se escrever o modelo AR($p$) como
 $$\begin{equation}
@@ -154,135 +154,115 @@ $$\begin{align*}
 Logo, o processo AR(1) é estacionário se 
 	$$|\dot{B}|>1\Rightarrow \left|\frac{1}{\phi}\right|>1\Rightarrow |\phi|< 1$$
 Nesse caso, já vimos que $\phi^{-1}(B)=1-\sum_{j=1}^\infty\phi^j B^j$.
-Então, pela equação (@eq-covariancia), identificando $\psi_^_j=\phi^j$,teremos que
+Então, pela equação (@eq-covariancia), identificando $\psi_j=\phi^j$,teremos que
 
 $$\gamma(h)=\nu\sum_{j=1}^\infty \phi^j\phi^{j+h}=\nu\phi^h\frac{\phi^2}{1-\phi^2} $$
 Assim, a função de autocorrelação é dada por
 $$\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi^h.$$
 
-:::
-
-
-\begin{frame}{Função de autocorrelação para o $AR(1)$ }
-	
-	A partir deste momento, vamos supor que as condições de estacionaridade estão satisfeitas. Sabemos que
-	$$x_{t}= \phi x_{t-1}+\varepsilon_t.$$
-	Multiplicando os dois lados da equação acima por $x_{t-1}$ teremos
-	$$x_{t}x_{t-1}= \phi x_{t-1}^2+x_{t-1}\varepsilon_t.$$
-	Aplicando a esperança dos dois lados da equação teremos
-	$$E(x_{t}x_{t-1})= \phi E(x_{t-1}^2)+E(x_{t-1})E(\varepsilon_t).$$
-	Reconhecendo o lado esquerdo como a auto covariância (defasagem 1), e $E(x_{t-1}^2)=\gamma(0)$ temos que
-	$$\gamma(1)= \phi \gamma(0).$$
-	e 
-	$$\rho(1)=\frac{\gamma(1)}{\gamma(0)}=\phi.$$
-Note então que um processo autorregressivo de ordem 1 pode ser identificado pela sua função de autocorrelação:
+Note que:
 
 - Se $\phi\in(0,1)$, então $\rho(h)$ decai exponencialmente para zero
 
 - Se $\in(-1,0)$, então $\rho(h)$ decai exponencialmente para zero, mas alternando o sinal. 
+```{r echo = FALSE}
+op <- par( mfrow = c(2,2)) 
+plot( 0:10, .3^(0:10), type = 'h', lwd = 2, 
+      xlab = 'Defasagem' , ylab = 'Autocorrelação')
+text(5,.8,expression(phi==0.3))
+abline( h= 0)
+plot( 0:10, .8^(0:10), type = 'h', lwd = 2, 
+      xlab = 'Defasagem' , ylab = 'Autocorrelação')
+text(5,.8,expression(phi==0.8))
+abline( h= 0)
+plot( 0:10, (-.3)^(0:10), type = 'h', lwd = 2, 
+      xlab = 'Defasagem' , ylab = 'Autocorrelação')
+text(5,.8,expression(phi==-0.3))
+abline( h= 0)
+plot( 0:10, (-.8)^(0:10), type = 'h', lwd = 2, 
+      xlab = 'Defasagem' , ylab = 'Autocorrelação')
+text(5,.8,expression(phi==-0.8))
+abline( h= 0)
 
-\end{frame}
-
-\begin{frame}	
-	Note que é possível obter a autocorrelação de defasagem 2 a partir do resultado  anterior. Primeiro, multiplique a
-	equação do modelo AR(1) por $x_{t-2}$ dos dois lados:
-		$$x_{t}x_{t-2}= \phi x_{t-1}x_{t-2} + x_{t-2}\varepsilon_t.$$
-	Agora, aplique a esperança dos dois lados	
-	$$E(x_{t}x_{t-2})= \phi E(x_{t-1}x_{t-2}) + E(x_{t-2}\varepsilon_t).$$
-	Reconhecendo o lado esquerdo como a auto covariância de defasagem 2, temos que
-	$$\gamma(2)= \phi \gamma(1).$$
-	Mas $\gamma(1)=\gamma(0)\phi$. Portanto,
-	$\gamma(2)= \phi^2 \gamma(0),$
-	e
-	$$\rho(2)= \phi^2,$$
-\end{frame}
-
-\begin{frame}
-	Suponha que (hipótese de indução)
-	$$\gamma(h-1)=\phi^{h-1}\nu.$$
-	Multiplicando os dois lados a equação do $AR(1)$ por $x_{t-h}$ temos
-	$$x_t x_{t-h}= \phi x_{t-1}x_{t-h} + x_{t-h}\varepsilon_t$$
-	e aplicando a esperança temos
-	$$E(x_t x_{t-h})= \phi E(x_{t-1}x_{t-h}) + E(x_{t-h}\varepsilon_t).$$
-	A primeira esperança é $\gamma(h)$ e a segunda é $\gamma(h-1)$. Portanto
-	$$\gamma(h)=\phi\gamma(h-1)=\phi\times \phi^{h-1} \gamma(0) = \phi^h \gamma(0).$$
-	Portanto, a hipótese de indução é verdadeira e
-	$$\rho(h)=\phi^h.$$
-\end{frame}
-
-\begin{frame}
-	Como a série é estacionária, temos que $|\phi|<1$.  Isto implica que
-	\begin{itemize}
-		\item O correlograma deve cai rapidamente para 0.
-		\item Se $\phi>0$ a queda no correlograma é exponencial.
-		\item Se $\phi<0$ a queda também é exponencial, mas o sinal das autocorrelações se alternam.
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-\begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{FigurasAulas/acf_ar1_parte1}
-\caption{Função de autocorrelação teórica para alguns valores de $\phi$.}
-\label{fig:acf_ar1_parte1}
-\end{figure}
-\end{frame}
-
-\begin{frame}
-	\begin{figure}
-		\centering
-		\includegraphics[width=1\linewidth]{FigurasAulas/acf_ar1_parte2}
-		\caption{Função de autocorrelação teórica para alguns valores de $\phi$.}
-		\label{fig:acf_ar1_parte2}
-	\end{figure}
-\end{frame}
+```
+$\blacksquare$
+:::
 
 
+:::{#exm-}
+Considere que $x_t$ é um AR($2$), ou seja,
+$$x_t=\phi_1 x_{t-1}+\phi_2 x_{t-2}+\varepsilon_t=\phi(B)\varepsilon_t,$$
+onde $\phi(B)=1-\phi_1B-\phi_2 B^2$. As raízes desse polinômio são
+$$\dot{B}=\frac{1}{2\phi_2}\left[\phi_1\pm\sqrt{\phi_1^2+4\phi_2}\right]$$
+e, considerando que $|\dot{B}|>1$, o processo será estacionário se $(\phi_1,\phi_2)$ pertence ao triângulo delimitado pelos vértices (-2,-1), (0,1), (2,-1). É interessante notarmos que, se $\phi_2<0$, as raízes de $\phi(B)$ serão um par de números complexos conjugados. 
 
-\begin{frame}{Função de autocorrelação para o $AR(p)$}
-	Consideremos o processo 
+$\blacksquare$
+:::
+
+### Função de autocorrelação para o $AR(p)$}
+Consideremos o processo 
 	$$x_t = \sum_{j=1}^p\phi_j x_{t-j}+\varepsilon_t.$$
-	Multiplicando ambos os lados por $x_{t-h}$, com $h>p$, calculando as esperanças e dividindo por $\nu$ teremos
-	\begin{equation}
-	\rho(h)=\sum_{j=1}^p\phi_j \rho(h-j).\label{eq::acf_arp}
-	\end{equation}
-		Obtendo $\rho(1),\ldots,\rho(p)$ as demais autocorrelações podem ser obtidas recursivamente.
-\end{frame}
+e suponha que ele é estacionário. Multiplicando ambos os lados por $x_{t-h}$ e aplicando a esperança, teremos
+$$\begin{align}
+E(x_{t-h}x_t)&=\sum_{j=1}^p \phi_j E(x_{t-h}x_{
+t-j})
+\end{align}$$
+e, como $\gamma(h)=E(x_t x_{t-h})$, teremos
+$$\begin{align}
+\gamma(h)&=\sum_{j=1}^p \phi_j \gamma(h-j)
+\end{align}$$
+Dividindo ambos os lados por $\gamma(0)$, teremos
+$$\begin{align}
+\rho(h)&=\sum_{j=1}^p \phi_j \rho(h-j)
+\end{align}$$
+Essa relação pode ser utilizada para encontrar a função de autocorrelação do processo sem a necessidade de encontrar a inversa de $\phi(B)$.
 
+:::{exm-}
 
-
-\begin{frame}{Exemplo: autocorrelação para o $AR(2)$}
-	Considere o processo $AR(2)$ abaixo:
-	$$x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon.$$
+Considere o processo $AR(2)$ abaixo:
+	$$x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon_t.$$
 	Multiplicando a equação acima por $x_{t-1}$ em ambos os lados teremos
-	$$x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon x_{t-1}.$$
-	Calculando o valor esperado, temos
-	\begin{align*}
-	\gamma(1)&=\phi_1E(x_{t-1}^2)+\phi_2E(x_{t-2}x_{t-1})+E(\varepsilon x_{t-1})\\
+	$$x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon_t x_{t-1}.$$
+Calculando o valor esperado, temos
+$$\begin{align*}
+	\gamma(1)&=\phi_1E(x_{t-1}^2)+\phi_2E(x_{t-2}x_{t-1})+E(\varepsilon_t x_{t-1})\\
 	&=\phi_1\gamma(0) + \phi_2\gamma(1).
-	\end{align*}
-	Portanto,
-	$$\rho(1)=\frac{\gamma(1)}{\gamma(0)}=\frac{\phi_1}{1-\phi_2}.$$
-\end{frame}
+	\end{align*}$$
+Dividindo ambos os lados por $\gamma(0)$ teremos		$$\rho(1)=\phi_1+\phi_2\rho(1),$$
+logo,
+$$\rho(1)=\frac{\phi_1}{1-\phi_2}
+$$
 
-\begin{frame}
-	De modo análogo, teremos
-	$$x_{t-2}\times x_{t}=x_{t-2}\left(\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon y_{t-1}\right).$$
-	Aplicando a esperança, teremos
-	\begin{align*}
-	\gamma(2)&=\phi_1 \gamma(1)+\phi_2\gamma(0) = \phi_1 \frac{\gamma(0)}{1-\phi_2}+\phi_2\gamma(0)
-	\end{align*}
-	e
-	$$\rho(2)=\frac{\phi_1^2}{1-\phi_2} + \phi_2.$$
-\end{frame}
+De modo análogo, teremos
+	$$x_{t-2} x_{t}=x_{t-2}\left(\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon_{t}\right).$$
+Aplicando a esperança, teremos
+$$\begin{align*}
+	\gamma(2)&=\phi_1 \gamma(1)+\phi_2\gamma(0).
+	\end{align*}$$
+e dividindo os dois lados por $\gamma(0)$ teremos	
+	$$\rho(2)=\phi_1\rho(1)+\phi_2=\frac{\phi_1^2}{1-\phi_2}+\phi_2$$
+Com os valores de $\rho(1)$ e $\rho(2)$, podemos encontrar $\rho(3)$:
+
+$$\rho(3)=\phi_1\rho(2)+\phi_2\rho(1)$$
+e assim sucessivamente.
+
+$\blacksquare$
+:::
+
+Em geral, a função de autocorrelação do processo AR($p$) pode ser escrita como
+
+$$\rho(h)=\sum_{j=1}^p c_j\left(\frac{1}{\dot{B}_j}\right)^h$$
+onde $\dot{B}$, novamente, é a raiz de $\phi(B)=1-\sum_{j=1}^p \phi_j B^j$. 
+
+Vamos mostrar esse resultado para o caso $p=2$ (o caso geral é análogo). Teremos que
 
 
-\begin{frame}
-	Utilizando a Equação (\ref{eq::acf_arp}) podemos obter as próximas autocorrelações. Por exemplo
-	$$\rho(3) = \phi_1\rho(2)+ \phi_2\rho(1)= \frac{\phi_1^3}{1-\phi_2} + \phi_1\phi_2\left(1 + \frac{1}{1-\phi_2}\right).$$	
-\end{frame}
 
-\begin{frame}{Comportamento das autocorrelações em um $AR(p)$}
+$$\begin{align}
+\left(\begin{array}{c}\rho(h)\\ \rho(h-1)\end{array}\right)=\left(\begin{array}{cc}\phi_1 & \phi_2 \\ 1 & 0 \end{array}\right)\end{align}$$
+
+
+
 	Segue que a solução geral da Equação (\ref{eq::acf_arp}), é dada por 
 	$$\rho(h)=\sum_{j=1}^{p}\alpha_j^h c_j$$
 	onde $\alpha_j=\ell_j^{-1}$ e $c_j$ é um polinômio com grau igual a multiplicidade da raiz menos um.
