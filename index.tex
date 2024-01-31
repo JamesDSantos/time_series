@@ -182,14 +182,14 @@
 \floatname{codelisting}{Listing}
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
 \theoremstyle{definition}
 \newtheorem{example}{Example}[chapter]
-\theoremstyle{plain}
-\newtheorem{proposition}{Proposition}[chapter]
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[chapter]
 \theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
 \theoremstyle{remark}
 \AtBeginDocument{\renewcommand*{\proofname}{Proof}}
 \newtheorem*{remark}{Remark}
@@ -231,7 +231,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, boxrule=0pt, interior hidden, frame hidden, sharp corners, enhanced, borderline west={3pt}{0pt}{shadecolor}]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, borderline west={3pt}{0pt}{shadecolor}, sharp corners, breakable, frame hidden, enhanced, boxrule=0pt]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -4707,7 +4707,7 @@ O modelo autorregressivo de ordem \(p\), ou \(AR(p)\), é dado por
 \[\begin{equation}
         y_t = \sum_{i=1}^{p}\phi_iy_{t-i} +\varepsilon_t
 \end{equation}\] onde \(\{\varepsilon_t\}\) é um ruído branco,
-tipicamente Normal\((0,\nu)\). Neste modelo, a contribuição da
+tipicamente Normal\((0,\nu)\). Nesse modelo, a contribuição da
 observação \(y_{t-j}\) em \(y_t\) é dada por \(\phi_j\), que é
 invariante no tempo.
 
@@ -4742,404 +4742,567 @@ Logo, o processo AR(1) é estacionário se
 \[|\dot{B}|>1\Rightarrow \left|\frac{1}{\phi}\right|>1\Rightarrow |\phi|< 1\]
 Nesse caso, já vimos que \(\phi^{-1}(B)=1-\sum_{j=1}^\infty\phi^j B^j\).
 Então, pela equação (Equation~\ref{eq-covariancia}), identificando
-\(\psi_^_j=\phi^j\),teremos que
+\(\psi_j=\phi^j\),teremos que
 
 \[\gamma(h)=\nu\sum_{j=1}^\infty \phi^j\phi^{j+h}=\nu\phi^h\frac{\phi^2}{1-\phi^2} \]
 Assim, a função de autocorrelação é dada por
 \[\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi^h.\]
 
+Note que:
+
+\begin{itemize}
+\item
+  Se \(\phi\in(0,1)\), então \(\rho(h)\) decai exponencialmente para
+  zero
+\item
+  Se \(\in(-1,0)\), então \(\rho(h)\) decai exponencialmente para zero,
+  mas alternando o sinal.
+\end{itemize}
+
+\includegraphics{processo_linear_geral_files/figure-pdf/unnamed-chunk-1-1.pdf}
+
+\(\blacksquare\)
+
 \end{example}
 
-\begin{frame}{Função de autocorrelação para o $AR(1)$ }
-    
-    A partir deste momento, vamos supor que as condições de estacionaridade estão satisfeitas. Sabemos que
-    $$x_{t}= \phi x_{t-1}+\varepsilon_t.$$
-    Multiplicando os dois lados da equação acima por $x_{t-1}$ teremos
-    $$x_{t}x_{t-1}= \phi x_{t-1}^2+x_{t-1}\varepsilon_t.$$
-    Aplicando a esperança dos dois lados da equação teremos
-    $$E(x_{t}x_{t-1})= \phi E(x_{t-1}^2)+E(x_{t-1})E(\varepsilon_t).$$
-    Reconhecendo o lado esquerdo como a auto covariância (defasagem 1), e $E(x_{t-1}^2)=\gamma(0)$ temos que
-    $$\gamma(1)= \phi \gamma(0).$$
-    e 
-    $$\rho(1)=\frac{\gamma(1)}{\gamma(0)}=\phi.$$
-Note então que um processo autorregressivo de ordem 1 pode ser identificado pela sua função de autocorrelação:
+\begin{example}[]\protect\hypertarget{exm-}{}\label{exm-}
 
-- Se $\phi\in(0,1)$, então $\rho(h)$ decai exponencialmente para zero
+Considere que \(x_t\) é um AR(\(2\)), ou seja,
+\[x_t=\phi_1 x_{t-1}+\phi_2 x_{t-2}+\varepsilon_t=\phi(B)\varepsilon_t,\]
+onde \(\phi(B)=1-\phi_1B-\phi_2 B^2\). As raízes desse polinômio são
+\[\dot{B}=\frac{1}{2\phi_2}\left[\phi_1\pm\sqrt{\phi_1^2+4\phi_2}\right]\]
+e, considerando que \(|\dot{B}|>1\), o processo será estacionário se
+\((\phi_1,\phi_2)\) pertence ao triângulo delimitado pelos vértices
+(-2,-1), (0,1), (2,-1). É interessante notarmos que, se \(\phi_2<0\), é
+possível que as raízes de \(\phi(B)\) sejam um par de números complexos
+conjugados.
 
-- Se $\in(-1,0)$, então $\rho(h)$ decai exponencialmente para zero, mas alternando o sinal. 
+\(\blacksquare\)
 
-\end{frame}
+\end{example}
 
-\begin{frame}   
-    Note que é possível obter a autocorrelação de defasagem 2 a partir do resultado  anterior. Primeiro, multiplique a
-    equação do modelo AR(1) por $x_{t-2}$ dos dois lados:
-        $$x_{t}x_{t-2}= \phi x_{t-1}x_{t-2} + x_{t-2}\varepsilon_t.$$
-    Agora, aplique a esperança dos dois lados   
-    $$E(x_{t}x_{t-2})= \phi E(x_{t-1}x_{t-2}) + E(x_{t-2}\varepsilon_t).$$
-    Reconhecendo o lado esquerdo como a auto covariância de defasagem 2, temos que
-    $$\gamma(2)= \phi \gamma(1).$$
-    Mas $\gamma(1)=\gamma(0)\phi$. Portanto,
-    $\gamma(2)= \phi^2 \gamma(0),$
-    e
-    $$\rho(2)= \phi^2,$$
-\end{frame}
+\hypertarget{funuxe7uxe3o-de-autocorrelauxe7uxe3o-para-o-arp}{%
+\subsection{\texorpdfstring{Função de autocorrelação para o
+\(AR(p)\)}{Função de autocorrelação para o AR(p)}}\label{funuxe7uxe3o-de-autocorrelauxe7uxe3o-para-o-arp}}
 
-\begin{frame}
-    Suponha que (hipótese de indução)
-    $$\gamma(h-1)=\phi^{h-1}\nu.$$
-    Multiplicando os dois lados a equação do $AR(1)$ por $x_{t-h}$ temos
-    $$x_t x_{t-h}= \phi x_{t-1}x_{t-h} + x_{t-h}\varepsilon_t$$
-    e aplicando a esperança temos
-    $$E(x_t x_{t-h})= \phi E(x_{t-1}x_{t-h}) + E(x_{t-h}\varepsilon_t).$$
-    A primeira esperança é $\gamma(h)$ e a segunda é $\gamma(h-1)$. Portanto
-    $$\gamma(h)=\phi\gamma(h-1)=\phi\times \phi^{h-1} \gamma(0) = \phi^h \gamma(0).$$
-    Portanto, a hipótese de indução é verdadeira e
-    $$\rho(h)=\phi^h.$$
-\end{frame}
+Consideremos o processo
+\[x_t = \sum_{j=1}^p\phi_j x_{t-j}+\varepsilon_t.\] e suponha que ele é
+estacionário. Multiplicando ambos os lados por \(x_{t-h}\) e aplicando a
+esperança, teremos \[\begin{align}
+E(x_{t-h}x_t)&=\sum_{j=1}^p \phi_j E(x_{t-h}x_{
+t-j})
+\end{align}\] e, como \(\gamma(h)=E(x_t x_{t-h})\), teremos
+\[\begin{align}
+\gamma(h)&=\sum_{j=1}^p \phi_j \gamma(h-j)
+\end{align}\] Dividindo ambos os lados por \(\gamma(0)\), teremos
+\[\begin{align}
+\rho(h)&=\sum_{j=1}^p \phi_j \rho(h-j)
+\end{align}\] Essa relação pode ser utilizada para encontrar a função de
+autocorrelação do processo sem a necessidade de encontrar a inversa de
+\(\phi(B)\).
 
-\begin{frame}
-    Como a série é estacionária, temos que $|\phi|<1$.  Isto implica que
-    \begin{itemize}
-        \item O correlograma deve cai rapidamente para 0.
-        \item Se $\phi>0$ a queda no correlograma é exponencial.
-        \item Se $\phi<0$ a queda também é exponencial, mas o sinal das autocorrelações se alternam.
-    \end{itemize}
-\end{frame}
+\begin{example}[]\protect\hypertarget{exm-}{}\label{exm-}
 
-\begin{frame}
-\begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{FigurasAulas/acf_ar1_parte1}
-\caption{Função de autocorrelação teórica para alguns valores de $\phi$.}
-\label{fig:acf_ar1_parte1}
-\end{figure}
-\end{frame}
-
-\begin{frame}
-    \begin{figure}
-        \centering
-        \includegraphics[width=1\linewidth]{FigurasAulas/acf_ar1_parte2}
-        \caption{Função de autocorrelação teórica para alguns valores de $\phi$.}
-        \label{fig:acf_ar1_parte2}
-    \end{figure}
-\end{frame}
-
-\begin{frame}{Função de autocorrelação para o $AR(p)$}
-    Consideremos o processo 
-    $$x_t = \sum_{j=1}^p\phi_j x_{t-j}+\varepsilon_t.$$
-    Multiplicando ambos os lados por $x_{t-h}$, com $h>p$, calculando as esperanças e dividindo por $\nu$ teremos
-    \begin{equation}
-    \rho(h)=\sum_{j=1}^p\phi_j \rho(h-j).\label{eq::acf_arp}
-    \end{equation}
-        Obtendo $\rho(1),\ldots,\rho(p)$ as demais autocorrelações podem ser obtidas recursivamente.
-\end{frame}
-
-\begin{frame}{Exemplo: autocorrelação para o $AR(2)$}
-    Considere o processo $AR(2)$ abaixo:
-    $$x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon.$$
-    Multiplicando a equação acima por $x_{t-1}$ em ambos os lados teremos
-    $$x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon x_{t-1}.$$
-    Calculando o valor esperado, temos
-    \begin{align*}
-    \gamma(1)&=\phi_1E(x_{t-1}^2)+\phi_2E(x_{t-2}x_{t-1})+E(\varepsilon x_{t-1})\\
+Considere o processo \(AR(2)\) abaixo:
+\[x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon_t.\] Multiplicando a
+equação acima por \(x_{t-1}\) em ambos os lados teremos
+\[x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon_t x_{t-1}.\]
+Calculando o valor esperado, temos \[\begin{align*}
+    \gamma(1)&=\phi_1E(x_{t-1}^2)+\phi_2E(x_{t-2}x_{t-1})+E(\varepsilon_t x_{t-1})\\
     &=\phi_1\gamma(0) + \phi_2\gamma(1).
-    \end{align*}
-    Portanto,
-    $$\rho(1)=\frac{\gamma(1)}{\gamma(0)}=\frac{\phi_1}{1-\phi_2}.$$
-\end{frame}
+    \end{align*}\] Dividindo ambos os lados por \(\gamma(0)\) teremos
+\[\rho(1)=\phi_1+\phi_2\rho(1),\] logo,
+\[\rho(1)=\frac{\phi_1}{1-\phi_2}
+\]
 
-\begin{frame}
-    De modo análogo, teremos
-    $$x_{t-2}\times x_{t}=x_{t-2}\left(\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon y_{t-1}\right).$$
-    Aplicando a esperança, teremos
-    \begin{align*}
-    \gamma(2)&=\phi_1 \gamma(1)+\phi_2\gamma(0) = \phi_1 \frac{\gamma(0)}{1-\phi_2}+\phi_2\gamma(0)
-    \end{align*}
-    e
-    $$\rho(2)=\frac{\phi_1^2}{1-\phi_2} + \phi_2.$$
-\end{frame}
+De modo análogo, teremos
+\[x_{t-2} x_{t}=x_{t-2}\left(\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon_{t}\right).\]
+Aplicando a esperança, teremos \[\begin{align*}
+    \gamma(2)&=\phi_1 \gamma(1)+\phi_2\gamma(0).
+    \end{align*}\] e dividindo os dois lados por \(\gamma(0)\) teremos\\
+\[\rho(2)=\phi_1\rho(1)+\phi_2=\frac{\phi_1^2}{1-\phi_2}+\phi_2\] Com os
+valores de \(\rho(1)\) e \(\rho(2)\), podemos encontrar \(\rho(3)\):
 
-\begin{frame}
-    Utilizando a Equação (\ref{eq::acf_arp}) podemos obter as próximas autocorrelações. Por exemplo
-    $$\rho(3) = \phi_1\rho(2)+ \phi_2\rho(1)= \frac{\phi_1^3}{1-\phi_2} + \phi_1\phi_2\left(1 + \frac{1}{1-\phi_2}\right).$$    
-\end{frame}
+\[\rho(3)=\phi_1\rho(2)+\phi_2\rho(1)\] e assim sucessivamente.
 
-\begin{frame}{Comportamento das autocorrelações em um $AR(p)$}
-    Segue que a solução geral da Equação (\ref{eq::acf_arp}), é dada por 
-    $$\rho(h)=\sum_{j=1}^{p}\alpha_j^h c_j$$
-    onde $\alpha_j=\ell_j^{-1}$ e $c_j$ é um polinômio com grau igual a multiplicidade da raiz menos um.
-    
-    Notas:
-    \begin{itemize}
-        \item As raízes reais se comportam de acordo com o que já foi visto no $AR(1)$.
-        \item As raízes complexas tem comportamento sazonal decaindo exponencialmente. 
-    \end{itemize}
-\end{frame}
+\(\blacksquare\)
 
-\begin{frame}
-    \textbf{Caso particular: AR(2) -} Existem três possibilidades:
-    \begin{itemize}
-        \item Existem duas raízes reais contínuas:
-        $$\rho(h)=c_1\alpha_1^h + c_2\alpha_2^h.$$
-        Neste caso, a ACF decai exponencialmente (seguindo o comportamento da raiz dominante).
-        \item Existe uma única raiz real (multiplicidade 2):
-        $$\rho(h)=  (c_1+c_2)\alpha^h.$$
-        Neste caso, a ACF também decai exponencialmente.
-        \item Existem duas raízes complexas conjugadas. Neste caso, $\alpha_1=re^{\omega \textit{i}}$ e $\alpha_2=re^{-\omega \textit{i}}$ e
-        \begin{align*}
-        \rho(h)& = c_1\alpha_1^h + c_2\alpha_2^h  = c_1\left( re^{\omega \textit{i}} \right)^h + c_2\left( re^{-\omega \textit{i}} \right)^h\\
-        &= c_1r^h\left( \cos(\omega h) + i\sin(\omega h) \right) + r^hc_2\left( \cos(\omega h) + i\sin(-\omega h) \right)\\
-        &= r^h(c_1+c_2)\cos(\omega h)
-        \end{align*}
-        e o processo exibirá comportamento sazonal com período $1/\omega$, caindo exponencialmente.
-    \end{itemize}
-\end{frame}
+\end{example}
 
-\begin{frame}
-    \begin{center}
-\includegraphics[width=1\linewidth]{FigurasAulas/acf_teorica_ar2}
-\end{center}
-\end{frame}
+Em geral, a função de autocorrelação do processo AR(\(p\)) pode ser
+escrita como
 
-\begin{frame}{Função de autocorrelação parcial (PACF)}
-    \begin{itemize}
-        \item   Consideremos novamente o processo $AR(1)$. Vimos que
-        $$\rho(h)=\phi^h.$$
-        \item Isto implica que $Cor(x_{t+2},x_t)=\phi^2$.
-        \item Note que esta correlação só existe por causa da relação entre os pares $(x_t,x_{t+1})$ e $(x_{t+1},x_{t+2})$. De fato
-        $$Cov(x_t,x_{t+2}|x_{t+1})=0.$$         
-    \end{itemize}
-\end{frame}
+\[\rho(h)=\sum_{j=1}^p c_j\left(\frac{1}{\dot{B}_j}\right)^h\] onde
+\(\dot{B}\), novamente, é a raiz de
+\(\phi(B)=1-\sum_{j=1}^p \phi_j B^j\).
 
-\begin{frame}
-\begin{defi}[Autocorrelação parcial]
-    A função de autocorrelação parcial de defasagem $h$ é dada por
-    $$\phi_{hh}=\frac{Cov\left(x_{t+h},x_t|x_{t+1},\ldots x_{t+h-1}\right)}{\sqrt{Var\left(x_t|x_{t+1},\ldots x_{t+h-1}\right)Var\left(x_{t+h}|x_{t+1},\ldots x_{t+h-1}\right)}}$$
-\end{defi}
+O comportamento da função de autocorrelação depende das raízes de
+\(\phi(B)\).
 
-Intuitivamente, a função de autocorrelação parcial calcula a correlação entre $x_t$ e $x_{t+h}$ eliminando a dependência linear entre os valores intermediários $x_s$, $t<s<t+h$.
-\end{frame}
+\begin{itemize}
+\item
+  As raízes reais se comportam de acordo com o que já foi visto no
+  \(AR(1)\), decaindo exponencialmente.
+\item
+  As raízes complexas tem um comportamento de onda abafada
+  exponencialmente.
+\end{itemize}
 
-\begin{frame}
-    \begin{teo}
-        Seja $\{x_t\}$ um processo estocástico estacionário. A função de autocorrelação parcial $\phi_{hh}$ para $h\geq 2$
-        é igual ao coeficiente $\alpha_h$, obtido pelo melhor preditor linear (BLUE) de $x_t$ baseado nas observações $x_{t-1},\ldots,x_{t-h}$:
-        \begin{equation}
-        \tilde{x}_t = \phi_{1k}x_{t-1}+\cdots+\phi_{kk}x_{t-h}.
-        \end{equation}
-    \end{teo}
-    
-    \begin{teo}
-        Para um $AR(p)$, $\phi_{kk}=0$ para $k>p$.
-    \end{teo}
-\end{frame}
+\begin{example}[]\protect\hypertarget{exm-}{}\label{exm-}
 
-\begin{frame}{Gráfico da função de autocorrelação parcial}
-    \begin{itemize}
-        \item É um gráfico de $(h,\phi_{hh})$.
-        \item Um $AR(p)$ possui apenas $p$ autocorrelações parciais não nulas.
-        \item Para determinar se devemos levar em consideração determinado valor de $\phi_{hh}$, verificamos se este está fora do intervalo
-        $$(-\frac{1,96}{\sqrt{n}}\;\;;\;\;\frac{1,96}{\sqrt{n}}).$$
-        \item O número de autocorrelações parciais fora do intervalo devem nos dar uma noção da ordem do modelo.
-    \end{itemize}
-    
-\end{frame}
+Vamos mostrar esse resultado para o caso \(p=2\) (o caso geral é
+análogo). Teremos que
 
-\begin{frame}{Exemplo: PIB Brasileiro}
-\begin{center}
-\includegraphics[width=1\linewidth]{FigurasAulas/PIB Brasileiro/PIB_imagem"}
-\end{center}
-\end{frame}
+\[\begin{align}
+\left(\begin{array}{c}\rho(h)\\ \rho(h-1)\end{array}\right)=\underbrace{\left(\begin{array}{cc}\phi_1 & \phi_2 \\ 1 & 0 \end{array}\right)}_{T}\left(\begin{array}{c}\rho(h-1)\\ \rho(h-2)\end{array}\right)=\cdots T^h\left(\begin{array}{c}\rho(0)\\ \rho(-1)\end{array}\right)\end{align}\]
 
-\begin{frame}
-\begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/pib_polinomioFinal"}
-\caption{Ajustamos um modelo polinomial de ordem 4 para explicar a tendência desta série.}
-\label{fig:pib_polinomioFinal}
+Já discutimos, na primeira seção, que os autovalores de \(T\) são
+equivalentes aos recíprocos das raizes de \(\phi(B)\). Agora, considere
+a decomposição de \(T\) na forma canônica \[T=Q\Lambda Q^{-1},\] onde
+\(Q\) é a matriz cujas colunas são formadas pelos autovetores de \(T\) e
+\(\Lambda\) é uma matriz diagonal formada pelos autovalores. Note que
+
+\[A^2=Q\Lambda Q^{-1}Q\Lambda Q^{-1}=Q\Lambda^2 Q^{-1}\] e, de modo
+análogo, \[A^h=Q\Lambda Q^{-1}Q\Lambda Q^{-1}=Q\Lambda^h Q^{-1}\] Como
+\(\Lambda^h\) é a matriz diagonal com os autovalores elevados à potência
+\(h\), os elementos de \(A^h\) devem ser necessariamente do tipo
+\(\sum_{j=1}^2 c_j \lambda_j^h\).
+
+O polinômio característico da matriz \(T\) é
+\[\lambda^2-\phi_1\lambda-\phi_2\] e, denominando suas raizes por
+\(\lambda_1\) e \(\lambda_2\), teremos
+\[\rho(h)=c_1\lambda_1^h+c_2\lambda_2^h.\] - Se \(\lambda_1\) é real
+então \(\lambda_2\) também é real e o decaimento de \(\rho(h)\) será
+exponencial, podendo alternar o sinal se algum dos autovalores for
+negativo.
+
+\begin{itemize}
+\tightlist
+\item
+  Se \(\lambda_1\) é complexo, então \(\lambda_2\) será seu conjugado.
+  Em coordenadas polares, teremos \(\lambda_1=re^{i\omega}\) e
+  \(\lambda_2=re^{-i\omega}\). Deste modo,
+  \[\begin{align}\rho(h)&=r^h [c_1e^{ih\omega}+c_2e^{-ih\omega}]\\&=r^h[(c_1+c_2)\cos(h\omega)+i(c_1-c_2)\sin(h\omega)]\end{align}\]
+  logo, \(\rho(h)\) terá um comportamento de onda com a amplitude
+  decrescendo exponencialmente. A próxima figura mostra esse efeito.
+\end{itemize}
+
+\includegraphics{processo_linear_geral_files/figure-pdf/unnamed-chunk-2-1.pdf}
+
+\(\blacksquare\)
+
+\end{example}
+
+\hypertarget{a-funuxe7uxe3o-de-autocorrelauxe7uxe3o-parcial-pacf}{%
+\subsection{A função de autocorrelação parcial
+(PACF)}\label{a-funuxe7uxe3o-de-autocorrelauxe7uxe3o-parcial-pacf}}
+
+Consideremos novamente o processo \(AR(1)\). Vimos que
+\[\rho(h)=\phi^h.\] Isto implica que \(Cor(x_{t+2},x_t)=\phi^2\). Note
+que esta correlação só existe por causa da relação entre os pares
+\((x_t,x_{t+1})\) e \((x_{t+1},x_{t+2})\). De fato
+\[Cov(x_t,x_{t+2}|x_{t+1})=0.\]
+
+A função de autocorrelação parcial para qualquer processo estacionário
+depende apenas da defasagem e é definada por
+\[\phi_{h}(h)=\frac{Cov\left(x_{t+h},x_t|x_{t+1},\ldots x_{t+h-1}\right)}{\sqrt{Var\left(x_t|x_{t+1},\ldots x_{t+h-1}\right)Var\left(x_{t+h}|x_{t+1},\ldots x_{t+h-1}\right)}}\]
+
+Intuitivamente, a função de autocorrelação parcial calcula a correlação
+entre \(x_t\) e \(x_{t+h}\) eliminando a dependência linear entre os
+valores intermediários \(x_s\), \(t<s<t+h\).
+
+\begin{theorem}[]\protect\hypertarget{thm-}{}\label{thm-}
+
+Seja \(x_1,\ldots,x_n\) uma amostra de um processo estacionário. Sejam
+\(\hat{\phi}_1(h),\ldots,\hat{\phi}_h(h)\) os valores que minimizam
+\[\sum_{t=h+1}^n(x_t-\phi_1x_{t-1}-\cdots-\phi_hx_{t-h})^2.\] Então,
+\(\hat{\phi}_h(h)\) é um estimador para a função de autocorrelação
+parcial
+
+\end{theorem}
+
+Para um \(AR(p)\), sempre é verdade que\(\phi_{h}(h)=0\) para \(h>p\).
+Deste modo, podemos estimar a ordem do modelo verificando a partir de
+qual defasagem \(h\) os valores \(\hat{\phi}_h(h)\) deixam serem
+significativos.
+
+O gráfico da função de autocorrelação parcial constrói um gráfico com os
+pares \((h,\hat{\phi}_{h}(h))\) de modo semelhante ao que foi feito com
+o correlograma, inclusive com os mesmos intervalos para testar se a
+autocorrelação parcial é nula - note que a primeira defasagem é um.
+
+No exemplo abaixo, uma amostra de tamanho 100 foi gerada de um processo
+AR(2) estacionário e o gráfico da função de autocorrelação parcial
+gerado. Note que há apenas duas autocorrelações significativas,
+levantando evidências de que a ordem do modelo autoregressivo é 2.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{x }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{3}\SpecialCharTok{:}\DecValTok{100}\NormalTok{) x[i] }\OtherTok{=}\NormalTok{ x[i}\DecValTok{{-}1}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{.}\DecValTok{8}\SpecialCharTok{*}\NormalTok{x[i}\DecValTok{{-}2}\NormalTok{]}\SpecialCharTok{+}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,.}\DecValTok{1}\NormalTok{)}
+ 
+\FunctionTok{pacf}\NormalTok{(x, }\AttributeTok{xlab =} \StringTok{\textquotesingle{}Defasagem\textquotesingle{}}\NormalTok{, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}Autocorrelação parcial\textquotesingle{}}\NormalTok{, }\AttributeTok{main =} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{processo_linear_geral_files/figure-pdf/unnamed-chunk-3-1.pdf}
+
+}
+
 \end{figure}
-\end{frame}
 
-\begin{frame}
-    \begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/polinomio_acf_residuos"}
-\caption{Correlograma dos resíduos. O comportamento quase sazonal (senoidal decaindo rapidamente) é consistente com um modelo autoregressivo com raízes complexas.}
-\label{fig:polinomio_acf_residuos}
-\end{figure}
-\end{frame}
+\hypertarget{muxe9todo-de-estimauxe7uxe3o-de-yule-walker}{%
+\subsection{Método de estimação de
+Yule-Walker}\label{muxe9todo-de-estimauxe7uxe3o-de-yule-walker}}
 
-\begin{frame}
-    \begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/polinomio_residuos_pacf"}
-\caption{Autocorrelação parcial estimada. Note que a sexta autocorrelação é significativa, dando evidências de que o modelo se trata de um $AR(6)$.}
-\label{fig:polinomio_residuos_pacf}
-\end{figure}
-\end{frame}
+O método de estimação de Yule-Walker para estimar os parâmetros do
+modelo AR(\(p\)) consiste na aplicação do método dos momentos. Sua
+principal vantagem é a ausência de suposição sobre a distribuição dos
+erros do modelo, exigindo apenas a condição de estacionaridade.
 
-\begin{frame}
-    Recapitulando: seja $\{y_t\}$ a série do PIB do Brasil, com $t=1$ equivalendo ao ano de 1960. Ao ajustar o polinômio de grau 4 calculamos os resíduos
-    $$y_t - \sum_{j=0}^4 \hat{\beta}_j t^j = a_t,$$
-    onde existem evidências de que $a_t$ é um $AR(6)$, ou seja,
-    $$a_t = \varepsilon_t + \sum_{k=1}^{6}\phi_j a_{t-j},$$
-    onde $\varepsilon_t$ é um ruído branco.
-\end{frame}
-
-\begin{frame}
-    Obtivemos as seguintes estimativas para $\phi_1,\ldots,\phi_6$:
-    $$0,7486\;\;\;-0,1845\;\;\;-0,1276\;\;\;-0,0202\;\;\;0,1369\;\;\;-0,3766.$$
-    Assim, o polinômio característico é dado por
-    $$\phi(B)=1-0,748B+0,184B^2+0,127B^3+0,020B^4-0,136B^5+0,376B^6.$$
-    As raízes deste polinômio são
-    $$0,9536\pm 0,4979i \;\;\; -1,0551\pm 0,7139i\;\;\; - 1,0551\pm 0,7139i.$$
-    Seus respectivos módulos são
-    $$1,0758\;\;\; 1,2740\;\;\;1,1888$$
-    e como todos são maiores que 1, temos que o $AR(6)$ é estacionário.
-\end{frame}
-
-\begin{frame}
-    \begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{"FigurasAulas/PIB Brasileiro/final_residuos_acf"}
-\caption{Gráficos dos resíduos obtidos após ajustar o modelo AR(6). Note que o resultado se comporta como um ruído branco.}
-\label{fig:final_residuos_acf}
-\end{figure}
-\end{frame}
-
-\begin{frame}
-    Após algumas manipulações, é possível mostrar que a série o PIB do Brasil pode ser modelada por
-    \begin{align*}
-    y_t = \varepsilon_t + \underbrace{\sum_{k=1}^6 \hat{\phi}_k y_{t-k}}_{\text{parte estacionária}} + \underbrace{\sum_{j=1}^{4}\hat{\beta}_j\left[t^j -\sum_{k=1}^{6}\hat{\phi}_k(t-k)^j\right]}_{\text{parte não estacionária}}
-    \end{align*}
-\end{frame}
-
-\begin{frame}{Leitura}
-    \begin{itemize}
-        \item Seção 5.5.2 de \cite{morettin2006analise}.
-        \item Seção 3.2 de \cite{box2015time}.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Estimando os parâmetros do modelo AR($p$)}
-    Existem alguns métodos clássicos para a estimação dos parâmetros auto regressivos. Discutiremos dois métodos:
-    \begin{itemize}
-        \item Estimação de Yule-Walker
-        \item Estimação por máxima verossimilhança condicional
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Estimação de Yule-Walker}
-    Considere o processo $AR(p)$:
-    $$x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t.$$
-    Multiplicando ambos os lados por $x_{t-h}$, com $h>0$ teremos
-    $$x_tx_{t-h} = \sum_{j=1}^p \phi_j x_{t-j}x_{t-h}+\varepsilon_tx_{t-h}.$$
-    Aplicando o valor esperado dos dois lados, teremos
-    $$\gamma(h) = \sum_{j=1}^p \phi_j \gamma( h-j).$$
-\end{frame}
-
-\begin{frame}
-Considerando ainda as equações:
-$$x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t,$$
-podemos multiplicar ambos os lados por $x_t$ (ou seja $x_{t-h}$, com $h=0$). Após aplicar a esperança
-teremos
-    $$E(x_t^2) = \sum_{j=1}^p \phi_j E(x_{t-j}x_{t})+E(\varepsilon_tx_{t}).$$
-Aqui há um detalhe importante:  
-$$E(\varepsilon_tx_{t})=E\left(\varepsilon_t\left[\sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t\right]\right)=E(\varepsilon_t^2)=\nu$$
-\end{frame}
-
-\begin{frame}
-    Portanto,
-    \begin{align}\label{eq:autocovarianca-AR}   
+Para o processo \(AR(p)\) estacionário, sabemos que
+\[\gamma(h) = \sum_{j=1}^p \phi_j \gamma( h-j).\] Considere a equações
+do modelo AR(\(p\)):
+\[x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t.\] Podemos multiplicar
+ambos os lados por \(x_t\) (ou seja \(x_{t-h}\), com \(h=0\)). Após
+aplicar a esperança teremos
+\[E(x_t^2) = \sum_{j=1}^p \phi_j E(x_{t-j}x_{t})+E(\varepsilon_tx_{t}).\]
+Aqui há um detalhe importante:\\
+\[E(\varepsilon_tx_{t})=E\left(\varepsilon_t\left[\sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t\right]\right)=E(\varepsilon_t^2)=\nu\]
+Portanto, \[\begin{align}   
     \gamma(h)=\left\{\begin{array}{ll}
     \sum_{j=1}^p \phi_j \gamma( h-j),&\;\;\hbox{se }h>0\\
     \sum_{j=1}^p \phi_j \gamma( j)+\nu,&\;\;\hbox{se }h=0 \\
     \end{array}\right.
-    \end{align}
-\end{frame}
+    \end{align}\]
 
-\begin{frame}
-O método de estimação de Yule-Walker consiste em substituir $\gamma(1),\ldots,\gamma(p)$ pelas auto covariâncias amostrais:
-\begin{align*}
+O método de estimação de Yule-Walker consiste em substituir
+\(\gamma(1),\ldots,\gamma(p)\) pelas autocovariâncias amostrais:
+\[\begin{align*}
 \hat{\gamma}(1) &= \phi_1\hat{\gamma}(0) + \phi_1\hat{\gamma}(-1) + \cdots + \phi_p\hat{\gamma}(1-p) \\ 
 \hat{\gamma}(2) &= \phi_1\hat{\gamma}(1) + \phi_1\hat{\gamma}(0)  + \cdots + \phi_p\hat{\gamma}(2-p) \\ 
 \vdots &= \vdots \\
 \hat{\gamma}(p) &= \phi_1\hat{\gamma}(p-1) + \phi_1\hat{\gamma}(p-2)  + \cdots + \phi_p\hat{\gamma}(0)
-\end{align*} 
-Nota: lembre-se que $\gamma(-i)=\gamma(i)$. 
-\end{frame}
-
-\begin{frame}
-    Podemos escrever o sistema na forma matricial:
-    \begin{align*}
+\end{align*}\] Nota: lembre-se que \(\gamma(-i)=\gamma(i)\). Podemos
+escrever o sistema na forma matricial: \[\begin{align*}
     \underbrace{\left(
     \begin{array}{cccc}
 \hat{\gamma}(0) & \hat{\gamma}(-1) & \cdots & \hat{\gamma}(1-p) \\ 
 \hat{\gamma}(1) & \hat{\gamma}(0)  & \cdots & \hat{\gamma}(2-p) \\ 
          \vdots & \vdots               & \ddots                & \vdots\\
 \hat{\gamma}(p-1) & \hat{\gamma}(p-2) &  \cdots & \hat{\gamma}(0)   
-    \end{array}\right)}_{\hat{\bm{\Gamma}}}
-    \underbrace{\left( \begin{array}{c} \hat{\phi}_1 \\ \hat{\phi}_2 \\ \vdots \\ \hat{\phi}_p   \end{array}\right)}_{\hat{\bm{\phi}}}=
-    \underbrace{\left( \begin{array}{c} \hat{\gamma}(1) \\ \hat{\gamma}(2) \\ \vdots \\ \hat{\gamma}(p)   \end{array}\right)}_{\hat{\bm{\gamma}}}.
-    \end{align*}
-    e os estimadores de Yule-Walker para os parâmetros autoregressivos são dados por
-    $$\hat{\bm{\phi}}=\hat{\bm{\Gamma}}^{-1}\hat{\bm{\gamma}}.$$ 
-\end{frame}
+    \end{array}\right)}_{\hat{\boldsymbol{\Gamma}}}
+    \underbrace{\left( \begin{array}{c} \hat{\phi}_1 \\ \hat{\phi}_2 \\ \vdots \\ \hat{\phi}_p   \end{array}\right)}_{\hat{\boldsymbol{\phi}}}=
+    \underbrace{\left( \begin{array}{c} \hat{\gamma}(1) \\ \hat{\gamma}(2) \\ \vdots \\ \hat{\gamma}(p)   \end{array}\right)}_{\hat{\boldsymbol{\gamma}}}.
+    \end{align*}\] e os estimadores de Yule-Walker para os parâmetros
+autoregressivos são dados por
+\[\hat{\boldsymbol{\phi}}=\hat{\boldsymbol{\Gamma}}^{-1}\hat{\boldsymbol{\gamma}}.\]
 
-\begin{frame}
-    Voltando para a Equação (\ref{eq:autocovarianca-AR}), temos que
-    $$\gamma(0)=\sum_{j=1}^{p}\phi_j \gamma(j)+\nu$$
-    Portanto, um estimador para $\nu$ é dado por
-    $$\hat{\nu}=  
-  \hat{\gamma(0)}=\sum_{j=1}^{p}\hat{\phi_j}\hat{\gamma(j)}$$
-\end{frame}
+Voltando para a Equação (\ref{eq:autocovarianca-AR}), temos que
+\[\gamma(0)=\sum_{j=1}^{p}\phi_j \gamma(j)+\nu\] Portanto, um estimador
+para \(\nu\) é dado por \[\hat{\nu}=  
+  \hat{\gamma(0)}=\sum_{j=1}^{p}\hat{\phi_j}\hat{\gamma(j)}\]
 
-\begin{frame}{Estimador de máxima verossimilhança condicional}
-    \begin{itemize}
-        \item Observe que
-        $$y_t|y_{1:t-1}\sim y_t|y_{t-p:t-1},$$
-        ou seja, $\{y_t\}$ é uma cadeia de Markov de ordem $p$.
-        \item Deste modo, para $T>p$,
-        \begin{align*}
-        f(y_{1:T})&=f\left(y_T|y_{1:T-1}\right)f\left(y_{1:T-1}\right)=f\left(y_T|y_{T-p:T-1}\right)f\left(y_{1:T-1}\right)\\
-        &=\prod_{t=p+1}^{T}f\left(y_t|y_{t-p:t:-1}\right)\times f(y_{1:p}).
-        \end{align*}
-        \item É comum considerar que os primeiros $p$ valores da série são constantes, produzindo a seguinte verossimilhança condicional:
-        $$f(\bm{y}|y_{1:p})=\prod_{t=p+1}^{T}f\left(y_t|y_{t-p:t:-1}\right).$$
-    \end{itemize}
-\end{frame}
+\hypertarget{estimador-de-muxe1xima-verossimilhanuxe7a}{%
+\subsection{Estimador de máxima
+verossimilhança}\label{estimador-de-muxe1xima-verossimilhanuxe7a}}
 
-\begin{frame}
-    Fazendo
-    \begin{align}
-    \bm{f}_t'&=\left(y_{t-1},\ldots,y_{t-p}\right)\\
-    \bm{\phi}'&=\left(\phi_{1},\ldots,\phi_{p}\right)       
-    \end{align}
-    teremos
-    $$y_t=\phi_1y_{t-1}+\cdots \phi_p y_{t-p} +\varepsilon_t= \underbrace{(y_{t-1}\;\cdots\;y_{t-p})}_{\bm{f}_t'}\underbrace{\left(\begin{array}{c}\phi_1 \\ \vdots \\ \phi_p\end{array}\right)}_{\bm{\phi}} + \varepsilon_{t},$$
-    ou seja,
-    $$y_t|y_{t-p:t-1}\sim\hbox{Normal}\left(\bm{f}_t'\bm{\phi}, \nu\right),$$
-    logo,
-    $$f(\bm{y}|y_{1:p})\propto \left(\frac{1}{\nu}\right)^{\frac{T}{2}}\exp\left\{ -\frac{1}{2\nu}\left(\bm{y}-\bm{F}'\bm{\phi}\right)'\left(\bm{y}-\bm{F}'\bm{\phi}\right) \right\},$$
-    onde $\bm{F}'=\left(\bm{f}_{p+1}',\ldots,\bm{f}_{T}'\right)$
-\end{frame}
+Observe que \[x_t|\mathcal{D}_{t-1}\sim x_t|x_{t-1},\ldots,x_{t-p}\] ou
+seja, \(\{x_t\}\) é uma cadeia de Markov de ordem \(p\). Deste modo,
+para \(n>p\), \[\begin{align*}
+f(x_{1},\ldots,x_n)&=f\left(x_n|\mathcal{D}_{n-1}\right)f\left(\mathcal{D}_{n-1}\right)=f\left(x_T|x_{n-1},\ldots,x_{n-p}\right)f\left(\mathcal{D}_{n-1}\right)\\
+        &=\prod_{t=p+1}^{n}f\left(x_t|x_{t-1},\ldots,x_{t-p}\right) f(x_{1},\ldots,x_p).
+        \end{align*}\] Agora, suponha que
+\(\varepsilon_t\sim\hbox{Normal}(0,\nu)\). Então, \[\begin{align*}
+L(\phi_1,\ldots,\phi_p,\nu)&=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\sum_{j=1}^p \phi_jx_{t-j})^2\right\}\\&\times f(x_{1},\ldots,x_p|\phi_1,\ldots,\phi_p,\nu).
+        \end{align*}\]
 
-\begin{frame}{Ilustrando com o AR(2)}
-    
-    O modelo AR(2) é dado por:
-    $$y_t = \phi_1 y_{t-1}+\phi_2 y_{t-2} + \varepsilon_t,$$
-        onde $\varepsilon\sim\hbox{Normal}(0,\nu)$.
-    
-    Portanto, $y_t|y_{t-1},y_{t-2}\sim\hbox{Normal}( \phi_1 y_{t-1} + \phi_2 y_{t-2}, \nu)$, ou seja, dado $y_{t-1}$ e $y_{t-2}$, 
-    
-    $$ y_t = \underbrace{ \left(  y_{t-1} \;\; y_{t-2}   \right) }_\text{$\bm{f}_t'$}\underbrace{\left(\begin{array}{c}\phi_1 \\ \phi_2
-        \end{array}\right)}_\text{$\bm{\phi}$}+\varepsilon_t= \bm{f}_t'\bm{\phi}+\varepsilon_t$$
-    Como o usual, o estimador de máxima verossimilhança (condicional) será dado por
-    $$\bm{\hat{\phi}}=(\bm{F}\bm{F}')^{-1}\bm{F}\bm{y}.$$
-    
-    
-    
-\end{frame}
+O método da maxima verossimilhança condicional consiste em ignorar o
+termo \(f(x_{1},\ldots,x_p|\phi_1,\ldots,\phi_p,\nu)\). Com isso, o
+restante da função de verossimilhança pode ser escrito como um modelo
+linear, uma vez que
+
+\[x_t=\sum_{j=1}^p \phi_jx_{t-j}+\varepsilon_t=\underbrace{(x_{t-1}\;\;\cdots \;\;x_{t-p})}_{F_t'}\underbrace{\left(\begin{array}{c}\phi_1 \\ \vdots \\ \phi_p\end{array}\right)}_{\beta}\]
+e \(\hat{\beta}\) e \(\hat{\nu}\) podem ser obtidos pelos estimadores já
+discutidos na seção sobre modelos lineares.
+
+Já para o método da máxima verossimilhança, precisamos especificar a
+distribuição do termo adicional
+\(f(x_1,\ldots,x_p|\phi_1,\ldots,\phi_p)\). Desde que o processo seja
+estacionário, é possível mostrar que
+\[x_1,\ldots,x_p\sim\hbox{Normal}(\textbf{0}_p,\Sigma(\phi_1,\ldots,\phi_p))\]
+onde \(\Sigma(\phi_1,\ldots,\phi_p))\) é a matriz formada pelas
+autocovariâncias.
+
+A maximização da função de verossimilhança é feita numericamente e
+pode-se utilizar as estimativas obtidas no método da máxima
+verossimilhança condicional como ponto de partida para o algoritmo de
+maximização.
+
+\hypertarget{previsuxe3o-1}{%
+\subsection{Previsão}\label{previsuxe3o-1}}
+
+Considere a amostra \(\mathcal{D}_t\) do modelo AR(1). Então,
+
+\[\begin{align}x_{t+h}&=\phi x_{t+h-1}+\varepsilon_{t+h}\\ &=\phi^2x_{t+h-2}+\phi\varepsilon_{t+h-1}+\varepsilon_{t+h}= \cdots\\&=\phi^h x_t+\sum_{j=0}^{h-1}\phi^j\varepsilon_{t+h-j}\end{align}\]
+logo \[E(x_{t+h}|\mathcal{D}_t)=\phi^h x_t\] e
+\[Var(x_{t+h}|\mathcal{D}_t)=\nu\sum_{j=0}^{h-1}\phi^{2j}=\nu\frac{1-\phi^{2h}}{1-\phi^2}\]
+Note que, se o processo é estacionário, então \(|\phi|<1\) e a previsão
+converge para zero exponencialmente. Na prática, tanto a previsão quanto
+a variância são calculadas substituíndo \(\phi\) por sua estimativa.
+
+Para o processo AR\((p)\), seja \(z_t=(x_t,\ldots,x_{t-p+1})\). Então,
+\[z_t=Tz_{t-1}+\boldsymbol{\varepsilon}_t\] onde
+\[T=\left(\begin{array}{ccc|c}\phi_1&\cdots&\phi_{p-1} & \phi_p \\ \hline & \textbf{I}_{p-1} & & \textbf{0}_{p-1}\end{array}\right)\]
+e
+\[\boldsymbol{\varepsilon}_t=\left(\begin{array}{c}\varepsilon_t \\ \hline \textbf{0}_{p-1}\end{array}\right)\]
+Logo, dado \(\mathcal{D}_t\),
+\[z_{t+h}=T^h z_t+\sum_{j=0}^{h-1}T^j\boldsymbol{\varepsilon}_{t+h-j}\]
+Note que \(x_{t+h}=(1|\textbf{0}'_{p-1})z_{t+h}\), logo
+\[E(x_{t+h}|\mathcal{D}_t)=(1|\textbf{0}'_{p-1})T^h z_t\] e
+\[Var(x_{t+h}|\mathcal{D}_t)=\nu\sum_{j=0}^{h-1}\left(\begin{array}{c|c}1&\textbf{0}'_{p-1}\end{array}\right)T^j \mathcal{E} T'^j\left(\begin{array}{c}1 \\ \hline \textbf{0}_{p-1}\end{array}\right) \]
+onde \(\mathcal{E}\) é uma matriz com o valor 1 no elemento \(a_{11}\) e
+zero nos demais.
+
+\hypertarget{processo-autorregressivo-com-deriva}{%
+\subsection{Processo autorregressivo com
+deriva}\label{processo-autorregressivo-com-deriva}}
+
+Até o momento, assumimos que o processo AR\((p)\) é estacionário com
+\(E(x_t)=0\). Quando \(\mu=E(x_t)\neq 0\), temos um parâmetro adicional,
+denominado deriva e escrito como
+
+\[x_t-\mu=\sum_{j=1}^p \phi_j(x_{t-j}-\mu)+\varepsilon_t\]
+
+Observe que a deriva não altera a estrutura de autocorrelação do
+processo, uma vez que podemos definir \(y_t=x_t-\mu\), onde \(y_t\) é um
+AR(\(p\)) com \(E(y_t)=0\), o que implica em
+\[\gamma(h)=Cov(x_t, x_{t-1})=Cov(x_t-\mu,x_{t-h}-\mu)=Cov(y_t,y_{t-h}).\]
+
+Contudo, a função de previsão do processo deve ser ajusta. Defina
+\(z_t=(x_t-\mu,\ldots,x_{t-p+1}-\mu)\). Já vimos que
+
+\[z_{t+h}=T^h z_t+\sum_{j=0}^{h-1}T^j\boldsymbol{\varepsilon}_{t+h-j}\]
+onde \(T\) e \(\boldsymbol{\varepsilon}_t\) foram definidos na seção
+anterior. Note que \(x_{t+h}-\mu=(1|\textbf{0}'_{p-1})z_{t+h}\), logo
+\[E(x_{t+h}|\mathcal{D}_t)=\mu+(1|\textbf{0}'_{p-1})T^h z_t\]
+
+Em termos de estimação, a função de verossimilhança deve ser alterada
+para
+
+\[\begin{align*}
+L(\mu,\phi_1,\ldots,\phi_p,\nu)&=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\mu-\sum_{j=1}^p \phi_j(x_{t-j}-\mu)^2\right\} \\&\times f(x_{1},\ldots,x_p|\mu,\phi_1,\ldots,\phi_p,\nu).
+        \end{align*}\]\\
+onde
+\[x_{1},\ldots,x_p\sim\hbox{Normal}(\mu\textbf{1}_p,\Sigma(\phi_1,\ldots,\phi_h))\]
+
+\hypertarget{exemplo-nuxfamero-anual-de-terremotos}{%
+\subsection{Exemplo: número anual de
+terremotos}\label{exemplo-nuxfamero-anual-de-terremotos}}
+
+A série abaixo apresenta o número anual de terremotos de magnitude maior
+ou igual à 7 na escala Richter.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(gsheet)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Carregando pacotes exigidos: gsheet
+\end{verbatim}
+
+\begin{verbatim}
+Warning: package 'gsheet' was built under R version 4.3.2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{\textquotesingle{}https://docs.google.com/spreadsheets/d/1PPf1nOjwh1fnr1VtFW2DKN6PY9s9TXEQTn6ZX3igCBQ/edit?usp=sharing\textquotesingle{}}
+
+\NormalTok{dados }\OtherTok{\textless{}{-}} \FunctionTok{gsheet2tbl}\NormalTok{(url)}
+\NormalTok{terr }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(dados[,}\DecValTok{2}\NormalTok{]) }
+\NormalTok{terr }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{( terr, }\AttributeTok{start =} \DecValTok{1900}\NormalTok{)}
+
+\FunctionTok{ts.plot}\NormalTok{(terr, }\AttributeTok{ylab =} \StringTok{\textquotesingle{}No terremotos\textquotesingle{}}\NormalTok{, }\AttributeTok{xlab =} \StringTok{\textquotesingle{}Ano\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd=} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{processo_linear_geral_files/figure-pdf/unnamed-chunk-4-1.pdf}
+
+}
+
+\end{figure}
+
+Note que o processo parece ser estacionário. Vamos explorar as funções
+de autocorrelação nas duas figuras abaixo. O correlograma mostra um
+comportamento tendendo para zero após 5 defasagens enquanto que o
+gráfico da função de autocorrelação parcial apresenta um único valor
+significativo. Temos evidências o modelo AR(1) pode ser adequado.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(terr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{processo_linear_geral_files/figure-pdf/unnamed-chunk-5-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pacf}\NormalTok{(terr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{processo_linear_geral_files/figure-pdf/unnamed-chunk-5-2.pdf}
+
+}
+
+\end{figure}
+
+A função \texttt{arima(x,\ order\ =\ c(p,0,0))} estima os parâmetros do
+modelo \(AR(p)\) já considerando a deriva (caso contrário, utilize o
+argumento \texttt{include.mean=FALSE}). Abaixo apresentamos o modelo
+ajustado.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod }\OtherTok{\textless{}{-}} \FunctionTok{arima}\NormalTok{( terr, }\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\NormalTok{mod}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+arima(x = terr, order = c(1, 0, 0))
+
+Coefficients:
+         ar1  intercept
+      0.5433    19.8907
+s.e.  0.0840     1.3180
+
+sigma^2 estimated as 36.7:  log likelihood = -318.98,  aic = 643.97
+\end{verbatim}
+
+Podemos verificar se o ajuste é adequado analisando os resíduos. Note
+que agora possuímos uma ferramente nova, o gráfico da função de
+autocorrelação parcial. Abaixo, os gráficos das funções de
+autocorrelação não apresentam valores significativos. O teste de
+Box-Pierce não rejeita a hipótese de um processo estacionário e o teste
+de Shapiro-Wilks não rejeita a hipótese de ruído branco gaussiano.
+Portano, temos evidências de que o modelo AR(1) com erros gaussianos é
+adequado para essa série.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{residuals)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{processo_linear_geral_files/figure-pdf/unnamed-chunk-7-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pacf}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{residuals)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{processo_linear_geral_files/figure-pdf/unnamed-chunk-7-2.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{residuals)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Pierce test
+
+data:  mod$residuals
+X-squared = 0.92715, df = 1, p-value = 0.3356
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{residuals)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Shapiro-Wilk normality test
+
+data:  mod$residuals
+W = 0.97813, p-value = 0.09826
+\end{verbatim}
+
+As estimativas encontradas foram \(\hat{\phi}=0,5\), \(\hat{\nu}=36,7\)
+e \(\hat{\mu}=19\). Podemos utilizar a função \texttt{forecast} do
+pacote de mesmo nome para fazer previsões. Note que a medida que o
+horizonte de previsão cresce, o modelo converge para a deriva.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(forecast)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Carregando pacotes exigidos: forecast
+\end{verbatim}
+
+\begin{verbatim}
+Warning: package 'forecast' was built under R version 4.3.1
+\end{verbatim}
+
+\begin{verbatim}
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prev }\OtherTok{\textless{}{-}} \FunctionTok{forecast}\NormalTok{(mod, }\DecValTok{10}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(prev)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{processo_linear_geral_files/figure-pdf/unnamed-chunk-8-1.pdf}
+
+}
+
+\end{figure}
 
 \bookmarksetup{startatroot}
 
