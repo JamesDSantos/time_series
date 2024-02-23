@@ -1,0 +1,256 @@
+# Intervenção e outliers
+
+## Análise de intervenção
+
+
+Considere o problema no qual a série temporal $x_t$ recebe apenas uma intervenção, no tempo $T$. O modelo geral é dado por
+
+$$x_t=m_t+N_t,$$
+onde o processo $N_t$ representa a série temporal sem a intervenção e $m_t$ representa o efeito da intervenção. Ante do tempo $T$, $m_t$ é assumida ser nula. A série $\{x_t,t<T\}$ é referida como dados pré-intervenção e a série $\{x_t,t\geq T\}$ é referida como  pós-intervenção.
+
+A função escada é definda como 
+$$S_t^{(T)}=\left\{\begin{array}{ll}1,&\hbox{ se }t\geq T\\ 0,&\hbox{ caso contrário}\end{array}\right.$$
+ou seja, $S_t(T)=0$ durante a pré-intervenção e $S_t^(T)=1$ durante a pós-intervenção. A função pulso, definida por 
+$$P^{(T)}_t=S_t^{(T)}-S_{t-1}^{(T)}$$
+é a variável indicadora do tempo da intervenção. Como
+$$P_t^{(T)}=(1-B)S_t^{(T)}$$
+podemos escrever o pulso em função de $S_t^{(T)}$. 
+
+Quando a intervenção possui um resultado imediato e permanente na função média, a mudança pode ser modelada por
+$$m_t=\omega S_t^{(T)},$$
+onde $\omega$ é o parâmetro que modela da mudança permantente na média. Em termos de função pulso, teremos
+$$m_t=m_{t-1}+\omega P_t^{(T)}.$$
+A figura abaixo ilustra esse efeito 
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - ""
+
+plot.new()
+plot.window(xlim=c(0,11), ylim=c(0,1.5))
+axis(1, at = c(0,5,10),c('','T',''))
+axis(2, at = c(0,1,1.5), c(0,expression(omega),''))
+lines(0:4,rep(0,5), type= 'o', pch=16)
+lines(5:10,rep(1,6), type= 'o', pch=16)
+```
+
+Também é possível que a mudança na função média só ocorra após um atraso de $d$ unidades de tempo em relação à intervenção. Se $d$ é conhecido, teremos
+$$m_t=\omega S_{t-d}^{(T)}.$$
+A figura abaixo apresenta essa estrutura considerando um atraso de dois dias.
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - ""
+
+plot.new()
+plot.window(xlim=c(0,11), ylim=c(0,1.5))
+axis(1, at = c(0,5,10),c('','T',''))
+axis(2, at = c(0,1,1.5), c(0,expression(omega),''))
+lines(0:6,rep(0,7), type= 'o', pch=16)
+lines(7:10,rep(1,4), type= 'o', pch=16)
+```
+
+Em outro cenário, é possível que a intervenção possua um efeito imediato que se apaga gradualmente. Podemos reproduzir esse efeito com utilizando a estrutura
+
+$$m_t=\delta m_{t-1}+\omega P_{t}^{(T)},$$
+com $\delta \in (0,1)$ e $m_0=0$. Uma vez que $m_t=\omega \delta^{T-t}$ para $t\geq T$, $m_t$ decrescerá exponencialmente para zero, eliminando o efeito da intervenção. A mesma estrutura anterior pode ser reescrita como
+
+$$m_t=(1-\delta B)^{-1}\omega (1-B)S^{(T)}_t$$
+A figura abaixo ilustra essa estrutura.
+
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - ""
+
+plot.new()
+plot.window(xlim=c(0,11), ylim=c(0,1.5))
+axis(1, at = c(0,5,10),c('','T',''))
+axis(2, at = c(0,1,1.5), c(0,expression(omega),''))
+lines(0:4,rep(0,5), type= 'o', pch=16)
+m = 0
+for(i in 1:6) m[i+1] = .5*m[i]+ifelse(i==1,1,0)
+lines(5:10,m[-1], type= 'o', pch=16)
+```
+
+As estruturas acima podem ser combinadas para criar novas. Por exemplo, suponha que no tempo $T$ a função média se modifia e posteriormente esse efeito diminui, se tornando uma nova constante. Podemos imaginar que a função $m_t$ deve ser composta de duas partes  
+
+$$m_t = m_{1,t}+m_{2,t},$$
+onde 
+$$m_{1,t}=\omega_1 S_{t}^{(T)}$$
+representa a nova mudança a ser observa em médio prazo e 
+$$m_{2,t}=\delta m_{2,t-1}+\omega_2 P_{t}^{(T)}$$
+representa a mudança momentânea, que será eliminada no curto prazo. A figua abaixo ilustra essa situação.
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - ""
+
+plot.new()
+plot.window(xlim=c(0,14), ylim=c(0,1.5))
+axis(1, at = c(0,5,10),c('','T',''))
+axis(2, at = c(0,1.5,.5), c(0,expression(omega[1]+omega[2]),expression(omega[1])))
+lines(0:4,rep(0,5), type= 'o', pch=16)
+m1 = 0
+for(i in 1:10) m1[i+1] = .5*m1[i]+ifelse(i==1,1,0)
+lines(5:14,.5+m1[-1], type= 'o', pch=16)
+abline(h=.5, lty = 2)
+abline(h=1.5, lty = 2)
+```
+
+Vamos discutir a estimação dos parâmetros da intervenção considerando um modelo ARIMA (sazonal ou não). Note que
+$$x_t-m_t=N_t,$$
+onde $N_t$ é um modelo ARIMA. Sejam $(\theta,\phi)$ os parâmetros do modelo ARIMA e $\omega$ os parâmetros da intervenção. Então,
+
+$$L(\theta,\phi,\omega|x_1,\ldots,x_n)=L_{\hbox{ARIMA}}(\theta,\phi|x_1-m_1,\ldots,x_n-m_n)$$
+e podemos utilizar a mesma função de verossimilhança para implementar a intervenção.
+
+### Exemplo
+
+Durante a pandemia de COVID-19, Manaus passou por duas grandes ondas de mortes. A primeira, ocorreu no início da pandemia, em abril de 2020. A segunda, e mais impactante, ocorreu em janeiro de 2021, pela falta de tubos de oxigênio. 
+
+A série abaixo representa o número de óbitos maternos e de mulheres em idade fértil, 10 a 49 anos - MIF - na cidade de Manaus, entre 2005 e 2022. 
+
+```{r}
+require(gsheet)
+url <- 'https://docs.google.com/spreadsheets/d/1Cd9sxyI7Hm058fCXP7Sw4WzKyuRrCbal7bWz16T8smM/edit?usp=sharing'
+
+x <- gsheet2tbl(url)
+obt <- ts(x$N, frequency = 12, start=c(2005,1))
+
+ts.plot(obt, ylab = 'Óbitos de MIF')
+```
+
+A pandemia é o nosso evento de intervenção e o período pré-pandêmico, logo a série até março de 2020 constiuirá nossos dados pré-intervenção, cuja série é mostrada abaixo 
+
+```{r}
+obt2020_3 <- window(obt, end = c(2020,3))
+
+ts.plot(obt2020_3, ylab= 'No. óbitos', title = 'Óbitos de MIF, pré-pandemia')
+```
+
+Podemos notar uma leve tendência na série. O correlograma e a autocorrelação parcial amostral da primeira diferença da série mostram uma estrutura compatível com um modelo ARIMA( 4,1,1).
+```{r}
+acf(diff(obt2020_3))
+pacf(diff(obt2020_3))
+```
+
+A análise dos resíduos do modelo ARIMA(4,1,1) mostram que essa escolha é adequada e que o ruído pode ser considerado gaussiano.
+
+```{r}
+mod <- arima(obt2020_3,c(4,1,1))
+res <- mod$residuals
+ts.plot(res)
+acf(res)
+pacf(res)
+Box.test(res)
+shapiro.test(res)
+```
+
+
+Considere agora a previsão para o resto do ano de 2020, dada abaixo, com o que foi observado.
+
+```{r}
+require(forecast)
+ts.plot( window( obt, start = c(2020,4), end=c(2020,12)), ylab = 'No. óbitos MIF')
+prev <- forecast(mod,9)
+lines(prev$mean, lwd = 2, col = 'seagreen')
+legend('topright', c('original','previsão'),fill = c(1,'seagreen'), bty= 'n')
+```
+
+Note que o efeito desaparece após poucos meses, e a série volta a oscilar em torno daquilo que foi previsto. Vamos então ajustar o seguinte modelo para a série até dezembro de 2020:
+
+$$x_t=x_{t-1}+\sum_{j=1}^4\phi_j(x_{t-j}-x_{t-j-1})+\varepsilon_t+\theta\varepsilon_t + m_t,$$
+onde
+$$m_t=\delta m_{t-1}+\omega P_t^{(T)},$$
+onde $T$ representa abril de 2020.
+
+
+```{r}
+# selecionando a série até o fim de 2020
+obt2020 <- window( obt, end = c(2020,12))
+
+# função pulso  
+Pt <- ifelse( time(obt2020) == 2020.250, 1, 0)
+
+# função para encontrar o EMV
+fun <- function(par){
+
+# parâmetros da intervenção
+delta <- exp(par[1]) / ( 1 + exp(par[1]) )
+omega <- exp( par[2] )
+
+
+# mt
+mt = 0
+for(i in 1:length(obt2020)) mt[i+1] = delta*mt[i]+omega*Pt[i]
+
+mt <- mt[-1] # removendo m0
+mt <- ts(mt, start=c(2005,1), frequency = 12)
+# estimação do ARIMA
+mod <- arima(obt2020-mt, c(4,1,1))
+
+# retorne a log verossimilhança do modelo
+-mod$loglik
+}
+```
+
+Vamos fazer um gráfico da função para alguns valores
+para procurar valores iniciais razoáveis para $delta$ e $omega$ - lembre-se, que esses valores estão transformados.
+
+```{r}
+Edelta <- seq(-3,3,.2)
+Eomega <- seq(2,4.5,.2)
+
+z <- outer(Edelta, Eomega, function(x,y) apply( cbind(x,y), 1, function(x)-fun(c(x[1],x[2]) ) ))
+
+image(Edelta, Eomega, z, col = terrain.colors(20))
+
+```
+
+Vamos obter as estimativas de máxima verossimilhança.
+
+```{r}
+opt <- optim( c(0,4), fun)
+
+opt$convergence
+delta <- exp(opt$par[1])/(1+exp(opt$par[1]))
+omega <- exp(opt$par[2])
+
+c(delta, omega)
+```
+
+Agora vamos obter os resíduos do modelo e o $m_t$, considerando os parâmetros estimados no passo anterior.
+
+```{r}
+# obtendo mt
+mt = 0
+for(i in 1:length(obt2020)) mt[i+1] = delta*mt[i]+omega*Pt[i]
+
+mt <- mt[-1] # removendo m0
+mt <- ts(mt, start = c(2005,1), frequency = 12)
+# obtendo os resíduos
+modFim <- arima(obt2020-mt,c(4,1,1))
+resFim <- modFim$res
+```
+
+Abaixo segue a análise usual dos resíduos
+
+```{r}
+ts.plot(resFim)
+acf(resFim)
+pacf(resFim)
+Box.test(resFim);shapiro.test(resFim)
+```
+
+Por último, podemos fazer um gráfico de $m_t$ para verificar o efeito do início da pandemia na série
+
+```{r}
+mt <- 
+ts.plot(window(mt, start = c(2020,1)), type = 'h')
+```
+

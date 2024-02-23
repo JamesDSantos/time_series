@@ -141,9 +141,11 @@ E(x_{t-h}x_t)&=\sum_{j=1}^p \phi_j E(x_{t-h}x_{
 t-j})
 \end{align}$$ e, como $\gamma(h)=E(x_t x_{t-h})$, teremos $$\begin{align}
 \gamma(h)&=\sum_{j=1}^p \phi_j \gamma(h-j)
-\end{align}$$ Dividindo ambos os lados por $\gamma(0)$, teremos $$\begin{align}
+\end{align}$${#eq-ACF-ARP} Dividindo ambos os lados por $\gamma(0)$, teremos $$\begin{align}
 \rho(h)&=\sum_{j=1}^p \phi_j \rho(h-j)
 \end{align}$$ Essa relação pode ser utilizada para encontrar a função de autocorrelação do processo sem a necessidade de encontrar a inversa de $\phi(B)$.
+
+
 
 :::{#exm-}
 Considere o processo $AR(2)$ abaixo: $$x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon_t.$$ Multiplicando a equação acima por $x_{t-1}$ em ambos os lados teremos $$x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon_t x_{t-1}.$$ Calculando o valor esperado, temos $$\begin{align*}
@@ -199,25 +201,86 @@ $\blacksquare$
 
 ### A função de autocorrelação parcial (PACF)
 
-Consideremos novamente o processo $AR(1)$. Vimos que
-    $$\rho(h)=\phi^h.$$
-Isto implica que $Cor(x_{t+2},x_t)=\phi^2$. Note que esta correlação só existe por causa da relação entre os pares $(x_t,x_{t+1})$ e $(x_{t+1},x_{t+2})$. De fato
-    $$Cov(x_t,x_{t+2}|x_{t+1})=0.$$         
+Inicialmente, considere a regressão 
+$$\hat{x}_t=\sum_{j=1}^p \beta_j x_{j-j}.$$
 
-A função de autocorrelação parcial para qualquer processo estacionário depende apenas da defasagem e é definada por
-$$\phi_{h}(h)=\frac{Cov\left(x_{t+h},x_t|x_{t+1},\ldots x_{t+h-1}\right)}{\sqrt{Var\left(x_t|x_{t+1},\ldots x_{t+h-1}\right)Var\left(x_{t+h}|x_{t+1},\ldots x_{t+h-1}\right)}}$$
+onde $\beta$ é o valor de minimiza
+$$E(x_t-\hat{x}_t)^2=E\left(x_t-\sum_{j=1}^p \beta_jx_{t-j}\right)^2.$${#eq-blue-PACF}
+Para calcular $\phi_{hh}$ devemos minimizar
+$$\begin{align}E(x_{t+h}-\hat{x}_{t+h})^2&=\gamma(0)+\sum_{j=1}^p\sum_{k=1}^p\beta_j\beta_k \gamma(j-k)-2\sum_{j=1}^p\beta_j\gamma(j)\end{align}$$
+e, encontrando o ponto crítico após derivar em $\beta$, concluímos que o valor de $\beta$ que minimiza (@eq-blue-PACF) satisfaz.
+$$\gamma(j)=\sum_{k=1}^p \beta_k\gamma(j-k).$$
+Contudo, comparando a equação acima com a identidade dada na @eq-ACF-ARP, temos que $\beta_k=\phi_k,$ ou seja,
 
-Intuitivamente, a função de autocorrelação parcial calcula a correlação entre $x_t$ e $x_{t+h}$ eliminando a dependência linear entre os valores intermediários $x_s$, $t<s<t+h$.
-  
-:::{#thm-}
-Seja $x_1,\ldots,x_n$ uma amostra de um processo estacionário. Sejam $\hat{\phi}_1(h),\ldots,\hat{\phi}_h(h)$ os valores que minimizam 
-$$\sum_{t=h+1}^n(x_t-\phi_1x_{t-1}-\cdots-\phi_hx_{t-h})^2.$$
-Então, $\hat{\phi}_h(h)$ é um estimador para a função de autocorrelação parcial
+$$\hat{x}_t=\sum_{j=1}^p\phi_jx_{t-j}.$$
+É interessante notarmos que chegaremos ao mesmo resultado de definirmos
+$$\hat{x}_t=\sum_{j=1}^p \phi_j x_{t+j}.$$
+Vamos alternar entre essas duas formas de acordo com a conveniência.
+
+:::{#def-}
+A função de autocorrelação parcial, denotada por $\phi_{hh}$ é
+$$\phi_{11}=\hbox{corr}(x_{t+1},x_t),$$
+e, para $h\geq 2$, 
+$$\phi_{hh}=\hbox{corr}(x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_t
+).$$
+Além disso, se $x_t$ é um processo gaussiano, então $$\phi_{hh}=\hbox{corr}(x_{t+h},x_t|x_{t+1},\ldots,x_{t+h-1}).$$
+$\blacksquare$
 :::
 
-Para um $AR(p)$, sempre é verdade que$\phi_{h}(h)=0$ para $h>p$. Deste modo, podemos estimar a ordem do modelo verificando a partir de qual defasagem $h$ os valores $\hat{\phi}_h(h)$ deixam serem significativos.
 
-O gráfico da função de autocorrelação parcial constrói um gráfico com os pares $(h,\hat{\phi}_{h}(h))$ de modo semelhante ao que foi feito com o correlograma, inclusive com os mesmos intervalos para testar se a autocorrelação parcial é nula - note que a primeira defasagem é um.
+Intuitivamente, a função de autocorrelação parcial calcula a correlação entre $x_t$ e $x_{t+h}$ eliminando a dependência linear entre os valores intermediários $x_s$, $t<s<t+h$.
+
+
+:::{#exm-}
+Considere o processo AR(1) estacionário. Como $\gamma(h)=\phi^2$, é imediato, pela definição, que $\phi_{11}=\gamma(1)/\gamma(0)=\phi$. 
+
+Para $h\geq 2$, vamos definir $\hat{x}_{t+h}=\phi x_{t+h-1}$ e $\hat{x}_t=\phi x_{t+1}$. Então,
+$$\begin{align}\phi_{hh}&=Cov( x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_t)\\&=Cov( x_{t+h}-\phi x_{t+h-1},x_t-\phi x_{t+1})\\&=
+\gamma(h)-\phi\gamma(h-1)-\phi\gamma(h-1)+\phi^2\gamma(h-2)\\
+\end{align}$$
+Pela @eq-ACF-ARP,
+$$\begin{align}\gamma(h)&=\phi \gamma(h-1)\\ \gamma(h-1)&=\phi\gamma(h-2) \end{align}$$
+logo, $\phi_{hh}=0$ para todo $h\geq 2$
+
+
+$\blacksquare$
+:::
+
+
+:::{#exm-}
+Considere o processo AR(2) estacionário. Para $h=2$, defina
+$$\begin{align}\hat{x}_{t+2}&=\phi_1 x_{t+1}+\phi_2 x_{t}\\ \hat{x}_t&=\phi_1 x_{t+1}+\phi_2 x_{t+2}\end{align}$$
+Então
+$$\begin{align}\phi_{22}&=Cov(x_{t+2}-\hat{x}_{t+2}, x_t-\hat{x}_t)\\&=Cov(x_{t+2}-\phi_1 x_{t+1}-\phi_2 x_{t},x_t-\phi_1 x_{t+1}-\phi_2 x_{t+2})\\
+&=Cov(\varepsilon_{t+2},x_t-\phi_1 x_{t+1} - \phi_2 x_{t+2})\\&=-\phi_2Cov(\varepsilon_{t+2},x_{t+2})\end{align}$$
+
+Por último, para qualquer $h>2$,
+$$\begin{align}\phi_{hh}&=Cov(x_{t+h}-\hat{x}_{t+h}, x_t-\hat{x}_t)\\&=Cov(x_{t+h}-\phi_1 x_{t+h-1}-\phi_2 x_{t+h-2},x_t-\phi_1 x_{t+1}-\phi_2 x_{t+2})\\
+&=Cov(\varepsilon_{t+2},x_t-\phi_1 x_{t+1} - \phi_2 x_{t+h})\\&=0\end{align}$$
+
+
+$\blacksquare$
+:::
+
+
+Seja $x_t$ um processo AR($p$) estacionário. Faça,
+$$\begin{align}\hat{x}_{t+h}&=\sum_{j=1}^p \phi_j x_{t+h-j}\\ \hat{x}_t&=\sum_{j=1}^p \phi_j x_{t+j}\end{align}$$
+
+Então,
+
+$$\begin{align}\phi_{hh}&=Cov(x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_{t})\\
+&=Cov\left(x_{t+h}-\sum_{j=1}^p\phi_j x_{t+h-j},x_{t}-\sum_{j=1}^p\phi_j x_{t-j} \right)\\
+&=Cov\left(\varepsilon_{t+h},x_{t}-\sum_{j=1}^p\phi_j x_{t-j} \right)\\ &=\sum_{j=1}^p \phi_j Cov\left(\varepsilon_{t+h}, x_{t-j} \right)\\ \end{align}$$
+logo, $\phi_{hh}$ é nulo sempre que $h>j$.
+
+
+:::{#def-}
+**Gráfico da autocorrelação parcial**
+
+O gráfico da função de autocorrelação parcial é construído a partir dos pares  $(h,\phi_{hh})$, para $h=1,2,\ldots$.
+$\blakcsquare$
+:::
+
 
 No exemplo abaixo, uma amostra de tamanho 100 foi gerada de um processo AR(2) estacionário e o gráfico da função de autocorrelação parcial gerado. Note que há apenas duas autocorrelações significativas, levantando evidências de que a ordem do modelo autoregressivo é 2.
 
@@ -400,3 +463,474 @@ require(forecast)
 prev <- forecast(mod, 10)
 plot(prev)
 ```
+
+
+## Médias móveis
+
+O processo
+$$	x_t= \varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j},$$
+onde $\{\varepsilon_t\}$ é um ruído branco, é denominado média móvel de ordem $q$ (onde MA é a sigle de \textit{moving average}). Note que esse modelo não está relacionado com o método de suavização de mesmo nome. Também podemos definir o modelo utilizando um polinômio de defasagens:
+$$\begin{align}x_t
+	=\left(1+\sum_{j=1}^{q}\theta_jB^j\right)\varepsilon_t=\theta(B)\varepsilon_t\end{align}$$
+
+O processo MA$(q)$ é estacionário. De fato
+$$E(x_t)=E\left(\varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}\right)=0,$$
+$$Var(x_t)=\nu\left(1+\sum_{j=1}^{q}\theta_j^2\right).$$
+Agora, defina $\psi_0=1$, $\psi_j=\theta_j$, para $j=1,\ldots,q$ e $\psi_j=0$ para $j>q$. Então,
+$$\begin{align}
+Cov(x_t,x_{t-h})&=\sum_{j=0}^q\sum_{k=0}^q \psi_j\psi_k Cov\left(\varepsilon_{t-j},\varepsilon_{t-k-h}\right)\\&=\nu\sum_{k=0}^{q-h} \psi_{k+h}\psi_k\\
+&=\nu\left[\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}\right]\end{align}$$
+
+A função de autocorrelação desse processo é dada por
+
+$$\rho(h)=\left\{\begin{array}{ll}\frac{\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}}{1+\sum_{j=1}^q\theta^2_j },&\;\;0<h\leq q\\0,&\hbox{ caso contrário}\end{array}\right.$$
+
+Portanto, o correlograma pode ser utilizado para determinar o valor que $q$, uma vez que são esperadas $q$ autocorrelações não nulas.
+
+
+
+### Inversibilidade do processo de média móvel
+
+Nem sempre o processo $MA(q)$ é inversível. De fato, note que
+$$x_t=\varepsilon_t +\theta\varepsilon_{t-1}=(1+\theta B)\varepsilon_t\Rightarrow x_t(1+\theta B)^{-1}=\varepsilon_t.$$
+Sabemos que
+	$$\theta^{-1}(B)=\sum_{j=0}^{\infty}\theta^j B^j,$$
+quando $|\theta|<1$. Portanto, para este processo ser inversível é necessário que $|\theta|<1$. Observe que
+
+$$\theta^{-1}(B)x_t=\varepsilon_t\Rightarrow x_t=\sum_{j=1}^\infty \theta^j x_{t-j}+\varepsilon_t,$$
+logo, a inversa do processo MA$(1)$ é equivalente ao modelo AR($\infty$). 
+
+:::{#prp-}
+O processo MA$(q)$ é inversível se e somente se o módulo das raízes do polinômio $\theta(B)$ forem maiores que um.
+$\blacksquare$
+:::
+
+### Autocorrelação parcial do MA($q$)
+	
+
+Considere que o processo MA$(q)$ inversível. Então, sabemos que
+$$x_t=\sum_{j=0}^\infty\psi_j x_{t-j}+\varepsilon_t $$
+existe e é estacionário. Defina 
+$$\begin{align}
+\hat{x}_{t+h}&=\sum_{j=1}^p\phi_j x_{t+h-j}\\
+\hat{x}_{t}&=\sum_{j=1}^p\phi_j x_{t+j}\\
+\end{align}$$
+
+Então,
+$$\begin{align}\phi_{hh}&=Cov(x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_t)\\
+&=Cov\left(x_{t+h}-\sum_{j=1}^\infty\phi_j x_{t+h-j},x_t- \sum_{j=1}^\infty\phi_j x_{t+j}\right)\\&=Cov\left(\varepsilon_{t+h},x_t- \sum_{j=1}^\infty\phi_j x_{t+j}\right)\\&=-\sum_{j=h}^\infty\psi_jCov(\varepsilon_{t+h},x_{t+j})\\&=-\sum_{j=h}^\infty\psi_jCov(\varepsilon_{t+h},x_{t+j})\end{align}$$
+e, como o processo é inversível, $\phi_{hh}$ deve decair exponencialmente para zero.
+
+
+:::{#exm}
+Considere o processo MA(1) inversível. É possível mostrar que
+$$Cov(\varepsilon_t,x_{t+j})=\nu\theta^j$$
+Sabemos que 
+$$x_t=\sum_{j=1}^\infty \psi_jx_{t-j}+\varepsilon_t,$$
+onde $\psi_j=\theta^j$. Então,
+$$\begin{align}\phi_{hh}&=-\sum_{j=h}^\infty\theta^j Cov(\varepsilon_{t+h},x_{t+j})=-\sum_{j=h}^\infty\theta^{2j} \nu\end{align}$$
+
+:::
+### Estimação dos parâmetros do MA($q$)
+
+Sabemos que
+$$f(x_1,\ldots,x_n)=f(x_1)\prod_{t=2}^{n}f(x_t|x_1,\ldots,x_{t-1}).$$
+	
+	Considere inicialmente o modelo $MA(1)$ e considere que $\varepsilon_0$ é conhecido. Então,
+	$$x_1= \varepsilon_1+\theta\varepsilon_0\sim\hbox{Normal}(\theta \varepsilon_0,\nu ).$$
+Além disso, após observar $x_1$, podemos escrever
+$$\hat{\varepsilon}_1=x_1-\theta\varepsilon_0.$$
+Como
+$$\begin{align*}
+x_2|\mathcal{D}_1\sim
+	(\varepsilon_2+\theta\varepsilon_1|\varepsilon_0,x_1)\sim\varepsilon_1+\theta\hat{\varepsilon}_1\sim\hbox{Normal}(\theta\hat{\varepsilon}_1,\nu).
+	\end{align*}$$
+
+De um modo geral, fazendo
+	$$\hat{\varepsilon}_t = x_t-\theta\hat{\varepsilon}_{t-1}$$
+teremos
+$$\begin{align*}
+	(x_t|\mathcal{D}_{t-1})&\sim  \hbox{Normal}(\theta \hat{\varepsilon}_{t-1},\nu)
+	\end{align*}$$
+e podemos escrever a verossimilhança, 
+
+$$L(\theta,\nu,\varepsilon_0)=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\left[(x_1-\theta\varepsilon_0)^2+\sum_{t=2}^n(x_t-\theta\hat{\varepsilon}_{t-1})^2\right]\right\}$$
+
+
+Para um modelo $MA(q)$, supomos que  $\varepsilon_{-q+1},\ldots,\varepsilon_{0}$ são conhecidos. Fazendo
+$$\begin{equation}
+	\hat{\varepsilon}_{t}=x_t - \sum_{j=1}^{q}\theta_j\hat{\varepsilon}_{t-j},
+	\end{equation}$$
+	e
+	
+$$\begin{align}
+	\lambda_t'=-(\hat{\varepsilon}_{t-1},\ldots,\hat{\varepsilon}_{t-q})
+	\end{align}$$
+	teremos que $$x_{t}|\mathcal{D}_{t-1}\sim\hbox{Normal}\left(\lambda_t'\boldsymbol{\theta},\nu\right)$$
+onde $\boldsymbol{\theta}'=(\theta_1,\ldots,\theta_q)$. Logo,
+$$\begin{equation}
+	L(\boldsymbol{\theta},\nu,\varepsilon_{-q+1},\ldots,\varepsilon_0)\propto \left(\frac{1}{\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=1}^n\left(y_t -\lambda_t'\boldsymbol{\theta}\right) ^ 2\right\}
+	\end{equation}$$
+
+Em relação aos valores $\varepsilon_{-q+1},\ldots,\varepsilon_0$, temos duas estratégias de otimização:
+-  Fazer $\varepsilon_{-q+1}=\cdots=\varepsilon}_0=0$: isto é equivalente a dizer que todos estes valores são iguais à sua média.
+- Estimar $\varepsilon_{-q+1},\ldots,\varepsilon_0$: isto altera o número de parâmetros para $2q+1$. Neste caso, a estratégia anterior pode ser utilizada como valores iniciais para o otimizador.
+
+## Modelo autorregressivo com médias móveis
+
+
+O modelo autorregressivo com médias móveis (ARMA) é dado por
+$$\begin{equation}
+	x_t= \sum_{j=1}^p \phi_j x_{t-1} + \varepsilon_t + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k},
+	\end{equation}$$
+onde $(p,q)$ são as ordens da parte autorregressiva e das médias móveis, respectivamente. Definimos $ARMA(0,q)=MA(q)$ e, de modo análogo, definimos $ARMA(p,0)=AR(p).$
+	
+Utilizando o operador defasagem teremos
+$$\begin{align}
+		x_t&= \sum_{j=1}^p \phi_j x_{t-1} + \varepsilon_t + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k} \\
+		&= 
+		\sum_{j=1}^p \phi_j B^jx_{t} + \varepsilon_t + \sum_{k=1}^{q}\theta_kB^k\varepsilon_{t}
+		\end{align}$$
+o que implica em
+$$\begin{align*}
+		\underbrace{\left(1-\sum_{j=1}^p \phi_j B^j\right)}_{\phi(B)}x_t = \underbrace{\left(1-\sum_{j=1}^p \theta_j B^j\right)}_{\theta(B)}\varepsilon_{t}
+		\end{align*}$$
+
+O modelo ARMA será estacionário se o módulo das raízes de $\phi(B)$ forem maiores que um e será inversível se o mesmo ocorrer com o módulo das raízes de $\theta(B)$.
+
+
+### Função de autocorrelação
+
+A função de auto covariância cruzada é dada por
+$$\begin{equation}
+	  \gamma_{x\varepsilon}(h)=E(\varepsilon_t x_{t-h}).
+	\end{equation}$$
+	Note que $x_{t-h}$ depende apenas dos ruídos que ocorreram até o tempo $t-h$. Portanto
+$$\begin{align}
+	 \gamma_{x\varepsilon}(h)=0,&\;\; h>0 \\
+     \gamma_{x\varepsilon}(h)\neq 0,&\;\; h\leq 0 \\
+	\end{align}$$
+
+Considere o processo ARMA(1,1), dado por
+$$x_t = \varepsilon_{t} + \phi x_{t-1} + \theta\varepsilon_{t-1}.$$
+
+Teremos que
+$$\begin{align*}
+\gamma_{x\varepsilon}(0)&=E(x_t\varepsilon_t) = E( \left[\varepsilon_t + \phi x_{t-1} + \theta\varepsilon_{t-1} \right]\varepsilon_t)\\
+&=\underbrace{E(\varepsilon_t^2)}_{\nu}+ \phi\underbrace{ E(x_{t-1}\varepsilon_t)}_{\gamma_{x\varepsilon}(1)=0} +\theta \underbrace{E(\varepsilon_{t}\varepsilon_{t-1})}_{=0} \\
+&=\nu
+\end{align*}$$
+
+Agora, multiplicando a equação do modelo ARMA(1,1) em ambos os lados por $x_{t-h}$, e aplicando a esperança teremos
+
+$$\begin{equation}
+	\underbrace{E(x_{t-h}x_t)}_{\gamma(h)} = \underbrace{E(x_{t-h}\varepsilon_{t})}_{\gamma_{x\varepsilon}(h)} + \phi \underbrace{E(x_{t-1}x_{t-h})}_{\gamma(h-1)} + \theta \underbrace{E(x_{t-h}\varepsilon_{t-1})}_{\gamma_{x\varepsilon}(h-1)}.
+	\end{equation}$$
+
+Fazendo $h=0$ na equação acima, teremos
+$$\gamma(0)=\phi\gamma(1) + \theta\gamma_{x\varepsilon}(-1)$$
+e, como 
+$$\gamma_{x\varepsilon}(-1)=E(x_{t+1}\varepsilon_t)=$$
+
+Fazendo $h=1$ teremos
+$$\gamma(1)=\phi\gamma(0)+\theta\nu$$
+
+Para qualquer $h\geq 2$,
+
+$$\gamma(h)=\phi\gamma(h-1),$$
+ou ainda 
+$$\gamma(h)=\phi^{h-1}\gamma(1)=\phi^h\gamma(0)+\theta\nu.$$
+Assim,
+$$\rho(h)=\left\{\begin{array}{ll}\end{array}\right.$$
+	
+	Note que a primeira auto covariância depende do parâmetro de média móvel.
+	
+	Note  ainda que após a primeira defasagem, a função de auto covariância se comporta como um modelo AR(1) tradicional: com um decaimento exponencial (podendo ser alternado ou não).
+\end{frame}
+
+\begin{frame}
+	Para o caso geral:
+	\begin{itemize}
+		\item As $q$ primeiras autocorrelações dependerão dos parâmetros $\phi_1,\ldots,\phi_p$ e $\theta_1,\ldots,\theta_q$.
+		\item Se $q<p$, toda a função de autocorrelação consistirá de uma mistura de exponenciais ou senos amortecidos, dependendo das raízes do polinômio $\phi(B)$.
+		\item Se $q\geq p$, então as $q-p+1$ primeiras autocorrelações não seguirão o padrão descrito acima.
+	\end{itemize}
+\end{frame}	
+
+\begin{frame}{Função de autocorrelação parcial}
+	Se comporta como um processo MA($q$).
+\end{frame}
+
+\begin{frame}{Verossimilhança}
+	\begin{itemize}
+		\item Dados, $y_{0},\ldots,y_{-p+1}$ e $\hat{\varepsilon}_0,\ldots,\hat{\varepsilon}_{-q+1}$, temos que
+			$$y_t=(y_{t-1},\ldots,y_{t-p})'\bm{\phi} -(\hat{\varepsilon}_{t-1},\ldots,\hat{\varepsilon}_{t-q} )'\bm{\theta}+\varepsilon_t$$
+		\item A construção da verossimilhança pode ser feita de modo análogo ao modelo $MA(q)$.
+		\item Considere o modelo $ARMA(1,1)$ e que estão fixados $y_0$ e $\varepsilon_0=\hat{\varepsilon}_0$.
+		\item $t=1$, teremos 
+		\begin{align*}
+		y_1|y_0,\hat{\varepsilon}_0 &\sim \phi y_0 + \varepsilon_1-\theta\varepsilon_0|y_0,\hat{\varepsilon}_0 \\
+		&\sim \phi y_0 + \varepsilon_1-\theta\hat{\varepsilon}_0|y_0,\hat{\varepsilon}_0\\
+		&\sim \hbox{Normal}\left(\phi y_0 -\theta\hat{\varepsilon}_0, \nu\right)
+		\end{align*}
+		Note ainda que, dados $y_0$ e $\hat{\varepsilon}_0$,
+		$$y_1=\phi y_0+\varepsilon_1-\theta \hat{\varepsilon}_{0}\Rightarrow \hat{\varepsilon}_1=y_1 - \phi y_0 + \theta\hat{\varepsilon}_0$$		
+	\end{itemize}	
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+		\item Para $t=2$,
+		\begin{align*}
+		y_2|y_1,y_0,\hat{\varepsilon}_0 &\sim \phi y_1 + \varepsilon_2-\theta\varepsilon_1|y_1,y_0,\hat{\varepsilon}_0 \\
+		&\sim \phi y_1 + \varepsilon_2-\theta\hat{\varepsilon}_1|y_0,y_1,\hat{\varepsilon}_0\\
+		&\sim \hbox{Normal}\left(\phi y_1 -\theta\hat{\varepsilon}_1, \nu\right)
+		\end{align*}
+		Novamente, dados $y_1,y_2,y_0$ e $\hat{\varepsilon}_0$, teremos
+		$$\hat{\varepsilon}_2=y_2 - \phi y_1 + \theta\hat{\varepsilon}_1.$$		
+		\item De modo geral, para qualquer $t\geq 1$,
+		$$\hat{\varepsilon}_t= y_t - \phi y_{t-1} + \theta \hat{\varepsilon}_{t-1}$$
+		e
+		$$(y_t|y_{0:t-1},\hat{\varepsilon}_0)\sim\hbox{Normal}( \phi y_{t-1} - \theta \hat{\varepsilon}_{t-1}).$$
+		
+	\end{itemize}	
+\end{frame}
+
+\begin{frame}{Verossimilhança para o modelo $ARMA(p,q)$}
+	Fixe $y_{0:-p+1}$ e $\hat{\varepsilon}_{0:-q+1}$. Para $t\geq 1$, faça,
+	\begin{align}
+	\bm{f}_t'&= \left(y_{t-1},\ldots,y_{t-p} , -\hat{\varepsilon}_{t-1},\ldots,-\hat{\varepsilon}_{t-q} \right)'\\
+	\bm{\beta}'&=\left(\bm{\phi}',\bm{\theta}'\right)
+	\end{align}
+	onde
+	$$\hat{\varepsilon}_t = y_t - \bm{f}_t'\bm{\beta}  $$
+	teremos o modelo (não linear)
+	$$L(\bm{\beta},\nu)\propto \left(\frac{1}{\nu}\right)^{\frac{T}{2}}\exp\left\{-\frac{1}{2\nu}\left(\bm{y}-\bm{F}'\bm{\beta}\right)'\left(\bm{y}-\bm{F}'\bm{\beta}\right)\right\}$$
+\end{frame}
+
+
+
+## Modelos integrados
+
+### O operador difereNça
+
+Vimos no começo do curso que o passeio aleatório, dado por
+$$x_t=x_{t-1}+\varepsilon_t$$
+onde $\varepsilon_t$ é um ruído branco, poderia gerar tendências aleatórias. Note que o passeio aleatório nada mais é que o processo AR(1) não estacionário. Podemos escrever esse modelo como
+$$x_t-x_{t-1}=\varepsilon_t\Rightarrow(1-B)x_t=\varepsilon_t\Rightarrow\Delta x_t=\varepsilon_t$$
+Acima,$\Delta=1-B$ é denominado operador diferença. Observe que a série 
+$$y_t=\Delta x_t=\varepsilon_t$$
+é um ruído branco. Desse modo, o operador elimina a tendência aleatória gerada pelo passeio.
+
+Agora, considere que 
+$$x_t=T(t)+\varepsilon_t,$$
+onde $T(t)$ é uma tendência localmente linear com inclinção constante, ou seja, para qualquer $s$ na vizinhança de $t$,
+$$T(s)=\mu_t+b s.$$
+Então
+$$\Delta x_t= \mu_t+bt-(\mu_t+b(t-1))+\varepsilon_t=b+\varepsilon_t$$
+e $y_t=\Delta x_t=b+\varepsilon_t$ será um ruído branco com deriva.
+
+Por último, para qualquer $s$ na vizinhança de $t$, suponha que
+$$T(s)=\mu_t+b_t s.$$
+Nesse caso,
+$$\Delta x_t= b_t+\varepsilon_t$$
+logo, o processo $y_t=\Detal x_t$ não é um ruído branco. Contudo, como é usual que $b_t\approx b_{t+1}$, teremos
+
+$$\Delta y_t= \Delta x_t - \Delta x_{t-1}=b_t-b_{t-1}+\varepsilon_t-\varepsilon_{t-1}\approx \varepsilon_t-\varepsilon_{t-1}$$
+
+logo, aplicar o operador diferença pela segunda vez gera um ruído branco. Note que
+
+$$\Delta y_t=\Delta (x_t-x_{t-1})=\Delta(1-B)x_t=\Delta^2 x_t.$$
+Então, aplicar o operador diferença algumas vezes pode eliminar a tendência da série, gerando um ruído branco.
+
+
+:::{#exm}
+Considere o modelo 
+$$y_t=\Delta x_t=\varepsilon_t,$$
+onde $\varepsilon_t$ é um ruído branco. Então, para $\mathcal{D}_t=\{x_1,\ldots,x_t\}$,
+$$E(y_{t+h}|\mathcal{D}_t)=0\Rightarrow E(x_{t+h}|\mathcal{D}_t)=E(x_{t+h-1}|\mathcal{D}_t)$$
+e, como $E(x_t|\mathcal{D}_t)=x_t$, teremos
+$$E(x_{t+h}|\mathcal{D}_t)=x_t.$$
+Portanto, esse modelo tem como previsão para qualquer horizonte o último valor observado, o que é equivalente ao modelo de suavização exponencial com $\alpha=1$.
+
+Considere agora o modelo $$y_t=\Delta^2 x_t=\varepsilon_t,$$
+onde $\varepsilon_t$ é um ruído branco. Observe que
+$$E(y_{t+1}|\mathcal{D}_t)=0\Rightarrow E(x_{t+1}|\mathcal{D}_t)=x_t + (x_t-x_{t-1}).$$
+É simples mostrar por indução que
+$$E(x_{t+h}|\mathcal{D}_t)=x_t+ h(x_t-x_{t-1}),$$
+que é equivalente ao método de Holt com nível $m_t=x_t$ e inclinação $b_t=(x_t-x_{t-1})$.
+
+$\blacksquare$.
+:::
+
+### Modelo autorregressivo integrado 
+
+Considere agora uma série temporal $x_t$ na qual foram necessárias $d$ diferenças para eliminar a tendência. Contudo, a série $y_t=\Delta^d x_t$ resultante é um ruído branco, mas sim um processo AR($p$). Teremos
+
+$$y_t=\sum_{j=1}^p \phi_j y_{t-j}+\varepsilon_t \Rightarrow \left(1-\sum_{j=1}^p \phi_jB^j\right)y_t=\varepsilon_t$$
+ou, de modo equivalente,
+$$\left(1-\sum_{j=1}^p \phi_jB^j\right)\Delta^d x_t=\varepsilon_t.$$
+O modelo acima é denominado autorregressivo integrado, e sua notação é ARI$(p,d)$, onde $p$ é a ordem do modelo autorregressivo resultante das $d$ diferenças da série original.
+
+As estimativas são obtidas criando a série $y_t=\Delta^d x_t$ e estimando os parâmetros do modelo AR($p$) resultante. 
+
+A previsão do processo ARI($p,d$) pode facilmente ser realizada a partir do modelo AR($p$). Por exemplo, para $y_t=\Delta x_t$,
+
+$$\begin{align}E(y_{t+1}|\mathcal{D}_t)&=\sum_{j=1}^p \phi_j y_{t-j}\\\end{align}$$
+o que implica em
+$$\begin{align} E(x_{t+1}|\mathcal{D}_t)=x_t+\sum_{j=1}^p\phi_j(x_{t-j}-x_{t-j-1})\end{align}$$
+
+:::{#exm-}
+**Previsão para o modelo ARI(1,1)**
+
+Seja $x_t$ uma série temporal segundo o processo ARI(1,1). Então, $\Delta y_t$ é um processo AR(1) e $E(y_{t+h}|\mathcal{D}_t)=\phi^h y_t$. Disto, notemos que
+
+$$E(x_{t+1}-x_t|\mathcal{D}_t)=\phi (x_{t}-x_{t-1})\Rightarrow E(x_{t+1}|\mathcal{D}_t)=x_t+\phi(x_t-x_{t-1}),$$
+e
+$$\begin{align}&E(x_{t+2}-x_{t+1}|\mathcal{D}_t)=\phi^2 (x_t-x_{t-1})\\&\Rightarrow E(x_{t+2}|\mathcal{D}_t)=\phi^2 (x_{t}-x_{t-1})+E(x_{t+1}|\mathcal{D}_t)\\ &\Rightarrow E(x_{t+2}|\mathcal{D}_t)=\phi^2 (x_{t}-x_{t-1})+\phi (x_{t}-x_{t-1})+x_t.\end{align}$$
+Por indução, é imediato que
+$$E(x_{t+h}|\mathcal{D}_t)=x_t+\sum_{j=1}^h \phi^{j}(x_t-x_{t-1}).$$
+Identificando $x_t$ como a estimativa para nível da série no tempo $t$ e $(x_t-x_{t-1})$ como a inclinação da tendência, temos que a função de previsão é um modleo com tendência amortecida.
+
+$\blacksquare$
+:::
+
+
+### Modelo autorregressivo sazonal
+
+Seja 
+$$x_t = g(t)+\varepsilon_t,$$
+onde $g(.)$ é uma função períodica com período $p$  e $\varepsilon_t$ um rúido branco. Note que
+$$x_t-x_{t-p}=g(t)-g(t-p)+\varepsilon_t-\varepsilon_{t-p}=\varepsilon_t-\varepsilon_{t-p},$$
+logo, a diferença acima gerou uma série estacionária. Observe que 
+$$x_t-x_{t-p}=(1-B^p)x_t.$$
+O operador $1-B^p$ é conhecido como diferença sazonal.
+
+Sem perda de generalidade, assuma que $D=3$. Então, a relação entre $x_t$ e $x_{t-3}$ pode ser obtida usando a seguinte transformação:
+
+$$\left(\begin{array}{c}x_t\\ x_{t-1}\\ x_{t-2}\end{array}\right)=\left(\begin{array}{cc}0 & 0 & 1\\ 1 & 0 & 0\\ 0& 1 & 0\end{array}\right)\left(\begin{array}{c}x_{t-1}\\ x_{t-2}\\ x_{t-3}\end{array}\right)=\left(\begin{array}{cc}0 & 0 & 1\\ 1 & 0 & 0\\ 0& 1 & 0\end{array}\right)^2\left(\begin{array}{c}x_{t-4}\\ x_{t-5}\\ x_{t-6}\end{array}\right)$$
+A matriz acima é denominada permutação, e já foi utilizada anteriormente. Para o caso geral,
+
+$$\left(\begin{array}{c}x_t\\ x_{t-1}\\ x_{t-2}\end{array}\right)=\left(\begin{array}{cc}0 & 0 & 1\\ 1 & 0 & 0\\ 0& 1 & 0\end{array}\right)^h\left(\begin{array}{c}x_{t-(3h-2)}\\ x_{t-(3h-1)}\\ x_{t-3h}\end{array}\right)$$
+ou ainda,
+$$x_t=\sum_{j=1}^3 c_j\lambda_j^h x_{t-(3h-j+1)},$$
+onde $\lambda_j$ são os autovalores da matriz acima. Acontece que
+$$\left|\left(\begin{array}{cc}0 & 0 & 1\\ 1 & 0 & 0\\ 0& 1 & 0\end{array}\right)-\lambda \textbf{I}_3\right|=0\Rightarrow \lambda^3=1$$
+Teremos que $\lambda=1$ é a solução real, enquanto que 
+$$\lambda= \exp\left\{\frac{\pi }{3}i\right\}=\cos\left(\frac{2\pi }{3}\right)+i\sin\left(\frac{2\pi}{3}\right).$$
+e
+$$\lambda= \exp\left\{\frac{2\pi }{3}i\right\}=\cos\left(\frac{4\pi }{3}\right)+i\sin\left(\frac{4\pi k}{3}\right).$$
+são as soluções complexas. 
+
+Na prática, para qualquer período $p$, o autovalores existirão $p-1$ autovalores da matriz de permutação satisfazendo 
+$$\lambda= \cos(2\pi k/p)+i\sin(2\pi k/p),$$
+com $k=1,\ldots,D-1$.
+
+Dizemos que $x_t$ é um processo autorregressivo sazonal se $y_t=(1-B^p)^Dx_t$ é um processo autorregressivo.
+
+Assim como no caso do modelo integrado, os parâmetros são estimados a partir do modelo AR($P$) considerando a amostra $y_t=(1-B^{p})^Dx_t$.
+
+A previsão é
+
+:::{#exm-}
+Seja $x_t$ um processo autorregressivo sazonal, de período 12. Então,
+
+$$(1-B^{12})x_t=\Phi(1-B^{12})x_{t-1}+\varepsilon_t,$$
+ou ainda,
+$$x_t=x_{t-12}+\Phi x_{t-1}-\Phi x_{t-13}+\varepsilon_t$$
+
+:::
+
+## O modelo ARMA
+
+O modelo auto regressivo de média móvel é dado por
+$$	x_t= \sum_{j=1}^p \phi_j x_{t-1}  + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k}+ \varepsilon_t,
+$$
+onde $(p,q)$ são as ordens da parte autorregressiva e da média móvel, respectivamente. Definimos o modelo de média móveis como $ARMA(0,q)$ e o autorregressivo como $AR(p).$
+
+Utilizando o operador defasagem teremos
+$$\begin{align}
+		x_t-\sum_{j=1}^p \phi_j x_{t-1}&= \varepsilon_t + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k} \\
+		&\Rightarrow 
+		\underbrace{\left(1-\sum_{j=1}^p \phi_j B^j\right)}_{\phi(B)}x_{t} =  \underbrace{\left(1+\sum_{k=1}^{q}\theta_kB^k\right)}_{\theta(B)}\varepsilon_{t}.
+		\end{align}$$
+
+O modelo ARMA será estacionário se o módulo das raízes de $\phi(B)$ forem maiores que um e será inversível se as raízes de $\theta(B)$ também o forem.
+
+### A função de autocorrelação
+
+A função de autocovariância cruzada é dada por
+$$\begin{equation}
+	  \gamma_{x\varepsilon}(h)=E(\varepsilon_t x_{t-h}).
+	\end{equation}$$
+Note que $x_{t-h}$ depende apenas dos ruídos que ocorreram até o tempo $t-h$. Portanto
+$$\begin{align}
+	 \gamma_{x\varepsilon}(h)=0,&\;\; h>0 \\
+     \gamma_{x\varepsilon}(h)\neq 0,&\;\; h\leq 0 \\
+	\end{align}$$
+
+:::{#exm-}
+Considere o processo ARMA(1,1), dado por
+$$x_t = \varepsilon_{t} + \phi x_{t-1} + \theta\varepsilon_{t-1}.$$
+Teremos que
+$$\begin{align*}
+\gamma_{x\varepsilon}(0)&=E(x_t\varepsilon_t) = E( \left[\varepsilon_t + \phi x_{t-1} - \theta\varepsilon_{t-1} \right]\varepsilon_t)\\
+&=\underbrace{E(\varepsilon_t^2)}_{\nu}+ \phi\underbrace{ E(x_{t-1}\varepsilon_t)}_{\gamma_{x\varepsilon}(1)=0} -\theta \underbrace{E(\varepsilon_{t}\varepsilon_{t-1})}_{=0} \\
+&=\nu
+\end{align*}$$
+
+$\blacksquare$
+:::
+
+
+Considere o processo ARMA$(1,1)$, dado por
+	$$x_t = \varepsilon_{t} + \phi x_{t-1} + \theta\varepsilon_{t-1}.$$
+Multiplicando ambos os lados por $x_{t-h}$, e aplicando a esperança teremos
+$$
+	\underbrace{E(x_{t-h}x_t)}_{\gamma(h)} = \underbrace{E(x_{t-h}\varepsilon_{t})}_{\gamma_{x\varepsilon}(h)} + \phi \underbrace{E(x_{t-1}x_{t-h})}_{\gamma(h-1)} + \theta \underbrace{E(x_{t-h}\varepsilon_{t-1})}_{\gamma_{x\varepsilon}(h-1)}
+	$$
+
+
+Fazendo $h=0$ na equação acima teremos
+$$\gamma(0)=\phi\gamma(1) + \theta\gamma_{x\varepsilon}(-1).$$
+
+Fazendo $h=1$ teremos
+$$\gamma(1)=\phi\gamma(0)+\theta\nu.$$
+
+Para qualquer $h\geq 2$,
+
+$$\gamma(h)=\phi\gamma(h-1),$$
+ou ainda 
+$$\gamma(h)=\phi^{h-1}\gamma(1),$$
+e
+$$\rho(h)=\phi^h+\nu\theta\phi^{h-1}\frac{\nu}{\gamma(0)}.$$
+
+Note que a função de autocovariância se comporta como um modelo AR(1) tradicional, com um decaimento exponencial (podendo ser alternado ou não).
+
+Para o caso geral:
+- As $q$ primeiras autocorrelações dependerão dos parâmetros $\phi_1,\ldots,\phi_p$ e $\theta_1,\ldots,\theta_q$.
+- Se $q<p$, toda a função de autocorrelação consistirá de uma mistura de exponenciais ou cossenos amortecidos, dependendo das raízes do polinômio $\phi(B)$.
+- Se $q\geq p$, então as $q-p+1$ primeiras autocorrelações não seguirão o padrão descrito acima.
+
+Para construir a função de verossimilhança, observe que
+$$y_t=\phi(B)x_t=\theta(B)\varepsilon_t,$$
+ou seja, $y_1,\ldots,y_n$ é um modelo de média móvel e sua função de verossimilhança pode ser construída desse a partir desse modelo.
+
+
+
+### Modelos ARMA integrados e sazonais
+
+Dizemos que $x_t$ é um processo autorregressivo integrado de médias móveis se
+
+$$\phi(B)\Delta^d x_t =\theta(B)\varepsilon_t,$$
+e denotamos esse modelo por ARIMA$(p,d,q)$. A previsão desse modelo é dada por
+	$$\hat{y}_t(h)=E(y_{t+h}|y_t,\ldots y_{t-(p+d)}).$$
+
+Seja $x_t$ uma série temporal sazonal com período $s$. Considere que o processo ${x_t,x_{t-s},x_{t-2s}}$ é um ARIMA$(P,D,Q)$:
+	$$\Phi(B)(1-B^P)^Dx_t = \Theta(B)\eta_t,$$
+	e que o processo $\eta_t\sim \hbox{ARIMA}(p,d,q)$. Então,
+	$$\theta(B)(1-B)^d\eta_t = \theta(B)\varepsilon_t\Rightarrow \eta_t = \left[\theta(B)(1-B)^d\right]^{-1}\theta(b)\varepsilon_t.$$
+	Portanto, teremos o modelo
+	$$\theta(B)\Phi(B)(1-B^P)^D(1-B)^dx_t = \Theta(B)\theta(B)\eta_t,$$
+
+	O modelo SARIMA é representado por ARIMA$(p,d,q)(P,D,Q)_s$ onde $(p,d,q)$ é a especificação do modelo ARIMA que corresponde a parte não sazonal a série e $(P,D,Q)_s$ é o modelo ARIMA que correponde a parte sazonal da série (com período $s$).
