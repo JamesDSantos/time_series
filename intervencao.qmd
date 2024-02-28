@@ -8,7 +8,7 @@ Considere o problema no qual a série temporal $x_t$ recebe apenas uma interven�
 $$x_t=m_t+N_t,$$
 onde o processo $N_t$ representa a série temporal sem a intervenção e $m_t$ representa o efeito da intervenção. Ante do tempo $T$, $m_t$ é assumida ser nula. A série $\{x_t,t<T\}$ é referida como dados pré-intervenção e a série $\{x_t,t\geq T\}$ é referida como  pós-intervenção.
 
-A função escada é definda como 
+A função degrau é definda como 
 $$S_t^{(T)}=\left\{\begin{array}{ll}1,&\hbox{ se }t\geq T\\ 0,&\hbox{ caso contrário}\end{array}\right.$$
 ou seja, $S_t(T)=0$ durante a pré-intervenção e $S_t^(T)=1$ durante a pós-intervenção. A função pulso, definida por 
 $$P^{(T)}_t=S_t^{(T)}-S_{t-1}^{(T)}$$
@@ -109,7 +109,63 @@ onde $N_t$ é um modelo ARIMA. Sejam $(\theta,\phi)$ os parâmetros do modelo AR
 $$L(\theta,\phi,\omega|x_1,\ldots,x_n)=L_{\hbox{ARIMA}}(\theta,\phi|x_1-m_1,\ldots,x_n-m_n)$$
 e podemos utilizar a mesma função de verossimilhança para implementar a intervenção.
 
-### Exemplo
+### Exemplo: Nível do Nilo
+
+Considere mais uma vez a série anual do fluxo do Rio Nilo, mostrada abaixo. A linha pontilhada vertical, no ano de 1898, mostra uma mudança de nível na série. As linhas pontilhadas horizontais mostram a média amostral da série antes e depois de 1898. Note que houve uma redução no volume de aproximadamente 247 $\times 10^8 m^3$.  
+
+
+
+```{r}
+ts.plot(Nile)
+abline( v= 1898, lty = 2)
+mediaAntes  <- mean(Nile[time(Nile)<1898])
+mediaDepois <- mean(Nile[time(Nile)>1898])
+                   
+segments(1871,mediaAntes,1898, mediaAntes, lty = 2)
+segments(1899,mediaDepois,1970, mediaDepois, lty = 2)
+
+(mediaAntes-mediaDepois)
+```
+
+Abaixo, mostramos que a série após 1890 é consistente com um modelo AR(1) com deriva.
+```{r}
+nile1890 <- window(Nile, start = 1890)
+acf(nile1890)
+pacf(nile1890)
+```
+
+Vamos considerar o modelo de intervenção
+
+$$m_t=\omega S_{t-1}^{(1898)}.$$
+
+```{r}
+La <- function(omega){
+  St <- array(1,length(Nile))
+  St[time(Nile)<1898]<-0
+  mod <- arima(Nile-omega*St, c(1,0,0))
+  mod$loglik
+} 
+
+optimize(La, c(-500,500), maximum = TRUE)
+```
+
+A estimativa de máxima verossimilhança para $\omega$ é $-241,857$. Abaixo, analisamos os resíduos do modelo ajustado
+
+```{r}
+  omega_chapeu <- -241.857
+  St <- array(1,length(Nile))
+  St[time(Nile)<1898]<-0
+  mod <- arima(Nile-omega_chapeu*St, c(1,0,0))
+  
+  ts.plot(mod$residuals)
+  acf(mod$residuals)
+  pacf(mod$residuals)
+  
+  Box.test(mod$residuals)
+  shapiro.test(mod$residuals)
+```
+
+### Exemplo: óbitos maternos durante a pandemia
 
 Durante a pandemia de COVID-19, Manaus passou por duas grandes ondas de mortes. A primeira, ocorreu no início da pandemia, em abril de 2020. A segunda, e mais impactante, ocorreu em janeiro de 2021, pela falta de tubos de oxigênio. 
 
@@ -129,20 +185,39 @@ A pandemia é o nosso evento de intervenção e o período pré-pandêmico, logo
 
 ```{r}
 obt2020_3 <- window(obt, end = c(2020,3))
-
 ts.plot(obt2020_3, ylab= 'No. óbitos', title = 'Óbitos de MIF, pré-pandemia')
 ```
 
 Podemos notar uma leve tendência na série. O correlograma e a autocorrelação parcial amostral da primeira diferença da série mostram uma estrutura compatível com um modelo ARIMA( 4,1,1).
 ```{r}
-acf(diff(obt2020_3))
-pacf(diff(obt2020_3))
+tend <- loess( obt2020_3 ~ time(obt2020_3))
+tend <- ts(tend$fitted, start = start(obt2020_3), frequency = frequency(obt2020_3))
+ts.plot(obt2020_3)
+lines(tend)
+
 ```
 
-A análise dos resíduos do modelo ARIMA(4,1,1) mostram que essa escolha é adequada e que o ruído pode ser considerado gaussiano.
+Abaixo, estudamos o comportamento da série sem a tendência, em busca de sazonalidade. Não há evidências de sazonalidade nessa etapa da análise.
+```{r}
+require(TSA)
+semTend <- obt2020_3 - tend
+ts.plot(semTend)
+periodogram(semTend)
+monthplot(semTend)
+```
+
+Vamos analisar a primeira diferença da série. Há sinais de que a parte estacionária é composta por uma média móvel e ordem 1 e uma sazonal e uma autoregressiva. 
+```{r}
+d1 <- diff(obt2020_3,1)
+acf(d1)
+pacf(d1)
+```
+
+Vamos tentar ajustar o modelo ARIMA(1,1,1)(0,0,1).
 
 ```{r}
-mod <- arima(obt2020_3,c(4,1,1))
+require(forecast)
+mod <- Arima(obt2020_3,c(1,1,1),c(0,0,1))
 res <- mod$residuals
 ts.plot(res)
 acf(res)
@@ -155,87 +230,95 @@ shapiro.test(res)
 Considere agora a previsão para o resto do ano de 2020, dada abaixo, com o que foi observado.
 
 ```{r}
-require(forecast)
-ts.plot( window( obt, start = c(2020,4), end=c(2020,12)), ylab = 'No. óbitos MIF')
+o20 <- window( obt, start = c(2020,4), end=c(2020,12))
+ts.plot( o20, ylab = 'No. óbitos MIF')
 prev <- forecast(mod,9)
-lines(prev$mean, lwd = 2, col = 'seagreen')
+lines(prev$mean, lwd = 2, col = 'seagreen', type = 'o')
 legend('topright', c('original','previsão'),fill = c(1,'seagreen'), bty= 'n')
+
+omega_hat <- o20[1]-prev$mean[1]
+
 ```
 
-Note que o efeito desaparece após poucos meses, e a série volta a oscilar em torno daquilo que foi previsto. Vamos então ajustar o seguinte modelo para a série até dezembro de 2020:
+Note que o efeito da pandemia surge em abril, aumenta em março e desaparece logo em seguida. Então, até dezembro de 2020, vamos assumir que
 
-$$x_t=x_{t-1}+\sum_{j=1}^4\phi_j(x_{t-j}-x_{t-j-1})+\varepsilon_t+\theta\varepsilon_t + m_t,$$
+
+$$x_t-x_{t-1}=\phi(x_{t-1}-x_{t-2}) + \theta\varepsilon_{t-1}+\Theta \varepsilon_{t-12}+\varepsilon_t+m_t,$$
 onde
-$$m_t=\delta m_{t-1}+\omega P_t^{(T)},$$
-onde $T$ representa abril de 2020.
+$$m_t=m_{1,t}+m_{2,t}$$
+com
+$$m_{1,t}=\delta_1 m_{1,t-1}+\omega P_t^{(2023/4)},$$
+e
+$$m_{2,t}=\delta_2 m_{2,t-1}+\omega_2P_{t}^{(2023/5)}.$$
 
+Abaixo, constrúimos a função de verossimilhança.
 
 ```{r}
 # selecionando a série até o fim de 2020
 obt2020 <- window( obt, end = c(2020,12))
 
 # função pulso  
-Pt <- ifelse( time(obt2020) == 2020.250, 1, 0)
+Pt1 <- ifelse( time(obt2020) == 2020.250, 1, 0)
+Pt2 <- ifelse( time(obt2020) == time(obt2020)[185], 1, 0)
 
 # função para encontrar o EMV
 fun <- function(par){
 
 # parâmetros da intervenção
-delta <- exp(par[1]) / ( 1 + exp(par[1]) )
-omega <- exp( par[2] )
-
+delta1 <- exp(par[1]) / ( 1 + exp(par[1]) )
+delta2 <- exp(par[2]) / ( 1 + exp(par[2]) )
+omega1 <- exp(par[3])
+omega2 <- exp(par[4])
 
 # mt
-mt = 0
-for(i in 1:length(obt2020)) mt[i+1] = delta*mt[i]+omega*Pt[i]
+mt = mt1 = mt2 = 0
+for(i in 1:length(obt2020)){
+  mt1[i+1] = delta1*mt1[i]+omega1*Pt1[i]
+  mt2[i+1] = delta2*mt2[i]+omega2*Pt2[i]
+}  
 
+mt = mt1 + mt2
 mt <- mt[-1] # removendo m0
 mt <- ts(mt, start=c(2005,1), frequency = 12)
 # estimação do ARIMA
-mod <- arima(obt2020-mt, c(4,1,1))
+mod <- Arima(obt2020-mt, c(1,1,1),c(0,0,1))
 
 # retorne a log verossimilhança do modelo
 -mod$loglik
 }
 ```
 
-Vamos fazer um gráfico da função para alguns valores
-para procurar valores iniciais razoáveis para $delta$ e $omega$ - lembre-se, que esses valores estão transformados.
-
-```{r}
-Edelta <- seq(-3,3,.2)
-Eomega <- seq(2,4.5,.2)
-
-z <- outer(Edelta, Eomega, function(x,y) apply( cbind(x,y), 1, function(x)-fun(c(x[1],x[2]) ) ))
-
-image(Edelta, Eomega, z, col = terrain.colors(20))
-
-```
-
 Vamos obter as estimativas de máxima verossimilhança.
 
 ```{r}
-opt <- optim( c(0,4), fun)
-
+opt <- optim( c(0,0,0,0), fun)
 opt$convergence
-delta <- exp(opt$par[1])/(1+exp(opt$par[1]))
-omega <- exp(opt$par[2])
 
-c(delta, omega)
+delta1 <- exp(opt$par[1])/(1+exp(opt$par[1]))
+delta2 <- exp(opt$par[2])/(1+exp(opt$par[2]))
+omega1 <- exp(opt$par[3])
+omega2 <- exp(opt$par[4])
+c(delta1,delta2,omega1,omega2)
+
+
 ```
-
-Agora vamos obter os resíduos do modelo e o $m_t$, considerando os parâmetros estimados no passo anterior.
+Logo em abril, os casos aumentaram em $\hat{\omega}_1=52$. Observe que $\delta_1<0,003$, logo o efeito para o mês seguinte dos casos de maio é praticamente nulo. Portanto, $\hat{\omega}_2=66$ representa, basicamente, o efeito de maio. Como $\delta_2$ é praticamente nulo, eses efeito somem em junho.
 
 ```{r}
 # obtendo mt
-mt = 0
-for(i in 1:length(obt2020)) mt[i+1] = delta*mt[i]+omega*Pt[i]
+# mt
+mt = mt1 = mt2 = 0
+for(i in 1:length(obt2020)){
+  mt1[i+1] = delta1*mt1[i]+omega1*Pt1[i]
+  mt2[i+1] = delta2*mt2[i]+omega2*Pt2[i]
+}  
 
+mt = mt1 + mt2
 mt <- mt[-1] # removendo m0
-mt <- ts(mt, start = c(2005,1), frequency = 12)
+mt <- ts(mt, start=c(2005,1), frequency = 12)
 # obtendo os resíduos
-modFim <- arima(obt2020-mt,c(4,1,1))
-resFim <- modFim$res
+modFim <- Arima(obt2020-mt,c(1,1,1),c(0,0,1))
+resFim <- modFim$residuals
 ```
 
 Abaixo segue a análise usual dos resíduos
@@ -250,7 +333,6 @@ Box.test(resFim);shapiro.test(resFim)
 Por último, podemos fazer um gráfico de $m_t$ para verificar o efeito do início da pandemia na série
 
 ```{r}
-mt <- 
 ts.plot(window(mt, start = c(2020,1)), type = 'h')
 ```
 
