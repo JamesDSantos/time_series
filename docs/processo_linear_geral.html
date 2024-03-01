@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Séries Temporais - 10&nbsp; Modelos ARMA</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./intervencao.html" rel="next">
+<link href="./suave_exponencial.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./processo_linear_geral.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modelos ARMA</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Séries Temporais</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefácio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ts_window_date.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./estacionaria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modelo_linear.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Revisão sobre o modelo linear</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tendencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Tendência</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sazonalidade.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Sazonalidade</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tendencia_sazonalidade.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Previsão para modelos lineares</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./suave_exponencial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Métodos de suavização exponencial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./processo_linear_geral.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modelos ARMA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intervencao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Intervenção e outliers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#o-polinômio-de-defasagens" id="toc-o-polinômio-de-defasagens" class="nav-link active" data-scroll-target="#o-polinômio-de-defasagens"><span class="header-section-number">10.1</span> O polinômio de defasagens</a></li>
+  <li><a href="#o-modelo-autorregressivo" id="toc-o-modelo-autorregressivo" class="nav-link" data-scroll-target="#o-modelo-autorregressivo"><span class="header-section-number">10.2</span> O modelo autorregressivo</a>
+  <ul class="collapse">
+  <li><a href="#função-de-autocorrelação-para-o-arp" id="toc-função-de-autocorrelação-para-o-arp" class="nav-link" data-scroll-target="#função-de-autocorrelação-para-o-arp"><span class="header-section-number">10.2.1</span> Função de autocorrelação para o <span class="math inline">\(AR(p)\)</span></a></li>
+  <li><a href="#a-função-de-autocorrelação-parcial-pacf" id="toc-a-função-de-autocorrelação-parcial-pacf" class="nav-link" data-scroll-target="#a-função-de-autocorrelação-parcial-pacf"><span class="header-section-number">10.2.2</span> A função de autocorrelação parcial (PACF)</a></li>
+  <li><a href="#método-de-estimação-de-yule-walker" id="toc-método-de-estimação-de-yule-walker" class="nav-link" data-scroll-target="#método-de-estimação-de-yule-walker"><span class="header-section-number">10.2.3</span> Método de estimação de Yule-Walker</a></li>
+  <li><a href="#estimador-de-máxima-verossimilhança" id="toc-estimador-de-máxima-verossimilhança" class="nav-link" data-scroll-target="#estimador-de-máxima-verossimilhança"><span class="header-section-number">10.2.4</span> Estimador de máxima verossimilhança</a></li>
+  <li><a href="#previsão" id="toc-previsão" class="nav-link" data-scroll-target="#previsão"><span class="header-section-number">10.2.5</span> Previsão</a></li>
+  <li><a href="#processo-autorregressivo-com-deriva" id="toc-processo-autorregressivo-com-deriva" class="nav-link" data-scroll-target="#processo-autorregressivo-com-deriva"><span class="header-section-number">10.2.6</span> Processo autorregressivo com deriva</a></li>
+  <li><a href="#exemplo-número-anual-de-terremotos" id="toc-exemplo-número-anual-de-terremotos" class="nav-link" data-scroll-target="#exemplo-número-anual-de-terremotos"><span class="header-section-number">10.2.7</span> Exemplo: número anual de terremotos</a></li>
+  </ul></li>
+  <li><a href="#médias-móveis" id="toc-médias-móveis" class="nav-link" data-scroll-target="#médias-móveis"><span class="header-section-number">10.3</span> Médias móveis</a>
+  <ul class="collapse">
+  <li><a href="#inversibilidade-do-processo-de-média-móvel" id="toc-inversibilidade-do-processo-de-média-móvel" class="nav-link" data-scroll-target="#inversibilidade-do-processo-de-média-móvel"><span class="header-section-number">10.3.1</span> Inversibilidade do processo de média móvel</a></li>
+  <li><a href="#autocorrelação-parcial-do-maq" id="toc-autocorrelação-parcial-do-maq" class="nav-link" data-scroll-target="#autocorrelação-parcial-do-maq"><span class="header-section-number">10.3.2</span> Autocorrelação parcial do MA(<span class="math inline">\(q\)</span>)</a></li>
+  <li><a href="#estimação-dos-parâmetros-do-maq" id="toc-estimação-dos-parâmetros-do-maq" class="nav-link" data-scroll-target="#estimação-dos-parâmetros-do-maq"><span class="header-section-number">10.3.3</span> Estimação dos parâmetros do MA(<span class="math inline">\(q\)</span>)</a></li>
+  </ul></li>
+  <li><a href="#modelo-autorregressivo-com-médias-móveis" id="toc-modelo-autorregressivo-com-médias-móveis" class="nav-link" data-scroll-target="#modelo-autorregressivo-com-médias-móveis"><span class="header-section-number">10.4</span> Modelo autorregressivo com médias móveis</a>
+  <ul class="collapse">
+  <li><a href="#função-de-autocorrelação" id="toc-função-de-autocorrelação" class="nav-link" data-scroll-target="#função-de-autocorrelação"><span class="header-section-number">10.4.1</span> Função de autocorrelação</a></li>
+  </ul></li>
+  <li><a href="#modelos-integrados" id="toc-modelos-integrados" class="nav-link" data-scroll-target="#modelos-integrados"><span class="header-section-number">10.5</span> Modelos integrados</a>
+  <ul class="collapse">
+  <li><a href="#o-operador-diferença" id="toc-o-operador-diferença" class="nav-link" data-scroll-target="#o-operador-diferença"><span class="header-section-number">10.5.1</span> O operador difereNça</a></li>
+  <li><a href="#modelo-autorregressivo-integrado" id="toc-modelo-autorregressivo-integrado" class="nav-link" data-scroll-target="#modelo-autorregressivo-integrado"><span class="header-section-number">10.5.2</span> Modelo autorregressivo integrado</a></li>
+  <li><a href="#modelo-autorregressivo-sazonal" id="toc-modelo-autorregressivo-sazonal" class="nav-link" data-scroll-target="#modelo-autorregressivo-sazonal"><span class="header-section-number">10.5.3</span> Modelo autorregressivo sazonal</a></li>
+  </ul></li>
+  <li><a href="#o-modelo-arma" id="toc-o-modelo-arma" class="nav-link" data-scroll-target="#o-modelo-arma"><span class="header-section-number">10.6</span> O modelo ARMA</a>
+  <ul class="collapse">
+  <li><a href="#a-função-de-autocorrelação" id="toc-a-função-de-autocorrelação" class="nav-link" data-scroll-target="#a-função-de-autocorrelação"><span class="header-section-number">10.6.1</span> A função de autocorrelação</a></li>
+  <li><a href="#modelos-arma-integrados-e-sazonais" id="toc-modelos-arma-integrados-e-sazonais" class="nav-link" data-scroll-target="#modelos-arma-integrados-e-sazonais"><span class="header-section-number">10.6.2</span> Modelos ARMA integrados e sazonais</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modelos ARMA</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="o-polinômio-de-defasagens" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="o-polinômio-de-defasagens"><span class="header-section-number">10.1</span> O polinômio de defasagens</h2>
+<div id="def-" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 10.1 </strong></span>Considere uma sequência <span class="math inline">\(\{a_t\}\)</span>. O operador defasagem é definido como <span class="math inline">\(Ba_t = a_{t-1}\)</span>. Em inglês este operador é conhecido como <em>backshift</em>.</p>
+</div>
+<div id="exm-example" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.1 </strong></span>Considere a série <span class="math inline">\(11,6,3,7,15,8\)</span>.</p>
+<p><span class="math display">\[\begin{align*}
+     Ba_2 &amp;= a_{1}=11\\
+     B a_6&amp; =a_5 =15
+    \end{align*}\]</span> <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>Seguem algumas propriedades fundamentais do operador defasagem</p>
+<ul>
+<li><span class="math inline">\(Bc=c\)</span></li>
+<li><span class="math inline">\(B^k a_t=a_{t-k}\)</span>.</li>
+<li><span class="math inline">\(B(c+ba_{t-1})=c+bBa_t\)</span> (operador linear)</li>
+<li><span class="math inline">\((B^m - B^n)a_t = a_{t-m}-a_{t-n}.\)</span></li>
+<li><span class="math inline">\(B^{-1}a_t = a_{t+1}\)</span></li>
+</ul>
+<p>Note que o operador <span class="math inline">\(B^{-1}\)</span> leva <span class="math inline">\(a_t\)</span> para um passo a frente (como em uma previsão). É comum encontrar a definição <span class="math inline">\(F=B^{-1}\)</span>, onde a letra <span class="math inline">\(F\)</span> é escolhida por causa do termo (previsão).</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.2 </strong></span>Seja <span class="math inline">\(B\)</span> o operado defasagem. Então, definimos um polinômio de defasagens como <span class="math display">\[\psi(B)=a_0+a_1B+\cdots+a_n B^n.\]</span></p>
+</div>
+<p>Note que <span class="math inline">\(\psi(B)\)</span> é um modo sucinto para escrever <span class="math display">\[a(B)x_t=a_0x_t+a_1x_{t-1}+\cdots+a_n x_{t-n}.\]</span></p>
+<p>O polinômio de defasagens pode ser operado como um polinômio regular. Por exemplo, se <span class="math inline">\(a(B)=1-aB\)</span> e <span class="math inline">\(b(B)=1-bB\)</span>, fazer <span class="math display">\[\begin{align}
+a(B)b(B)x_t&amp;=a(B)[(1-bB)x_t]=a(B)(x_t-bx_{t-1})\\
+&amp;=a(B)x_t-ba(B)x_{t-1}=(1-aB)x_t-b(1-aB)x_{t-1}\\
+&amp;=x_t-(a+b)x_{t-1}+abx_{t-2}\end{align}\]</span> é equivalente a encontrar <span class="math display">\[c(B)=(1-aB)(1-bB)=1-(a+b)B + abB^2\]</span> e calcular <span class="math display">\[c(B)x_t=x_t-(a+b)x_{t-1}+abx_{t-2}.\]</span></p>
+<p>Dizemos que o polinômio de defasagens <span class="math inline">\(\psi(B)\)</span> possui inversa se existe uma função <span class="math inline">\(\psi^{-1}(B)\)</span> tal que <span class="math inline">\(\psi(B)\psi^{-1}(B)x_t=x_t\)</span>.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.3 </strong></span>Para entender corretamente os modelos que serão propostos, é fundamental entender o que é a inversa do polinômio de defasagens. O caso mais importante, que será a chave para os demais, é o baseado no seguinte polinômio: <span class="math display">\[\psi(B)=1-\phi B.\]</span></p>
+<p>Suponha que <span class="math display">\[y_t=(1-\phi B)x_t=x_t-\phi x_{t-1 }\]</span> Estamos procurando que qual situação existe <span class="math inline">\(\psi^{-1}(B)\)</span> tal que <span class="math display">\[x_t=\psi^{-1}(B)y_t.\]</span> Como <span class="math display">\[y_{t-1}=(1-\phi B)x_{t-1}=x_{t-1}-\phi x_{t-2},\]</span> teremos que <span class="math display">\[y_t=x_t-\phi[y_{t-1}-\phi x_{t-2}]=x_t-\phi y_{t-1}-\phi^2x_{t-2}.\]</span> Note que podemos continuar iterando as equações acima, obtendo <span class="math display">\[y_t=x_t-\sum_{j=1}^{t-1} \phi^jy_{t-j}-\phi^{t}x_0.\]</span> Assuma que <span class="math inline">\(|\phi|&lt;1\)</span> e que <span class="math inline">\(t\)</span> é grande, o que implica que <span class="math inline">\(\phi^t x_0\)</span> é despresível. Então <span class="math display">\[y_t=x_t-\sum_{j=1}^{t-1}\phi^j y_{t-j}=x_t-\sum_{j=1}^{t-1}\phi^j B^j y_t\]</span> ou ainda <span class="math display">\[\left(1-\sum_{j=1}^{t-1}\phi^j B^j\right)y_t=x_t\]</span> Agora, multiplique os dois lados da equação acima por <span class="math inline">\(1-\phi B\)</span>. Então <span class="math display">\[(1-\phi B)\left(1-\sum_{j=1}^{t-1}\phi^j B^j\right)y_t=(1-\phi B)x_t=y_t \]</span> Deste modo, <span class="math display">\[\psi^{-1}(B)=\lim_{t\rightarrow \infty }\left(1-\sum_{j=1}^{t}\phi^j B^j\right)=1-\sum_{j=1}^{\infty}\phi^j B^j\]</span></p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>No exemplo anterior, o fato de <span class="math inline">\(|\phi|&lt;1\)</span> garante que a inveresa do polinômio de defasagens existem uma vez que <span class="math inline">\(\lim_{t\rightarrow\infty}\sum_{j=1}^t \phi^jB^j\)</span> é convergente.</p>
+<p>O resultado geral é baseado no seguinte teorema.</p>
+<div id="prp-pgMatrix" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 10.1 </strong></span>Seja <span class="math inline">\(T\)</span> uma matriz quadrada qualquer e seja <span class="math display">\[S_n=\sum_{j=1}^n T^j.\]</span> A série <span class="math inline">\(S_n\)</span> converge quando <span class="math inline">\(n\rightarrow\infty\)</span> se e somente se todos os autovalores de <span class="math inline">\(T\)</span> são menores que um em módulo. Nesse caso, <span class="math inline">\(T^j\rightarrow \textbf{0}\)</span> quando <span class="math inline">\(j\rightarrow\infty\)</span> e <span class="math display">\[S_n\rightarrow (1-T)^{-1}.\]</span></p>
+</div>
+<p>A proposição acima é a chave para demonstrar o seguite teorema</p>
+<div id="thm-" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 10.1 </strong></span>Seja <span class="math display">\[y_t=x_t-\sum_{j=1}^p\phi_jx_{t-j}=\left(1-\sum_{j=1}^p\phi_jB^j\right)x_t=\phi(B).\]</span> Então, existe <span class="math inline">\(\phi^{-1}(B)\)</span> se e somente se o módulo das raízes de <span class="math inline">\(\phi(B)\)</span> são maiores que um.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>Faremos a demonstração para o caso <span class="math inline">\(p=2\)</span>, mas os mesmos passos podem ser seguidos para demonstrar o caso geral.</p>
+<p>Seja <span class="math display">\[y_t=x_t-\phi_1x_{t-1}-\phi_2 x_{t-2}=(1-\phi_1B-\phi_2 B^2)x_t.\]</span> Comecemos notando que</p>
+<p><span class="math display">\[\left(\begin{array}{c} x_t \\ x_{t-1}\end{array}\right)=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\left(\begin{array}{cc} \phi_1 &amp; \phi_2 \\ 1 &amp; 0\end{array}\right)\left(\begin{array}{c} x_{t-1} \\ x_{t-2}\end{array}\right)\]</span> Fazendo <span class="math inline">\(z_t=(x_t\;\;x_{t-1})\)</span>, teremos <span class="math display">\[z_t=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\underbrace{\left(\begin{array}{cc} \phi_1 &amp; \phi_2 \\ 1 &amp; 0\end{array}\right)}_{A}z_{t-1}.\]</span> Utilizando essa relação recursiva, teremos <span class="math display">\[z_t=A^t z_{0}+\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)\]</span> e, notando que <span class="math inline">\(x_t=(1\;\;0)z_t\)</span>, teremos <span class="math display">\[x_t=(1\;\;0)A^t z_{0}+(1\;\;0)\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)\]</span> Suponha que os autovalores de <span class="math inline">\(A\)</span> são, em módulo, maiores que um. Então, pela <a href="#prp-pgMatrix">Proposition&nbsp;<span class="quarto-unresolved-ref">prp-pgMatrix</span></a>, para <span class="math inline">\(t\)</span> suficientemente grande, <span class="math display">\[\begin{align}x_t&amp;=(1\;\;0)\sum_{j=1}^\infty A^j \left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)=(1\;\;0)\sum_{j=1}^\infty A^j B^j\left(\begin{array}{c} y_{t} \\ 0\end{array}\right)\\&amp;=\sum_{j=1}^\infty (1\;\;0)A^j B^j\left(\begin{array}{c} 1 \\ 0\end{array}\right)y_{t}=\phi^{-1}(B)y_t\end{align}\]</span> Agora, observe que os autovalores de <span class="math inline">\(A\)</span> são obtidos através da solução de<br>
+<span class="math display">\[\begin{align}0=&amp;\left|\left(\begin{array}{cc}\phi_1 &amp; \phi_2 \\ 1 &amp; 0\end{array}\right)-\lambda \textbf{I}\right|-\lambda(\phi_1-\lambda)-\phi_2\\&amp;=\lambda^2-\lambda \phi_1-\phi_2\\
+&amp;=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\end{align}\]</span> Fazendo <span class="math inline">\(\lambda = 1/B\)</span>, teremos que a equação acima se torna <span class="math display">\[0=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\equiv 1-\phi_1 B-\phi_2B^2=\phi(B)\]</span> logo, se o módulo das raízes de <span class="math inline">\(\phi(B)\)</span> são maiores que um, então o módulo dos autovalores de <span class="math inline">\(A\)</span> são menores que um e, portanto, existe <span class="math inline">\(\phi^{-1}(B)\)</span>.</p>
+</div>
+</section>
+<section id="o-modelo-autorregressivo" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="o-modelo-autorregressivo"><span class="header-section-number">10.2</span> O modelo autorregressivo</h2>
+<p>O modelo autorregressivo de ordem <span class="math inline">\(p\)</span>, ou <span class="math inline">\(AR(p)\)</span>, é dado por <span class="math display">\[\begin{equation}
+        y_t = \sum_{i=1}^{p}\phi_iy_{t-i} +\varepsilon_t
+\end{equation}\]</span> onde <span class="math inline">\(\{\varepsilon_t\}\)</span> é um ruído branco, tipicamente Normal<span class="math inline">\((0,\nu)\)</span>. Nesse modelo, a contribuição da observação <span class="math inline">\(y_{t-j}\)</span> em <span class="math inline">\(y_t\)</span> é dada por <span class="math inline">\(\phi_j\)</span>, que é invariante no tempo.</p>
+<p>Utilizando o polinômio de defasagens, pode-se escrever o modelo AR(<span class="math inline">\(p\)</span>) como <span class="math display">\[\begin{equation}
+        \phi(B)y_t = \varepsilon_t,
+\end{equation}\]</span> onde <span class="math inline">\(\phi(B)=1-B\phi_1-\cdots \phi_p B^p\)</span>. Se o módulo das raízes desse polinômio são maiores que um, então existe <span class="math inline">\(\phi^{-1}(B)\)</span>, ou seja <span class="math display">\[y_t=\phi^{-1}(B)\varepsilon_t=\left(\sum_{j=1}^\infty \psi_jB^j\right)\varepsilon_t\]</span> e o processo será estacionário, com média e variância iguais à <span class="math display">\[\begin{align}E(y_t)&amp;=\left(\sum_{j=1}^\infty \psi_jB^j\right)E(\varepsilon_t)=0\\
+Var(y_t)&amp;=Var\left(\sum_{j=1}^\infty \psi_jB^j\varepsilon_t\right)=\nu\sum_{j=1}^\infty \psi_j^2\\
+\end{align}\]</span> e a função de auto covariância é dada por <span id="eq-covariancia"><span class="math display">\[\begin{align}
+\gamma(h)&amp;=Cov(y_t,y_{t-h})\\&amp;=Cov\left( \left(\sum_{j=1}^\infty \psi_jB^j\right)\varepsilon_t,\left(\sum_{k=1}^\infty \psi_kB^k\right)\varepsilon_{t-h}\right)\\
+&amp;=\sum_{j=1}^\infty \sum_{k=1}^\infty \psi_j\psi_k Cov\left(   \varepsilon_{t-j},\varepsilon_{t-k-h}\right)\\
+&amp;=\nu\sum_{j=1}^\infty \psi_j\psi_{j+h}\end{align} \tag{10.1}\]</span></span></p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.4 </strong></span>Considere o processo <span class="math inline">\(AR(1)\)</span> abaixo: <span class="math display">\[\begin{align*}
+    x_t(1-B\phi)&amp;= \varepsilon_{t-1}.
+\end{align*}\]</span></p>
+<p>Seja <span class="math inline">\(\dot{B}\)</span> a raiz do polinômio <span class="math inline">\(1-B\phi\)</span>. Temos que <span class="math display">\[\begin{align*}
+    \phi(\dot{B})=0\Rightarrow 1-\phi \dot{B} =0 \Rightarrow \dot{B} =\frac{1}{\phi}
+\end{align*}\]</span></p>
+<p>Logo, o processo AR(1) é estacionário se <span class="math display">\[|\dot{B}|&gt;1\Rightarrow \left|\frac{1}{\phi}\right|&gt;1\Rightarrow |\phi|&lt; 1\]</span> Nesse caso, já vimos que <span class="math inline">\(\phi^{-1}(B)=1-\sum_{j=1}^\infty\phi^j B^j\)</span>. Então, pela equação (<a href="#eq-covariancia">Equation&nbsp;<span class="quarto-unresolved-ref">eq-covariancia</span></a>), identificando <span class="math inline">\(\psi_j=\phi^j\)</span>,teremos que</p>
+<p><span class="math display">\[\gamma(h)=\nu\sum_{j=1}^\infty \phi^j\phi^{j+h}=\nu\phi^h\frac{\phi^2}{1-\phi^2} \]</span> Assim, a função de autocorrelação é dada por <span class="math display">\[\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi^h.\]</span></p>
+<p>Note que:</p>
+<ul>
+<li><p>Se <span class="math inline">\(\phi\in(0,1)\)</span>, então <span class="math inline">\(\rho(h)\)</span> decai exponencialmente para zero</p></li>
+<li><p>Se <span class="math inline">\(\in(-1,0)\)</span>, então <span class="math inline">\(\rho(h)\)</span> decai exponencialmente para zero, mas alternando o sinal.</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.5 </strong></span>Considere que <span class="math inline">\(x_t\)</span> é um AR(<span class="math inline">\(2\)</span>), ou seja, <span class="math display">\[x_t=\phi_1 x_{t-1}+\phi_2 x_{t-2}+\varepsilon_t=\phi(B)\varepsilon_t,\]</span> onde <span class="math inline">\(\phi(B)=1-\phi_1B-\phi_2 B^2\)</span>. As raízes desse polinômio são <span class="math display">\[\dot{B}=\frac{1}{2\phi_2}\left[\phi_1\pm\sqrt{\phi_1^2+4\phi_2}\right]\]</span> e, considerando que <span class="math inline">\(|\dot{B}|&gt;1\)</span>, o processo será estacionário se <span class="math inline">\((\phi_1,\phi_2)\)</span> pertence ao triângulo delimitado pelos vértices (-2,-1), (0,1), (2,-1). É interessante notarmos que, se <span class="math inline">\(\phi_2&lt;0\)</span>, é possível que as raízes de <span class="math inline">\(\phi(B)\)</span> sejam um par de números complexos conjugados.</p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<section id="função-de-autocorrelação-para-o-arp" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="função-de-autocorrelação-para-o-arp"><span class="header-section-number">10.2.1</span> Função de autocorrelação para o <span class="math inline">\(AR(p)\)</span></h3>
+<p>Consideremos o processo <span class="math display">\[x_t = \sum_{j=1}^p\phi_j x_{t-j}+\varepsilon_t.\]</span> e suponha que ele é estacionário. Multiplicando ambos os lados por <span class="math inline">\(x_{t-h}\)</span> e aplicando a esperança, teremos <span class="math display">\[\begin{align}
+E(x_{t-h}x_t)&amp;=\sum_{j=1}^p \phi_j E(x_{t-h}x_{
+t-j})
+\end{align}\]</span> e, como <span class="math inline">\(\gamma(h)=E(x_t x_{t-h})\)</span>, teremos <span id="eq-ACF-ARP"><span class="math display">\[\begin{align}
+\gamma(h)&amp;=\sum_{j=1}^p \phi_j \gamma(h-j)
+\end{align} \tag{10.2}\]</span></span> Dividindo ambos os lados por <span class="math inline">\(\gamma(0)\)</span>, teremos <span class="math display">\[\begin{align}
+\rho(h)&amp;=\sum_{j=1}^p \phi_j \rho(h-j)
+\end{align}\]</span> Essa relação pode ser utilizada para encontrar a função de autocorrelação do processo sem a necessidade de encontrar a inversa de <span class="math inline">\(\phi(B)\)</span>.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.6 </strong></span>Considere o processo <span class="math inline">\(AR(2)\)</span> abaixo: <span class="math display">\[x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon_t.\]</span> Multiplicando a equação acima por <span class="math inline">\(x_{t-1}\)</span> em ambos os lados teremos <span class="math display">\[x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon_t x_{t-1}.\]</span> Calculando o valor esperado, temos <span class="math display">\[\begin{align*}
+    \gamma(1)&amp;=\phi_1E(x_{t-1}^2)+\phi_2E(x_{t-2}x_{t-1})+E(\varepsilon_t x_{t-1})\\
+    &amp;=\phi_1\gamma(0) + \phi_2\gamma(1).
+    \end{align*}\]</span> Dividindo ambos os lados por <span class="math inline">\(\gamma(0)\)</span> teremos <span class="math display">\[\rho(1)=\phi_1+\phi_2\rho(1),\]</span> logo, <span class="math display">\[\rho(1)=\frac{\phi_1}{1-\phi_2}
+\]</span></p>
+<p>De modo análogo, teremos <span class="math display">\[x_{t-2} x_{t}=x_{t-2}\left(\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon_{t}\right).\]</span> Aplicando a esperança, teremos <span class="math display">\[\begin{align*}
+    \gamma(2)&amp;=\phi_1 \gamma(1)+\phi_2\gamma(0).
+    \end{align*}\]</span> e dividindo os dois lados por <span class="math inline">\(\gamma(0)\)</span> teremos<br>
+<span class="math display">\[\rho(2)=\phi_1\rho(1)+\phi_2=\frac{\phi_1^2}{1-\phi_2}+\phi_2\]</span> Com os valores de <span class="math inline">\(\rho(1)\)</span> e <span class="math inline">\(\rho(2)\)</span>, podemos encontrar <span class="math inline">\(\rho(3)\)</span>:</p>
+<p><span class="math display">\[\rho(3)=\phi_1\rho(2)+\phi_2\rho(1)\]</span> e assim sucessivamente.</p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>Em geral, a função de autocorrelação do processo AR(<span class="math inline">\(p\)</span>) pode ser escrita como</p>
+<p><span class="math display">\[\rho(h)=\sum_{j=1}^p c_j\left(\frac{1}{\dot{B}_j}\right)^h\]</span> onde <span class="math inline">\(\dot{B}\)</span>, novamente, é a raiz de <span class="math inline">\(\phi(B)=1-\sum_{j=1}^p \phi_j B^j\)</span>.</p>
+<p>O comportamento da função de autocorrelação depende das raízes de <span class="math inline">\(\phi(B)\)</span>.</p>
+<ul>
+<li><p>As raízes reais se comportam de acordo com o que já foi visto no <span class="math inline">\(AR(1)\)</span>, decaindo exponencialmente.</p></li>
+<li><p>As raízes complexas tem um comportamento de onda abafada exponencialmente.</p></li>
+</ul>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.7 </strong></span>Vamos mostrar esse resultado para o caso <span class="math inline">\(p=2\)</span> (o caso geral é análogo). Teremos que</p>
+<p><span class="math display">\[\begin{align}
+\left(\begin{array}{c}\rho(h)\\ \rho(h-1)\end{array}\right)=\underbrace{\left(\begin{array}{cc}\phi_1 &amp; \phi_2 \\ 1 &amp; 0 \end{array}\right)}_{T}\left(\begin{array}{c}\rho(h-1)\\ \rho(h-2)\end{array}\right)=\cdots T^h\left(\begin{array}{c}\rho(0)\\ \rho(-1)\end{array}\right)\end{align}\]</span></p>
+<p>Já discutimos, na primeira seção, que os autovalores de <span class="math inline">\(T\)</span> são equivalentes aos recíprocos das raizes de <span class="math inline">\(\phi(B)\)</span>. Agora, considere a decomposição de <span class="math inline">\(T\)</span> na forma canônica <span class="math display">\[T=Q\Lambda Q^{-1},\]</span> onde <span class="math inline">\(Q\)</span> é a matriz cujas colunas são formadas pelos autovetores de <span class="math inline">\(T\)</span> e <span class="math inline">\(\Lambda\)</span> é uma matriz diagonal formada pelos autovalores. Note que</p>
+<p><span class="math display">\[A^2=Q\Lambda Q^{-1}Q\Lambda Q^{-1}=Q\Lambda^2 Q^{-1}\]</span> e, de modo análogo, <span class="math display">\[A^h=Q\Lambda Q^{-1}Q\Lambda Q^{-1}=Q\Lambda^h Q^{-1}\]</span> Como <span class="math inline">\(\Lambda^h\)</span> é a matriz diagonal com os autovalores elevados à potência <span class="math inline">\(h\)</span>, os elementos de <span class="math inline">\(A^h\)</span> devem ser necessariamente do tipo <span class="math inline">\(\sum_{j=1}^2 c_j \lambda_j^h\)</span>.</p>
+<p>O polinômio característico da matriz <span class="math inline">\(T\)</span> é <span class="math display">\[\lambda^2-\phi_1\lambda-\phi_2\]</span> e, denominando suas raizes por <span class="math inline">\(\lambda_1\)</span> e <span class="math inline">\(\lambda_2\)</span>, teremos <span class="math display">\[\rho(h)=c_1\lambda_1^h+c_2\lambda_2^h.\]</span> - Se <span class="math inline">\(\lambda_1\)</span> é real então <span class="math inline">\(\lambda_2\)</span> também é real e o decaimento de <span class="math inline">\(\rho(h)\)</span> será exponencial, podendo alternar o sinal se algum dos autovalores for negativo.</p>
+<ul>
+<li>Se <span class="math inline">\(\lambda_1\)</span> é complexo, então <span class="math inline">\(\lambda_2\)</span> será seu conjugado. Em coordenadas polares, teremos <span class="math inline">\(\lambda_1=re^{i\omega}\)</span> e <span class="math inline">\(\lambda_2=re^{-i\omega}\)</span>. Deste modo, <span class="math display">\[\begin{align}\rho(h)&amp;=r^h [c_1e^{ih\omega}+c_2e^{-ih\omega}]\\&amp;=r^h[(c_1+c_2)\cos(h\omega)+i(c_1-c_2)\sin(h\omega)]\end{align}\]</span> logo, <span class="math inline">\(\rho(h)\)</span> terá um comportamento de onda com a amplitude decrescendo exponencialmente. A próxima figura mostra esse efeito.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+</section>
+<section id="a-função-de-autocorrelação-parcial-pacf" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="a-função-de-autocorrelação-parcial-pacf"><span class="header-section-number">10.2.2</span> A função de autocorrelação parcial (PACF)</h3>
+<p>Inicialmente, considere a regressão <span class="math display">\[\hat{x}_t=\sum_{j=1}^p \beta_j x_{j-j}.\]</span></p>
+<p>onde <span class="math inline">\(\beta\)</span> é o valor de minimiza <span id="eq-blue-PACF"><span class="math display">\[E(x_t-\hat{x}_t)^2=E\left(x_t-\sum_{j=1}^p \beta_jx_{t-j}\right)^2. \tag{10.3}\]</span></span> Para calcular <span class="math inline">\(\phi_{hh}\)</span> devemos minimizar <span class="math display">\[\begin{align}E(x_{t+h}-\hat{x}_{t+h})^2&amp;=\gamma(0)+\sum_{j=1}^p\sum_{k=1}^p\beta_j\beta_k \gamma(j-k)-2\sum_{j=1}^p\beta_j\gamma(j)\end{align}\]</span> e, encontrando o ponto crítico após derivar em <span class="math inline">\(\beta\)</span>, concluímos que o valor de <span class="math inline">\(\beta\)</span> que minimiza (<a href="#eq-blue-PACF">Equation&nbsp;<span class="quarto-unresolved-ref">eq-blue-PACF</span></a>) satisfaz. <span class="math display">\[\gamma(j)=\sum_{k=1}^p \beta_k\gamma(j-k).\]</span> Contudo, comparando a equação acima com a identidade dada na <a href="#eq-ACF-ARP">Equation&nbsp;<span class="quarto-unresolved-ref">eq-ACF-ARP</span></a>, temos que <span class="math inline">\(\beta_k=\phi_k,\)</span> ou seja,</p>
+<p><span class="math display">\[\hat{x}_t=\sum_{j=1}^p\phi_jx_{t-j}.\]</span> É interessante notarmos que chegaremos ao mesmo resultado de definirmos <span class="math display">\[\hat{x}_t=\sum_{j=1}^p \phi_j x_{t+j}.\]</span> Vamos alternar entre essas duas formas de acordo com a conveniência.</p>
+<div id="def-" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 10.2 </strong></span>A função de autocorrelação parcial, denotada por <span class="math inline">\(\phi_{hh}\)</span> é <span class="math display">\[\phi_{11}=\hbox{corr}(x_{t+1},x_t),\]</span> e, para <span class="math inline">\(h\geq 2\)</span>, <span class="math display">\[\phi_{hh}=\hbox{corr}(x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_t
+).\]</span> Além disso, se <span class="math inline">\(x_t\)</span> é um processo gaussiano, então <span class="math display">\[\phi_{hh}=\hbox{corr}(x_{t+h},x_t|x_{t+1},\ldots,x_{t+h-1}).\]</span> <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>Intuitivamente, a função de autocorrelação parcial calcula a correlação entre <span class="math inline">\(x_t\)</span> e <span class="math inline">\(x_{t+h}\)</span> eliminando a dependência linear entre os valores intermediários <span class="math inline">\(x_s\)</span>, <span class="math inline">\(t&lt;s&lt;t+h\)</span>.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.8 </strong></span>Considere o processo AR(1) estacionário. Como <span class="math inline">\(\gamma(h)=\phi^2\)</span>, é imediato, pela definição, que <span class="math inline">\(\phi_{11}=\gamma(1)/\gamma(0)=\phi\)</span>.</p>
+<p>Para <span class="math inline">\(h\geq 2\)</span>, vamos definir <span class="math inline">\(\hat{x}_{t+h}=\phi x_{t+h-1}\)</span> e <span class="math inline">\(\hat{x}_t=\phi x_{t+1}\)</span>. Então, <span class="math display">\[\begin{align}\phi_{hh}&amp;=Cov( x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_t)\\&amp;=Cov( x_{t+h}-\phi x_{t+h-1},x_t-\phi x_{t+1})\\&amp;=
+\gamma(h)-\phi\gamma(h-1)-\phi\gamma(h-1)+\phi^2\gamma(h-2)\\
+\end{align}\]</span> Pela <a href="#eq-ACF-ARP">Equation&nbsp;<span class="quarto-unresolved-ref">eq-ACF-ARP</span></a>, <span class="math display">\[\begin{align}\gamma(h)&amp;=\phi \gamma(h-1)\\ \gamma(h-1)&amp;=\phi\gamma(h-2) \end{align}\]</span> logo, <span class="math inline">\(\phi_{hh}=0\)</span> para todo <span class="math inline">\(h\geq 2\)</span></p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.9 </strong></span>Considere o processo AR(2) estacionário. Para <span class="math inline">\(h=2\)</span>, defina <span class="math display">\[\begin{align}\hat{x}_{t+2}&amp;=\phi_1 x_{t+1}+\phi_2 x_{t}\\ \hat{x}_t&amp;=\phi_1 x_{t+1}+\phi_2 x_{t+2}\end{align}\]</span> Então <span class="math display">\[\begin{align}\phi_{22}&amp;=Cov(x_{t+2}-\hat{x}_{t+2}, x_t-\hat{x}_t)\\&amp;=Cov(x_{t+2}-\phi_1 x_{t+1}-\phi_2 x_{t},x_t-\phi_1 x_{t+1}-\phi_2 x_{t+2})\\
+&amp;=Cov(\varepsilon_{t+2},x_t-\phi_1 x_{t+1} - \phi_2 x_{t+2})\\&amp;=-\phi_2Cov(\varepsilon_{t+2},x_{t+2})\end{align}\]</span></p>
+<p>Por último, para qualquer <span class="math inline">\(h&gt;2\)</span>, <span class="math display">\[\begin{align}\phi_{hh}&amp;=Cov(x_{t+h}-\hat{x}_{t+h}, x_t-\hat{x}_t)\\&amp;=Cov(x_{t+h}-\phi_1 x_{t+h-1}-\phi_2 x_{t+h-2},x_t-\phi_1 x_{t+1}-\phi_2 x_{t+2})\\
+&amp;=Cov(\varepsilon_{t+2},x_t-\phi_1 x_{t+1} - \phi_2 x_{t+h})\\&amp;=0\end{align}\]</span></p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>Seja <span class="math inline">\(x_t\)</span> um processo AR(<span class="math inline">\(p\)</span>) estacionário. Faça, <span class="math display">\[\begin{align}\hat{x}_{t+h}&amp;=\sum_{j=1}^p \phi_j x_{t+h-j}\\ \hat{x}_t&amp;=\sum_{j=1}^p \phi_j x_{t+j}\end{align}\]</span></p>
+<p>Então,</p>
+<p><span class="math display">\[\begin{align}\phi_{hh}&amp;=Cov(x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_{t})\\
+&amp;=Cov\left(x_{t+h}-\sum_{j=1}^p\phi_j x_{t+h-j},x_{t}-\sum_{j=1}^p\phi_j x_{t-j} \right)\\
+&amp;=Cov\left(\varepsilon_{t+h},x_{t}-\sum_{j=1}^p\phi_j x_{t-j} \right)\\ &amp;=\sum_{j=1}^p \phi_j Cov\left(\varepsilon_{t+h}, x_{t-j} \right)\\ \end{align}\]</span> logo, <span class="math inline">\(\phi_{hh}\)</span> é nulo sempre que <span class="math inline">\(h&gt;j\)</span>.</p>
+<div id="def-" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 10.3 </strong></span><strong>Gráfico da autocorrelação parcial</strong></p>
+<p>O gráfico da função de autocorrelação parcial é construído a partir dos pares <span class="math inline">\((h,\phi_{hh})\)</span>, para <span class="math inline">\(h=1,2,\ldots\)</span>. <span class="math inline">\(\blakcsquare\)</span></p>
+</div>
+<p>No exemplo abaixo, uma amostra de tamanho 100 foi gerada de um processo AR(2) estacionário e o gráfico da função de autocorrelação parcial gerado. Note que há apenas duas autocorrelações significativas, levantando evidências de que a ordem do modelo autoregressivo é 2.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">100</span>) x[i] <span class="ot">=</span> x[i<span class="dv">-1</span>] <span class="sc">-</span>.<span class="dv">8</span><span class="sc">*</span>x[i<span class="dv">-2</span>]<span class="sc">+</span><span class="fu">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,.<span class="dv">1</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(x, <span class="at">xlab =</span> <span class="st">'Defasagem'</span>, <span class="at">ylab =</span> <span class="st">'Autocorrelação parcial'</span>, <span class="at">main =</span> <span class="st">''</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="método-de-estimação-de-yule-walker" class="level3" data-number="10.2.3">
+<h3 data-number="10.2.3" class="anchored" data-anchor-id="método-de-estimação-de-yule-walker"><span class="header-section-number">10.2.3</span> Método de estimação de Yule-Walker</h3>
+<p>O método de estimação de Yule-Walker para estimar os parâmetros do modelo AR(<span class="math inline">\(p\)</span>) consiste na aplicação do método dos momentos. Sua principal vantagem é a ausência de suposição sobre a distribuição dos erros do modelo, exigindo apenas a condição de estacionaridade.</p>
+<p>Para o processo <span class="math inline">\(AR(p)\)</span> estacionário, sabemos que <span class="math display">\[\gamma(h) = \sum_{j=1}^p \phi_j \gamma( h-j).\]</span> Considere a equações do modelo AR(<span class="math inline">\(p\)</span>): <span class="math display">\[x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t.\]</span> Podemos multiplicar ambos os lados por <span class="math inline">\(x_t\)</span> (ou seja <span class="math inline">\(x_{t-h}\)</span>, com <span class="math inline">\(h=0\)</span>). Após aplicar a esperança teremos <span class="math display">\[E(x_t^2) = \sum_{j=1}^p \phi_j E(x_{t-j}x_{t})+E(\varepsilon_tx_{t}).\]</span> Aqui há um detalhe importante:<br>
+<span class="math display">\[E(\varepsilon_tx_{t})=E\left(\varepsilon_t\left[\sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t\right]\right)=E(\varepsilon_t^2)=\nu\]</span> Portanto, <span class="math display">\[\begin{align}   
+    \gamma(h)=\left\{\begin{array}{ll}
+    \sum_{j=1}^p \phi_j \gamma( h-j),&amp;\;\;\hbox{se }h&gt;0\\
+    \sum_{j=1}^p \phi_j \gamma( j)+\nu,&amp;\;\;\hbox{se }h=0 \\
+    \end{array}\right.
+    \end{align}\]</span></p>
+<p>O método de estimação de Yule-Walker consiste em substituir <span class="math inline">\(\gamma(1),\ldots,\gamma(p)\)</span> pelas autocovariâncias amostrais: <span class="math display">\[\begin{align*}
+\hat{\gamma}(1) &amp;= \phi_1\hat{\gamma}(0) + \phi_1\hat{\gamma}(-1) + \cdots + \phi_p\hat{\gamma}(1-p) \\
+\hat{\gamma}(2) &amp;= \phi_1\hat{\gamma}(1) + \phi_1\hat{\gamma}(0)  + \cdots + \phi_p\hat{\gamma}(2-p) \\
+\vdots &amp;= \vdots \\
+\hat{\gamma}(p) &amp;= \phi_1\hat{\gamma}(p-1) + \phi_1\hat{\gamma}(p-2)  + \cdots + \phi_p\hat{\gamma}(0)
+\end{align*}\]</span> Nota: lembre-se que <span class="math inline">\(\gamma(-i)=\gamma(i)\)</span>. Podemos escrever o sistema na forma matricial: <span class="math display">\[\begin{align*}
+    \underbrace{\left(
+    \begin{array}{cccc}
+\hat{\gamma}(0) &amp; \hat{\gamma}(-1) &amp; \cdots &amp; \hat{\gamma}(1-p) \\
+\hat{\gamma}(1) &amp; \hat{\gamma}(0)  &amp; \cdots &amp; \hat{\gamma}(2-p) \\
+         \vdots &amp; \vdots               &amp; \ddots                &amp; \vdots\\
+\hat{\gamma}(p-1) &amp; \hat{\gamma}(p-2) &amp;  \cdots &amp; \hat{\gamma}(0)   
+    \end{array}\right)}_{\hat{\boldsymbol{\Gamma}}}
+    \underbrace{\left( \begin{array}{c} \hat{\phi}_1 \\ \hat{\phi}_2 \\ \vdots \\ \hat{\phi}_p   \end{array}\right)}_{\hat{\boldsymbol{\phi}}}=
+    \underbrace{\left( \begin{array}{c} \hat{\gamma}(1) \\ \hat{\gamma}(2) \\ \vdots \\ \hat{\gamma}(p)   \end{array}\right)}_{\hat{\boldsymbol{\gamma}}}.
+    \end{align*}\]</span> e os estimadores de Yule-Walker para os parâmetros autoregressivos são dados por <span class="math display">\[\hat{\boldsymbol{\phi}}=\hat{\boldsymbol{\Gamma}}^{-1}\hat{\boldsymbol{\gamma}}.\]</span></p>
+<p>Voltando para a Equação (<span class="math inline">\(\ref{eq:autocovarianca-AR}\)</span>), temos que <span class="math display">\[\gamma(0)=\sum_{j=1}^{p}\phi_j \gamma(j)+\nu\]</span> Portanto, um estimador para <span class="math inline">\(\nu\)</span> é dado por <span class="math display">\[\hat{\nu}=  
+  \hat{\gamma(0)}=\sum_{j=1}^{p}\hat{\phi_j}\hat{\gamma(j)}\]</span></p>
+</section>
+<section id="estimador-de-máxima-verossimilhança" class="level3" data-number="10.2.4">
+<h3 data-number="10.2.4" class="anchored" data-anchor-id="estimador-de-máxima-verossimilhança"><span class="header-section-number">10.2.4</span> Estimador de máxima verossimilhança</h3>
+<p>Observe que <span class="math display">\[x_t|\mathcal{D}_{t-1}\sim x_t|x_{t-1},\ldots,x_{t-p}\]</span> ou seja, <span class="math inline">\(\{x_t\}\)</span> é uma cadeia de Markov de ordem <span class="math inline">\(p\)</span>. Deste modo, para <span class="math inline">\(n&gt;p\)</span>, <span class="math display">\[\begin{align*}
+f(x_{1},\ldots,x_n)&amp;=f\left(x_n|\mathcal{D}_{n-1}\right)f\left(\mathcal{D}_{n-1}\right)=f\left(x_T|x_{n-1},\ldots,x_{n-p}\right)f\left(\mathcal{D}_{n-1}\right)\\
+        &amp;=\prod_{t=p+1}^{n}f\left(x_t|x_{t-1},\ldots,x_{t-p}\right) f(x_{1},\ldots,x_p).
+        \end{align*}\]</span> Agora, suponha que <span class="math inline">\(\varepsilon_t\sim\hbox{Normal}(0,\nu)\)</span>. Então, <span class="math display">\[\begin{align*}
+L(\phi_1,\ldots,\phi_p,\nu)&amp;=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\sum_{j=1}^p \phi_jx_{t-j})^2\right\}\\&amp;\times f(x_{1},\ldots,x_p|\phi_1,\ldots,\phi_p,\nu).
+        \end{align*}\]</span></p>
+<p>O método da maxima verossimilhança condicional consiste em ignorar o termo <span class="math inline">\(f(x_{1},\ldots,x_p|\phi_1,\ldots,\phi_p,\nu)\)</span>. Com isso, o restante da função de verossimilhança pode ser escrito como um modelo linear, uma vez que</p>
+<p><span class="math display">\[x_t=\sum_{j=1}^p \phi_jx_{t-j}+\varepsilon_t=\underbrace{(x_{t-1}\;\;\cdots \;\;x_{t-p})}_{F_t'}\underbrace{\left(\begin{array}{c}\phi_1 \\ \vdots \\ \phi_p\end{array}\right)}_{\beta}\]</span> e <span class="math inline">\(\hat{\beta}\)</span> e <span class="math inline">\(\hat{\nu}\)</span> podem ser obtidos pelos estimadores já discutidos na seção sobre modelos lineares.</p>
+<p>Já para o método da máxima verossimilhança, precisamos especificar a distribuição do termo adicional <span class="math inline">\(f(x_1,\ldots,x_p|\phi_1,\ldots,\phi_p)\)</span>. Desde que o processo seja estacionário, é possível mostrar que <span class="math display">\[x_1,\ldots,x_p\sim\hbox{Normal}(\textbf{0}_p,\Sigma(\phi_1,\ldots,\phi_p))\]</span> onde <span class="math inline">\(\Sigma(\phi_1,\ldots,\phi_p))\)</span> é a matriz formada pelas autocovariâncias.</p>
+<p>A maximização da função de verossimilhança é feita numericamente e pode-se utilizar as estimativas obtidas no método da máxima verossimilhança condicional como ponto de partida para o algoritmo de maximização.</p>
+</section>
+<section id="previsão" class="level3" data-number="10.2.5">
+<h3 data-number="10.2.5" class="anchored" data-anchor-id="previsão"><span class="header-section-number">10.2.5</span> Previsão</h3>
+<p>Considere a amostra <span class="math inline">\(\mathcal{D}_t\)</span> do modelo AR(1). Então,</p>
+<p><span class="math display">\[\begin{align}x_{t+h}&amp;=\phi x_{t+h-1}+\varepsilon_{t+h}\\ &amp;=\phi^2x_{t+h-2}+\phi\varepsilon_{t+h-1}+\varepsilon_{t+h}= \cdots\\&amp;=\phi^h x_t+\sum_{j=0}^{h-1}\phi^j\varepsilon_{t+h-j}\end{align}\]</span> logo <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=\phi^h x_t\]</span> e <span class="math display">\[Var(x_{t+h}|\mathcal{D}_t)=\nu\sum_{j=0}^{h-1}\phi^{2j}=\nu\frac{1-\phi^{2h}}{1-\phi^2}\]</span> Note que, se o processo é estacionário, então <span class="math inline">\(|\phi|&lt;1\)</span> e a previsão converge para zero exponencialmente. Na prática, tanto a previsão quanto a variância são calculadas substituíndo <span class="math inline">\(\phi\)</span> por sua estimativa.</p>
+<p>Para o processo AR<span class="math inline">\((p)\)</span>, seja <span class="math inline">\(z_t=(x_t,\ldots,x_{t-p+1})\)</span>. Então, <span class="math display">\[z_t=Tz_{t-1}+\boldsymbol{\varepsilon}_t\]</span> onde <span class="math display">\[T=\left(\begin{array}{ccc|c}\phi_1&amp;\cdots&amp;\phi_{p-1} &amp; \phi_p \\ \hline &amp; \textbf{I}_{p-1} &amp; &amp; \textbf{0}_{p-1}\end{array}\right)\]</span> e <span class="math display">\[\boldsymbol{\varepsilon}_t=\left(\begin{array}{c}\varepsilon_t \\ \hline \textbf{0}_{p-1}\end{array}\right)\]</span> Logo, dado <span class="math inline">\(\mathcal{D}_t\)</span>, <span class="math display">\[z_{t+h}=T^h z_t+\sum_{j=0}^{h-1}T^j\boldsymbol{\varepsilon}_{t+h-j}\]</span> Note que <span class="math inline">\(x_{t+h}=(1|\textbf{0}'_{p-1})z_{t+h}\)</span>, logo <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=(1|\textbf{0}'_{p-1})T^h z_t\]</span> e <span class="math display">\[Var(x_{t+h}|\mathcal{D}_t)=\nu\sum_{j=0}^{h-1}\left(\begin{array}{c|c}1&amp;\textbf{0}'_{p-1}\end{array}\right)T^j \mathcal{E} T'^j\left(\begin{array}{c}1 \\ \hline \textbf{0}_{p-1}\end{array}\right) \]</span> onde <span class="math inline">\(\mathcal{E}\)</span> é uma matriz com o valor 1 no elemento <span class="math inline">\(a_{11}\)</span> e zero nos demais.</p>
+</section>
+<section id="processo-autorregressivo-com-deriva" class="level3" data-number="10.2.6">
+<h3 data-number="10.2.6" class="anchored" data-anchor-id="processo-autorregressivo-com-deriva"><span class="header-section-number">10.2.6</span> Processo autorregressivo com deriva</h3>
+<p>Até o momento, assumimos que o processo AR<span class="math inline">\((p)\)</span> é estacionário com <span class="math inline">\(E(x_t)=0\)</span>. Quando <span class="math inline">\(\mu=E(x_t)\neq 0\)</span>, temos um parâmetro adicional, denominado deriva e escrito como</p>
+<p><span class="math display">\[x_t-\mu=\sum_{j=1}^p \phi_j(x_{t-j}-\mu)+\varepsilon_t\]</span></p>
+<p>Observe que a deriva não altera a estrutura de autocorrelação do processo, uma vez que podemos definir <span class="math inline">\(y_t=x_t-\mu\)</span>, onde <span class="math inline">\(y_t\)</span> é um AR(<span class="math inline">\(p\)</span>) com <span class="math inline">\(E(y_t)=0\)</span>, o que implica em <span class="math display">\[\gamma(h)=Cov(x_t, x_{t-1})=Cov(x_t-\mu,x_{t-h}-\mu)=Cov(y_t,y_{t-h}).\]</span></p>
+<p>Contudo, a função de previsão do processo deve ser ajusta. Defina <span class="math inline">\(z_t=(x_t-\mu,\ldots,x_{t-p+1}-\mu)\)</span>. Já vimos que</p>
+<p><span class="math display">\[z_{t+h}=T^h z_t+\sum_{j=0}^{h-1}T^j\boldsymbol{\varepsilon}_{t+h-j}\]</span> onde <span class="math inline">\(T\)</span> e <span class="math inline">\(\boldsymbol{\varepsilon}_t\)</span> foram definidos na seção anterior. Note que <span class="math inline">\(x_{t+h}-\mu=(1|\textbf{0}'_{p-1})z_{t+h}\)</span>, logo <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=\mu+(1|\textbf{0}'_{p-1})T^h z_t\]</span></p>
+<p>Em termos de estimação, a função de verossimilhança deve ser alterada para</p>
+<p><span class="math display">\[\begin{align*}
+L(\mu,\phi_1,\ldots,\phi_p,\nu)&amp;=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\mu-\sum_{j=1}^p \phi_j(x_{t-j}-\mu)^2\right\} \\&amp;\times f(x_{1},\ldots,x_p|\mu,\phi_1,\ldots,\phi_p,\nu).
+        \end{align*}\]</span><br>
+onde <span class="math display">\[x_{1},\ldots,x_p\sim\hbox{Normal}(\mu\textbf{1}_p,\Sigma(\phi_1,\ldots,\phi_h))\]</span></p>
+</section>
+<section id="exemplo-número-anual-de-terremotos" class="level3" data-number="10.2.7">
+<h3 data-number="10.2.7" class="anchored" data-anchor-id="exemplo-número-anual-de-terremotos"><span class="header-section-number">10.2.7</span> Exemplo: número anual de terremotos</h3>
+<p>A série abaixo apresenta o número anual de terremotos de magnitude maior ou igual à 7 na escala Richter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gsheet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: gsheet</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'gsheet' was built under R version 4.3.2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1PPf1nOjwh1fnr1VtFW2DKN6PY9s9TXEQTn6ZX3igCBQ/edit?usp=sharing'</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> <span class="fu">gsheet2tbl</span>(url)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>terr <span class="ot">&lt;-</span> <span class="fu">unlist</span>(dados[,<span class="dv">2</span>]) </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>terr <span class="ot">&lt;-</span> <span class="fu">ts</span>( terr, <span class="at">start =</span> <span class="dv">1900</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(terr, <span class="at">ylab =</span> <span class="st">'No terremotos'</span>, <span class="at">xlab =</span> <span class="st">'Ano'</span>, <span class="at">lwd=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note que o processo parece ser estacionário. Vamos explorar as funções de autocorrelação nas duas figuras abaixo. O correlograma mostra um comportamento tendendo para zero após 5 defasagens enquanto que o gráfico da função de autocorrelação parcial apresenta um único valor significativo. Temos evidências o modelo AR(1) pode ser adequado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(terr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(terr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A função <code>arima(x, order = c(p,0,0))</code> estima os parâmetros do modelo <span class="math inline">\(AR(p)\)</span> já considerando a deriva (caso contrário, utilize o argumento <code>include.mean=FALSE</code>). Abaixo apresentamos o modelo ajustado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">arima</span>( terr, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mod</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+arima(x = terr, order = c(1, 0, 0))
+
+Coefficients:
+         ar1  intercept
+      0.5433    19.8907
+s.e.  0.0840     1.3180
+
+sigma^2 estimated as 36.7:  log likelihood = -318.98,  aic = 643.97</code></pre>
+</div>
+</div>
+<p>Podemos verificar se o ajuste é adequado analisando os resíduos. Note que agora possuímos uma ferramente nova, o gráfico da função de autocorrelação parcial. Abaixo, os gráficos das funções de autocorrelação não apresentam valores significativos. O teste de Box-Pierce não rejeita a hipótese de um processo estacionário e o teste de Shapiro-Wilks não rejeita a hipótese de ruído branco gaussiano. Portano, temos evidências de que o modelo AR(1) com erros gaussianos é adequado para essa série.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(mod<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(mod<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(mod<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Pierce test
+
+data:  mod$residuals
+X-squared = 0.92715, df = 1, p-value = 0.3356</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(mod<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  mod$residuals
+W = 0.97813, p-value = 0.09826</code></pre>
+</div>
+</div>
+<p>As estimativas encontradas foram <span class="math inline">\(\hat{\phi}=0,5\)</span>, <span class="math inline">\(\hat{\nu}=36,7\)</span> e <span class="math inline">\(\hat{\mu}=19\)</span>. Podemos utilizar a função <code>forecast</code> do pacote de mesmo nome para fazer previsões. Note que a medida que o horizonte de previsão cresce, o modelo converge para a deriva.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: forecast</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'forecast' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>prev <span class="ot">&lt;-</span> <span class="fu">forecast</span>(mod, <span class="dv">10</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(prev)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="médias-móveis" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="médias-móveis"><span class="header-section-number">10.3</span> Médias móveis</h2>
+<p>O processo <span class="math display">\[  x_t= \varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j},\]</span> onde <span class="math inline">\(\{\varepsilon_t\}\)</span> é um ruído branco, é denominado média móvel de ordem <span class="math inline">\(q\)</span> (onde MA é a sigle de ). Note que esse modelo não está relacionado com o método de suavização de mesmo nome. Também podemos definir o modelo utilizando um polinômio de defasagens: <span class="math display">\[\begin{align}x_t
+    =\left(1+\sum_{j=1}^{q}\theta_jB^j\right)\varepsilon_t=\theta(B)\varepsilon_t\end{align}\]</span></p>
+<p>O processo MA<span class="math inline">\((q)\)</span> é estacionário. De fato <span class="math display">\[E(x_t)=E\left(\varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}\right)=0,\]</span> <span class="math display">\[Var(x_t)=\nu\left(1+\sum_{j=1}^{q}\theta_j^2\right).\]</span> Agora, defina <span class="math inline">\(\psi_0=1\)</span>, <span class="math inline">\(\psi_j=\theta_j\)</span>, para <span class="math inline">\(j=1,\ldots,q\)</span> e <span class="math inline">\(\psi_j=0\)</span> para <span class="math inline">\(j&gt;q\)</span>. Então, <span class="math display">\[\begin{align}
+Cov(x_t,x_{t-h})&amp;=\sum_{j=0}^q\sum_{k=0}^q \psi_j\psi_k Cov\left(\varepsilon_{t-j},\varepsilon_{t-k-h}\right)\\&amp;=\nu\sum_{k=0}^{q-h} \psi_{k+h}\psi_k\\
+&amp;=\nu\left[\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}\right]\end{align}\]</span></p>
+<p>A função de autocorrelação desse processo é dada por</p>
+<p><span class="math display">\[\rho(h)=\left\{\begin{array}{ll}\frac{\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}}{1+\sum_{j=1}^q\theta^2_j },&amp;\;\;0&lt;h\leq q\\0,&amp;\hbox{ caso contrário}\end{array}\right.\]</span></p>
+<p>Portanto, o correlograma pode ser utilizado para determinar o valor que <span class="math inline">\(q\)</span>, uma vez que são esperadas <span class="math inline">\(q\)</span> autocorrelações não nulas.</p>
+<section id="inversibilidade-do-processo-de-média-móvel" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="inversibilidade-do-processo-de-média-móvel"><span class="header-section-number">10.3.1</span> Inversibilidade do processo de média móvel</h3>
+<p>Nem sempre o processo <span class="math inline">\(MA(q)\)</span> é inversível. De fato, note que <span class="math display">\[x_t=\varepsilon_t +\theta\varepsilon_{t-1}=(1+\theta B)\varepsilon_t\Rightarrow x_t(1+\theta B)^{-1}=\varepsilon_t.\]</span> Sabemos que <span class="math display">\[\theta^{-1}(B)=\sum_{j=0}^{\infty}\theta^j B^j,\]</span> quando <span class="math inline">\(|\theta|&lt;1\)</span>. Portanto, para este processo ser inversível é necessário que <span class="math inline">\(|\theta|&lt;1\)</span>. Observe que</p>
+<p><span class="math display">\[\theta^{-1}(B)x_t=\varepsilon_t\Rightarrow x_t=\sum_{j=1}^\infty \theta^j x_{t-j}+\varepsilon_t,\]</span> logo, a inversa do processo MA<span class="math inline">\((1)\)</span> é equivalente ao modelo AR(<span class="math inline">\(\infty\)</span>).</p>
+<div id="prp-" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 10.2 </strong></span>O processo MA<span class="math inline">\((q)\)</span> é inversível se e somente se o módulo das raízes do polinômio <span class="math inline">\(\theta(B)\)</span> forem maiores que um. <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+</section>
+<section id="autocorrelação-parcial-do-maq" class="level3" data-number="10.3.2">
+<h3 data-number="10.3.2" class="anchored" data-anchor-id="autocorrelação-parcial-do-maq"><span class="header-section-number">10.3.2</span> Autocorrelação parcial do MA(<span class="math inline">\(q\)</span>)</h3>
+<p>Considere que o processo MA<span class="math inline">\((q)\)</span> inversível. Então, sabemos que <span class="math display">\[x_t=\sum_{j=0}^\infty\psi_j x_{t-j}+\varepsilon_t \]</span> existe e é estacionário. Defina <span class="math display">\[\begin{align}
+\hat{x}_{t+h}&amp;=\sum_{j=1}^p\phi_j x_{t+h-j}\\
+\hat{x}_{t}&amp;=\sum_{j=1}^p\phi_j x_{t+j}\\
+\end{align}\]</span></p>
+<p>Então, <span class="math display">\[\begin{align}\phi_{hh}&amp;=Cov(x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_t)\\
+&amp;=Cov\left(x_{t+h}-\sum_{j=1}^\infty\phi_j x_{t+h-j},x_t- \sum_{j=1}^\infty\phi_j x_{t+j}\right)\\&amp;=Cov\left(\varepsilon_{t+h},x_t- \sum_{j=1}^\infty\phi_j x_{t+j}\right)\\&amp;=-\sum_{j=h}^\infty\psi_jCov(\varepsilon_{t+h},x_{t+j})\\&amp;=-\sum_{j=h}^\infty\psi_jCov(\varepsilon_{t+h},x_{t+j})\end{align}\]</span> e, como o processo é inversível, <span class="math inline">\(\phi_{hh}\)</span> deve decair exponencialmente para zero.</p>
+<div id="exm">
+<p>Considere o processo MA(1) inversível. É possível mostrar que <span class="math display">\[Cov(\varepsilon_t,x_{t+j})=\nu\theta^j\]</span> Sabemos que <span class="math display">\[x_t=\sum_{j=1}^\infty \psi_jx_{t-j}+\varepsilon_t,\]</span> onde <span class="math inline">\(\psi_j=\theta^j\)</span>. Então, <span class="math display">\[\begin{align}\phi_{hh}&amp;=-\sum_{j=h}^\infty\theta^j Cov(\varepsilon_{t+h},x_{t+j})=-\sum_{j=h}^\infty\theta^{2j} \nu\end{align}\]</span></p>
+</div>
+</section>
+<section id="estimação-dos-parâmetros-do-maq" class="level3" data-number="10.3.3">
+<h3 data-number="10.3.3" class="anchored" data-anchor-id="estimação-dos-parâmetros-do-maq"><span class="header-section-number">10.3.3</span> Estimação dos parâmetros do MA(<span class="math inline">\(q\)</span>)</h3>
+<p>Sabemos que <span class="math display">\[f(x_1,\ldots,x_n)=f(x_1)\prod_{t=2}^{n}f(x_t|x_1,\ldots,x_{t-1}).\]</span></p>
+<pre><code>Considere inicialmente o modelo $MA(1)$ e considere que $\varepsilon_0$ é conhecido. Então,
+$$x_1= \varepsilon_1+\theta\varepsilon_0\sim\hbox{Normal}(\theta \varepsilon_0,\nu ).$$</code></pre>
+<p>Além disso, após observar <span class="math inline">\(x_1\)</span>, podemos escrever <span class="math display">\[\hat{\varepsilon}_1=x_1-\theta\varepsilon_0.\]</span> Como <span class="math display">\[\begin{align*}
+x_2|\mathcal{D}_1\sim
+    (\varepsilon_2+\theta\varepsilon_1|\varepsilon_0,x_1)\sim\varepsilon_1+\theta\hat{\varepsilon}_1\sim\hbox{Normal}(\theta\hat{\varepsilon}_1,\nu).
+    \end{align*}\]</span></p>
+<p>De um modo geral, fazendo <span class="math display">\[\hat{\varepsilon}_t = x_t-\theta\hat{\varepsilon}_{t-1}\]</span> teremos <span class="math display">\[\begin{align*}
+    (x_t|\mathcal{D}_{t-1})&amp;\sim  \hbox{Normal}(\theta \hat{\varepsilon}_{t-1},\nu)
+    \end{align*}\]</span> e podemos escrever a verossimilhança,</p>
+<p><span class="math display">\[L(\theta,\nu,\varepsilon_0)=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\left[(x_1-\theta\varepsilon_0)^2+\sum_{t=2}^n(x_t-\theta\hat{\varepsilon}_{t-1})^2\right]\right\}\]</span></p>
+<p>Para um modelo <span class="math inline">\(MA(q)\)</span>, supomos que <span class="math inline">\(\varepsilon_{-q+1},\ldots,\varepsilon_{0}\)</span> são conhecidos. Fazendo <span class="math display">\[\begin{equation}
+    \hat{\varepsilon}_{t}=x_t - \sum_{j=1}^{q}\theta_j\hat{\varepsilon}_{t-j},
+    \end{equation}\]</span> e</p>
+<p><span class="math display">\[\begin{align}
+    \lambda_t'=-(\hat{\varepsilon}_{t-1},\ldots,\hat{\varepsilon}_{t-q})
+    \end{align}\]</span> teremos que <span class="math display">\[x_{t}|\mathcal{D}_{t-1}\sim\hbox{Normal}\left(\lambda_t'\boldsymbol{\theta},\nu\right)\]</span> onde <span class="math inline">\(\boldsymbol{\theta}'=(\theta_1,\ldots,\theta_q)\)</span>. Logo, <span class="math display">\[\begin{equation}
+    L(\boldsymbol{\theta},\nu,\varepsilon_{-q+1},\ldots,\varepsilon_0)\propto \left(\frac{1}{\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=1}^n\left(y_t -\lambda_t'\boldsymbol{\theta}\right) ^ 2\right\}
+    \end{equation}\]</span></p>
+<p>Em relação aos valores <span class="math inline">\(\varepsilon_{-q+1},\ldots,\varepsilon_0\)</span>, temos duas estratégias de otimização: - Fazer <span class="math inline">\(\varepsilon_{-q+1}=\cdots=\varepsilon}_0=0\)</span>: isto é equivalente a dizer que todos estes valores são iguais à sua média. - Estimar <span class="math inline">\(\varepsilon_{-q+1},\ldots,\varepsilon_0\)</span>: isto altera o número de parâmetros para <span class="math inline">\(2q+1\)</span>. Neste caso, a estratégia anterior pode ser utilizada como valores iniciais para o otimizador.</p>
+</section>
+</section>
+<section id="modelo-autorregressivo-com-médias-móveis" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="modelo-autorregressivo-com-médias-móveis"><span class="header-section-number">10.4</span> Modelo autorregressivo com médias móveis</h2>
+<p>O modelo autorregressivo com médias móveis (ARMA) é dado por <span class="math display">\[\begin{equation}
+    x_t= \sum_{j=1}^p \phi_j x_{t-1} + \varepsilon_t + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k},
+    \end{equation}\]</span> onde <span class="math inline">\((p,q)\)</span> são as ordens da parte autorregressiva e das médias móveis, respectivamente. Definimos <span class="math inline">\(ARMA(0,q)=MA(q)\)</span> e, de modo análogo, definimos <span class="math inline">\(ARMA(p,0)=AR(p).\)</span></p>
+<p>Utilizando o operador defasagem teremos <span class="math display">\[\begin{align}
+        x_t&amp;= \sum_{j=1}^p \phi_j x_{t-1} + \varepsilon_t + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k} \\
+        &amp;=
+        \sum_{j=1}^p \phi_j B^jx_{t} + \varepsilon_t + \sum_{k=1}^{q}\theta_kB^k\varepsilon_{t}
+        \end{align}\]</span> o que implica em <span class="math display">\[\begin{align*}
+        \underbrace{\left(1-\sum_{j=1}^p \phi_j B^j\right)}_{\phi(B)}x_t = \underbrace{\left(1-\sum_{j=1}^p \theta_j B^j\right)}_{\theta(B)}\varepsilon_{t}
+        \end{align*}\]</span></p>
+<p>O modelo ARMA será estacionário se o módulo das raízes de <span class="math inline">\(\phi(B)\)</span> forem maiores que um e será inversível se o mesmo ocorrer com o módulo das raízes de <span class="math inline">\(\theta(B)\)</span>.</p>
+<section id="função-de-autocorrelação" class="level3" data-number="10.4.1">
+<h3 data-number="10.4.1" class="anchored" data-anchor-id="função-de-autocorrelação"><span class="header-section-number">10.4.1</span> Função de autocorrelação</h3>
+<p>A função de auto covariância cruzada é dada por <span class="math display">\[\begin{equation}
+      \gamma_{x\varepsilon}(h)=E(\varepsilon_t x_{t-h}).
+    \end{equation}\]</span> Note que <span class="math inline">\(x_{t-h}\)</span> depende apenas dos ruídos que ocorreram até o tempo <span class="math inline">\(t-h\)</span>. Portanto <span class="math display">\[\begin{align}
+     \gamma_{x\varepsilon}(h)=0,&amp;\;\; h&gt;0 \\
+     \gamma_{x\varepsilon}(h)\neq 0,&amp;\;\; h\leq 0 \\
+    \end{align}\]</span></p>
+<p>Considere o processo ARMA(1,1), dado por <span class="math display">\[x_t = \varepsilon_{t} + \phi x_{t-1} + \theta\varepsilon_{t-1}.\]</span></p>
+<p>Teremos que <span class="math display">\[\begin{align*}
+\gamma_{x\varepsilon}(0)&amp;=E(x_t\varepsilon_t) = E( \left[\varepsilon_t + \phi x_{t-1} + \theta\varepsilon_{t-1} \right]\varepsilon_t)\\
+&amp;=\underbrace{E(\varepsilon_t^2)}_{\nu}+ \phi\underbrace{ E(x_{t-1}\varepsilon_t)}_{\gamma_{x\varepsilon}(1)=0} +\theta \underbrace{E(\varepsilon_{t}\varepsilon_{t-1})}_{=0} \\
+&amp;=\nu
+\end{align*}\]</span></p>
+<p>Agora, multiplicando a equação do modelo ARMA(1,1) em ambos os lados por <span class="math inline">\(x_{t-h}\)</span>, e aplicando a esperança teremos</p>
+<p><span class="math display">\[\begin{equation}
+    \underbrace{E(x_{t-h}x_t)}_{\gamma(h)} = \underbrace{E(x_{t-h}\varepsilon_{t})}_{\gamma_{x\varepsilon}(h)} + \phi \underbrace{E(x_{t-1}x_{t-h})}_{\gamma(h-1)} + \theta \underbrace{E(x_{t-h}\varepsilon_{t-1})}_{\gamma_{x\varepsilon}(h-1)}.
+    \end{equation}\]</span></p>
+<p>Fazendo <span class="math inline">\(h=0\)</span> na equação acima, teremos <span class="math display">\[\gamma(0)=\phi\gamma(1) + \theta\gamma_{x\varepsilon}(-1)\]</span> e, como <span class="math display">\[\gamma_{x\varepsilon}(-1)=E(x_{t+1}\varepsilon_t)=\]</span></p>
+<p>Fazendo <span class="math inline">\(h=1\)</span> teremos <span class="math display">\[\gamma(1)=\phi\gamma(0)+\theta\nu\]</span></p>
+<p>Para qualquer <span class="math inline">\(h\geq 2\)</span>,</p>
+<p><span class="math display">\[\gamma(h)=\phi\gamma(h-1),\]</span> ou ainda <span class="math display">\[\gamma(h)=\phi^{h-1}\gamma(1)=\phi^h\gamma(0)+\theta\nu.\]</span> Assim, <span class="math display">\[\rho(h)=\left\{\begin{array}{ll}\end{array}\right.\]</span></p>
+<pre><code>Note que a primeira auto covariância depende do parâmetro de média móvel.
+
+Note  ainda que após a primeira defasagem, a função de auto covariância se comporta como um modelo AR(1) tradicional: com um decaimento exponencial (podendo ser alternado ou não).</code></pre>
+<p>\end{frame}</p>
+</section>
+</section>
+<section id="modelos-integrados" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="modelos-integrados"><span class="header-section-number">10.5</span> Modelos integrados</h2>
+<section id="o-operador-diferença" class="level3" data-number="10.5.1">
+<h3 data-number="10.5.1" class="anchored" data-anchor-id="o-operador-diferença"><span class="header-section-number">10.5.1</span> O operador difereNça</h3>
+<p>Vimos no começo do curso que o passeio aleatório, dado por <span class="math display">\[x_t=x_{t-1}+\varepsilon_t\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco, poderia gerar tendências aleatórias. Note que o passeio aleatório nada mais é que o processo AR(1) não estacionário. Podemos escrever esse modelo como <span class="math display">\[x_t-x_{t-1}=\varepsilon_t\Rightarrow(1-B)x_t=\varepsilon_t\Rightarrow\Delta x_t=\varepsilon_t\]</span> Acima,<span class="math inline">\(\Delta=1-B\)</span> é denominado operador diferença. Observe que a série <span class="math display">\[y_t=\Delta x_t=\varepsilon_t\]</span> é um ruído branco. Desse modo, o operador elimina a tendência aleatória gerada pelo passeio.</p>
+<p>Agora, considere que <span class="math display">\[x_t=T(t)+\varepsilon_t,\]</span> onde <span class="math inline">\(T(t)\)</span> é uma tendência localmente linear com inclinção constante, ou seja, para qualquer <span class="math inline">\(s\)</span> na vizinhança de <span class="math inline">\(t\)</span>, <span class="math display">\[T(s)=\mu_t+b s.\]</span> Então <span class="math display">\[\Delta x_t= \mu_t+bt-(\mu_t+b(t-1))+\varepsilon_t=b+\varepsilon_t\]</span> e <span class="math inline">\(y_t=\Delta x_t=b+\varepsilon_t\)</span> será um ruído branco com deriva.</p>
+<p>Por último, para qualquer <span class="math inline">\(s\)</span> na vizinhança de <span class="math inline">\(t\)</span>, suponha que <span class="math display">\[T(s)=\mu_t+b_t s.\]</span> Nesse caso, <span class="math display">\[\Delta x_t= b_t+\varepsilon_t\]</span> logo, o processo <span class="math inline">\(y_t=\Detal x_t\)</span> não é um ruído branco. Contudo, como é usual que <span class="math inline">\(b_t\approx b_{t+1}\)</span>, teremos</p>
+<p><span class="math display">\[\Delta y_t= \Delta x_t - \Delta x_{t-1}=b_t-b_{t-1}+\varepsilon_t-\varepsilon_{t-1}\approx \varepsilon_t-\varepsilon_{t-1}\]</span></p>
+<p>logo, aplicar o operador diferença pela segunda vez gera um ruído branco. Note que</p>
+<p><span class="math display">\[\Delta y_t=\Delta (x_t-x_{t-1})=\Delta(1-B)x_t=\Delta^2 x_t.\]</span> Então, aplicar o operador diferença algumas vezes pode eliminar a tendência da série, gerando um ruído branco.</p>
+<div id="exm">
+<p>Considere o modelo <span class="math display">\[y_t=\Delta x_t=\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco. Então, para <span class="math inline">\(\mathcal{D}_t=\{x_1,\ldots,x_t\}\)</span>, <span class="math display">\[E(y_{t+h}|\mathcal{D}_t)=0\Rightarrow E(x_{t+h}|\mathcal{D}_t)=E(x_{t+h-1}|\mathcal{D}_t)\]</span> e, como <span class="math inline">\(E(x_t|\mathcal{D}_t)=x_t\)</span>, teremos <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=x_t.\]</span> Portanto, esse modelo tem como previsão para qualquer horizonte o último valor observado, o que é equivalente ao modelo de suavização exponencial com <span class="math inline">\(\alpha=1\)</span>.</p>
+<p>Considere agora o modelo <span class="math display">\[y_t=\Delta^2 x_t=\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco. Observe que <span class="math display">\[E(y_{t+1}|\mathcal{D}_t)=0\Rightarrow E(x_{t+1}|\mathcal{D}_t)=x_t + (x_t-x_{t-1}).\]</span> É simples mostrar por indução que <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=x_t+ h(x_t-x_{t-1}),\]</span> que é equivalente ao método de Holt com nível <span class="math inline">\(m_t=x_t\)</span> e inclinação <span class="math inline">\(b_t=(x_t-x_{t-1})\)</span>.</p>
+<p><span class="math inline">\(\blacksquare\)</span>.</p>
+</div>
+</section>
+<section id="modelo-autorregressivo-integrado" class="level3" data-number="10.5.2">
+<h3 data-number="10.5.2" class="anchored" data-anchor-id="modelo-autorregressivo-integrado"><span class="header-section-number">10.5.2</span> Modelo autorregressivo integrado</h3>
+<p>Considere agora uma série temporal <span class="math inline">\(x_t\)</span> na qual foram necessárias <span class="math inline">\(d\)</span> diferenças para eliminar a tendência. Contudo, a série <span class="math inline">\(y_t=\Delta^d x_t\)</span> resultante é um ruído branco, mas sim um processo AR(<span class="math inline">\(p\)</span>). Teremos</p>
+<p><span class="math display">\[y_t=\sum_{j=1}^p \phi_j y_{t-j}+\varepsilon_t \Rightarrow \left(1-\sum_{j=1}^p \phi_jB^j\right)y_t=\varepsilon_t\]</span> ou, de modo equivalente, <span class="math display">\[\left(1-\sum_{j=1}^p \phi_jB^j\right)\Delta^d x_t=\varepsilon_t.\]</span> O modelo acima é denominado autorregressivo integrado, e sua notação é ARI<span class="math inline">\((p,d)\)</span>, onde <span class="math inline">\(p\)</span> é a ordem do modelo autorregressivo resultante das <span class="math inline">\(d\)</span> diferenças da série original.</p>
+<p>As estimativas são obtidas criando a série <span class="math inline">\(y_t=\Delta^d x_t\)</span> e estimando os parâmetros do modelo AR(<span class="math inline">\(p\)</span>) resultante.</p>
+<p>A previsão do processo ARI(<span class="math inline">\(p,d\)</span>) pode facilmente ser realizada a partir do modelo AR(<span class="math inline">\(p\)</span>). Por exemplo, para <span class="math inline">\(y_t=\Delta x_t\)</span>,</p>
+<p><span class="math display">\[\begin{align}E(y_{t+1}|\mathcal{D}_t)&amp;=\sum_{j=1}^p \phi_j y_{t-j}\\\end{align}\]</span> o que implica em <span class="math display">\[\begin{align} E(x_{t+1}|\mathcal{D}_t)=x_t+\sum_{j=1}^p\phi_j(x_{t-j}-x_{t-j-1})\end{align}\]</span></p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.10 </strong></span><strong>Previsão para o modelo ARI(1,1)</strong></p>
+<p>Seja <span class="math inline">\(x_t\)</span> uma série temporal segundo o processo ARI(1,1). Então, <span class="math inline">\(\Delta y_t\)</span> é um processo AR(1) e <span class="math inline">\(E(y_{t+h}|\mathcal{D}_t)=\phi^h y_t\)</span>. Disto, notemos que</p>
+<p><span class="math display">\[E(x_{t+1}-x_t|\mathcal{D}_t)=\phi (x_{t}-x_{t-1})\Rightarrow E(x_{t+1}|\mathcal{D}_t)=x_t+\phi(x_t-x_{t-1}),\]</span> e <span class="math display">\[\begin{align}&amp;E(x_{t+2}-x_{t+1}|\mathcal{D}_t)=\phi^2 (x_t-x_{t-1})\\&amp;\Rightarrow E(x_{t+2}|\mathcal{D}_t)=\phi^2 (x_{t}-x_{t-1})+E(x_{t+1}|\mathcal{D}_t)\\ &amp;\Rightarrow E(x_{t+2}|\mathcal{D}_t)=\phi^2 (x_{t}-x_{t-1})+\phi (x_{t}-x_{t-1})+x_t.\end{align}\]</span> Por indução, é imediato que <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=x_t+\sum_{j=1}^h \phi^{j}(x_t-x_{t-1}).\]</span> Identificando <span class="math inline">\(x_t\)</span> como a estimativa para nível da série no tempo <span class="math inline">\(t\)</span> e <span class="math inline">\((x_t-x_{t-1})\)</span> como a inclinação da tendência, temos que a função de previsão é um modleo com tendência amortecida.</p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+</section>
+<section id="modelo-autorregressivo-sazonal" class="level3" data-number="10.5.3">
+<h3 data-number="10.5.3" class="anchored" data-anchor-id="modelo-autorregressivo-sazonal"><span class="header-section-number">10.5.3</span> Modelo autorregressivo sazonal</h3>
+<p>Seja <span class="math display">\[x_t = g(t)+\varepsilon_t,\]</span> onde <span class="math inline">\(g(.)\)</span> é uma função períodica com período <span class="math inline">\(p\)</span> e <span class="math inline">\(\varepsilon_t\)</span> um rúido branco. Note que <span class="math display">\[x_t-x_{t-p}=g(t)-g(t-p)+\varepsilon_t-\varepsilon_{t-p}=\varepsilon_t-\varepsilon_{t-p},\]</span> logo, a diferença acima gerou uma série estacionária. Observe que <span class="math display">\[x_t-x_{t-p}=(1-B^p)x_t.\]</span> O operador <span class="math inline">\(1-B^p\)</span> é conhecido como diferença sazonal.</p>
+<p>Sem perda de generalidade, assuma que <span class="math inline">\(D=3\)</span>. Então, a relação entre <span class="math inline">\(x_t\)</span> e <span class="math inline">\(x_{t-3}\)</span> pode ser obtida usando a seguinte transformação:</p>
+<p><span class="math display">\[\left(\begin{array}{c}x_t\\ x_{t-1}\\ x_{t-2}\end{array}\right)=\left(\begin{array}{cc}0 &amp; 0 &amp; 1\\ 1 &amp; 0 &amp; 0\\ 0&amp; 1 &amp; 0\end{array}\right)\left(\begin{array}{c}x_{t-1}\\ x_{t-2}\\ x_{t-3}\end{array}\right)=\left(\begin{array}{cc}0 &amp; 0 &amp; 1\\ 1 &amp; 0 &amp; 0\\ 0&amp; 1 &amp; 0\end{array}\right)^2\left(\begin{array}{c}x_{t-4}\\ x_{t-5}\\ x_{t-6}\end{array}\right)\]</span> A matriz acima é denominada permutação, e já foi utilizada anteriormente. Para o caso geral,</p>
+<p><span class="math display">\[\left(\begin{array}{c}x_t\\ x_{t-1}\\ x_{t-2}\end{array}\right)=\left(\begin{array}{cc}0 &amp; 0 &amp; 1\\ 1 &amp; 0 &amp; 0\\ 0&amp; 1 &amp; 0\end{array}\right)^h\left(\begin{array}{c}x_{t-(3h-2)}\\ x_{t-(3h-1)}\\ x_{t-3h}\end{array}\right)\]</span> ou ainda, <span class="math display">\[x_t=\sum_{j=1}^3 c_j\lambda_j^h x_{t-(3h-j+1)},\]</span> onde <span class="math inline">\(\lambda_j\)</span> são os autovalores da matriz acima. Acontece que <span class="math display">\[\left|\left(\begin{array}{cc}0 &amp; 0 &amp; 1\\ 1 &amp; 0 &amp; 0\\ 0&amp; 1 &amp; 0\end{array}\right)-\lambda \textbf{I}_3\right|=0\Rightarrow \lambda^3=1\]</span> Teremos que <span class="math inline">\(\lambda=1\)</span> é a solução real, enquanto que <span class="math display">\[\lambda= \exp\left\{\frac{\pi }{3}i\right\}=\cos\left(\frac{2\pi }{3}\right)+i\sin\left(\frac{2\pi}{3}\right).\]</span> e <span class="math display">\[\lambda= \exp\left\{\frac{2\pi }{3}i\right\}=\cos\left(\frac{4\pi }{3}\right)+i\sin\left(\frac{4\pi k}{3}\right).\]</span> são as soluções complexas.</p>
+<p>Na prática, para qualquer período <span class="math inline">\(p\)</span>, o autovalores existirão <span class="math inline">\(p-1\)</span> autovalores da matriz de permutação satisfazendo <span class="math display">\[\lambda= \cos(2\pi k/p)+i\sin(2\pi k/p),\]</span> com <span class="math inline">\(k=1,\ldots,D-1\)</span>.</p>
+<p>Dizemos que <span class="math inline">\(x_t\)</span> é um processo autorregressivo sazonal se <span class="math inline">\(y_t=(1-B^p)^Dx_t\)</span> é um processo autorregressivo.</p>
+<p>Assim como no caso do modelo integrado, os parâmetros são estimados a partir do modelo AR(<span class="math inline">\(P\)</span>) considerando a amostra <span class="math inline">\(y_t=(1-B^{p})^Dx_t\)</span>.</p>
+<p>A previsão é</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.11 </strong></span>Seja <span class="math inline">\(x_t\)</span> um processo autorregressivo sazonal, de período 12. Então,</p>
+<p><span class="math display">\[(1-B^{12})x_t=\Phi(1-B^{12})x_{t-1}+\varepsilon_t,\]</span> ou ainda, <span class="math display">\[x_t=x_{t-12}+\Phi x_{t-1}-\Phi x_{t-13}+\varepsilon_t\]</span></p>
+</div>
+</section>
+</section>
+<section id="o-modelo-arma" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="o-modelo-arma"><span class="header-section-number">10.6</span> O modelo ARMA</h2>
+<p>O modelo auto regressivo de média móvel é dado por <span class="math display">\[  x_t= \sum_{j=1}^p \phi_j x_{t-1}  + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k}+ \varepsilon_t,
+\]</span> onde <span class="math inline">\((p,q)\)</span> são as ordens da parte autorregressiva e da média móvel, respectivamente. Definimos o modelo de média móveis como <span class="math inline">\(ARMA(0,q)\)</span> e o autorregressivo como <span class="math inline">\(AR(p).\)</span></p>
+<p>Utilizando o operador defasagem teremos <span class="math display">\[\begin{align}
+        x_t-\sum_{j=1}^p \phi_j x_{t-1}&amp;= \varepsilon_t + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k} \\
+        &amp;\Rightarrow
+        \underbrace{\left(1-\sum_{j=1}^p \phi_j B^j\right)}_{\phi(B)}x_{t} =  \underbrace{\left(1+\sum_{k=1}^{q}\theta_kB^k\right)}_{\theta(B)}\varepsilon_{t}.
+        \end{align}\]</span></p>
+<p>O modelo ARMA será estacionário se o módulo das raízes de <span class="math inline">\(\phi(B)\)</span> forem maiores que um e será inversível se as raízes de <span class="math inline">\(\theta(B)\)</span> também o forem.</p>
+<section id="a-função-de-autocorrelação" class="level3" data-number="10.6.1">
+<h3 data-number="10.6.1" class="anchored" data-anchor-id="a-função-de-autocorrelação"><span class="header-section-number">10.6.1</span> A função de autocorrelação</h3>
+<p>A função de autocovariância cruzada é dada por <span class="math display">\[\begin{equation}
+      \gamma_{x\varepsilon}(h)=E(\varepsilon_t x_{t-h}).
+    \end{equation}\]</span> Note que <span class="math inline">\(x_{t-h}\)</span> depende apenas dos ruídos que ocorreram até o tempo <span class="math inline">\(t-h\)</span>. Portanto <span class="math display">\[\begin{align}
+     \gamma_{x\varepsilon}(h)=0,&amp;\;\; h&gt;0 \\
+     \gamma_{x\varepsilon}(h)\neq 0,&amp;\;\; h\leq 0 \\
+    \end{align}\]</span></p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 10.12 </strong></span>Considere o processo ARMA(1,1), dado por <span class="math display">\[x_t = \varepsilon_{t} + \phi x_{t-1} + \theta\varepsilon_{t-1}.\]</span> Teremos que <span class="math display">\[\begin{align*}
+\gamma_{x\varepsilon}(0)&amp;=E(x_t\varepsilon_t) = E( \left[\varepsilon_t + \phi x_{t-1} - \theta\varepsilon_{t-1} \right]\varepsilon_t)\\
+&amp;=\underbrace{E(\varepsilon_t^2)}_{\nu}+ \phi\underbrace{ E(x_{t-1}\varepsilon_t)}_{\gamma_{x\varepsilon}(1)=0} -\theta \underbrace{E(\varepsilon_{t}\varepsilon_{t-1})}_{=0} \\
+&amp;=\nu
+\end{align*}\]</span></p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>Considere o processo ARMA<span class="math inline">\((1,1)\)</span>, dado por <span class="math display">\[x_t = \varepsilon_{t} + \phi x_{t-1} + \theta\varepsilon_{t-1}.\]</span> Multiplicando ambos os lados por <span class="math inline">\(x_{t-h}\)</span>, e aplicando a esperança teremos <span class="math display">\[
+    \underbrace{E(x_{t-h}x_t)}_{\gamma(h)} = \underbrace{E(x_{t-h}\varepsilon_{t})}_{\gamma_{x\varepsilon}(h)} + \phi \underbrace{E(x_{t-1}x_{t-h})}_{\gamma(h-1)} + \theta \underbrace{E(x_{t-h}\varepsilon_{t-1})}_{\gamma_{x\varepsilon}(h-1)}
+    \]</span></p>
+<p>Fazendo <span class="math inline">\(h=0\)</span> na equação acima teremos <span class="math display">\[\gamma(0)=\phi\gamma(1) + \theta\gamma_{x\varepsilon}(-1).\]</span></p>
+<p>Fazendo <span class="math inline">\(h=1\)</span> teremos <span class="math display">\[\gamma(1)=\phi\gamma(0)+\theta\nu.\]</span></p>
+<p>Para qualquer <span class="math inline">\(h\geq 2\)</span>,</p>
+<p><span class="math display">\[\gamma(h)=\phi\gamma(h-1),\]</span> ou ainda <span class="math display">\[\gamma(h)=\phi^{h-1}\gamma(1),\]</span> e <span class="math display">\[\rho(h)=\phi^h+\nu\theta\phi^{h-1}\frac{\nu}{\gamma(0)}.\]</span></p>
+<p>Note que a função de autocovariância se comporta como um modelo AR(1) tradicional, com um decaimento exponencial (podendo ser alternado ou não).</p>
+<p>Para o caso geral: - As <span class="math inline">\(q\)</span> primeiras autocorrelações dependerão dos parâmetros <span class="math inline">\(\phi_1,\ldots,\phi_p\)</span> e <span class="math inline">\(\theta_1,\ldots,\theta_q\)</span>. - Se <span class="math inline">\(q&lt;p\)</span>, toda a função de autocorrelação consistirá de uma mistura de exponenciais ou cossenos amortecidos, dependendo das raízes do polinômio <span class="math inline">\(\phi(B)\)</span>. - Se <span class="math inline">\(q\geq p\)</span>, então as <span class="math inline">\(q-p+1\)</span> primeiras autocorrelações não seguirão o padrão descrito acima.</p>
+<p>Para construir a função de verossimilhança, observe que <span class="math display">\[y_t=\phi(B)x_t=\theta(B)\varepsilon_t,\]</span> ou seja, <span class="math inline">\(y_1,\ldots,y_n\)</span> é um modelo de média móvel e sua função de verossimilhança pode ser construída desse a partir desse modelo.</p>
+</section>
+<section id="modelos-arma-integrados-e-sazonais" class="level3" data-number="10.6.2">
+<h3 data-number="10.6.2" class="anchored" data-anchor-id="modelos-arma-integrados-e-sazonais"><span class="header-section-number">10.6.2</span> Modelos ARMA integrados e sazonais</h3>
+<p>Dizemos que <span class="math inline">\(x_t\)</span> é um processo autorregressivo integrado de médias móveis se</p>
+<p><span class="math display">\[\phi(B)\Delta^d x_t =\theta(B)\varepsilon_t,\]</span> e denotamos esse modelo por ARIMA<span class="math inline">\((p,d,q)\)</span>. A previsão desse modelo é dada por <span class="math display">\[\hat{y}_t(h)=E(y_{t+h}|y_t,\ldots y_{t-(p+d)}).\]</span></p>
+<p>Seja <span class="math inline">\(x_t\)</span> uma série temporal sazonal com período <span class="math inline">\(s\)</span>. Considere que o processo <span class="math inline">\({x_t,x_{t-s},x_{t-2s}}\)</span> é um ARIMA<span class="math inline">\((P,D,Q)\)</span>: <span class="math display">\[\Phi(B)(1-B^P)^Dx_t = \Theta(B)\eta_t,\]</span> e que o processo <span class="math inline">\(\eta_t\sim \hbox{ARIMA}(p,d,q)\)</span>. Então, <span class="math display">\[\theta(B)(1-B)^d\eta_t = \theta(B)\varepsilon_t\Rightarrow \eta_t = \left[\theta(B)(1-B)^d\right]^{-1}\theta(b)\varepsilon_t.\]</span> Portanto, teremos o modelo <span class="math display">\[\theta(B)\Phi(B)(1-B^P)^D(1-B)^dx_t = \Theta(B)\theta(B)\eta_t,\]</span></p>
+<pre><code>O modelo SARIMA é representado por ARIMA$(p,d,q)(P,D,Q)_s$ onde $(p,d,q)$ é a especificação do modelo ARIMA que corresponde a parte não sazonal a série e $(P,D,Q)_s$ é o modelo ARIMA que correponde a parte sazonal da série (com período $s$).</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./suave_exponencial.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Métodos de suavização exponencial</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./intervencao.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Intervenção e outliers</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

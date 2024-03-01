@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<head>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
 
-<meta charset="utf-8" />
-<meta name="generator" content="quarto-1.3.450" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Séries Temporais – 2  Introdução</title>
+<title>Séries Temporais - 2&nbsp; Introdução</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -58,7 +56,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
-<!-- htmldependencies:E3FAD763 -->
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ts_window_date.html" rel="next">
+<link href="./summary.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -85,22 +101,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body>
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn"
-      data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" 
-      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
-      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <h1 class="quarto-secondary-nav-title"></h1>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" 
-      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
-      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introdução</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -114,9 +125,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="/">
-      Séries Temporais
-      </a> 
+      <a href="./">Séries Temporais</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -128,90 +137,109 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/index.html" class="sidebar-item-text sidebar-link">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Prefácio</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>1</span>  <span class='chapter-title'>Summary</span></span></a>
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/intro.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class='chapter-number'>2</span>  <span class='chapter-title'>Introdução</span></span></a>
+  <a href="./intro.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/ts_window_date.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>3</span>  <span class='chapter-title'>Criando séries no `R`</span></span></a>
+  <a href="./ts_window_date.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/estacionaria.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>4</span>  <span class='chapter-title'>Séries Estacionárias</span></span></a>
+  <a href="./estacionaria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/modelo_linear.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>5</span>  <span class='chapter-title'>Revisão sobre o modelo linear</span></span></a>
+  <a href="./modelo_linear.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Revisão sobre o modelo linear</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/tendencia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>6</span>  <span class='chapter-title'>Tendência</span></span></a>
+  <a href="./tendencia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Tendência</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/sazonalidade.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>7</span>  <span class='chapter-title'>Sazonalidade</span></span></a>
+  <a href="./sazonalidade.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Sazonalidade</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/tendencia_sazonalidade.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>8</span>  <span class='chapter-title'>Previsão para modelos lineares</span></span></a>
+  <a href="./tendencia_sazonalidade.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Previsão para modelos lineares</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/suave_exponencial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>9</span>  <span class='chapter-title'>Métodos de suavização exponencial</span></span></a>
+  <a href="./suave_exponencial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Métodos de suavização exponencial</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/processo_linear_geral.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class='chapter-number'>10</span>  <span class='chapter-title'>Modelos ARMA</span></span></a>
+  <a href="./processo_linear_geral.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modelos ARMA</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="/references.html" class="sidebar-item-text sidebar-link">
+  <a href="./intervencao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Intervenção e outliers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" ></div>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <div id="quarto-toc-target"></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#notações" id="toc-notações" class="nav-link active" data-scroll-target="#notações"><span class="header-section-number">2.1</span> Notações</a></li>
+  <li><a href="#o-que-é-uma-análise-de-séries-temporais" id="toc-o-que-é-uma-análise-de-séries-temporais" class="nav-link" data-scroll-target="#o-que-é-uma-análise-de-séries-temporais"><span class="header-section-number">2.2</span> O que é uma análise de séries temporais?</a></li>
+  <li><a href="#exemplos-de-séries-temporais" id="toc-exemplos-de-séries-temporais" class="nav-link" data-scroll-target="#exemplos-de-séries-temporais"><span class="header-section-number">2.3</span> Exemplos de séries temporais</a>
+  <ul class="collapse">
+  <li><a href="#eletrocardiograma" id="toc-eletrocardiograma" class="nav-link" data-scroll-target="#eletrocardiograma"><span class="header-section-number">2.3.1</span> Eletrocardiograma</a></li>
+  <li><a href="#produto-interno-brupo-brasileiro" id="toc-produto-interno-brupo-brasileiro" class="nav-link" data-scroll-target="#produto-interno-brupo-brasileiro"><span class="header-section-number">2.3.2</span> Produto Interno Brupo Brasileiro</a></li>
+  <li><a href="#mortes-por-doenças-pulmonares-no-reino-unido" id="toc-mortes-por-doenças-pulmonares-no-reino-unido" class="nav-link" data-scroll-target="#mortes-por-doenças-pulmonares-no-reino-unido"><span class="header-section-number">2.3.3</span> Mortes por doenças pulmonares no Reino Unido</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>  <span class="chapter-title">Introdução</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introdução</span></h1>
 </div>
 
 
@@ -225,24 +253,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 </header>
-<nav id="TOC" role="doc-toc">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#notações" id="toc-notações"><span class="header-section-number">2.1</span> Notações</a></li>
-  <li><a href="#o-que-é-uma-análise-de-séries-temporais" id="toc-o-que-é-uma-análise-de-séries-temporais"><span class="header-section-number">2.2</span> O que é uma análise de séries temporais?</a></li>
-  <li><a href="#exemplos-de-séries-temporais" id="toc-exemplos-de-séries-temporais"><span class="header-section-number">2.3</span> Exemplos de séries temporais</a>
-  <ul>
-  <li><a href="#eletrocardiograma" id="toc-eletrocardiograma"><span class="header-section-number">2.3.1</span> Eletrocardiograma</a></li>
-  <li><a href="#produto-interno-brupo-brasileiro" id="toc-produto-interno-brupo-brasileiro"><span class="header-section-number">2.3.2</span> Produto Interno Brupo Brasileiro</a></li>
-  <li><a href="#mortes-por-doenças-pulmonares-no-reino-unido" id="toc-mortes-por-doenças-pulmonares-no-reino-unido"><span class="header-section-number">2.3.3</span> Mortes por doenças pulmonares no Reino Unido</a></li>
-  </ul></li>
-  </ul>
-</nav>
+
 <section id="notações" class="level2" data-number="2.1">
-<h2 data-number="2.1"><span class="header-section-number">2.1</span> Notações</h2>
+<h2 data-number="2.1" class="anchored" data-anchor-id="notações"><span class="header-section-number">2.1</span> Notações</h2>
 <p>Serão utilizadas letras minúsculas para designar tanto variáveis aleatórias quanto seus respectivos valores observados, entando a diferença clara no contexto. Exemplo: em <span class="math display">\[x_t\sim\hbox{Normal}(0,1),\]</span> <span class="math inline">\(x_t\)</span> representa uma variável aleatória, enquanto que em <span class="math inline">\(x_t=0\)</span> é um valor observado.</p>
-<p>Vetores serão denotados por negritos e sempre serão vetores-coluna. Exemplo <span class="math display">\[\boldsymbol{x}=\left(\begin{array}{c}x_1 \\ x_2 \\ \vdots \\ x_q\end{array}\right).\]</span> O vetor <span class="math inline">\(\boldsymbol{x}&#39;\)</span> é o transposto de <span class="math inline">\(\boldsymbol{x}\)</span>.</p>
+<p>Vetores serão denotados por negritos e sempre serão vetores-coluna. Exemplo <span class="math display">\[\boldsymbol{x}=\left(\begin{array}{c}x_1 \\ x_2 \\ \vdots \\ x_q\end{array}\right).\]</span> O vetor <span class="math inline">\(\boldsymbol{x}'\)</span> é o transposto de <span class="math inline">\(\boldsymbol{x}\)</span>.</p>
 <p>Para <span class="math inline">\(\mathcal{T}=\{1,2\ldots,\}\)</span>,</p>
 <ul>
 <li>Se <span class="math inline">\(A\subset\mathcal{T}\)</span>. Então <span class="math inline">\(x_A=\{x_{t},t\in A\}\)</span>.</li>
@@ -251,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 <section id="o-que-é-uma-análise-de-séries-temporais" class="level2" data-number="2.2">
-<h2 data-number="2.2"><span class="header-section-number">2.2</span> O que é uma análise de séries temporais?</h2>
+<h2 data-number="2.2" class="anchored" data-anchor-id="o-que-é-uma-análise-de-séries-temporais"><span class="header-section-number">2.2</span> O que é uma análise de séries temporais?</h2>
 <p>Considera-se que uma série temporal é uma coleção de observações realizadas ao longo do tempo. Será utilizada a notação <span class="math inline">\(x_t\)</span> para designar o valor registrado no tempo <span class="math inline">\(t\)</span> e <span class="math inline">\(\mathcal{D}_t==\{x_1,\ldots,x_t\}\)</span> representará a série observada até o tempo <span class="math inline">\(t\)</span>.</p>
 <p>Existem três objetivos principais no estudo de séries temporais</p>
 <ul>
@@ -262,31 +277,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Note que tais objetivos só fazem sentido se há alguma estrutura de dependência entre as variáveis que compõe a série temporal. Para ilustrar, considere a figura abaixo representa o gráfico a série temporal com o número anual de embarques e desembarques de passageiros em vôos domésticos no aeroporto Eduardo Gomes.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="intro_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672" /></p>
+<p><img src="intro_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Ainda considerando a série acima, seja <span class="math inline">\(x_t\)</span> o número de embarques e desembarques registrado no ano <span class="math inline">\(t\)</span>. A figura abaixo mostra o diagrama de disperão entre <span class="math inline">\(x_t\)</span> e <span class="math inline">\(x_{t-1}\)</span>, de onde é possível observar a correlação positiva, estimada em 0,86.</p>
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="intro_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672" /></p>
+<p><img src="intro_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>De posse desses resultados, pode-se imaginar um primeiro modelo, no qual a relação entre o presente e o passado imediato é ditado por uma regressão linear simples, gerando a equação</p>
 <p><span class="math display">\[\hat{x}_t = 7,589\times 10^5 +0,7109 x_{t-1}.\]</span> Sabendo que <span class="math inline">\(x_{2017}=2.376.505\)</span>, uma previsão para 2018 seria <span class="math inline">\(\hat{x}_{2018}=2.448.357\)</span>. O valor observado em 2018 foi 2.572.159, gerando um erro de previsão igual a <span class="math inline">\(x_{2018}-\hat{x}_{2018}=195.654\)</span> embarques e desembarques domésticos.</p>
 </section>
 <section id="exemplos-de-séries-temporais" class="level2" data-number="2.3">
-<h2 data-number="2.3"><span class="header-section-number">2.3</span> Exemplos de séries temporais</h2>
+<h2 data-number="2.3" class="anchored" data-anchor-id="exemplos-de-séries-temporais"><span class="header-section-number">2.3</span> Exemplos de séries temporais</h2>
 <section id="eletrocardiograma" class="level3" data-number="2.3.1">
-<h3 data-number="2.3.1"><span class="header-section-number">2.3.1</span> Eletrocardiograma</h3>
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="eletrocardiograma"><span class="header-section-number">2.3.1</span> Eletrocardiograma</h3>
 <div>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ECG)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ECG)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img src="intro_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672" /></p>
-<figcaption>1800 medidas da taxa cardíaca instantânea, em batidas por minuto, de um indivíduo.</figcaption>
+<figure class="figure">
+<p><img src="intro_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">1800 medidas da taxa cardíaca instantânea, em batidas por minuto, de um indivíduo.</figcaption>
 </figure>
 </div>
 </div>
@@ -295,16 +310,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 <section id="produto-interno-brupo-brasileiro" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2"><span class="header-section-number">2.3.2</span> Produto Interno Brupo Brasileiro</h3>
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="produto-interno-brupo-brasileiro"><span class="header-section-number">2.3.2</span> Produto Interno Brupo Brasileiro</h3>
 <div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(PIB)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(PIB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img src="intro_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672" /></p>
-<figcaption>PIB entre 1967 e 2014 corrigidos pelo valor do dólar em 4/2015.</figcaption>
+<figure class="figure">
+<p><img src="intro_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">PIB entre 1967 e 2014 corrigidos pelo valor do dólar em 4/2015.</figcaption>
 </figure>
 </div>
 </div>
@@ -313,33 +328,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 <section id="mortes-por-doenças-pulmonares-no-reino-unido" class="level3" data-number="2.3.3">
-<h3 data-number="2.3.3"><span class="header-section-number">2.3.3</span> Mortes por doenças pulmonares no Reino Unido</h3>
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="mortes-por-doenças-pulmonares-no-reino-unido"><span class="header-section-number">2.3.3</span> Mortes por doenças pulmonares no Reino Unido</h3>
 <div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ldeaths)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ldeaths)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img src="intro_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672" /></p>
-<figcaption>PIB entre 1967 e 2014 corrigidos pelo valor do dólar em 4/2015.</figcaption>
+<figure class="figure">
+<p><img src="intro_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">PIB entre 1967 e 2014 corrigidos pelo valor do dólar em 4/2015.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div id="quarto-navigation-envelope" class="hidden">
-<p><span class="hidden" data-render-id="quarto-int-sidebar-title">Séries Temporais</span> <span class="hidden" data-render-id="quarto-int-navbar-title">Séries Temporais</span> <span class="hidden" data-render-id="quarto-int-next"><span class="chapter-number">3</span>  <span class="chapter-title">Criando séries no <code>R</code></span></span> <span class="hidden" data-render-id="quarto-int-prev"><span class="chapter-number">1</span>  <span class="chapter-title">Summary</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/index.html">Prefácio</span> <span class="hidden" data-render-id="quarto-int-sidebar:/summary.html"><span class="chapter-number">1</span>  <span class="chapter-title">Summary</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/intro.html"><span class="chapter-number">2</span>  <span class="chapter-title">Introdução</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/ts_window_date.html"><span class="chapter-number">3</span>  <span class="chapter-title">Criando séries no <code>R</code></span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/estacionaria.html"><span class="chapter-number">4</span>  <span class="chapter-title">Séries Estacionárias</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/modelo_linear.html"><span class="chapter-number">5</span>  <span class="chapter-title">Revisão sobre o modelo linear</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/tendencia.html"><span class="chapter-number">6</span>  <span class="chapter-title">Tendência</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/sazonalidade.html"><span class="chapter-number">7</span>  <span class="chapter-title">Sazonalidade</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/tendencia_sazonalidade.html"><span class="chapter-number">8</span>  <span class="chapter-title">Previsão para modelos lineares</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/suave_exponencial.html"><span class="chapter-number">9</span>  <span class="chapter-title">Métodos de suavização exponencial</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/processo_linear_geral.html"><span class="chapter-number">10</span>  <span class="chapter-title">Modelos ARMA</span></span> <span class="hidden" data-render-id="quarto-int-sidebar:/references.html">References</span> <span class="hidden" data-render-id="quarto-breadcrumbs-73ad118577853d7aec0ac5f847f475e5"><span class="chapter-number">2</span>  <span class="chapter-title">Introdução</span></span></p>
-</div>
-<div id="quarto-meta-markdown" class="hidden">
-<p><span class="hidden" data-render-id="quarto-metatitle">Séries Temporais - <span class="chapter-number">2</span>  <span class="chapter-title">Introdução</span></span> <span class="hidden" data-render-id="quarto-twittercardtitle">Séries Temporais - <span class="chapter-number">2</span>  <span class="chapter-title">Introdução</span></span> <span class="hidden" data-render-id="quarto-ogcardtitle">Séries Temporais - <span class="chapter-number">2</span>  <span class="chapter-title">Introdução</span></span> <span class="hidden" data-render-id="quarto-metasitename">Séries Temporais</span> <span class="hidden" data-render-id="quarto-twittercarddesc"></span> <span class="hidden" data-render-id="quarto-ogcardddesc"></span></p>
-</div>
+
+
 </section>
 </section>
 
 </main> <!-- /main -->
-<script id = "quarto-html-after-body" type="application/javascript">
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -574,18 +585,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a  href="/summary.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class='chapter-number'>1</span>  <span class='chapter-title'>Summary</span></span>
+      <a href="./summary.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Summary</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a  href="/ts_window_date.html" class="pagination-link">
-        <span class="nav-page-text"><span class='chapter-number'>3</span>  <span class='chapter-title'>Criando séries no `R`</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./ts_window_date.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 
-</body>
 
-</html>
+
+</body></html>

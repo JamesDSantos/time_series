@@ -18,6 +18,7 @@ book:
     - tendencia_sazonalidade.qmd
     - suave_exponencial.qmd
     - processo_linear_geral.qmd
+    - intervencao.qmd
     - references.qmd
 
 bibliography: references.bib

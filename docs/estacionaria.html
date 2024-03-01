@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Séries Temporais - 1&nbsp; Summary</title>
+<title>Séries Temporais - 4&nbsp; Séries Estacionárias</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -64,8 +30,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./intro.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./modelo_linear.html" rel="next">
+<link href="./ts_window_date.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -96,6 +62,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -108,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Summary</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./estacionaria.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -141,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link active">
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
@@ -159,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./estacionaria.html" class="sidebar-item-text sidebar-link">
+  <a href="./estacionaria.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></span></a>
   </div>
 </li>
@@ -217,14 +185,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#processo-estacionário-ergódico" id="toc-processo-estacionário-ergódico" class="nav-link active" data-scroll-target="#processo-estacionário-ergódico"><span class="header-section-number">4.1</span> Processo estacionário ergódico</a></li>
+  <li><a href="#ruído-branco" id="toc-ruído-branco" class="nav-link" data-scroll-target="#ruído-branco"><span class="header-section-number">4.2</span> Ruído branco</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Summary</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Séries Estacionárias</span></h1>
 </div>
 
 
@@ -239,15 +214,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>In summary, this book has no content whatsoever.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<p>Uma coleção do tipo <span class="math inline">\(\{x(t),t\in\mathcal{T}\}\)</span>, <span class="math inline">\(\mathcal{T}\subseteq \mathbb{R}\)</span>, onde <span class="math inline">\(x(t)\)</span> é uma variável aleatória para cada <span class="math inline">\(t\)</span> fixado, é denominada processo estocástico.</p>
+<p>Um processo estocástico é dito ser fortemente estacionário se sua distribuição é invariante ao índice. Portanto, para qualquer <span class="math inline">\(t_1,\ldots,t_k\)</span>, a distribuição de <span class="math inline">\(x(t_1),\ldots,x(t_k)\)</span> é a mesma de <span class="math inline">\(x(t_1+h),\ldots,x(t_k+h)\)</span>.</p>
+<div id="exm-serie_estacionaria_1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 4.1 </strong></span>Se <span class="math inline">\(x(t)\sim \hbox{Normal}(0,1)\)</span> e <span class="math inline">\(x(t)\)</span> é independente de <span class="math inline">\(x(s)\)</span> para todo <span class="math inline">\(t\neq s\)</span>, então, para qualquer <span class="math inline">\(t_1,\ldots,t_k\)</span>,</p>
+<p><span class="math display">\[\begin{align}P(x(t_1)&lt;x_1,\ldots,x(t_k)&lt;x_k)&amp;=\prod_{i=1}^k P(x(t_i)&lt;x_i)=\prod_{i=1}^k P(x(t_i+h)&lt;x_i)\\&amp;=P(x(t_1+h)&lt;x_1,\ldots,x(t_k+h)&lt;x_k)\end{align}\]</span> logo, <span class="math inline">\(\{x(t),t\in \mathbb{R}\}\)</span> é um processo fortemente estacionário. <span class="math inline">\(\blacksquare\)</span></p>
 </div>
+<div id="thm-exm_estacionaria2" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 4.1 </strong></span>Seja <span class="math inline">\(\{x(t),t\in\mathbb{N}\}\)</span> um processo estocástico com <span class="math display">\[x(t)= x_{(t-1)}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),\]</span> para <span class="math inline">\(t=1,2,\ldots\)</span> com a condição de que <span class="math inline">\(x_0\sim\hbox{Normal}(0,1)\)</span> e que <span class="math inline">\(Cov(\varepsilon_t,\varepsilon_s)=0\;\;\forall s\neq t\)</span>. Então, <span class="math display">\[x_t=x_{t-1}+\varepsilon_{t}=\cdots=x_0+\sum_{j=1}^t\varepsilon_t\sim\hbox{Normal}(0,t+1).\]</span> Como <span class="math inline">\(x_t\sim\hbox{Normal}(0,t+1)\)</span> e, para qualquer <span class="math inline">\(h&gt;0\)</span>, <span class="math inline">\(x_{t+h}\sim\hbox{Normal}(0,t+h+1)\)</span>, temos que este processo não é fortemente estacionário. <span class="math inline">\(\blacksquare\)</span></p>
 </div>
+<div id="def-fracamente" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.1 </strong></span>Um processo estocástico <span class="math inline">\(\{y_t\}\)</span> é dito ser fracamente estacionário (ou de segunda ordem) se <span class="math display">\[\begin{align*}
+    E(y_t)&amp;=\mu,\\
+    Var(y_t)&amp;=\nu,\\
+    Cov(y_t,y_s)&amp;=E(y_ty_s)-E(y_t)E(y_s)=\gamma(t-s)
+    \end{align*}\]</span> onde <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\nu\)</span> são constantes independentes de <span class="math inline">\(t\)</span> e <span class="math inline">\(\gamma(t-s)\)</span> depende de <span class="math inline">\(t\)</span> e <span class="math inline">\(s\)</span> somente através da diferença <span class="math inline">\(|t-s|\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<div id="exm-fracamente1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 4.2 </strong></span>Considere o processo estocástico <span class="math inline">\(\{x(t),t\in\mathbb{N}\}\)</span>, onde <span class="math display">\[x(t) = \varepsilon(t) +\frac{1}{2}\varepsilon(t-1)
+\]</span> onde <span class="math inline">\(\varepsilon(t)\sim\hbox{Normal}(0,\nu)\)</span> para <span class="math inline">\(t=1,\ldots\)</span>, <span class="math inline">\(\varepsilon(t)\)</span> é independente de <span class="math inline">\(\varepsilon(s)\)</span> para todo <span class="math inline">\(s\neq t\)</span> e <span class="math inline">\(\varepsilon(0)=0\)</span>. Então: <span class="math display">\[\begin{align}
+E(x(t))&amp;=E(\varepsilon(t))+\frac{1}{2}E(\varepsilon(t-1))=0\\
+Var(x(t))&amp;=Var(\varepsilon(t))+\frac{1}{4}Var(\varepsilon(t-1))=\frac{5}{4}\nu
+\end{align}
+\]</span> e <span class="math display">\[\begin{align}
+          Cov(x(t),x(t+h))&amp;=Cov\left(\varepsilon(t)+\frac{1}{2}\varepsilon(t-1),\varepsilon(t+h)+\frac{1}{2}\varepsilon(t+h-1)\right)\\
+          &amp;=Cov\left(\varepsilon(t),\varepsilon(t+h)\right)+\frac{1}{2}Cov\left(\varepsilon(t),\varepsilon(t+h-1)\right)\\
+          &amp;+\frac{1}{2}Cov\left(\varepsilon(t-1),\varepsilon(t+h)\right)+\frac{1}{4}Cov\left(\varepsilon(t-1),\varepsilon(t+h-1)\right)\\
+          &amp;=\left\{ \begin{array}{ll}
+          \frac{4}{5}\nu,&amp;\; h = 0 \\         
+          \frac{1}{2}\nu,&amp;\; |h|=1,\\
+          0,&amp;\;\hbox{caso contrário.}
+          \end{array} \right.
+    \end{align}\]</span> Portanto, o processo é fracamente estacionáriao. <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>Quando <span class="math inline">\(\mathcal{T}=\{t\in D\subseteq \mathbb{Z}\}\)</span>, utiliza-se a notação <span class="math inline">\(x(t)=x_t\)</span>. Além disso, se <span class="math inline">\(t\)</span> pode ser interpretado como tempo, <span class="math inline">\(x_t\)</span> é uma série temporal. Uma série temporal é dita ser estacionária se ela é fracamente estacionária e o mesmo princípio se aplica nessas notas de aula.</p>
+<section id="processo-estacionário-ergódico" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="processo-estacionário-ergódico"><span class="header-section-number">4.1</span> Processo estacionário ergódico</h2>
+<p>Seja <span class="math inline">\(x_1,x_2,\ldots,x_n\)</span> uma série temporal estacionária. Então, a média <span class="math inline">\(\mu\)</span> pode ser estimada por <span class="math inline">\(\bar{x}_n\)</span>, uma vez que <span class="math inline">\(E(\bar{x})=\mu\)</span>. A variância essa estatística é</p>
+<p><span class="math display">\[\begin{align}Var(\bar{x})&amp;=Cov(\bar{x}_n,\bar{x}_n)=Cov\left(\sum_{i=1}^n \frac{x_i}{n},\sum_{j=1}^n\frac{x_j}{n}\right)=\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^nCov(x_i,x_j)\\
+&amp;=\frac{1}{n^2}\left[\sum_{i=1}^nCov(x_i,x_i)+2\sum_{i=1}^n\sum_{j\neq i}Cov(x_i,x_j)\right]\\
+&amp;=\frac{1}{n^2}\left[n\nu+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right]=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\gamma(h)
+\end{align}\]</span></p>
+<p>Note que, diferente do caso independente e identicamente distribuído, <span class="math inline">\(\bar{x}\)</span> não é necessariamente um estimador adequado, conforme pode ser constatado no exemplo abaixo.</p>
+<div id="exm-estationario_nao_ergodico" class="theorem example">
+<p><span class="theorem-title"><strong>Example 4.3 </strong></span>Seja <span class="math inline">\(x_t\)</span> um processo onde <span class="math inline">\(x_0\sim\hbox{Normal}(0,\nu)\)</span> e <span class="math inline">\(x_t=x_0\)</span> para todo <span class="math inline">\(t&gt;0\)</span>. Como</p>
+<p><span class="math display">\[\begin{align}
+E(x_t)&amp;=E(E(x_t|x_0))=E(x_0)=0\\
+Var(x_t)&amp;=E(Var(x_t|x_0))+Var(E(x_t|x_0))=E(0)+Var(x_0)=\nu\\
+Cov(x_t,x_{t-h})&amp;=E( Cov(x_t,x_{t-h}|x_0))+Cov( E(x_t|x_0),E(x_{t-h}|x_0))\\
+&amp;=E(0)+Cov(x_0,x_0)=Var(x_0)=\nu
+\end{align}\]</span> e, portanto, o processo é fracamente estacionário. Contudo, <span class="math display">\[Var(\bar{x})=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,\]</span> portanto, o erro padrão não decai com o aumento do tamanho da amostra.</p>
+<p><span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>A partir do exemplo acima, fica claro que <span class="math inline">\(\bar{x}\)</span> nem sempre será um estimador adequado para uma série estacionária.</p>
+<div id="def-ergodica" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.2 </strong></span>Uma série temporal estacionária é dita ser ergódica para a média se <span class="math display">\[\sum_{i=1}^n\frac{x_1}{n}\stackrel{p}{\rightarrow} \mu,\]</span> quando <span class="math inline">\(n\rightarrow\infty\)</span>.</p>
+</div>
+<p>A partir deste momento será considerado que toda série temporal estacionária é ergódica e, portanto <span class="math inline">\(\bar{x}\)</span> é um estimador para <span class="math inline">\(\mu\)</span>.</p>
+<div id="exm-estationario_nao_ergodico_conclusao" class="theorem example">
+<p><span class="theorem-title"><strong>Example 4.4 </strong></span>Considere novamente o processo no <span class="citation" data-cites="estationario_nao_ergodico">(<a href="#ref-estationario_nao_ergodico" role="doc-biblioref"><strong>estationario_nao_ergodico?</strong></a>)</span>. Como <span class="math inline">\(\bar{x}_n=x_0\)</span>, tem-se que, para <span class="math inline">\(\varepsilon&gt;0\)</span> arbitrário, <span class="math inline">\(\bar{x}\sim\hbox{Normal}(0,\nu)\)</span> e <span class="math display">\[P(|\bar{x}_n-0|&gt;\varepsilon)=2P(x_0&gt;\varepsilon)=2\int_{-\infty}^\varepsilon \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}d\nu&gt;\frac{1}{2}\]</span> logo, <span class="math inline">\(\bar{x}\)</span> não converge em probabilidade para <span class="math inline">\(0\)</span> e, portanto, o processo não é ergódico na média. <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+</section>
+<section id="ruído-branco" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="ruído-branco"><span class="header-section-number">4.2</span> Ruído branco</h2>
+<div id="def-ruido_branco" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.3 </strong></span>A série estacionária <span class="math inline">\(x_t\)</span> é dita ser um ruído branco se <span class="math inline">\(E(x_t)=0\)</span>, <span class="math inline">\(Var(x_t)=\nu\)</span> e <span class="math display">\[\begin{equation}
+        Cov(x_t,x_s)=0,
+        \end{equation}\]</span> para todo <span class="math inline">\(t\neq s\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<p>É imediato que o ruído branco é uma série temporal estacionária. Além disso, pela Desigualdade de Chebyshev, para qualquer <span class="math inline">\(\varepsilon&gt;0\)</span>,</p>
+<p><span class="math display">\[P\left(|\bar{x}_n|\geq\varepsilon\right)\leq \frac{E(\bar{x}_n^2)}{\varepsilon^2}=\frac{Var(\bar{x}_n)}{\varepsilon^2}=\frac{\nu}{n\varepsilon^2}\]</span> logo <span class="math inline">\(\lim_{n}P(|\bar{x}_n|\leq \varepsilon)=0\)</span> e <span class="math inline">\(\bar{x}_n\stackrel{p}{\rightarrow}0\)</span>. Portanto, o ruído branco é ergódico.</p>
+<p>Considere agora a série temporal <span class="math inline">\(y_t=\mu+x_t\)</span>, onde <span class="math inline">\(x_t\)</span> é um ruído branco. Então <span class="math display">\[\bar{y}_n=\mu+\bar{x}_n\stackrel{p}{\rightarrow}\mu\]</span> e <span class="math inline">\(\bar{y}_n\)</span> é um estimador para <span class="math inline">\(\mu\)</span>.</p>
+<p>Em certos momentos, será considerado que <span class="math inline">\(x_t\)</span> e <span class="math inline">\(x_s\)</span>, para todo <span class="math inline">\(t\neq s\)</span> são independentes (essa é uma condição mais forte, pois implica em <span class="math inline">\(Cov(x_t,x_s)=0\)</span>). Esse processo é denominado ruído branco independente.</p>
+<p>Por último, também será considerado a possibilidade de que <span class="math inline">\(x_t\sim\hbox{Normal}(0,\nu)\)</span>, com <span class="math inline">\(x_t\)</span> e <span class="math inline">\(x_s\)</span> indepentens para todo <span class="math inline">\(t\neq s\)</span>. Esse processo será denominado é denominado ruído branco gaussiano.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -485,13 +527,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Prefácio</span>
+      <a href="./ts_window_date.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Criando séries no <code>R</code></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./intro.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introdução</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./modelo_linear.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Revisão sobre o modelo linear</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
