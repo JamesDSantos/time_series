@@ -27,6 +27,7 @@ format:
   html:
     theme: cosmo
   pdf:
+    pdf-engine: pdflatex
     documentclass: scrartcl
     toc: true
     number-sections: true

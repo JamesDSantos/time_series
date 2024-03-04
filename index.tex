@@ -183,9 +183,9 @@
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \usepackage{amsthm}
 \theoremstyle{plain}
-\newtheorem{proposition}{Proposition}[chapter]
-\theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[chapter]
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[chapter]
 \theoremstyle{definition}
 \newtheorem{example}{Example}[chapter]
 \theoremstyle{definition}
@@ -231,7 +231,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, frame hidden, breakable, sharp corners, boxrule=0pt, interior hidden, enhanced]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, sharp corners, frame hidden, breakable, interior hidden, enhanced, borderline west={3pt}{0pt}{shadecolor}]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -6740,6 +6740,411 @@ do início da pandemia na série
 }
 
 \end{figure}
+
+\hypertarget{outliers}{%
+\section{Outliers}\label{outliers}}
+
+Outliers são observações atípicas. Segundo sua natureza, eles podem ser
+classificados como
+
+\begin{itemize}
+\item
+  Outliers aditivos (AO): são resultantes de erros de medição/registro
+\item
+  Outliers na inovação (IO): são mudanças abrúptas de curta duração no
+  processo subjacente.
+\end{itemize}
+
+Seja \(x_t\) uma série temporal. Então, se um outlier aditivo ocorre no
+tempo \(T\), a série temporal pode ser descrita como \(x_t'\), onde
+
+\[x_t'=\left\{\begin{array}{ll}x_t,&\;\;t\neq T\\ x_t+\omega_AP_t^{(T)},&\;\;t=T.\end{array}\right.\]
+Note que um outlier aditivo pode ser tratado como uma intervenção, onde
+\(m_t=\omega_A P_t^{(T)}\).
+
+Seja \(\varepsilon_t\) erro associado à série \(x_t\). Um outlier na
+inovação ocorre quando o erro (também conhecido como inovação) no tempo
+\(T\) sofre uma perturbação.
+
+\[\varepsilon_t'=\left\{\begin{array}{ll}\varepsilon_t,&\;\;t\neq T\\ \varepsilon_t+\omega_I P_t^{(T)},&\;\;t=T.\end{array}\right.\]
+Considere o processo estacionário MA\((\infty)\)
+\[x_t=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}\] Então,
+o processo com outlier na inovação no tempo \(T\) é escrito como
+\[x_t'=\varepsilon_t'+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}'=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}+\theta_{t-T}\omega_I=x_t+\theta_{t-T}\omega_I,\]
+onde \(\theta_0=1\) e \(\theta_j=0\) se \(j<0\). Portanto, um outlier na
+inovação perturba todas as observações no tempo \(t\geq T\), embora esse
+efeito diminua na medida que \(t\) se afasta de \(T\).
+
+Para detectar um IO, considere que um modelo foi ajustado, gerando a
+série de resíduos
+\[\hat{\varepsilon}_t'=x_t'-E(x_t'|\mathcal{D}_{t-1}),\] onde
+\(\hat{\varepsilon}_t\approx N(0,\sigma^2)\). Então
+\[\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}\] se comporta como
+uma distribuição normal padrão quando não há outliers. Na presença de
+outliers, teremos
+
+\[\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}=\left\{\begin{array}{ll}\frac{\hat{\varepsilon}_t}{\sigma},&\;\; t\neq T\\ \frac{\hat{\varepsilon}_t+\omega_I}{\sigma},&\;\; t= T\end{array}\right.\]
+Se \(T\) é conhecido, declaramos \(x_T\) como outlier se
+\(|\lambda_{1,T}|>1,96\) e \(\hat{\omega}_I=\hat{\varepsilon}'_T\). Se
+\(T\) é desconhecido, calcula-se
+\[\lambda_1=\max_{1\leq t \leq n}|\lambda_{1,t}|,\] e define-se \(T\)
+como sendo o valor \(t\) tal que \(\lambda_{1,t}=\lambda_1\). Como todos
+os pontos estão sendo avaliados, precisamos realizar algum teste
+múltiplo. O mais simples é a correção de Bonferroni, que nos leva a
+declarar que \(x_T\) é um outlier se \(\lambda_1\) é maior que o quantil
+\(1-\alpha/2n\) da normal padrão. Na prática, \(\sigma\) deve ser
+estimado de modo robusto, uma vez que a variância tradicional é sensível
+à outliers. Uma alternativa é estimar \(\sigma\) por
+\[\hat{\sigma}=\sqrt{\frac{2}{\pi}}\sum_{t=1}^n\frac{|\hat{\varepsilon_t}|}{n}.\]
+
+Para o caso AO, considere que \(x_t'\) é um processo AR(\(\infty\)).
+Então \[\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}',\]
+onde \(\phi_j=0\) para \(j<t\). Note que, para \(t<T\),
+\[\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}'=x_t-\sum_{j=1}^\infty \phi_j x_{t-j},\]
+Para \(t=T\), teremos
+\[\hat{\varepsilon}_T'=x_T+\omega_A-\sum_{j=1}^\infty \phi_j x_{T-j}=\omega_A+\hat{\varepsilon}_T.\]
+Para \(t=T+1\), teremos
+\[\hat{\varepsilon}_{T+1}'=x_{T+1}-\phi_1\omega_A-\sum_{j=2}^\infty \phi_j x_{T+1-j}=-\phi_1\omega_A+\hat{\varepsilon}_{T+1},\]
+e, de modo geral, para \(k>T\)
+\[\hat{\varepsilon}_{k}'=-\phi_{T-k}\omega_A+\hat{\varepsilon}_k.\]
+Definindo a soma de quadrados
+\[\sum_{j=T}^n'\hat{\varepsilon}_j^2=\sum_{j=T}^{n}(\hat{\varepsilon}_{j}+\omega_A\pi_{T-j})^2\]
+onde \(\pi_0=1\) e \(\pi_j=\phi_j\) se \(j>0\), podemos estimar
+\(\omega\) por
+\[\hat{\omega}_{T,A}=-\frac{\sum_{j=T}^n\pi_{T-j}\hat{\varepsilon}_{j}}{\sum_{j=T}^n\pi_{T-j}^2}\]
+
+Como \(\hat{\varepsilon}_t\approx N(0,\sigma^2)\), teremos que
+\[\lambda_{2,T}=\frac{\hat{\omega}_{T,A}}{\sigma\sqrt{\sum_{j=T}^n \pi_{T-j}^2}}\]
+deve se comportar como uma distribuição normal padrão na ausência de
+outliers. Novamente, se \(T\) for desconhecido, podemos escolher \(T\)
+como o valor \(t\) que gera o valor
+\[\lambda_2=\max_{1\leq t \leq n}|\lambda_{2,t}|\] e podemos testar sua
+significância comparando seu valor com o quantil 1-\(\alpha/2n\) da
+distribuição normal padrão.
+
+Na prática, é provável que a natureza do outlier seja desconhecida.
+Nesses casos, tanto o teste para o AO quanto para o IO devem detectar os
+mesmos outliers. Uma regra que tende a funcionar é classificar o outlier
+como IO se \(|\lambda_{1,T}|>|\lambda_{2,T}\) ou como AO em caso
+contrário. Após identificar o outlier e estimar \(\omega\), o mesmo deve
+ser incorporado na função de verossimilhança e as estimativas devem ser
+realziadas novamente.
+
+\hypertarget{mortes-por-doencas-pulmonares-no-reino-unidos}{%
+\subsection{Mortes por doencas pulmonares no Reino
+Unidos}\label{mortes-por-doencas-pulmonares-no-reino-unidos}}
+
+Voltemos à série \texttt{ldeaths}. Sabemos que essa série possui
+sazonalidade de período 12 e uma leve tendência de decrescimento. Após
+fazer uma diferença para remover a tendência de uma diferença sazonal
+para a sazonalidade, encontramos evidências para ajustar o modelo
+ARIMA(2,1,2)(0,1,1)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(ldeaths)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{intervencao_files/figure-pdf/unnamed-chunk-21-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d1\_ldeaths }\OtherTok{\textless{}{-}} \FunctionTok{diff}\NormalTok{(ldeaths,}\DecValTok{1}\NormalTok{)}
+\NormalTok{D12d1\_ldeaths }\OtherTok{\textless{}{-}} \FunctionTok{diff}\NormalTok{(d1\_ldeaths,}\DecValTok{12}\NormalTok{)}
+
+\FunctionTok{acf}\NormalTok{(D12d1\_ldeaths)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{intervencao_files/figure-pdf/unnamed-chunk-21-2.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pacf}\NormalTok{(D12d1\_ldeaths)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{intervencao_files/figure-pdf/unnamed-chunk-21-3.pdf}
+
+}
+
+\end{figure}
+
+Abaixo, apresentamos a série dos resíduos, que apresentam possíveis
+outliers.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod }\OtherTok{\textless{}{-}} \FunctionTok{arima}\NormalTok{(ldeaths,}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{),}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+\NormalTok{mod}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+arima(x = ldeaths, order = c(2, 1, 2), seasonal = c(0, 1, 1))
+
+Coefficients:
+          ar1      ar2      ma1      ma2     sma1
+      -0.0145  -0.2761  -0.7617  -0.2383  -0.9999
+s.e.   0.3997   0.1639   0.4327   0.4206   0.2385
+
+sigma^2 estimated as 47226:  log likelihood = -414.79,  aic = 839.57
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ts.plot}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{residuals[}\SpecialCharTok{{-}}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{)])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{intervencao_files/figure-pdf/unnamed-chunk-22-1.pdf}
+
+}
+
+\end{figure}
+
+Utilizaremos as funções \texttt{detectIO} e \texttt{detectAO}, do pacote
+\texttt{TSA}, para a detecção de outliers na série através dos resíduos
+encontrados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{detectAO}\NormalTok{(mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+             [,1]
+ind     72.000000
+lambda2 -3.453803
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{detectIO}\NormalTok{(mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+             [,1]     [,2]      [,3]
+ind     26.000000 38.00000 72.000000
+lambda1  6.685518 -4.41524 -3.453803
+\end{verbatim}
+
+As observações no tempo \(26\) e 38 foram consideradas outliers nas
+inovações. Já a observação no tempo 72 recebeu as duas classificações e
+vamos modelar como um AO apenas por fins didáticos.
+
+Ao considerar que o outlier no tempo 72 é aditivo, estamos modificando
+apenas o nível da série, assim como fizemos para a análise de
+intervenção. Aqui vamos utilizar a função \texttt{arimax}, do pacote
+\texttt{TSA} para o mesmo fim. Tal função possui o argumento
+\texttt{xreg} que permite o uso de variáveis regressoras (no caso,
+utilizaremos a função pulso como indicadora). Além disso, essa função
+possui o argumento \texttt{io} que nos permite colocar os índices os
+outliers nas inovações.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pulso }\OtherTok{\textless{}{-}} \FunctionTok{array}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FunctionTok{length}\NormalTok{(ldeaths))}
+\NormalTok{pulso[}\DecValTok{72}\NormalTok{] }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{mod2 }\OtherTok{\textless{}{-}} \FunctionTok{arimax}\NormalTok{(ldeaths, }\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), }\AttributeTok{xreg =}\NormalTok{ pulso, }\AttributeTok{io =} \FunctionTok{c}\NormalTok{(}\DecValTok{26}\NormalTok{,}\DecValTok{38}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+Vamos verificar se novos ouliers foram revelados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{detectAO}\NormalTok{(mod2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "No AO detected"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{detectIO}\NormalTok{(mod2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+             [,1]
+ind     50.000000
+lambda1  3.535189
+\end{verbatim}
+
+Note que mais um outlier foi detectado IO, agora no tempo 50. Abaixo,
+constrúimos mais um modelo, agora com o outlier no tempo 50.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod3 }\OtherTok{\textless{}{-}} \FunctionTok{arimax}\NormalTok{(ldeaths, }\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{), }\AttributeTok{xreg =}\NormalTok{ pulso, }\AttributeTok{io =} \FunctionTok{c}\NormalTok{(}\DecValTok{26}\NormalTok{,}\DecValTok{38}\NormalTok{,}\DecValTok{50}\NormalTok{))}
+\FunctionTok{detectAO}\NormalTok{(mod3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "No AO detected"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{detectIO}\NormalTok{(mod3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] "No IO detected"
+\end{verbatim}
+
+Depois de detectar todos os outliers, vamos comparar o AIC do modelo
+original com o do modelo com tratamento de outliers.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod}\SpecialCharTok{$}\NormalTok{aic}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 839.5738
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod3}\SpecialCharTok{$}\NormalTok{aic}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 773.1072
+\end{verbatim}
+
+O modelo 3 se mostrou mais parcimonioso e vamos mantê-lo. As estimativas
+dos parâmetros são:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+arimax(x = ldeaths, order = c(2, 1, 2), seasonal = c(0, 1, 1), xreg = pulso, 
+    io = c(26, 38, 50))
+
+Coefficients:
+\end{verbatim}
+
+\begin{verbatim}
+Warning in sqrt(diag(x$var.coef)): NaNs produzidos
+\end{verbatim}
+
+\begin{verbatim}
+         ar1      ar2      ma1      ma2     sma1       xreg     IO.26
+      0.0010  -0.2706  -0.5834  -0.3580  -0.9590  -596.0401  1383.398
+s.e.  0.1331   0.0958      NaN   0.1557   0.0864   125.0698   148.260
+          IO.38     IO.50
+      -292.6500  499.8729
+s.e.   148.1292   67.7714
+
+sigma^2 estimated as 14410:  log likelihood = -377.55,  aic = 773.11
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{resid }\OtherTok{\textless{}{-}}\NormalTok{ mod3}\SpecialCharTok{$}\NormalTok{residuals[}\SpecialCharTok{{-}}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{)]}
+\FunctionTok{ts.plot}\NormalTok{(resid)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{intervencao_files/figure-pdf/unnamed-chunk-29-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{acf}\NormalTok{(resid)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{intervencao_files/figure-pdf/unnamed-chunk-29-2.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pacf}\NormalTok{(resid)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{intervencao_files/figure-pdf/unnamed-chunk-29-3.pdf}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{Box.test}\NormalTok{(resid)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Box-Pierce test
+
+data:  resid
+X-squared = 0.52117, df = 1, p-value = 0.4703
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(resid)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+    Shapiro-Wilk normality test
+
+data:  resid
+W = 0.98455, p-value = 0.6467
+\end{verbatim}
 
 \bookmarksetup{startatroot}
 

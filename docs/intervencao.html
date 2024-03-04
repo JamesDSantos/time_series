@@ -228,6 +228,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#exemplo-nível-do-nilo" id="toc-exemplo-nível-do-nilo" class="nav-link" data-scroll-target="#exemplo-nível-do-nilo"><span class="header-section-number">11.1.1</span> Exemplo: Nível do Nilo</a></li>
   <li><a href="#exemplo-óbitos-maternos-durante-a-pandemia" id="toc-exemplo-óbitos-maternos-durante-a-pandemia" class="nav-link" data-scroll-target="#exemplo-óbitos-maternos-durante-a-pandemia"><span class="header-section-number">11.1.2</span> Exemplo: óbitos maternos durante a pandemia</a></li>
   </ul></li>
+  <li><a href="#outliers" id="toc-outliers" class="nav-link" data-scroll-target="#outliers"><span class="header-section-number">11.2</span> Outliers</a>
+  <ul class="collapse">
+  <li><a href="#mortes-por-doencas-pulmonares-no-reino-unidos" id="toc-mortes-por-doencas-pulmonares-no-reino-unidos" class="nav-link" data-scroll-target="#mortes-por-doencas-pulmonares-no-reino-unidos"><span class="header-section-number">11.2.1</span> Mortes por doencas pulmonares no Reino Unidos</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -682,6 +686,179 @@ W = 0.9931, p-value = 0.5056</code></pre>
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">window</span>(mt, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">1</span>)), <span class="at">type =</span> <span class="st">'h'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="intervencao_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="outliers" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="outliers"><span class="header-section-number">11.2</span> Outliers</h2>
+<p>Outliers são observações atípicas. Segundo sua natureza, eles podem ser classificados como</p>
+<ul>
+<li><p>Outliers aditivos (AO): são resultantes de erros de medição/registro</p></li>
+<li><p>Outliers na inovação (IO): são mudanças abrúptas de curta duração no processo subjacente.</p></li>
+</ul>
+<p>Seja <span class="math inline">\(x_t\)</span> uma série temporal. Então, se um outlier aditivo ocorre no tempo <span class="math inline">\(T\)</span>, a série temporal pode ser descrita como <span class="math inline">\(x_t'\)</span>, onde</p>
+<p><span class="math display">\[x_t'=\left\{\begin{array}{ll}x_t,&amp;\;\;t\neq T\\ x_t+\omega_AP_t^{(T)},&amp;\;\;t=T.\end{array}\right.\]</span> Note que um outlier aditivo pode ser tratado como uma intervenção, onde <span class="math inline">\(m_t=\omega_A P_t^{(T)}\)</span>.</p>
+<p>Seja <span class="math inline">\(\varepsilon_t\)</span> erro associado à série <span class="math inline">\(x_t\)</span>. Um outlier na inovação ocorre quando o erro (também conhecido como inovação) no tempo <span class="math inline">\(T\)</span> sofre uma perturbação.</p>
+<p><span class="math display">\[\varepsilon_t'=\left\{\begin{array}{ll}\varepsilon_t,&amp;\;\;t\neq T\\ \varepsilon_t+\omega_I P_t^{(T)},&amp;\;\;t=T.\end{array}\right.\]</span> Considere o processo estacionário MA<span class="math inline">\((\infty)\)</span> <span class="math display">\[x_t=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}\]</span> Então, o processo com outlier na inovação no tempo <span class="math inline">\(T\)</span> é escrito como <span class="math display">\[x_t'=\varepsilon_t'+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}'=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}+\theta_{t-T}\omega_I=x_t+\theta_{t-T}\omega_I,\]</span> onde <span class="math inline">\(\theta_0=1\)</span> e <span class="math inline">\(\theta_j=0\)</span> se <span class="math inline">\(j&lt;0\)</span>. Portanto, um outlier na inovação perturba todas as observações no tempo <span class="math inline">\(t\geq T\)</span>, embora esse efeito diminua na medida que <span class="math inline">\(t\)</span> se afasta de <span class="math inline">\(T\)</span>.</p>
+<p>Para detectar um IO, considere que um modelo foi ajustado, gerando a série de resíduos <span class="math display">\[\hat{\varepsilon}_t'=x_t'-E(x_t'|\mathcal{D}_{t-1}),\]</span> onde <span class="math inline">\(\hat{\varepsilon}_t\approx N(0,\sigma^2)\)</span>. Então <span class="math display">\[\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}\]</span> se comporta como uma distribuição normal padrão quando não há outliers. Na presença de outliers, teremos</p>
+<p><span class="math display">\[\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}=\left\{\begin{array}{ll}\frac{\hat{\varepsilon}_t}{\sigma},&amp;\;\; t\neq T\\ \frac{\hat{\varepsilon}_t+\omega_I}{\sigma},&amp;\;\; t= T\end{array}\right.\]</span> Se <span class="math inline">\(T\)</span> é conhecido, declaramos <span class="math inline">\(x_T\)</span> como outlier se <span class="math inline">\(|\lambda_{1,T}|&gt;1,96\)</span> e <span class="math inline">\(\hat{\omega}_I=\hat{\varepsilon}'_T\)</span>. Se <span class="math inline">\(T\)</span> é desconhecido, calcula-se <span class="math display">\[\lambda_1=\max_{1\leq t \leq n}|\lambda_{1,t}|,\]</span> e define-se <span class="math inline">\(T\)</span> como sendo o valor <span class="math inline">\(t\)</span> tal que <span class="math inline">\(\lambda_{1,t}=\lambda_1\)</span>. Como todos os pontos estão sendo avaliados, precisamos realizar algum teste múltiplo. O mais simples é a correção de Bonferroni, que nos leva a declarar que <span class="math inline">\(x_T\)</span> é um outlier se <span class="math inline">\(\lambda_1\)</span> é maior que o quantil <span class="math inline">\(1-\alpha/2n\)</span> da normal padrão. Na prática, <span class="math inline">\(\sigma\)</span> deve ser estimado de modo robusto, uma vez que a variância tradicional é sensível à outliers. Uma alternativa é estimar <span class="math inline">\(\sigma\)</span> por <span class="math display">\[\hat{\sigma}=\sqrt{\frac{2}{\pi}}\sum_{t=1}^n\frac{|\hat{\varepsilon_t}|}{n}.\]</span></p>
+<p>Para o caso AO, considere que <span class="math inline">\(x_t'\)</span> é um processo AR(<span class="math inline">\(\infty\)</span>). Então <span class="math display">\[\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}',\]</span> onde <span class="math inline">\(\phi_j=0\)</span> para <span class="math inline">\(j&lt;t\)</span>. Note que, para <span class="math inline">\(t&lt;T\)</span>, <span class="math display">\[\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}'=x_t-\sum_{j=1}^\infty \phi_j x_{t-j},\]</span> Para <span class="math inline">\(t=T\)</span>, teremos <span class="math display">\[\hat{\varepsilon}_T'=x_T+\omega_A-\sum_{j=1}^\infty \phi_j x_{T-j}=\omega_A+\hat{\varepsilon}_T.\]</span> Para <span class="math inline">\(t=T+1\)</span>, teremos <span class="math display">\[\hat{\varepsilon}_{T+1}'=x_{T+1}-\phi_1\omega_A-\sum_{j=2}^\infty \phi_j x_{T+1-j}=-\phi_1\omega_A+\hat{\varepsilon}_{T+1},\]</span> e, de modo geral, para <span class="math inline">\(k&gt;T\)</span> <span class="math display">\[\hat{\varepsilon}_{k}'=-\phi_{T-k}\omega_A+\hat{\varepsilon}_k.\]</span> Definindo a soma de quadrados <span class="math display">\[\sum_{j=T}^n'\hat{\varepsilon}_j^2=\sum_{j=T}^{n}(\hat{\varepsilon}_{j}+\omega_A\pi_{T-j})^2\]</span> onde <span class="math inline">\(\pi_0=1\)</span> e <span class="math inline">\(\pi_j=\phi_j\)</span> se <span class="math inline">\(j&gt;0\)</span>, podemos estimar <span class="math inline">\(\omega\)</span> por <span class="math display">\[\hat{\omega}_{T,A}=-\frac{\sum_{j=T}^n\pi_{T-j}\hat{\varepsilon}_{j}}{\sum_{j=T}^n\pi_{T-j}^2}\]</span></p>
+<p>Como <span class="math inline">\(\hat{\varepsilon}_t\approx N(0,\sigma^2)\)</span>, teremos que <span class="math display">\[\lambda_{2,T}=\frac{\hat{\omega}_{T,A}}{\sigma\sqrt{\sum_{j=T}^n \pi_{T-j}^2}}\]</span> deve se comportar como uma distribuição normal padrão na ausência de outliers. Novamente, se <span class="math inline">\(T\)</span> for desconhecido, podemos escolher <span class="math inline">\(T\)</span> como o valor <span class="math inline">\(t\)</span> que gera o valor <span class="math display">\[\lambda_2=\max_{1\leq t \leq n}|\lambda_{2,t}|\]</span> e podemos testar sua significância comparando seu valor com o quantil 1-<span class="math inline">\(\alpha/2n\)</span> da distribuição normal padrão.</p>
+<p>Na prática, é provável que a natureza do outlier seja desconhecida. Nesses casos, tanto o teste para o AO quanto para o IO devem detectar os mesmos outliers. Uma regra que tende a funcionar é classificar o outlier como IO se <span class="math inline">\(|\lambda_{1,T}|&gt;|\lambda_{2,T}\)</span> ou como AO em caso contrário. Após identificar o outlier e estimar <span class="math inline">\(\omega\)</span>, o mesmo deve ser incorporado na função de verossimilhança e as estimativas devem ser realziadas novamente.</p>
+<section id="mortes-por-doencas-pulmonares-no-reino-unidos" class="level3" data-number="11.2.1">
+<h3 data-number="11.2.1" class="anchored" data-anchor-id="mortes-por-doencas-pulmonares-no-reino-unidos"><span class="header-section-number">11.2.1</span> Mortes por doencas pulmonares no Reino Unidos</h3>
+<p>Voltemos à série <code>ldeaths</code>. Sabemos que essa série possui sazonalidade de período 12 e uma leve tendência de decrescimento. Após fazer uma diferença para remover a tendência de uma diferença sazonal para a sazonalidade, encontramos evidências para ajustar o modelo ARIMA(2,1,2)(0,1,1)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ldeaths)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>d1_ldeaths <span class="ot">&lt;-</span> <span class="fu">diff</span>(ldeaths,<span class="dv">1</span>)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>D12d1_ldeaths <span class="ot">&lt;-</span> <span class="fu">diff</span>(d1_ldeaths,<span class="dv">12</span>)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(D12d1_ldeaths)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(D12d1_ldeaths)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-21-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Abaixo, apresentamos a série dos resíduos, que apresentam possíveis outliers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">arima</span>(ldeaths,<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>mod</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+arima(x = ldeaths, order = c(2, 1, 2), seasonal = c(0, 1, 1))
+
+Coefficients:
+          ar1      ar2      ma1      ma2     sma1
+      -0.0145  -0.2761  -0.7617  -0.2383  -0.9999
+s.e.   0.3997   0.1639   0.4327   0.4206   0.2385
+
+sigma^2 estimated as 47226:  log likelihood = -414.79,  aic = 839.57</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(mod<span class="sc">$</span>residuals[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Utilizaremos as funções <code>detectIO</code> e <code>detectAO</code>, do pacote <code>TSA</code>, para a detecção de outliers na série através dos resíduos encontrados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectAO</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             [,1]
+ind     72.000000
+lambda2 -3.453803</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectIO</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             [,1]     [,2]      [,3]
+ind     26.000000 38.00000 72.000000
+lambda1  6.685518 -4.41524 -3.453803</code></pre>
+</div>
+</div>
+<p>As observações no tempo <span class="math inline">\(26\)</span> e 38 foram consideradas outliers nas inovações. Já a observação no tempo 72 recebeu as duas classificações e vamos modelar como um AO apenas por fins didáticos.</p>
+<p>Ao considerar que o outlier no tempo 72 é aditivo, estamos modificando apenas o nível da série, assim como fizemos para a análise de intervenção. Aqui vamos utilizar a função <code>arimax</code>, do pacote <code>TSA</code> para o mesmo fim. Tal função possui o argumento <code>xreg</code> que permite o uso de variáveis regressoras (no caso, utilizaremos a função pulso como indicadora). Além disso, essa função possui o argumento <code>io</code> que nos permite colocar os índices os outliers nas inovações.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>pulso <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">0</span>,<span class="fu">length</span>(ldeaths))</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>pulso[<span class="dv">72</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">arimax</span>(ldeaths, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xreg =</span> pulso, <span class="at">io =</span> <span class="fu">c</span>(<span class="dv">26</span>,<span class="dv">38</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Vamos verificar se novos ouliers foram revelados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectAO</span>(mod2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No AO detected"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectIO</span>(mod2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             [,1]
+ind     50.000000
+lambda1  3.535189</code></pre>
+</div>
+</div>
+<p>Note que mais um outlier foi detectado IO, agora no tempo 50. Abaixo, constrúimos mais um modelo, agora com o outlier no tempo 50.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">arimax</span>(ldeaths, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xreg =</span> pulso, <span class="at">io =</span> <span class="fu">c</span>(<span class="dv">26</span>,<span class="dv">38</span>,<span class="dv">50</span>))</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="fu">detectAO</span>(mod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No AO detected"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectIO</span>(mod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "No IO detected"</code></pre>
+</div>
+</div>
+<p>Depois de detectar todos os outliers, vamos comparar o AIC do modelo original com o do modelo com tratamento de outliers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>mod<span class="sc">$</span>aic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 839.5738</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>mod3<span class="sc">$</span>aic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 773.1072</code></pre>
+</div>
+</div>
+<p>O modelo 3 se mostrou mais parcimonioso e vamos mantê-lo. As estimativas dos parâmetros são:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>mod3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+arimax(x = ldeaths, order = c(2, 1, 2), seasonal = c(0, 1, 1), xreg = pulso, 
+    io = c(26, 38, 50))
+
+Coefficients:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in sqrt(diag(x$var.coef)): NaNs produzidos</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         ar1      ar2      ma1      ma2     sma1       xreg     IO.26
+      0.0010  -0.2706  -0.5834  -0.3580  -0.9590  -596.0401  1383.398
+s.e.  0.1331   0.0958      NaN   0.1557   0.0864   125.0698   148.260
+          IO.38     IO.50
+      -292.6500  499.8729
+s.e.   148.1292   67.7714
+
+sigma^2 estimated as 14410:  log likelihood = -377.55,  aic = 773.11</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>resid <span class="ot">&lt;-</span> mod3<span class="sc">$</span>residuals[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)]</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-29-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-29-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Pierce test
+
+data:  resid
+X-squared = 0.52117, df = 1, p-value = 0.4703</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  resid
+W = 0.98455, p-value = 0.6467</code></pre>
 </div>
 </div>
 

@@ -336,3 +336,136 @@ Por último, podemos fazer um gráfico de $m_t$ para verificar o efeito do iníc
 ts.plot(window(mt, start = c(2020,1)), type = 'h')
 ```
 
+
+## Outliers
+
+Outliers são observações atípicas. Segundo sua natureza, eles podem ser classificados como
+
+- Outliers aditivos (AO): são resultantes de erros de medição/registro
+
+- Outliers na inovação (IO): são mudanças abrúptas de curta duração no processo subjacente. 
+
+Seja $x_t$ uma série temporal. Então, se um outlier aditivo ocorre no tempo $T$, a série temporal pode ser descrita como $x_t'$, onde
+
+$$x_t'=\left\{\begin{array}{ll}x_t,&\;\;t\neq T\\ x_t+\omega_AP_t^{(T)},&\;\;t=T.\end{array}\right.$$
+Note que um outlier aditivo pode ser tratado como uma intervenção, onde $m_t=\omega_A P_t^{(T)}$.
+
+Seja $\varepsilon_t$ erro associado à série $x_t$. Um outlier na inovação ocorre quando o erro (também conhecido como inovação) no tempo $T$ sofre uma perturbação.
+
+$$\varepsilon_t'=\left\{\begin{array}{ll}\varepsilon_t,&\;\;t\neq T\\ \varepsilon_t+\omega_I P_t^{(T)},&\;\;t=T.\end{array}\right.$$
+Considere o processo estacionário MA$(\infty)$
+$$x_t=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}$$
+Então, o processo com outlier na inovação no tempo $T$ é escrito como
+$$x_t'=\varepsilon_t'+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}'=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}+\theta_{t-T}\omega_I=x_t+\theta_{t-T}\omega_I,$$
+onde $\theta_0=1$ e $\theta_j=0$ se $j<0$. Portanto, um outlier na inovação perturba todas as observações no tempo $t\geq T$, embora esse efeito diminua na medida que $t$ se afasta de $T$. 
+
+Para detectar um IO, considere que um modelo foi ajustado, gerando a série de resíduos 
+$$\hat{\varepsilon}_t'=x_t'-E(x_t'|\mathcal{D}_{t-1}),$$ onde $\hat{\varepsilon}_t\approx N(0,\sigma^2)$. Então
+$$\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}$$
+se comporta como uma distribuição normal padrão quando não há outliers. Na presença de outliers, teremos
+
+$$\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}=\left\{\begin{array}{ll}\frac{\hat{\varepsilon}_t}{\sigma},&\;\; t\neq T\\ \frac{\hat{\varepsilon}_t+\omega_I}{\sigma},&\;\; t= T\end{array}\right.$$
+Se $T$ é conhecido, declaramos $x_T$ como outlier se $|\lambda_{1,T}|>1,96$ e $\hat{\omega}_I=\hat{\varepsilon}'_T$. Se $T$ é desconhecido, calcula-se
+$$\lambda_1=\max_{1\leq t \leq n}|\lambda_{1,t}|,$$
+e define-se $T$ como sendo o valor $t$ tal que $\lambda_{1,t}=\lambda_1$. Como todos os pontos estão sendo avaliados, precisamos realizar algum teste múltiplo. O mais simples é a correção de Bonferroni, que nos leva a declarar que $x_T$ é um outlier se $\lambda_1$ é maior que o quantil $1-\alpha/2n$ da normal padrão. Na prática, $\sigma$ deve ser estimado de modo robusto, uma vez que a variância tradicional é sensível à outliers. Uma alternativa é estimar $\sigma$ por
+$$\hat{\sigma}=\sqrt{\frac{2}{\pi}}\sum_{t=1}^n\frac{|\hat{\varepsilon_t}|}{n}.$$
+
+Para o caso AO, considere que $x_t'$ é um processo AR($\infty$). Então
+$$\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}',$$ 
+onde $\phi_j=0$ para $j<t$. Note que, para $t<T$,
+$$\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}'=x_t-\sum_{j=1}^\infty \phi_j x_{t-j},$$
+Para $t=T$, teremos 
+$$\hat{\varepsilon}_T'=x_T+\omega_A-\sum_{j=1}^\infty \phi_j x_{T-j}=\omega_A+\hat{\varepsilon}_T.$$
+Para $t=T+1$, teremos
+$$\hat{\varepsilon}_{T+1}'=x_{T+1}-\phi_1\omega_A-\sum_{j=2}^\infty \phi_j x_{T+1-j}=-\phi_1\omega_A+\hat{\varepsilon}_{T+1},$$
+e, de modo geral, para $k>T$
+$$\hat{\varepsilon}_{k}'=-\phi_{T-k}\omega_A+\hat{\varepsilon}_k.$$
+Definindo a soma de quadrados
+$$\sum_{j=T}^n'\hat{\varepsilon}_j^2=\sum_{j=T}^{n}(\hat{\varepsilon}_{j}+\omega_A\pi_{T-j})^2$$
+onde $\pi_0=1$ e $\pi_j=\phi_j$ se $j>0$, podemos estimar $\omega$ por
+$$\hat{\omega}_{T,A}=-\frac{\sum_{j=T}^n\pi_{T-j}\hat{\varepsilon}_{j}}{\sum_{j=T}^n\pi_{T-j}^2}$$
+
+Como $\hat{\varepsilon}_t\approx N(0,\sigma^2)$, teremos que
+$$\lambda_{2,T}=\frac{\hat{\omega}_{T,A}}{\sigma\sqrt{\sum_{j=T}^n \pi_{T-j}^2}}$$
+deve se comportar como uma distribuição normal padrão na ausência de outliers. Novamente, se $T$ for desconhecido, podemos escolher $T$ como o valor $t$ que gera o valor
+$$\lambda_2=\max_{1\leq t \leq n}|\lambda_{2,t}|$$
+e podemos testar sua significância comparando seu valor com o quantil 1-$\alpha/2n$ da distribuição normal padrão.
+
+Na prática, é provável que a natureza do outlier seja desconhecida. Nesses casos, tanto o teste para o AO quanto para o IO devem detectar os mesmos outliers. Uma regra que tende a funcionar é classificar o outlier como IO se $|\lambda_{1,T}|>|\lambda_{2,T}$ ou como AO em caso contrário. Após identificar o outlier e estimar $\omega$, o mesmo deve ser incorporado na função de verossimilhança e as estimativas devem ser realziadas novamente. 
+
+
+### Mortes por doencas pulmonares no Reino Unidos
+
+Voltemos à série `ldeaths`. Sabemos que essa série possui  sazonalidade de período 12 e uma leve tendência de decrescimento. Após fazer uma diferença para remover a tendência de uma diferença sazonal para a sazonalidade, encontramos evidências para ajustar o modelo ARIMA(2,1,2)(0,1,1)
+
+
+```{r}
+ts.plot(ldeaths)
+d1_ldeaths <- diff(ldeaths,1)
+D12d1_ldeaths <- diff(d1_ldeaths,12)
+
+acf(D12d1_ldeaths)
+pacf(D12d1_ldeaths)
+```
+
+Abaixo, apresentamos a série dos resíduos, que apresentam possíveis outliers.
+
+```{r}
+mod <- arima(ldeaths,c(2,1,2),c(0,1,1))
+mod
+ts.plot(mod$residuals[-(1:12)])
+```
+
+Utilizaremos as funções `detectIO` e `detectAO`, do pacote `TSA`, para a detecção de outliers na série através dos resíduos encontrados.
+
+```{r}
+detectAO(mod)
+detectIO(mod)
+```
+
+As observações no tempo $26$ e 38 foram consideradas outliers nas inovações. Já a observação no tempo 72 recebeu as duas classificações e vamos modelar como um AO apenas por fins didáticos. 
+
+Ao considerar que o outlier no tempo 72 é aditivo, estamos modificando apenas o nível da série, assim como fizemos para a análise de intervenção. Aqui vamos utilizar a função `arimax`, do pacote `TSA` para o mesmo fim. Tal função possui o argumento `xreg` que permite o uso de variáveis regressoras (no caso, utilizaremos a função pulso como indicadora). Além disso, essa função possui o argumento `io` que nos permite colocar os índices os outliers nas inovações.
+
+```{r}
+pulso <- array(0,length(ldeaths))
+pulso[72] <- 1
+mod2 <- arimax(ldeaths, c(2,1,2), c(0,1,1), xreg = pulso, io = c(26,38))
+```
+
+Vamos verificar se novos ouliers foram revelados.
+
+```{r}
+detectAO(mod2)
+detectIO(mod2)
+```
+
+Note que mais um outlier foi detectado IO, agora no tempo 50. Abaixo, constrúimos mais um modelo, agora com o outlier no tempo 50.
+
+```{r}
+mod3 <- arimax(ldeaths, c(2,1,2), c(0,1,1), xreg = pulso, io = c(26,38,50))
+detectAO(mod3)
+detectIO(mod3)
+```
+
+Depois de detectar todos os outliers, vamos comparar o AIC do modelo original com o do modelo com tratamento de outliers.
+
+```{r}
+mod$aic
+mod3$aic
+```
+
+O modelo 3 se mostrou mais parcimonioso e vamos mantê-lo. As estimativas dos parâmetros são:
+```{r}
+mod3
+```
+
+```{r}
+resid <- mod3$residuals[-(1:12)]
+ts.plot(resid)
+acf(resid)
+pacf(resid)
+Box.test(resid)
+shapiro.test(resid)
+
+```
