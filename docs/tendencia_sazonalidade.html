@@ -209,6 +209,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./regressao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Modelos de regressão para séries temporais</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -416,9 +422,12 @@ Jun 1996 365.1953 364.1894 366.2011</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Carregando pacotes exigidos: scales</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(co2, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1994</span>,<span class="dv">1998</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">350</span>,<span class="dv">370</span>), <span class="at">type =</span> <span class="st">'p'</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">polygon</span>( <span class="dv">1996</span><span class="sc">+</span><span class="fu">c</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>,<span class="dv">23</span><span class="sc">:</span><span class="dv">0</span>)<span class="sc">/</span><span class="dv">12</span>, <span class="fu">c</span>(pred[,<span class="dv">2</span>],pred[<span class="dv">24</span><span class="sc">:</span><span class="dv">1</span>,<span class="dv">3</span>]), <span class="at">col =</span> <span class="fu">alpha</span>(<span class="st">'lightpink'</span>,.<span class="dv">3</span>), <span class="at">border =</span> <span class="st">'lightpink'</span>)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pred[,<span class="dv">1</span>], <span class="at">lwd =</span><span class="dv">2</span>, <span class="at">col =</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'scales' was built under R version 4.3.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(co2, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1994</span>,<span class="dv">1998</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">350</span>,<span class="dv">370</span>), <span class="at">type =</span> <span class="st">'p'</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">polygon</span>( <span class="dv">1996</span><span class="sc">+</span><span class="fu">c</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>,<span class="dv">23</span><span class="sc">:</span><span class="dv">0</span>)<span class="sc">/</span><span class="dv">12</span>, <span class="fu">c</span>(pred[,<span class="dv">2</span>],pred[<span class="dv">24</span><span class="sc">:</span><span class="dv">1</span>,<span class="dv">3</span>]), <span class="at">col =</span> <span class="fu">alpha</span>(<span class="st">'lightpink'</span>,.<span class="dv">3</span>), <span class="at">border =</span> <span class="st">'lightpink'</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pred[,<span class="dv">1</span>], <span class="at">lwd =</span><span class="dv">2</span>, <span class="at">col =</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="tendencia_sazonalidade_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -426,16 +435,16 @@ Jun 1996 365.1953 364.1894 366.2011</code></pre>
 <p>Note que o modelo conseguiu prever o ano de 1996 de modo satisfatório e os cinco primeiros meses de 1997. Este modelo parece ser adequado para previsões com o horizonte de doze meses.</p>
 <p>Vale ressaltar que este modelo não satisfaz a hipótese de ruído branco. Os gráficos dos resíduos revelam ainda características típicas de séries estacionárias.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">rstudent</span>(modFinal)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">rstudent</span>(modFinal)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="tendencia_sazonalidade_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="tendencia_sazonalidade_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -443,7 +452,7 @@ Jun 1996 365.1953 364.1894 366.2011</code></pre>
 data:  res
 W = 0.99684, p-value = 0.5439</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>( res, <span class="at">type =</span> <span class="st">'Ljung-Box'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>( res, <span class="at">type =</span> <span class="st">'Ljung-Box'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Ljung test

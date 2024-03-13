@@ -19,6 +19,7 @@ book:
     - suave_exponencial.qmd
     - processo_linear_geral.qmd
     - intervencao.qmd
+    - regressao.qmd
     - references.qmd
 
 bibliography: references.bib
