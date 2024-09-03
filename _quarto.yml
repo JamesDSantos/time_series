@@ -20,6 +20,8 @@ book:
     - processo_linear_geral.qmd
     - intervencao.qmd
     - regressao.qmd
+    - longa_memoria.qmd
+    - garch.qmd
     - references.qmd
 
 bibliography: references.bib

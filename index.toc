@@ -1,0 +1,84 @@
+\contentsline {chapter}{Prefácio}{1}{section*.1}%
+\contentsline {section}{\numberline {1}Notações}{1}{section.1}%
+\contentsline {section}{\numberline {2}O que é uma análise de séries temporais?}{2}{section.2}%
+\contentsline {section}{\numberline {3}Exemplos de séries temporais}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Eletrocardiograma}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Produto Interno Brupo Brasileiro}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Mortes por doenças pulmonares no Reino Unido}{4}{subsection.3.3}%
+\contentsline {section}{\numberline {4}A classe \texttt {ts}}{4}{section.4}%
+\contentsline {section}{\numberline {5}A função \texttt {window}}{6}{section.5}%
+\contentsline {section}{\numberline {6}O pacote \texttt {data.table}}{7}{section.6}%
+\contentsline {section}{\numberline {7}Exercício}{10}{section.7}%
+\contentsline {section}{\numberline {8}Processo estacionário ergódico}{11}{section.8}%
+\contentsline {section}{\numberline {9}Ruído branco}{13}{section.9}%
+\contentsline {section}{\numberline {10}Definição}{14}{section.10}%
+\contentsline {section}{\numberline {11}Resíduos e valores ajustados}{15}{section.11}%
+\contentsline {section}{\numberline {12}Seleção de modelos}{15}{section.12}%
+\contentsline {section}{\numberline {13}Robustez do modelo linear}{16}{section.13}%
+\contentsline {section}{\numberline {14}O que é tendência?}{16}{section.14}%
+\contentsline {section}{\numberline {15}Tendência aletória e tendência determinística}{16}{section.15}%
+\contentsline {section}{\numberline {16}O modelo de tendência polinomial}{17}{section.16}%
+\contentsline {subsection}{\numberline {16.1}Previsão}{20}{subsection.16.1}%
+\contentsline {subsection}{\numberline {16.2}Seleção de modelos lineares}{21}{subsection.16.2}%
+\contentsline {section}{\numberline {17}Métodos não paramétricos para estimação da tendência}{23}{section.17}%
+\contentsline {subsection}{\numberline {17.1}Médias Móveis}{23}{subsection.17.1}%
+\contentsline {section}{\numberline {18}Suavização do gráfico de dispersão estimada localmente (loess)}{28}{section.18}%
+\contentsline {section}{\numberline {19}Padrão sazonal}{31}{section.19}%
+\contentsline {section}{\numberline {20}Gráficos sazonal de subséries}{32}{section.20}%
+\contentsline {section}{\numberline {21}Dessazonalização}{36}{section.21}%
+\contentsline {section}{\numberline {22}Decomposições de séries}{37}{section.22}%
+\contentsline {section}{\numberline {23}Modelo de Forma livre - ou fatores sazonais}{38}{section.23}%
+\contentsline {section}{\numberline {24}Regressão harmônica simples}{42}{section.24}%
+\contentsline {subsection}{\numberline {24.1}A função harmônica}{42}{subsection.24.1}%
+\contentsline {subsection}{\numberline {24.2}O modelo de regressão harmônica simples}{44}{subsection.24.2}%
+\contentsline {section}{\numberline {25}Periodograma}{46}{section.25}%
+\contentsline {section}{\numberline {26}Regressão Harmônica}{48}{section.26}%
+\contentsline {section}{\numberline {27}O valor ajustado como previsão}{51}{section.27}%
+\contentsline {section}{\numberline {28}Aplicação na série \texttt {co2}}{52}{section.28}%
+\contentsline {section}{\numberline {29}Avaliando a qualidade da previsão}{58}{section.29}%
+\contentsline {section}{\numberline {30}Introdução}{59}{section.30}%
+\contentsline {section}{\numberline {31}Suavização exponencial simples}{60}{section.31}%
+\contentsline {subsection}{\numberline {31.1}Definição do método}{60}{subsection.31.1}%
+\contentsline {subsection}{\numberline {31.2}Aplicação: nível do Nilo}{62}{subsection.31.2}%
+\contentsline {section}{\numberline {32}Suavização Exponencial de Holt}{64}{section.32}%
+\contentsline {subsection}{\numberline {32.1}Aplicação: ocorrências aeronáuticas}{67}{subsection.32.1}%
+\contentsline {section}{\numberline {33}Suavização Exponencial de Holt-Winters}{70}{section.33}%
+\contentsline {subsection}{\numberline {33.1}Definição}{70}{subsection.33.1}%
+\contentsline {subsection}{\numberline {33.2}Aplicação para a série \texttt {co2}}{73}{subsection.33.2}%
+\contentsline {section}{\numberline {34}Modelo de Holt amortecido}{74}{section.34}%
+\contentsline {section}{\numberline {35}Modelos com componentes multiplicativas}{75}{section.35}%
+\contentsline {subsection}{\numberline {35.1}Tendência multiplicativa}{75}{subsection.35.1}%
+\contentsline {subsection}{\numberline {35.2}Tendência aditiva e sazonalidade multiplicativa}{76}{subsection.35.2}%
+\contentsline {section}{\numberline {36}O polinômio de defasagens}{76}{section.36}%
+\contentsline {section}{\numberline {37}O modelo autorregressivo}{80}{section.37}%
+\contentsline {subsection}{\numberline {37.1}Função de autocorrelação para o \(AR(p)\)}{82}{subsection.37.1}%
+\contentsline {subsection}{\numberline {37.2}A função de autocorrelação parcial (PACF)}{85}{subsection.37.2}%
+\contentsline {subsection}{\numberline {37.3}Método de estimação de Yule-Walker}{88}{subsection.37.3}%
+\contentsline {subsection}{\numberline {37.4}Estimador de máxima verossimilhança}{89}{subsection.37.4}%
+\contentsline {subsection}{\numberline {37.5}Previsão}{90}{subsection.37.5}%
+\contentsline {subsection}{\numberline {37.6}Processo autorregressivo com deriva}{91}{subsection.37.6}%
+\contentsline {subsection}{\numberline {37.7}Exemplo: número anual de terremotos}{92}{subsection.37.7}%
+\contentsline {section}{\numberline {38}Médias móveis}{95}{section.38}%
+\contentsline {subsection}{\numberline {38.1}Inversibilidade do processo de média móvel}{96}{subsection.38.1}%
+\contentsline {subsection}{\numberline {38.2}Autocorrelação parcial do MA(\(q\))}{97}{subsection.38.2}%
+\contentsline {subsection}{\numberline {38.3}Estimação dos parâmetros do MA(\(q\))}{98}{subsection.38.3}%
+\contentsline {section}{\numberline {39}Modelo autorregressivo com médias móveis}{99}{section.39}%
+\contentsline {subsection}{\numberline {39.1}Função de autocorrelação}{100}{subsection.39.1}%
+\contentsline {section}{\numberline {40}Modelos integrados}{103}{section.40}%
+\contentsline {subsection}{\numberline {40.1}O operador difereNça}{103}{subsection.40.1}%
+\contentsline {subsection}{\numberline {40.2}Modelo autorregressivo integrado}{104}{subsection.40.2}%
+\contentsline {subsection}{\numberline {40.3}Modelo autorregressivo sazonal}{105}{subsection.40.3}%
+\contentsline {section}{\numberline {41}O modelo ARMA}{107}{section.41}%
+\contentsline {subsection}{\numberline {41.1}A função de autocorrelação}{108}{subsection.41.1}%
+\contentsline {subsection}{\numberline {41.2}Modelos ARMA integrados e sazonais}{109}{subsection.41.2}%
+\contentsline {section}{\numberline {42}Análise de intervenção}{110}{section.42}%
+\contentsline {subsection}{\numberline {42.1}Exemplo: Nível do Nilo}{114}{subsection.42.1}%
+\contentsline {subsection}{\numberline {42.2}Exemplo: óbitos maternos durante a pandemia}{120}{subsection.42.2}%
+\contentsline {section}{\numberline {43}Outliers}{128}{section.43}%
+\contentsline {subsection}{\numberline {43.1}Mortes por doencas pulmonares no Reino Unidos}{131}{subsection.43.1}%
+\contentsline {section}{\numberline {44}As funções \texttt {ts.union} e \texttt {ts.intersect}}{135}{section.44}%
+\contentsline {section}{\numberline {45}A função de correlação cruzada e a correlação espúria}{137}{section.45}%
+\contentsline {section}{\numberline {46}Whitening}{139}{section.46}%
+\contentsline {section}{\numberline {47}Regressão para séries temporais}{141}{section.47}%
+\contentsline {chapter}{References}{144}{figure.caption.120}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
