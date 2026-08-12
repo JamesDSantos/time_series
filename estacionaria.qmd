@@ -76,7 +76,7 @@ $$\begin{align}Var(\bar{x})&=Cov(\bar{x}_n,\bar{x}_n)=Cov\left(\sum_{i=1}^n \fra
 &=\frac{1}{n^2}\left[n\nu+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right]=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\gamma(h)
 \end{align}$$
 	
-Note que, diferente do caso independente e identicamente distribuído, $\bar{x}$ não é necessariamente um estimador adequado, conforme pode ser constatado no exemplo abaixo.
+Note que, diferente do caso independente e identicamente distribuído, $\bar{x}_n$ não é necessariamente um estimador adequado, conforme pode ser constatado no exemplo abaixo.
 
 
 :::{#exm-estationario_nao_ergodico}
@@ -89,13 +89,13 @@ Cov(x_t,x_{t-h})&=E( Cov(x_t,x_{t-h}|x_0))+Cov( E(x_t|x_0),E(x_{t-h}|x_0))\\
 &=E(0)+Cov(x_0,x_0)=Var(x_0)=\nu
 \end{align}$$
 e, portanto, o processo é fracamente estacionário. Contudo, 
-$$Var(\bar{x})=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,$$
+$$Var(\bar{x}_n)=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,$$
 portanto, o erro padrão não decai com o aumento do tamanho da amostra. 
 
 $\blacksquare$
 :::
 
-A partir do exemplo acima, fica claro que $\bar{x}$ nem sempre será um estimador adequado para uma série estacionária. 
+A partir do exemplo acima, fica claro que $\bar{x}_n$ nem sempre será um estimador adequado para uma série estacionária. 
 
 ::: {#def-ergodica}
 Uma série temporal estacionária é dita ser ergódica para a média se
@@ -103,11 +103,11 @@ $$\sum_{t=1}^n\frac{x_t}{n}\stackrel{P}{\rightarrow} \mu,$$
 quando $n\rightarrow\infty$.
 :::
 
-A partir deste momento será considerado que toda série temporal estacionária é ergódica e, portanto $\bar{x}$ é um estimador para $\mu$. 
+A partir deste momento **será considerado que toda série temporal estacionária é ergódica** e, portanto $\bar{x}$ é um estimador para $\mu$. 
 
 :::{#exm-estationario_nao_ergodico_conclusao}
 
-Considere novamente o processo no @estationario_nao_ergodico. Como
+Considere novamente o processo no @exm-estationario_nao_ergodico. Como
 $\bar{x}_n=x_0$, tem-se que, para $\varepsilon>0$ arbitrário, $\bar{x}\sim\hbox{Normal}(0,\nu)$ e 
 $$P(|\bar{x}_n-0|>\varepsilon)=2P(x_0>\varepsilon)=2\int_\varepsilon^{\infty} \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}dy>0,\quad \forall n$$
 logo, $\bar{x}$ não converge em probabilidade para $0$ e, portanto, o processo não é ergódico na média.

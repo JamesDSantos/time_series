@@ -79,7 +79,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-9e3e5b9121e68b3f077afb32f2c64d95.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-12eeb4b20e9f5a2b0bfc604bfaf942bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -138,6 +138,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -455,7 +456,7 @@ Figure&nbsp;8.2: Gráfico de subséries
 </div>
 <p>Também é possível que o padrão sazonal não seja bem representado por uma função periódica. Isto ocorre quando o gráfico de subséries possui tendência.</p>
 <div id="exm-AirPassengersMonthplot" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.5</strong></span> A <a href="#fig-AirPassengersMonthplot" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-AirPassengersMonthplot</span></a> apresenta o gráfico da série <code>AirPassengers</code> e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série.</p>
+<p><span class="theorem-title"><strong>Example 8.5</strong></span> A <span class="quarto-unresolved-ref">?fig-AirPassengersMonthplot</span> apresenta o gráfico da série <code>AirPassengers</code> e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(AirPassengers)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
@@ -534,7 +535,7 @@ Figure&nbsp;8.4: Gráfico de subséries da série AirPassengers. Observe as tend
 <li><p>Estime a tendência dessazoanlizada, utilizando a <span class="math inline">\(p\)</span>-MM, obtendo <span class="math inline">\(\hat{T}\)</span></p></li>
 <li><p>Remova a tendência da série: <span class="math inline">\(\tilde{x}_t=x_t-\hat{T}\)</span></p></li>
 <li><p>Encontre as <span class="math inline">\(p\)</span> subséries de <span class="math inline">\(\tilde{x}\)</span> e estime os valores de <span class="math inline">\(s\)</span> através de suas médias.</p></li>
-<li><p>Estime os resíduos: <span class="math inline">\(\hat{\varepsilon}_t=x_t-\hat{T}(t)-\hat{s}(t)\)</span> A <a href="#fig-ldeathsDecomposicaoClassica" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-ldeathsDecomposicaoClassica</span></a> apresenta a decomposição clássica da série de óbitos pode doenças pulmonares no Reino Unido.</p></li>
+<li><p>Estime os resíduos: <span class="math inline">\(\hat{\varepsilon}_t=x_t-\hat{T}(t)-\hat{s}(t)\)</span> A <a href="#fig-ldeathsDecomposicaoClassica" class="quarto-xref">Figure&nbsp;<span>8.5</span></a> apresenta a decomposição clássica da série de óbitos pode doenças pulmonares no Reino Unido.</p></li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">decompose</span>(ldeaths))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
@@ -553,7 +554,7 @@ Figure&nbsp;8.5: Decomposição da série de óbitos por doenças pulmonares no 
 </div>
 </div>
 </div>
-<p>Como é utilizada uma média móvel, a estimativa da tendência e do ruído é prejudicada no início e fim da série. Outro problema que este método não consegue estimar padrões sazonais que não sejam representamos por uma função periódica. Para ilustrar, apresentamos abaixo a decomposição clássica da série <code>AirPassengers</code>. Como a estimação da parte sazonal utilizou a média das subséries, as tendências sazonais vistas no <a href="#exm-AirPassengersMonthplot" class="quarto-xref">Example&nbsp;<span class="quarto-unresolved-ref">exm-AirPassengersMonthplot</span></a> foram para os resíduos (identificados co)</p>
+<p>Como é utilizada uma média móvel, a estimativa da tendência e do ruído é prejudicada no início e fim da série. Outro problema que este método não consegue estimar padrões sazonais que não sejam representamos por uma função periódica. Para ilustrar, apresentamos abaixo a decomposição clássica da série <code>AirPassengers</code>. Como a estimação da parte sazonal utilizou a média das subséries, as tendências sazonais vistas no <a href="#exm-AirPassengersMonthplot" class="quarto-xref">Example&nbsp;<span>8.5</span></a> foram para os resíduos (identificados co)</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">decompose</span>(AirPassengers))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -887,7 +888,7 @@ Coefficients:
 <pre><code>[1] 12</code></pre>
 </div>
 </div>
-<p>No <a href="#exm-nottemHarmonico1" class="quarto-xref">Example&nbsp;<span class="quarto-unresolved-ref">exm-nottemHarmonico1</span></a> aplicamos uma regressão harmônica simples e descobrimos que o ruído resultante não era branco e gaussiano. Abaixo, mostramos o periodograma dos resíduos obtidos nesse exemplo.</p>
+<p>No <a href="#exm-nottemHarmonico1" class="quarto-xref">Example&nbsp;<span>8.8</span></a> aplicamos uma regressão harmônica simples e descobrimos que o ruído resultante não era branco e gaussiano. Abaixo, mostramos o periodograma dos resíduos obtidos nesse exemplo.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">periodogram</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">

@@ -44,7 +44,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-9e3e5b9121e68b3f077afb32f2c64d95.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-12eeb4b20e9f5a2b0bfc604bfaf942bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -103,6 +103,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -320,7 +321,7 @@ Var(x_t)&amp;=Var(\varepsilon_t)+\frac{1}{4}Var(\varepsilon_{t-1})=\frac{5}{4}\n
 &amp;=\frac{1}{n^2}\left[\sum_{i=1}^nCov(x_i,x_i)+\sum_{i=1}^n\sum_{j\neq i}Cov(x_i,x_j)\right]\\
 &amp;=\frac{1}{n^2}\left[n\nu+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right]=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\gamma(h)
 \end{align}\]</span></p>
-<p>Note que, diferente do caso independente e identicamente distribuído, <span class="math inline">\(\bar{x}\)</span> não é necessariamente um estimador adequado, conforme pode ser constatado no exemplo abaixo.</p>
+<p>Note que, diferente do caso independente e identicamente distribuído, <span class="math inline">\(\bar{x}_n\)</span> não é necessariamente um estimador adequado, conforme pode ser constatado no exemplo abaixo.</p>
 <div id="exm-estationario_nao_ergodico" class="theorem example">
 <p><span class="theorem-title"><strong>Example 4.3</strong></span> Seja <span class="math inline">\(x_t\)</span> um processo onde <span class="math inline">\(x_0\sim\hbox{Normal}(0,\nu)\)</span> e <span class="math inline">\(x_t=x_0\)</span> para todo <span class="math inline">\(t&gt;0\)</span>. Como</p>
 <p><span class="math display">\[\begin{align}
@@ -328,16 +329,16 @@ E(x_t)&amp;=E(E(x_t|x_0))=E(x_0)=0\\
 Var(x_t)&amp;=E(Var(x_t|x_0))+Var(E(x_t|x_0))=E(0)+Var(x_0)=\nu\\
 Cov(x_t,x_{t-h})&amp;=E( Cov(x_t,x_{t-h}|x_0))+Cov( E(x_t|x_0),E(x_{t-h}|x_0))\\
 &amp;=E(0)+Cov(x_0,x_0)=Var(x_0)=\nu
-\end{align}\]</span> e, portanto, o processo é fracamente estacionário. Contudo, <span class="math display">\[Var(\bar{x})=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,\]</span> portanto, o erro padrão não decai com o aumento do tamanho da amostra.</p>
+\end{align}\]</span> e, portanto, o processo é fracamente estacionário. Contudo, <span class="math display">\[Var(\bar{x}_n)=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\nu=\nu,\]</span> portanto, o erro padrão não decai com o aumento do tamanho da amostra.</p>
 <p><span class="math inline">\(\blacksquare\)</span></p>
 </div>
-<p>A partir do exemplo acima, fica claro que <span class="math inline">\(\bar{x}\)</span> nem sempre será um estimador adequado para uma série estacionária.</p>
+<p>A partir do exemplo acima, fica claro que <span class="math inline">\(\bar{x}_n\)</span> nem sempre será um estimador adequado para uma série estacionária.</p>
 <div id="def-ergodica" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 4.2</strong></span> Uma série temporal estacionária é dita ser ergódica para a média se <span class="math display">\[\sum_{t=1}^n\frac{x_t}{n}\stackrel{P}{\rightarrow} \mu,\]</span> quando <span class="math inline">\(n\rightarrow\infty\)</span>.</p>
 </div>
-<p>A partir deste momento será considerado que toda série temporal estacionária é ergódica e, portanto <span class="math inline">\(\bar{x}\)</span> é um estimador para <span class="math inline">\(\mu\)</span>.</p>
+<p>A partir deste momento <strong>será considerado que toda série temporal estacionária é ergódica</strong> e, portanto <span class="math inline">\(\bar{x}\)</span> é um estimador para <span class="math inline">\(\mu\)</span>.</p>
 <div id="exm-estationario_nao_ergodico_conclusao" class="theorem example">
-<p><span class="theorem-title"><strong>Example 4.4</strong></span> Considere novamente o processo no <span class="citation" data-cites="estationario_nao_ergodico">(<a href="#ref-estationario_nao_ergodico" role="doc-biblioref"><strong>estationario_nao_ergodico?</strong></a>)</span>. Como <span class="math inline">\(\bar{x}_n=x_0\)</span>, tem-se que, para <span class="math inline">\(\varepsilon&gt;0\)</span> arbitrário, <span class="math inline">\(\bar{x}\sim\hbox{Normal}(0,\nu)\)</span> e <span class="math display">\[P(|\bar{x}_n-0|&gt;\varepsilon)=2P(x_0&gt;\varepsilon)=2\int_\varepsilon^{\infty} \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}dy&gt;0,\quad \forall n\]</span> logo, <span class="math inline">\(\bar{x}\)</span> não converge em probabilidade para <span class="math inline">\(0\)</span> e, portanto, o processo não é ergódico na média. <span class="math inline">\(\blacksquare\)</span></p>
+<p><span class="theorem-title"><strong>Example 4.4</strong></span> Considere novamente o processo no <a href="#exm-estationario_nao_ergodico" class="quarto-xref">Example&nbsp;<span>4.3</span></a>. Como <span class="math inline">\(\bar{x}_n=x_0\)</span>, tem-se que, para <span class="math inline">\(\varepsilon&gt;0\)</span> arbitrário, <span class="math inline">\(\bar{x}\sim\hbox{Normal}(0,\nu)\)</span> e <span class="math display">\[P(|\bar{x}_n-0|&gt;\varepsilon)=2P(x_0&gt;\varepsilon)=2\int_\varepsilon^{\infty} \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}dy&gt;0,\quad \forall n\]</span> logo, <span class="math inline">\(\bar{x}\)</span> não converge em probabilidade para <span class="math inline">\(0\)</span> e, portanto, o processo não é ergódico na média. <span class="math inline">\(\blacksquare\)</span></p>
 </div>
 </section>
 <section id="ruído-branco" class="level2" data-number="4.2">

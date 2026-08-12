@@ -29,12 +29,5 @@ bibliography: references.bib
 
 format:
   html:
-    theme: cosmo
-  pdf:
-    pdf-engine: pdflatex
-    documentclass: scrartcl
-    toc: true
-    number-sections: true
-    colorlinks: true
-  epub:
-    cover-image: cover.png
+    css: styles.css
+ 
