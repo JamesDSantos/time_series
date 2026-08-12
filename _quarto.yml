@@ -12,6 +12,7 @@ book:
     - intro.qmd
     - ts_window_date.qmd
     - estacionaria.qmd
+    - acf.qmd
     - modelo_linear.qmd
     - tendencia.qmd
     - sazonalidade.qmd

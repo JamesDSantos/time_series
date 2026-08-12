@@ -48,11 +48,11 @@ end(x)
 frequency(x)
 ```
 
-A partir das informações acima, sabe-se a série `x` é mensal (`frequency=12`), que  sua primeira observação data de janeiro de 2021 e a última de dezembro de 2021.
+A partir das informações acima, sabe-se que a série `x` é mensal (`frequency=12`), que  sua primeira observação data de janeiro de 2021 e a última de dezembro de 2021.
 
 ## A função `window`
 
-A função `window` seleciona um subconjunto da série temporal. Abaixo foram selecionados apenas os nascimentos entre Junho e Agosto e este valores foram registrados no gráfico.
+A função `window` é aplicada a um objeto `ts` com o objetivo de selecionar um subconjunto da série temporal. Abaixo foram selecionados apenas os nascimentos entre Junho e Agosto de 2021 e este valores foram registrados no gráfico com a cor marrom.
 
 ```{r}
 z <- window(x, start=c(2021,6), end = c(2021,8))
@@ -63,72 +63,142 @@ lines(z, col = 'brown', lwd= 2)
 ```
 
 
-## O pacote `data.table`
+## A classe `Date` e o pacote `lubridate`
 
-Assim como números e textos possuem classes específicas, as datas no ambiente `R` também possuem sua própria classe, denominada `Date`.
+Nessa seção discutimos a classe `Date`, responsável por operações com datas no `R`. São apresentadas as principais funções do pacote `base`. Em seguida, apresentamos o pacote `lubridate`, que oferece funções adicionais e uma sintaxe mais fluida.   
+
+
+No pacote `base`, as datas são objeto da classe `Date`. Abaixo, transformamos o texto que representa 3 de agosto de 1998 nessa classe.
 
 ```{r}
 # 3 de agosto de 1998 (formato americano)
 x <- '1998/8/3'
-as.Date(x)
+y <- as.Date(x)
 ```
 
-Para que o `R` entenda uma data fora do padrão americano, é necessário passar o formado para o argumento `format`. Seguem alguns exemplos:
+Existem diversas funções que interagem com objetos nessa classe: 
+
+* `weekdays`:  Retorna o dia da semana.
+
+* `months`: Retorna o nome do mês.
+
+* `quarters`: Retorna o trimestre do ano (Q1,Q2,Q3 ou Q4).
+
+
+Abaixo, ilustramos o uso dessas funções com a data 3 de agosto de 1998.
 
 ```{r}
+weekdays(y)
+months(y)
+quarters(y)
+```
+
+Outra vantagem desta classe é a possibilidade de calcular a diferença em dias entre duas datas, utilizando a função `-`. Abaixo mostramos a diferença entre 3 de agosto de 1998 e 3 de agosto de 1999.
+
+```{r}
+z <- as.Date('1999-08-03')
+z-y
+```
+Em certas aplicações, é necessário criar um vetor contendo datas em sequência. A função `seq` interage com objetos da classe `Date`, permitindo que o argumento `by` receba as strings `day`, `week`,`month`, `quarter` e `year`. Abaixo, criamos um vetor mensal que começa em 3 de agosto de 1998 e terminando e 3 de agosto de 1999.
+
+```{r}
+inicio <- as.Date('1998-08-03')
+fim <- as.Date('1999-08-03')
+seq(inicio, fim, by='month')
+```
+
+
+Observe que a conversão da `string` para `Date` é realizada considerando o formato americano por padrão. É possível usar a função `as.Date` para ler qualquer formato, modificando o argumento `format`. No entanto, o pacote `lubridate` oferece funções mais simples para essa conversão:
+
+* `ymd`: Converte `strings` no formato "ano, mês, dia", como "2023-10-26".
+
+* `mdy`: Converte `strings` no formato "mês, dia, ano", como "10-26-2023".
+
+* `dmy`: Converte `strings` no formato "dia, mês, ano", como "26-10-2023".
+
+
+Abaixo, transformamos a data 3/8/1998 para o formato americano.
+
+```{r, message=FALSE}
+require(lubridate)
 # 3 de agosto de 1998 (formato nacional)
 x <- '3/8/1998'
-as.Date(x, format = '%d/%m/%Y')
-x <- '3-8-1998'
-as.Date(x, format = '%d-%m-%Y')
-
-# agosto de 1998
-x <- '8/1998'
-as.Date(x, format = '%m/%Y')
-
+dmy(x)
 ```
 
 
-Ao se trabalhar com fontes originais, é comum ter como unidade amostral um evento com sua data registrada. Em geral, nosso objetivo é determinar a quantidade de eventos dentro de dias, semanas, meses ou anos. O pacote `data.table` permite lidar com esse problema de modo rápido, criando um objeto deste tipo utilizando a função `fread`.
-
-Para ilustrar, será utilizada a base de dados de acidentes com aeronaves, mantida pela Força Aérea Brasileira, que registra diariamente o número de acidentes com aeronaves.
+O `lubridate` também ofere a possibilidade de trabalhar com informações de tempo dentro de um dia, como horas, minutos e segundos. Por exemplo, a informação 15h30 de 3 de agosto de 1998 é lida como
 
 ```{r}
-library(data.table)
-url <- 'https://drive.google.com/uc?authuser=0&id=1iYrnwXgmLK07x8b330aD73scOVruZEuz&export=download'
-
-aereo <-  fread(url, encoding = 'Latin-1')
-aereo$ocorrencia_dia <- as.Date(aereo$ocorrencia_dia, '%d/%m/%Y')
+x <- '3/8/1998 15:30:00'
+dmy_hms(x)
 ```
+O `lubridate` possui as funções `month` e `wday`, que funcionam de modo análgo às funções `months` e `weekdays`. Além disso, o `lubridate` traz uma série de funções adicionais como:
 
-Um objeto do tipo `data.table` permite uma série de consultas. Em geral, pode-se fazer `aereo[a,b,c]`, onde `a` é uma consulta/função nas linhas, `b` nas colunas e `c` é um agrupador. Uma excelente introdução pode ser vista em [Introduction to data.table](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html). 
+* `year`: retorna o ano de uma data
+* `day`: retornam o dia de uma data (útil para o formado xxx-xx-xx 00:00:00)
+* `hour`, `minute`, `second`: Retornam a hora, minuto e segundo de um objeto de data e tempo.
 
-Abaixo, foi selecionada a coluna de interesse `ocorrencia_dia`.
+As funções de arredondamento de data também são úteis, especialmente para obter contagens mensais, anuais, etc. Elas são `floor_date` e `ceiling_date` e são responsáveis por arredondar uma data para o início ou o fim de um período, respectivamente. Abaixo, arredondamos a data 3 de agosto de 1998 para o começo do mês.
 
 ```{r}
-fab_dia <- aereo[,'ocorrencia_dia',]
-head(fab_dia)
+x <- dmy('03/08/1998')
+floor_date(x, 'month')
 ```
 
-Ao utilizar o operador `.N` em `[,.N,c]`, é retornado o número de linhas que possuem o agrupamento em `c`. Abaixo, as datas do banco são agrupadas por ano.
- 
-```{r} 
-fab_ano <- fab_dia[, .N, by=.(year(ocorrencia_dia))]
-fab_ano <-fab_ano[ order(year) ]
-head(fab_ano)
-```
+<div class='alert alert-info'>
+**Exemplo**
 
-Os comandos a seguir criam dois objetos do tipo `ts`, sendo um para o número anual de acidentes e outro para o mensal  
+A Força Aérea Brasileira (FAB), por meio do Centro de Investigação e Prevenção de Acidentes Aeronáuticos (CENIPA), possui um `dashboard` para explorar dados sobre incidentes e acidentes aéreos no Brasil. Um acidente é definido como uma ocorrência grave associada à operação de uma aeronave que resulta em lesões ou morte, dano estrutural da aeronave ou aeronave desaparecida. Os demais casos são classificados como incidentes. Os dados, atualizados em 11/08/2025, estão disponíveis para esse curso na `url` abaixo:
+
+
 ```{r}
-fab_ano <- ts( fab_ano, start = 2013)
-plot(fab_ano[,2], lwd = 2, ylab = 'No. acidentes/ano', xlab = 'Ano')
+url <- 'https://docs.google.com/spreadsheets/d/1BjTXFMmTpcxKdRHCr5IIDJde9yr0s3oAAfyj2vdVuX8/edit?usp=sharing'
 
-fab_mes <- fab_dia[, .N, by=.(year(ocorrencia_dia), month(ocorrencia_dia))]
-
-fab_mes <-fab_mes[ order(year, month ) ]
-fab_mes <- ts( fab_mes[,3], start = c(2013, 1), frequency = 12)
-plot(fab_mes, lwd = 2, ylab = 'No. acidentes/mês', xlab = 'Ano')
+aereo <-  gsheet::gsheet2tbl(url)
+head(aereo)
 ```
+
+A unidade amostral é o acidente/indicente. Estamos interessados em criar uma série temporal com o número de acidentes mensais. Abaixo, filtramos apenas os acidentes (coluna `Classificção`) e, em seguida, transformamos as datas em objetos do tipo `Date`.
+
+
+```{r}
+acidentes <- aereo[ aereo$Classificação=='ACIDENTE', ]
+datas <- dmy(acidentes$Data)
+```
+
+Agora, vamos arredondar todas as datas para o primeiro dia do mês. Em seguida, contaremos as frequências para cada mês/ano
+
+```{r}
+mes_ano <- floor_date(datas, 'month')
+contagem <- table(mes_ano)
+contagem
+```
+
+É sempre importante checar o resultado em `contagem`, para verificar se não há algum mês ausente. Como não o caso aqui, vamos construir um objeto do tipo `ts` e fazer o gráfico da série temporal.
+
+```{r}
+serie_acidentes <- ts(contagem, start=c(2015,1), frequency = 12 )
+plot(serie_acidentes, ylab = 'No. de acidentes aéreos', xlab = 'Ano', sub= 'Fonte: CENIPA' )
+```
+</div>
+
+
+<div class='alert alert-warning'>
+<strong>Exercício 2</strong>
+
+
+A série abaixo contém as datas dos óbitos maternos no Brasil a partir de 2010.
+
+```{r}
+url <- 'https://drive.google.com/uc?authuser=0&id=1tYFFT9L2iopKmBDUI3P8qNIRaOnMYj7d&export=download'
+```
+
+Crie uma série temporal com o número de óbitos mensal e faça um gráfico. Crie uma janela para destacar no gráfico o período da pandemia de COVID-19 (março de 2020 até julhode 2021).
+
+</div>
+
+
      
 ## Exercício
 

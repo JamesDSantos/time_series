@@ -180,9 +180,8 @@ AIC(mod5)
 AIC(mod6)
 
 ```
-Entre os modelos ajustados, o de ordem 2 foi aquele com o menor valor do AIC. Sua tendência estimada é
 
-O polinômio ajustado foi
+Entre os modelos ajustados, o de ordem 2 foi aquele com o menor valor do AIC, sendo sua a tendência estimada por 
 $$\hat{T}(t) = 581 -0,091 t + 0,001 t^2$$
 
 Abaixo, apresentamos a análise de resíduos desse modelo.
@@ -287,7 +286,7 @@ Box.test(ruido)
 $\blacksquare$
 :::
 
-Até o momento, foi considerado que a ordem da média móvel é escrita como $m=2h+1$, ou seja, a ordem é sempre ímpar. Sem Para definir a média móvel para uma ordem par, perda de generalidade, assuma que $m=4$. Como não é possível escolher um número igual de vizinhos à $y_t$, tem-se duas possibilidades para $\mathcal{V}(4)_t$:
+Até o momento, foi considerado que a ordem da média móvel é escrita como $m=2h+1$, ou seja, a ordem é sempre ímpar. Para definir a média móvel para uma ordem par, sem perda de generalidade, assuma que $m=4$. Como não é possível escolher um número igual de vizinhos à $y_t$, tem-se duas possibilidades para $\mathcal{V}(4)_t$:
 $$\mathcal{V}'(4)_t=\{y_{t-1},y_t,y_{t+1},y_{t+2}\}$$
 e
 $$\mathcal{V}''(4)_t=\{y_{t-2},y_{t-1},y_t,y_{t+1}\}.$$

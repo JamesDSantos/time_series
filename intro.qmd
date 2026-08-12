@@ -3,10 +3,10 @@
 
 ## Notações
 
-Serão utilizadas letras minúsculas para designar tanto variáveis aleatórias quanto seus respectivos valores observados, entando a diferença clara no contexto. Exemplo: em $$x_t\sim\hbox{Normal}(0,1),$$
-$x_t$ representa uma variável aleatória, enquanto que em $x_t=0$ é um valor observado.
+Serão utilizadas letras minúsculas para designar tanto variáveis aleatórias quanto seus respectivos valores observados, sendo que a diferença deve ficar clara no contexto. Exemplo: em $$x_t\sim\hbox{Normal}(0,1),$$
+$x_t$ representa uma variável aleatória, enquanto que em $x_t=0$ a mesma representa um valor observado. Além disso, o índice $t$ sempre será denominado **tempo**.
 
-Vetores serão denotados por negritos e sempre serão vetores-coluna. Exemplo $$\boldsymbol{x}=\left(\begin{array}{c}x_1 \\ x_2 \\ \vdots \\ x_q\end{array}\right).$$ O vetor $\boldsymbol{x}'$ é o transposto de $\boldsymbol{x}$.
+Vetores serão denotados por negritos e sempre serão vetores coluna. Exemplo $$\boldsymbol{x}=\left(\begin{array}{c}x_1 \\ x_2 \\ \vdots \\ x_q\end{array}\right).$$ O vetor $\boldsymbol{x}'$ é o transposto de $\boldsymbol{x}$.
 
 Para $\mathcal{T}=\{1,2\ldots,\}$,
 
@@ -17,28 +17,28 @@ Para $\mathcal{T}=\{1,2\ldots,\}$,
 
 ## O que é uma análise de séries temporais?
 
-Considera-se que uma série temporal é uma coleção de observações realizadas ao longo do tempo. Será utilizada a notação $x_t$ para designar o valor registrado no tempo $t$ e $\mathcal{D}_t==\{x_1,\ldots,x_t\}$ representará a série observada até o tempo $t$.
+Considera-se que uma série temporal é uma coleção de observações realizadas ao longo do tempo. Utilizamos a notação $x_t$ para designar tanto a variável quanto o valor registrado no tempo $t$ e $\mathcal{D}_t=\{x_1,\ldots,x_t\}$ para representar a série até o tempo $t$.
 
-Existem três objetivos principais no estudo de séries temporais
+Existem três objetivos principais no estudo de séries temporais:
 
--   *Previsão:* Dado $\mathcal{D}_t$ a previsão trata do problema de realizar inferências sobre $x_{t+h}$, com $h>0$.
+-   *Previsão:* Dado $\mathcal{D}_t$, trata-se do problema de realizar inferências sobre $x_{t+h}$, com $h>0$.
 
--   *Suavização (ou alisamento):* Dado $\mathcal{D}_t$ a suavização trata do problema de realizar inferências baseadas $x_{t-h}$, com $h>0$
+-   *Suavização (ou alisamento):* Dado $\mathcal{D}_t$, trata-se do problema de realizar inferências sobre a distribuição de $x_{t-h}$, com $h>0$
 
--   *Monitoramento:* detectar em tempo real as mudanças ou discrepâncias no comportamento do processo.
+-   *Intervenção:* permitir que a série de ajuste a um evento externo.
 
 
-Note que tais objetivos só fazem sentido se há alguma estrutura de dependência entre as variáveis que compõe a série temporal. Para ilustrar, considere a figura abaixo representa o gráfico a série temporal com o número anual de embarques e desembarques de passageiros em vôos domésticos no aeroporto Eduardo Gomes.
+
+Note que tanto a previsão quanto a suavização só fazem sentido se há alguma estrutura de dependência entre as variáveis que compõe a série temporal. Para ilustrar, considere a figura abaixo, que representa o gráfico da série temporal sobre o número anual de embarques e desembarques de passageiros em vôos domésticos no aeroporto Eduardo Gomes.
 
 
 ```{r echo=FALSE, message=FALSE , warning=FALSE}
 url <- 'https://docs.google.com/spreadsheets/d/1QpBrW2uRZcNYJo_slcl6KBYOvIJOt_CetXiqJMQoNUA/edit?usp=sharing'
 
-library(data.table)
 library(TSA)
-x <- fread(url)
-y <- ts(x$DOMESTICO[-c(13,14,15)], start = 2006)
-plot(y, lwd = 2, type = 'o', pch = 16, ylab = 'No. de embarques e desembarques', xlab = 'Ano')
+x <- gsheet::gsheet2tbl(url)
+y <- ts(x$DOMESTICO[-c(12,13,14,15)], start = 2006)/1000
+plot(y, lwd = 2, type = 'o', pch = 16, ylab = 'No. de embarques e desembarques (em milhares)', xlab = 'Ano')
 
 ```
 
@@ -46,52 +46,128 @@ Ainda considerando a série acima, seja $x_t$ o número de embarques e desembarq
 
 ```{r echo=FALSE, message=FALSE , warning=FALSE}
 plot.new()
-plot.window(xlim = c(1600000,2800000), ylim = c(1600000,2800000))
+plot.window(xlim = c(1600,2800), ylim = c(1600,2800))
 points(zlag(y),y, type = 'p', pch = 16)
 title(ylab = expression(x[t]), xlab = expression(x[t-1]) )
 axis(1); axis(2)
 ```
-De posse desses resultados, pode-se imaginar um primeiro modelo, no qual a relação entre o presente e o passado imediato é ditado por uma regressão linear simples, gerando a equação
+De posse desses resultados, pode-se imaginar um primeiro modelo, no qual a relação entre o presente e o passado imediato é ditada por uma regressão linear simples, gerando a equação
 
-$$\hat{x}_t = 7,589\times 10^5 +0,7109 x_{t-1}.$$
-Sabendo que $x_{2017}=2.376.505$, uma previsão para 2018 seria $\hat{x}_{2018}=2.448.357$. O valor observado em 2018 foi 2.572.159, gerando um erro de previsão igual a $x_{2018}-\hat{x}_{2018}=195.654$
-embarques e desembarques domésticos. 
+$$\hat{x}_t = 7,589\cdot 10^5 +0,7109 x_{t-1}.$$
+Sabendo que $x_{2017}=2.376$ mil embarques e desembarques domésticos, uma previsão para 2018 seria $\hat{x}_{2018}=2.448$. O valor observado em 2018 foi 2.572 mil passageiros, gerando um erro de previsão igual a $x_{2018}-\hat{x}_{2018}=195$ mil embarques e desembarques domésticos. Veremos mais adiante que esse modelo possui diversas falhas.
 
-## Exemplos de séries temporais
+## Elementos de séries temporais
+
+Em geral, as séries temporais são decompostas em sinais e ruídos. Os sinais são estruturas persistentes e abaixo descrevemos os mais importantes:
+
+* Tendência: um comportamento de crescimento(decrescimento) de médio/longo prazo
+
+* Sazonalidade: um comportamento que se repete em um período específico de tempo.
+
+* Ciclos: também é um comportamento que se repete, mas de período incerto.
+
+Os ruídos representam choques aleatórios que incidem sobre o sinal são parte fundamental da análise de séries temporais, mas serão discutidos posteriormente..
+
 
 ```{r echo = FALSE}
 source('./Base_de_Dados/base_dropbox.R')
 ```
 
-### Eletrocardiograma
 
+### Mortes por doenças pulmonares no Reino Unido (padrão sazonal)
+
+A série `ldeaths` mostra o número de óbitos mensais no Reino Unido 1974 e 1980. O padrão de subida e decida em forma de onda é típica do sinal sazonal. Nesta série, mais óbitos são observados nos meses mais frios. Ao prestar atenção, é possível notar uma tendência de decrescimento (veremos isso em detalhes em outro momento).
 
 ```{r}
 #| layout-ncol: 1
 #| fig-cap: 
-#|   - "1800 medidas da taxa cardíaca instantânea, em batidas por minuto, de um indivíduo."
+#|   - "Óbito mensais no Reino Unido"
 
-ts.plot(ECG)
+ts.plot(ldeaths)
+
 ```
 
-### Produto Interno Brupo Brasileiro
+
+### Mortes por Diabetes no Amazonas
+
+A série abaixo apresenta o número mensal de mortes por diabetes no Amazonas desde 1996 (início da série histórica). Essa série possui uma tendência de crescimento fácil de detectar. Por ser uma população de risco, houve um excesso de mortes devido à pandemia de Covid-19. Em março de 2021 foi identificado o primeiro caso e em abril houve um recorde de mortes, suplantado por outro durante a segunda onda em janeiro de 2022, agravada pela falta total de oxigênio hospitalar. 
 
 
 ```{r}
 #| layout-ncol: 1
 #| fig-cap: 
-#|   - "PIB entre 1967 e 2014 corrigidos pelo valor do dólar em 4/2015."
+#|   - "Mortes por diabetes no Amazonas"
+
+url = 'https://docs.google.com/spreadsheets/d/1raue0tQ-GDlvAr2WA4GrwUp2MmXCGSNkLOEZiiHxw_Y/edit?usp=sharing'
+require(gsheet)
+dados = gsheet2tbl(url)
+diabetes <- ts(dados$No, start = c(1996,1), frequency = 12)
+ts.plot(diabetes,ylab='No mensal de mortes por diabetes', xlab = 'Tempo')
+points( c(2020+(4/12), 2021+1/12.),c(173,188),pch=16)
+```
+
+
+### Produto Interno Brupo Brasileiro (tendência e ciclo)
+
+A figura abaixo apresenta o PIB anual brasileiro entre 1967 e 2016. Observe que a tendência do PIB é de crescimento. O interesse aqui é o de suavisação: estimar a tendência e estudar os ciclos econômicos. 
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - "PIB entre 1967 e 2016 corrigidos pelo valor do dólar em 4/2015."
 
 ts.plot(PIB)
 ```
 
-### Mortes por doenças pulmonares no Reino Unido
+Abaixo apresentamos a tendência estimada e os ciclos identificados.
+
 
 ```{r}
-#| layout-ncol: 1
+#| layout-nrow: 2
 #| fig-cap: 
-#|   - "PIB entre 1967 e 2014 corrigidos pelo valor do dólar em 4/2015."
+#|   - "PIB entre 1967 e 2016 corrigidos pelo valor do dólar em 4/2015."
+tempo  = 1967:2016
+lo = loess(PIB~ tempo)
+ts.plot(ts(lo$fitted, start = start(PIB)), lwd = 2, xlab= 'Ano', ylab= 'Tendência')
+ciclo_pib = ts(PIB -lo$fitted, start= start(PIB))
+ts.plot(ciclo_pib, lwd = 2, xlab= 'Ano', ylab= 'Ciclos econômicos',ylim=c(-1000,600), type='o')
+lines( window(ciclo_pib,start=1967, end = 1980), col = 'brown', lwd = 2)
+abline(v = 1980, lty =2)
+abline(h = 0, lty = 2)
+text(1967,-510, '"Milagre econômico"\n gasto com infraestrutura \n durante o regime militar \n e aumento da dívida externa', col ='brown', cex = .6, adj =0, type='o')
 
-ts.plot(ldeaths)
+lines( window(ciclo_pib,start=1980, end = 1983), col = 'red', lwd = 2, type='o')
+text(1981,-700, 'Recessão\n dívida\n externa', col ='red', cex = .7, adj =0) 
 
+lines( window(ciclo_pib,start=1983, end = 1989), col = 'orange', lwd = 2,type='o')
+text(1983,400, 'Plano cruzado', col ='orange', cex = .7, adj =0) 
+
+lines( window(ciclo_pib,start=1989, end = 1992), col = 'yellow3', lwd = 2,type='o')
+text(1989,-450, 'Recessão\n Plano Collor', col ='yellow3', cex = .7, adj =0) 
+
+lines( window(ciclo_pib,start=1992, end = 1998), col = 'green3', lwd = 2,type='o')
+text(1992,450, 'Plano Real', col ='green3', cex = .7, adj =0) 
+
+lines( window(ciclo_pib,start=2003, end = 2013), col = 'blue', lwd = 2,type='o')
+text(2003,-550, 'Do goveno Lula 1 \n  até o impeachment\n de Dilma Rousseff', col ='blue', cex = .7, adj =0) 
+
+points(2008,288.79, pch = 16, cex = 1, col='purple')
+text(2008,600, 'Subprime', col = 'purple')
+
+```
+
+
+
+### Taxa de desemprego
+
+A série abaixo apresenta a série mensal da taxa de desemprego no país. Observe que tanto os sinais de tendência e sazonalidade são bem evidentes.
+
+```{r}
+url <- 'https://www.dropbox.com/s/rmgymzsic99qawd/desemprego.csv?dl=1'
+
+banco <- read.csv(url, sep = ';', h = F)
+
+desemprego<- ts( banco$V2, start = c(2002,3), frequency=12)
+
+ts.plot(desemprego, ylab = 'Taxa de desemprego')
 ```

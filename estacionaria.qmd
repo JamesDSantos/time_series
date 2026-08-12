@@ -2,23 +2,25 @@
 
 Uma coleção do tipo $\{x(t),t\in\mathcal{T}\}$, $\mathcal{T}\subseteq \mathbb{R}$, onde $x(t)$ é uma variável aleatória para cada $t$ fixado,  é denominada processo estocástico.
 
-Um processo estocástico é dito ser fortemente estacionário se sua distribuição é invariante ao índice. Portanto, para qualquer $t_1,\ldots,t_k$, a distribuição de $x(t_1),\ldots,x(t_k)$ é a mesma de $x(t_1+h),\ldots,x(t_k+h)$.  
+Quando o conjunto de índices $\mathcal{T}$ é discreto, utilizamos a notação $x_t$ no lugar de $x(t)$. A partir deste momento, estamos interessados apenas em processos com o conjunto de índices discreto. Também utilizaremos a notação $x_t$ tanto para a variável aleatória quanto para o valor do processo no índice  $t$.   
+
+Um processo estocástico é dito ser fortemente estacionário (ou de primeira ordem) se sua distribuição é invariante ao índice. Portanto, para qualquer $t_1,\ldots,t_k$, a distribuição de $x_{t_1},\ldots,x_{t_k}$ é a mesma de $x_{t_1+h},\ldots,x_{t_k+h}$.  
 
 :::{#exm-serie_estacionaria_1}
-Se $x(t)\sim \hbox{Normal}(0,1)$ e $x(t)$ é independente de $x(s)$ para todo $t\neq s$, então, para qualquer $t_1,\ldots,t_k$,
+Se $x_t\sim \hbox{Normal}(0,1)$ e $x_t$ é independente de $x_s$ para todo $t\neq s$, então, para qualquer $t_1,\ldots,t_k$,
 
-$$\begin{align}P(x(t_1)<x_1,\ldots,x(t_k)<x_k)&=\prod_{i=1}^k P(x(t_i)<x_i)=\prod_{i=1}^k P(x(t_i+h)<x_i)\\&=P(x(t_1+h)<x_1,\ldots,x(t_k+h)<x_k)\end{align}$$
-logo, $\{x(t),t\in \mathbb{R}\}$ é um processo fortemente estacionário.
+$$\begin{align}P(x_{t_1}<x_1,\ldots,x_{t_k}<x_k)&=\prod_{i=1}^k P(x_{t_i}<x_i)=\prod_{i=1}^k P(x_{t_i+h}<x_i)\\&=P(x_{t_1+h}<x_1,\ldots,x_{t_k+h}<x_k)\end{align}$$
+logo, $\{x_t,t\in \mathbb{N}\}$ é um processo fortemente estacionário. Note que, o mesmo resultado se aplica para qualquer amostra aleatória.
 $\blacksquare$
 :::
 
 
 :::{#thm-exm_estacionaria2}
-Seja $\{x(t),t\in\mathbb{N}\}$ um processo estocástico com 
-	$$x(t)= x_{(t-1)}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),$$
+Seja $\{x_t,t\in\mathbb{N}\}$ um processo estocástico com 
+	$$x_t= x_{t-1}+\varepsilon_t,\;\;\varepsilon_t\sim\hbox{Normal}(0,1),$$
 para $t=1,2,\ldots$ com a condição de que $x_0\sim\hbox{Normal}(0,1)$ e que $Cov(\varepsilon_t,\varepsilon_s)=0\;\;\forall s\neq t$.
 	Então,
-	$$x_t=x_{t-1}+\varepsilon_{t}=\cdots=x_0+\sum_{j=1}^t\varepsilon_t\sim\hbox{Normal}(0,t+1).$$
+	$$x_t=x_{t-1}+\varepsilon_{t}=\cdots=x_0+\sum_{j=1}^t\varepsilon_j\sim\hbox{Normal}(0,t+1).$$
 	Como $x_t\sim\hbox{Normal}(0,t+1)$ e, para qualquer $h>0$, $x_{t+h}\sim\hbox{Normal}(0,t+h+1)$, temos que este processo não é fortemente estacionário.
 $\blacksquare$
 :::
@@ -37,42 +39,40 @@ $\blacksquare$
 				
 
 :::{#exm-fracamente1}
-Considere o processo estocástico $\{x(t),t\in\mathbb{N}\}$, onde 
-$$x(t) = \varepsilon(t) +\frac{1}{2}\varepsilon(t-1)
+Considere o processo estocástico $\{x_t,t\in\mathbb{N}\}$, onde 
+$$x_t = \varepsilon_t +\frac{1}{2}\varepsilon_{t-1}
 $$
-onde $\varepsilon(t)\sim\hbox{Normal}(0,\nu)$ para $t=1,\ldots$, $\varepsilon(t)$ é independente de $\varepsilon(s)$ para todo $s\neq t$ e $\varepsilon(0)=0$.
+onde $\varepsilon_t\sim\hbox{Normal}(0,\nu)$ para $t=1,\ldots$, $\varepsilon_t$ é independente de $\varepsilon_s$ para todo $s\neq t$ e $\varepsilon_0=0$.
 Então:
 $$\begin{align}
-E(x(t))&=E(\varepsilon(t))+\frac{1}{2}E(\varepsilon(t-1))=0\\
-Var(x(t))&=Var(\varepsilon(t))+\frac{1}{4}Var(\varepsilon(t-1))=\frac{5}{4}\nu
+E(x_t)&=E(\varepsilon_t)+\frac{1}{2}E(\varepsilon_{t-1})=0\\
+Var(x_t)&=Var(\varepsilon_t)+\frac{1}{4}Var(\varepsilon_{t-1})=\frac{5}{4}\nu
 \end{align}
 $$
 e
 $$\begin{align}
-		  Cov(x(t),x(t+h))&=Cov\left(\varepsilon(t)+\frac{1}{2}\varepsilon(t-1),\varepsilon(t+h)+\frac{1}{2}\varepsilon(t+h-1)\right)\\
-		  &=Cov\left(\varepsilon(t),\varepsilon(t+h)\right)+\frac{1}{2}Cov\left(\varepsilon(t),\varepsilon(t+h-1)\right)\\
-		  &+\frac{1}{2}Cov\left(\varepsilon(t-1),\varepsilon(t+h)\right)+\frac{1}{4}Cov\left(\varepsilon(t-1),\varepsilon(t+h-1)\right)\\
+		  Cov(x_t,x_{t+h})&=Cov\left(\varepsilon_t+\frac{1}{2}\varepsilon_{t-1},\varepsilon_{t+h}+\frac{1}{2}\varepsilon_{t+h-1}\right)\\
+		  &=Cov\left(\varepsilon_t,\varepsilon_{t+h}\right)+\frac{1}{2}Cov\left(\varepsilon_t,\varepsilon_{t+h-1}\right)\\
+		  &+\frac{1}{2}Cov\left(\varepsilon_{t-1},\varepsilon_{t+h}\right)+\frac{1}{4}Cov\left(\varepsilon_{t-1},\varepsilon_{t+h-1}\right)\\
 		  &=\left\{ \begin{array}{ll}
-		  \frac{4}{5}\nu,&\; h = 0 \\		  
+		  \frac{5}{4}\nu,&\; h = 0 \\		  
 		  \frac{1}{2}\nu,&\; |h|=1,\\
 		  0,&\;\hbox{caso contrário.}
 		  \end{array} \right.
 	\end{align}$$
-Portanto, o processo é fracamente estacionáriao.
+Portanto, o processo é fracamente estacionário.
 $\blacksquare$
 :::
 
-Quando $\mathcal{T}=\{t\in D\subseteq \mathbb{Z}\}$, utiliza-se a notação $x(t)=x_t$. Além disso, se $t$ pode ser interpretado como tempo, $x_t$ é uma série temporal.
-Uma série temporal é dita ser estacionária se ela é fracamente estacionária e o mesmo princípio se aplica nessas notas de aula.  
-
+Quando o conjunto de índices representa o tempo, o processo estocástico é denominado série temporal. Uma série temporal é dita ser estacionária se ela é fracamente estacionária.  
 
 
 ## Processo estacionário ergódico
 
-Seja $x_1,x_2,\ldots,x_n$ uma série temporal estacionária. Então, a média $\mu$ pode ser estimada por $\bar{x}_n$, uma vez que $E(\bar{x})=\mu$. A variância essa estatística  é
+Seja $x_1,x_2,\ldots,x_n$ uma série temporal estacionária. Então, a média $\mu$ pode ser estimada por $\bar{x}_n$, uma vez que $E(\bar{x})=\mu$. A variância dessa estatística  é
 
 $$\begin{align}Var(\bar{x})&=Cov(\bar{x}_n,\bar{x}_n)=Cov\left(\sum_{i=1}^n \frac{x_i}{n},\sum_{j=1}^n\frac{x_j}{n}\right)=\frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^nCov(x_i,x_j)\\
-&=\frac{1}{n^2}\left[\sum_{i=1}^nCov(x_i,x_i)+2\sum_{i=1}^n\sum_{j\neq i}Cov(x_i,x_j)\right]\\
+&=\frac{1}{n^2}\left[\sum_{i=1}^nCov(x_i,x_i)+\sum_{i=1}^n\sum_{j\neq i}Cov(x_i,x_j)\right]\\
 &=\frac{1}{n^2}\left[n\nu+2\sum_{h=1}^{n-1}(n-h)\gamma(h)\right]=\frac{\nu}{n}+\frac{2}{n}\sum_{h=1}^{n-1}\left(1-\frac{h}{n}\right)\gamma(h)
 \end{align}$$
 	
@@ -99,7 +99,7 @@ A partir do exemplo acima, fica claro que $\bar{x}$ nem sempre será um estimado
 
 ::: {#def-ergodica}
 Uma série temporal estacionária é dita ser ergódica para a média se
-$$\sum_{i=1}^n\frac{x_1}{n}\stackrel{p}{\rightarrow} \mu,$$
+$$\sum_{t=1}^n\frac{x_t}{n}\stackrel{P}{\rightarrow} \mu,$$
 quando $n\rightarrow\infty$.
 :::
 
@@ -109,7 +109,7 @@ A partir deste momento será considerado que toda série temporal estacionária 
 
 Considere novamente o processo no @estationario_nao_ergodico. Como
 $\bar{x}_n=x_0$, tem-se que, para $\varepsilon>0$ arbitrário, $\bar{x}\sim\hbox{Normal}(0,\nu)$ e 
-$$P(|\bar{x}_n-0|>\varepsilon)=2P(x_0>\varepsilon)=2\int_{-\infty}^\varepsilon \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}d\nu>\frac{1}{2}$$
+$$P(|\bar{x}_n-0|>\varepsilon)=2P(x_0>\varepsilon)=2\int_\varepsilon^{\infty} \frac{1}{\sqrt{2\pi\nu}}e^{-\frac{y^2}{2\nu}}dy>0,\quad \forall n$$
 logo, $\bar{x}$ não converge em probabilidade para $0$ e, portanto, o processo não é ergódico na média.
 $\blacksquare$
 :::
@@ -129,7 +129,7 @@ $\blacksquare$
 É imediato que o ruído branco é uma série temporal estacionária. Além disso, pela Desigualdade de Chebyshev, para qualquer $\varepsilon>0$, 
 
 $$P\left(|\bar{x}_n|\geq\varepsilon\right)\leq \frac{E(\bar{x}_n^2)}{\varepsilon^2}=\frac{Var(\bar{x}_n)}{\varepsilon^2}=\frac{\nu}{n\varepsilon^2}$$
-logo $\lim_{n}P(|\bar{x}_n|\leq \varepsilon)=0$ e $\bar{x}_n\stackrel{p}{\rightarrow}0$. Portanto, o ruído branco é ergódico.
+logo $\lim_{n}P(|\bar{x}_n|\geq \varepsilon)=0$ e $\bar{x}_n\stackrel{p}{\rightarrow}0$. Portanto, o ruído branco é ergódico.
 
 Considere agora a série temporal $y_t=\mu+x_t$, onde $x_t$ é um ruído branco. Então 
 $$\bar{y}_n=\mu+\bar{x}_n\stackrel{p}{\rightarrow}\mu$$
@@ -137,4 +137,4 @@ e $\bar{y}_n$ é um estimador para $\mu$.
 
 Em certos momentos, será considerado que $x_t$ e $x_s$, para todo $t\neq s$ são independentes (essa é uma condição mais forte, pois implica em $Cov(x_t,x_s)=0$). Esse processo é denominado ruído branco independente.
 
-Por último, também será considerado a possibilidade de que $x_t\sim\hbox{Normal}(0,\nu)$, com $x_t$ e $x_s$ indepentens para todo $t\neq s$. Esse processo será denominado é denominado ruído branco gaussiano. 
+Por último, também será considerada a possibilidade de que $x_t\sim\hbox{Normal}(0,\nu)$, com $x_t$ e $x_s$ independentes para todo $t\neq s$. Esse processo é denominado ruído branco gaussiano. 

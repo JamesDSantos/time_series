@@ -2,7 +2,7 @@
 
 ## Gráfico de Defasagens
 
-Denomina-se por **defasagem** $h$ (*lag*, em inglês), um atraso em $h$ nos índices da série temporal. A tabela abaixo ilustra algumas defasagens para a série $x_1,\ldots,x_5$
+Denomina-se por **defasagem** $h$ (*lag*, em inglês), um atraso em $h$ unidades de tempo nos índices da série temporal. A tabela abaixo ilustra algumas defasagens para a série $x_1,\ldots,x_5$
 
 | Série original | $h=1$ | $h=2$ | $h=3$ |
 |----------------|-------|-------|-------|
@@ -16,10 +16,12 @@ Conforme dito anteriormente, a existência de uma estrutura de dependência entr
 
 ```{r echo=FALSE, message=FALSE , warning=FALSE}
 url <- 'https://docs.google.com/spreadsheets/d/1QpBrW2uRZcNYJo_slcl6KBYOvIJOt_CetXiqJMQoNUA/edit?usp=sharing'
-library(data.table)
+
 library(TSA)
-x <- fread(url)
+require(gsheet)
+x <- gsheet2tbl(url)
 y <- ts(x$DOMESTICO[-c(13,14,15)], start = 2006)
+y <- ts(x$DOMESTICO, start = 2006)
 lag.plot(y,4)
 ```
 
@@ -27,7 +29,7 @@ Abaixo, a figura mostra o gráfico de defasagens para $h=1,2,3,12$ considerando 
 
 
 ```{r echo = F}
-lag.plot(ldeaths, set.lag=c(1:3,12))
+lag.plot(ldeaths, set.lag=c(1:12))
 ```
 
 
@@ -155,14 +157,14 @@ O correlograma é um gráfico cartesiano construído a partir dos pontos $(h, \h
 
 :::{#exm-afogamentos}
 
-A série abaixo representa o número anual de óbitos por afogamento na cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o código internacional de doenças (CID10) W70  - Afogamento e submersão conseqüentes a queda dentro de águas naturais.
+A série abaixo representa o número anual de óbitos por afogamento na cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o código internacional de doenças (CID10) entre W65 e W74.
 
 
 ```{r warning=FALSE, results = 'hide'}
 url <- 'https://docs.google.com/spreadsheets/d/13MdzvZB5U85MkLy97ZRytkylikJu7rJoC1WL0XjKw-c/edit?usp=sharing'
 
-require(data.table)
-dados <- fread(url)
+require(gsheet)
+dados <- gsheet2tbl(url)
 afogamentos <- ts( dados[,2], start = 1996)
 ```
 
