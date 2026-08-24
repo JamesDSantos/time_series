@@ -288,7 +288,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#o-que-é-tendência" id="toc-o-que-é-tendência" class="nav-link active" data-scroll-target="#o-que-é-tendência"><span class="header-section-number">7.1</span> O que é tendência?</a></li>
-  <li><a href="#tendência-aletória-e-tendência-determinística" id="toc-tendência-aletória-e-tendência-determinística" class="nav-link" data-scroll-target="#tendência-aletória-e-tendência-determinística"><span class="header-section-number">7.2</span> Tendência aletória e tendência determinística</a></li>
+  <li><a href="#tendência-aleatória-e-tendência-determinística" id="toc-tendência-aleatória-e-tendência-determinística" class="nav-link" data-scroll-target="#tendência-aleatória-e-tendência-determinística"><span class="header-section-number">7.2</span> Tendência aleatória e tendência determinística</a></li>
   <li><a href="#o-modelo-de-tendência-polinomial" id="toc-o-modelo-de-tendência-polinomial" class="nav-link" data-scroll-target="#o-modelo-de-tendência-polinomial"><span class="header-section-number">7.3</span> O modelo de tendência polinomial</a>
   <ul class="collapse">
   <li><a href="#previsão" id="toc-previsão" class="nav-link" data-scroll-target="#previsão"><span class="header-section-number">7.3.1</span> Previsão</a></li>
@@ -327,22 +327,22 @@ window.Quarto = {
 <section id="o-que-é-tendência" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="o-que-é-tendência"><span class="header-section-number">7.1</span> O que é tendência?</h2>
 <p>Diz-se que uma série temporal observada possui tendência quando ela exibe um padrão de crescimento ou decrescimento em médio/longo prazo.</p>
-<p>A <a href="#fig-fabMes" class="quarto-xref">Figure&nbsp;<span>7.1</span></a> mostra a série do número mensal de acidentes com aeronaves, construída através dos dados diários mantidos pela Força Aérea Brasileira. Note uma tendência de decrescimento na série até meados de 2016, substituída então por uma tendência de crescimento.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://www.dropbox.com/scl/fi/kq4jwbovu94u857238sus/N-mensal-de-acidentes-com-aeronaves-2013jan.csv?rlkey=n5pa45e7ht33houmiawdkjb09&amp;dl=1'</span></span>
+<p>A <a href="#fig-hom" class="quarto-xref">Figure&nbsp;<span>7.1</span></a> mostra a série do número mensal de homicídios, obtida através do SUS. Nela é possível notar uma tendência de crescimento.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1NxxKFzTH7TBd3xP9r5qvggHeorJeR5xKIhn_UZwBol0/edit?usp=sharing'</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url, <span class="at">h =</span> T)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>acidentesFAB <span class="ot">&lt;-</span> <span class="fu">ts</span>( x, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2013</span>,<span class="dv">1</span>), <span class="at">frequency=</span><span class="dv">12</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(acidentesFAB, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">'Ano'</span>, <span class="at">ylab =</span> <span class="st">'No. acidentes'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> gsheet<span class="sc">::</span><span class="fu">gsheet2tbl</span>(url)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>hom <span class="ot">&lt;-</span> <span class="fu">ts</span>( x[,<span class="dv">2</span>], <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1996</span>,<span class="dv">1</span>), <span class="at">frequency=</span><span class="dv">12</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(hom, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">'Ano'</span>, <span class="at">ylab =</span> <span class="st">'No. homicídios'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-fabMes" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-hom" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fabMes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="tendencia_files/figure-html/fig-fabMes-1.png" class="img-fluid figure-img" width="672">
+<div aria-describedby="fig-hom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="tendencia_files/figure-html/fig-hom-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fabMes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7.1: Número mensal de acidentes envolvendo aeronaves. Fonte: FAB
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.1: Número mensal de homicídios em Manaus. Fonte: SUS
 </figcaption>
 </figure>
 </div>
@@ -350,10 +350,14 @@ Figure&nbsp;7.1: Número mensal de acidentes envolvendo aeronaves. Fonte: FAB
 </div>
 </div>
 </section>
-<section id="tendência-aletória-e-tendência-determinística" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="tendência-aletória-e-tendência-determinística"><span class="header-section-number">7.2</span> Tendência aletória e tendência determinística</h2>
-<p>A tendência pode ser duas naturezas: determinística ou aleatória.</p>
-<p>A tendência aleatória é construída ao acaso. Considere, por exemplo, o passeio aleatório definido por <span class="math inline">\(x_0=0\)</span> e <span class="math inline">\(x_t = x_{t-1}+\varepsilon_t\)</span>, onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco gaussiano com <span class="math inline">\(\nu=1\)</span>. Já foi mostrado que <span class="math inline">\(E(x_t)=0\)</span> e <span class="math inline">\(Var(x_t)=t\)</span>. A figura abaixo apresenta uma série simulada desse processo.</p>
+<section id="tendência-aleatória-e-tendência-determinística" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="tendência-aleatória-e-tendência-determinística"><span class="header-section-number">7.2</span> Tendência aleatória e tendência determinística</h2>
+<p>A tendência pode ser de duas naturezas: determinística ou aleatória.</p>
+<p>A tendência aleatória é construída ao acaso. Considere, por exemplo, o passeio aleatório definido por</p>
+<p><span class="math display">\[\begin{align}
+x_0&amp;=0\\
+x_t &amp;= x_{t-1}+\varepsilon_t,\quad t=1,2,\ldots
+\end{align}\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco gaussiano com <span class="math inline">\(\nu=1\)</span>. Já foi mostrado que <span class="math inline">\(E(x_t)=0\)</span> e <span class="math inline">\(Var(x_t)=t\)</span>. A figura abaixo apresenta uma série simulada desse processo, com uma semente escolhida de propósito.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">0</span></span>
@@ -367,20 +371,21 @@ Figure&nbsp;7.1: Número mensal de acidentes envolvendo aeronaves. Fonte: FAB
 </div>
 </div>
 </div>
-<p>Observe que a série exibe um tendência, mas não há qualquer explicação para a sua exsitência, uma vez que este comportamento é fruto do acaso. Ainda, teremos que <span class="math inline">\(E(x_t)=0\)</span>, o que torna o padrão observado irrelevante.</p>
-<p>Na tendência determinística, há uma função T(.) que determina seu comportamento. Nesse caso, é assumido que</p>
-<p><span class="math display">\[y_t = T(t) + \varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é uma série estacionária com média <span class="math inline">\(0\)</span> e variância <span class="math inline">\(\nu\)</span>. Deste modo, <span class="math inline">\(E(y_t)=T(t)\)</span>, o que implica que <span class="math inline">\(T(.)\)</span> representa o comportamento médio da série. O problema de estimar <span class="math inline">\(T(.)\)</span> é denominado suavização.</p>
-<p>Na prática, é impossível determinar se uma tendência é aleatória ou determinística, cabendo ao estastístico procurar se há motivos para acreditar que está analisando o segundo tipo. A partir deste momento, toda tendência será considerada determinística.</p>
+<p>Observe que a série exibe uma tendência, mas não há qualquer explicação para a sua existência, uma vez que este comportamento é fruto do acaso. Ainda, teremos que <span class="math inline">\(E(x_t)=0\)</span>, o que torna o padrão observado irrelevante.</p>
+<p>Na tendência determinística, existe uma função T(.) que determina seu comportamento. É comum assumir que</p>
+<p><span class="math display">\[x_t = T(t) + \varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é uma série estacionária com média <span class="math inline">\(0\)</span> e variância <span class="math inline">\(\nu\)</span>. Deste modo, <span class="math inline">\(E(y_t)=T(t)\)</span>, o que implica que <span class="math inline">\(T(.)\)</span> representa o comportamento médio da série. O problema de estimar <span class="math inline">\(T(.)\)</span> é denominado suavização.</p>
+<p>Na prática, é impossível determinar se uma tendência é aleatória ou determinística, cabendo ao analista procurar se há motivos para acreditar que está analisando o segundo tipo. A partir deste momento, toda tendência será considerada determinística.</p>
 </section>
 <section id="o-modelo-de-tendência-polinomial" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="o-modelo-de-tendência-polinomial"><span class="header-section-number">7.3</span> O modelo de tendência polinomial</h2>
-<p>Considere que a série temporal foi observada até o tempo <span class="math inline">\(s\)</span>. Então, a tendência é definida como uma função <span class="math inline">\(T:(0,t]\rightarrow \mathbb{R}\)</span>. O Teorema de Weierstrass afirma que, se <span class="math inline">\(T\)</span> é contínua, então para qualquer <span class="math inline">\(\delta&gt;0\)</span>, existe um polinômio <span class="math inline">\(u(.)\)</span> tal que <span class="math display">\[|T(t)-u(t)|&lt;\delta.\]</span> Isto quer dizer que <span class="math inline">\(T(.)\)</span> sempre pode ser aproximada por um polinômio. Assim, para determinada ordem <span class="math inline">\(p\)</span>, é correto afirmar que<br>
+<p>Considere que a série temporal foi observada até o tempo <span class="math inline">\(n\)</span>. Então, a tendência é definida como uma função <span class="math inline">\(T:[1,n]\rightarrow \mathbb{R}\)</span>. O Teorema de Weierstrass afirma que, se <span class="math inline">\(T\)</span> é contínua, então para qualquer <span class="math inline">\(\delta&gt;0\)</span>, existe um polinômio <span class="math inline">\(u(.)\)</span> tal que <span class="math display">\[|T(t)-u(t)|&lt;\delta.\]</span> Isto quer dizer que <span class="math inline">\(T(.)\)</span> sempre pode ser aproximada por um polinômio. Assim, para determinada ordem <span class="math inline">\(p\)</span>, é correto afirmar que<br>
 <span class="math display">\[\begin{equation}
-        y_t = \beta_0 + \sum_{j=1}^p \beta_j t^j + \varepsilon_t
-        \end{equation}\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é uma série estacionária, é um modelo razoável para uma série temporal com tendência. Assumindo que <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco gaussiano, tem-se o modelo de tendência polinomial de grau <span class="math inline">\(p\)</span>.</p>
-<p>Fazendo <span class="math inline">\(\boldsymbol{f}_t'=(1,t,\ldots,t^p)\)</span> , o modelo de tendência polinomial é reescrito como <span class="math display">\[\boldsymbol{y}=\boldsymbol{F}'\boldsymbol{\beta}+\boldsymbol{\varepsilon}\]</span> e inferências sobre <span class="math inline">\(\boldsymbol{\beta}\)</span> e <span class="math inline">\(\nu\)</span> são feitas utilizando o modelo linear tradicional.</p>
+        x_t = \beta_0 + \sum_{j=1}^p \beta_j t^j + \varepsilon_t
+        \end{equation}\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é uma série estacionária, é um modelo razoável para uma série temporal com tendência.</p>
+<p>Assumindo que <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco gaussiano, tem-se o modelo de tendência polinomial de grau <span class="math inline">\(p\)</span>.</p>
+<p>Fazendo <span class="math inline">\(\boldsymbol{f}_t'=(1,t,\ldots,t^p)\)</span> , o modelo de tendência polinomial é reescrito como <span class="math display">\[\boldsymbol{x}=\boldsymbol{F}'\boldsymbol{\beta}+\boldsymbol{\varepsilon}\]</span> e inferências sobre <span class="math inline">\(\boldsymbol{\beta}\)</span> e <span class="math inline">\(\nu\)</span> são feitas utilizando o modelo linear tradicional.</p>
 <div id="exm-nascidos" class="theorem example">
-<p><span class="theorem-title"><strong>Example 7.1</strong></span> Considere o número anual de nascidos vivos no estado do Amazonas entre os anos 2000 e 20013:</p>
+<p><span class="theorem-title"><strong>Example 7.1</strong></span> Considere o número anual de nascidos vivos no estado do Amazonas entre os anos 2000 e 2013:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="dv">67646</span> , <span class="dv">70252</span> , <span class="dv">70671</span> , <span class="dv">70751</span> , <span class="dv">71345</span> ,</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        <span class="dv">73488</span> , <span class="dv">75584</span> , <span class="dv">73469</span> , <span class="dv">75030</span> , <span class="dv">75729</span> , </span>
@@ -419,9 +424,9 @@ Figure&nbsp;7.3: Correlograma da série (Fonte: SINASC/SUS).
 </div>
 </div>
 <p>Vamos ajustar um modelo de tendência polinomial de ordem 1, ou seja</p>
-<p><span class="math display">\[y_t=\beta_0+\beta_1 t + \varepsilon_t\]</span> onde <span class="math inline">\(t=1,\ldots,14\)</span> representa os tempos <span class="math inline">\(2000,\ldots,2013\)</span>.</p>
+<p><span class="math display">\[x_t=\beta_0+\beta_1 t + \varepsilon_t\]</span> onde <span class="math inline">\(t=1,\ldots,14\)</span> representa os tempos <span class="math inline">\(2000,\ldots,2013\)</span>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="fu">time</span>(nascidos)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>( nascidos <span class="sc">~</span> <span class="fu">poly</span>(tempo, <span class="dv">1</span>, <span class="at">raw =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>As estimativas de máxima verossimilhança para <span class="math inline">\(\beta_0\)</span> e <span class="math inline">\(\beta_1\)</span> são:</p>
@@ -429,12 +434,12 @@ Figure&nbsp;7.3: Correlograma da série (Fonte: SINASC/SUS).
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               (Intercept) poly(tempo, 1, raw = TRUE) 
-                 68266.879                    715.178 </code></pre>
+              -1361373.987                    715.178 </code></pre>
 </div>
 </div>
-<p>ou seja, <span class="math display">\[\hat{T}(t)=\hat{\beta}+\hat{\beta}_1 t = 68.267+715 t\]</span> Os resíduos do modelo linear <code>mod</code> podem ser obtidos via função <code>residuals</code>. Abaixo, verificamos que a série dos resíduos oscila em torno de zero e que nenhuma autocorrelação parece ser relevante, o que dão indícios de que os erros são um ruído branco.</p>
+<p>ou seja, <span class="math display">\[\hat{T}(t)=\hat{\beta}_0+\hat{\beta}_1 t = 68.267+715 t\]</span> Os resíduos do modelo linear <code>mod</code> podem ser obtidos via função <code>residuals</code>. Abaixo, verificamos que a série dos resíduos oscila em torno de zero e que nenhuma autocorrelação parece ser relevante, o que dá indícios de que os erros são um ruído branco.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>( res, <span class="at">main =</span> <span class="st">''</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>( res, <span class="at">main =</span> <span class="st">''</span>, <span class="at">ylab=</span><span class="st">'Resíduos'</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res, <span class="at">main =</span> <span class="st">''</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
@@ -492,15 +497,15 @@ X-squared = 0.02156, df = 1, p-value = 0.8833</code></pre>
 </div>
 <section id="previsão" class="level3" data-number="7.3.1">
 <h3 data-number="7.3.1" class="anchored" data-anchor-id="previsão"><span class="header-section-number">7.3.1</span> Previsão</h3>
-<p>A previsão é realizada utilizando o modelo ajustado, estrapolando para um tempo não observado. Por exemplo a estimativa para 2014 (<span class="math inline">\(t=15\)</span>) é</p>
-<p><span class="math display">\[\hat{T}(15)=\hat{\beta}+\hat{\beta}_1 15 = 78.992\]</span> (o valor real foi 81.145).</p>
+<p>A previsão é realizada utilizando o modelo ajustado, extrapolando para um tempo não observado. Por exemplo a estimativa para 2014 (<span class="math inline">\(t=15\)</span>) é</p>
+<p><span class="math display">\[\hat{T}(15)=\hat{\beta}_0+\hat{\beta}_1 15 = 78.992\]</span> (o valor real foi 81.145).</p>
 <p>É importante ressaltar que esse tipo de modelo é interessante para fazer inferências sobre a tendência, mas pode ser inadequado para previsões, uma vez que o polinômio é uma aproximação apenas para o intervalo observado.</p>
 </section>
 <section id="seleção-de-modelos-lineares" class="level3" data-number="7.3.2">
 <h3 data-number="7.3.2" class="anchored" data-anchor-id="seleção-de-modelos-lineares"><span class="header-section-number">7.3.2</span> Seleção de modelos lineares</h3>
-<p>O valor do Critério de Informação de Akaike (AIC) é dado por <span class="math inline">\(-2L(\hat{\theta})+2k\)</span> onde <span class="math inline">\(L\)</span> é a função de verossimilhança e <span class="math inline">\(\hat{\theta}\)</span> e <span class="math inline">\(k\)</span> são o estimador de máxima verossimilhança para <span class="math inline">\(\theta\)</span> e sua dimensão, respectivamente. O modelo com menor AIC é considerado mais adequado.</p>
-<div class="{exm-LakeHuronPoly}">
-<p>Considere o nível anual, em pés, do Lago Huron. Essa série já vem carregada no <code>R</code> sob o nome <code>LakeHuron</code>.</p>
+<p>O valor do Critério de Informação de Akaike (AIC) é dado por <span class="math inline">\(-2\log L(\hat{\theta})+2k\)</span> onde <span class="math inline">\(L\)</span> é a função de verossimilhança e <span class="math inline">\(\hat{\theta}\)</span> e <span class="math inline">\(k\)</span> são o estimador de máxima verossimilhança para <span class="math inline">\(\theta\)</span> e sua dimensão, respectivamente. O modelo com menor AIC é considerado mais adequado.</p>
+<div id="exm-LakeHuronPoly" class="theorem example">
+<p><span class="theorem-title"><strong>Example 7.2</strong></span> Considere o nível anual, em pés, do Lago Huron. Essa série já vem carregada no <code>R</code> sob o nome <code>LakeHuron</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(LakeHuron, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'Nível (pés)'</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">acf</span>(LakeHuron)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
@@ -531,53 +536,20 @@ Figure&nbsp;7.5: Correlograma da série
 </div>
 </div>
 </div>
-<p>Vamos ajustar alguns modelos para tentar explica a tendêndia dessa série.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> <span class="fu">length</span>(LakeHuron)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>( LakeHuron <span class="sc">~</span> <span class="fu">poly</span>(tempo, <span class="dv">1</span>, <span class="at">raw =</span> T))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">lm</span>( LakeHuron <span class="sc">~</span> <span class="fu">poly</span>(tempo, <span class="dv">2</span>, <span class="at">raw =</span> T))</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">lm</span>( LakeHuron <span class="sc">~</span> <span class="fu">poly</span>(tempo, <span class="dv">3</span>, <span class="at">raw =</span> T))</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>mod4 <span class="ot">&lt;-</span> <span class="fu">lm</span>( LakeHuron <span class="sc">~</span> <span class="fu">poly</span>(tempo, <span class="dv">4</span>, <span class="at">raw =</span> T))</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>mod5 <span class="ot">&lt;-</span> <span class="fu">lm</span>( LakeHuron <span class="sc">~</span> <span class="fu">poly</span>(tempo, <span class="dv">5</span>, <span class="at">raw =</span> T))</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>mod6 <span class="ot">&lt;-</span> <span class="fu">lm</span>( LakeHuron <span class="sc">~</span> <span class="fu">poly</span>(tempo, <span class="dv">6</span>, <span class="at">raw =</span> T))</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 306.0957</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 287.8407</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 289.8391</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 291.7127</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod5)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 293.475</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod6)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 291.7054</code></pre>
-</div>
-</div>
-<p>Entre os modelos ajustados, o de ordem 2 foi aquele com o menor valor do AIC, sendo sua a tendência estimada por <span class="math display">\[\hat{T}(t) = 581 -0,091 t + 0,001 t^2\]</span></p>
+<p>Ao ajustar os modelos lineares até a ordem 6 e calcular a Informação de Akaike através da função <code>AIC</code>, obtivemos o melhor ajuste com <span class="math inline">\(p=2\)</span>, sendo a tendência estimada por <span class="math display">\[\hat{T}(t) = 581 -0,091 t + 0,001 t^2\]</span></p>
 <p>Abaixo, apresentamos a análise de resíduos desse modelo.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod2)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>( res, <span class="at">main =</span> <span class="st">''</span>)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res, <span class="at">main =</span> <span class="st">''</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="fu">time</span>(LakeHuron)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">lm</span>( LakeHuron <span class="sc">~</span> <span class="fu">poly</span>(tempo, <span class="dv">2</span>, <span class="at">raw =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod2)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>( res, <span class="at">main =</span> <span class="st">''</span>, <span class="at">ylab=</span><span class="st">'Resíduos'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res, <span class="at">main =</span> <span class="st">''</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="tendencia_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tendencia_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>Série dos resíduos</figcaption>
 </figure>
 </div>
@@ -585,16 +557,16 @@ Figure&nbsp;7.5: Correlograma da série
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="tendencia_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tendencia_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>Correlograma dos resíduos</figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<p>Os resíduos parecem oscilar em torno de zero com um variância constante, mas o correlograma sugere que não temos um ruído branco. O teste de Box-Pierce, dado abaixo, confirma a nossa suspeita. Deste modo, este modelo não é adequado.</p>
+<p>Os resíduos parecem oscilar em torno de zero com uma variância constante, mas o correlograma sugere que não temos um ruído branco. O teste de Box-Pierce, dado abaixo, confirma a nossa suspeita. Deste modo, este modelo não é adequado.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Pierce test
@@ -616,26 +588,26 @@ X-squared = 50.973, df = 1, p-value = 9.365e-13</code></pre>
 <p>Para compreender melhor esse estimador, considere que a relação entre pontos vizinhos é aproximadamente linear, ou seja, para qualquer <span class="math inline">\(t\in\mathcal{V}(m)_t\)</span> existem <span class="math inline">\(a_\mathcal{V}\)</span> e <span class="math inline">\(b_\mathcal{V}\)</span> tais que <span class="math display">\[y_t\approx a_\mathcal{V}+b_\mathcal{V}t+\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é considerado uma série temporal estacionária e ergódica. Então <span class="math display">\[\begin{align}E(\hat{T}(t))&amp;=\frac{a_\mathcal{V}+b_\mathcal{V}(t-h)+\cdots+a_\mathcal{V}+b_\mathcal{V}t+\cdots+a_\mathcal{V}+b_\mathcal{V}(t+h)}{m}\\&amp;=a_\mathcal{V}+b_\mathcal{V}t\end{align}\]</span> <span class="math display">\[Var(\hat{T}(t))=\frac{\nu}{m}+\frac{2}{m}\sum_{j=1}^{2h}j\gamma(j)\]</span> Observe que, como <span class="math inline">\(T(.)\)</span> é determinística e os ruídos são estacionários e ergódicos, então <span class="math inline">\(Var(\hat{T}(t))\)</span> converge para zero quando <span class="math inline">\(m\rightarrow \infty\)</span>. Contudo, <span class="math inline">\(T(.)\)</span> é localmente linear, logo <span class="math inline">\(\hat{T}\)</span> é um estimador razoável para valores baixos de <span class="math inline">\(h\)</span>. Este é um exemplo típico de <em>trade off</em> entre víes e variância, onde não é possível minimizar os dois simultaneamente.</p>
 <p>Utilizaremos a função <code>ma(x,m)</code>, do pacote <code>forecast</code> para encontrar <span class="math inline">\(m-\)</span>MM para a série `x</p>
 <div id="exm-NACIDOSMA" class="theorem example">
-<p><span class="theorem-title"><strong>Example 7.2</strong></span> Abaixo, apresentamos a série anual histórica de nascidos vivos no Amazonas desde 1994 até 2021.</p>
+<p><span class="theorem-title"><strong>Example 7.3</strong></span> Abaixo, apresentamos a série anual histórica de nascidos vivos no Amazonas desde 1994 até 2021.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">47780</span>, <span class="dv">47966</span>, <span class="dv">49112</span>, <span class="dv">56070</span>, <span class="dv">57180</span>, <span class="dv">62037</span>,</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="dv">67646</span>, <span class="dv">70252</span>, <span class="dv">70671</span>, <span class="dv">70751</span>, <span class="dv">71345</span>, <span class="dv">73488</span>, <span class="dv">75584</span>,</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="dv">73469</span>, <span class="dv">75030</span>, <span class="dv">75729</span>, <span class="dv">74188</span>, <span class="dv">76202</span>, <span class="dv">77434</span>, <span class="dv">79041</span>,</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="dv">81145</span>, <span class="dv">80097</span>, <span class="dv">76703</span>, <span class="dv">78066</span>, <span class="dv">78087</span>, <span class="dv">77622</span>, <span class="dv">75635</span>,</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="dv">78454</span>)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>nascidos <span class="ot">&lt;-</span> <span class="fu">ts</span>(x, <span class="at">start =</span><span class="dv">1994</span>)</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">47780</span>, <span class="dv">47966</span>, <span class="dv">49112</span>, <span class="dv">56070</span>, <span class="dv">57180</span>, <span class="dv">62037</span>,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="dv">67646</span>, <span class="dv">70252</span>, <span class="dv">70671</span>, <span class="dv">70751</span>, <span class="dv">71345</span>, <span class="dv">73488</span>, <span class="dv">75584</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="dv">73469</span>, <span class="dv">75030</span>, <span class="dv">75729</span>, <span class="dv">74188</span>, <span class="dv">76202</span>, <span class="dv">77434</span>, <span class="dv">79041</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="dv">81145</span>, <span class="dv">80097</span>, <span class="dv">76703</span>, <span class="dv">78066</span>, <span class="dv">78087</span>, <span class="dv">77622</span>, <span class="dv">75635</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="dv">78454</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>nascidos <span class="ot">&lt;-</span> <span class="fu">ts</span>(x, <span class="at">start =</span><span class="dv">1994</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tendencia_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tendencia_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Carregando pacotes exigidos: forecast</code></pre>
 </div>
@@ -644,32 +616,32 @@ X-squared = 50.973, df = 1, p-value = 9.365e-13</code></pre>
   method            from
   as.zoo.data.frame zoo </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>oo <span class="ot">&lt;-</span> <span class="fu">par</span>( <span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">3</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'3-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">5</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'5-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">7</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'7-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">9</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'9-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>oo <span class="ot">&lt;-</span> <span class="fu">par</span>( <span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">3</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'3-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">5</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'5-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">7</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'7-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nascidos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylab =</span> <span class="st">'No. nascidos vivos'</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>( <span class="fu">ma</span>(nascidos,<span class="dv">9</span>) , <span class="at">col =</span><span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">'Série original'</span>,<span class="st">'9-MM'</span>),  <span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tendencia_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tendencia_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(oo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(oo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Considere a estimativa obtida pela média móvel de ordem 3.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tendencia <span class="ot">&lt;-</span> <span class="fu">ma</span>(nascidos, <span class="dv">3</span>)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>tendencia</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>tendencia <span class="ot">&lt;-</span> <span class="fu">ma</span>(nascidos, <span class="dv">3</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tendencia</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Time Series:
 Start = 1994 
@@ -683,31 +655,31 @@ Frequency = 1
 </div>
 <p>Vamos estimar o ruído da série (e eliminar as coordenadas vazias)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>ruido <span class="ot">&lt;-</span> nascidos <span class="sc">-</span> tendencia</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>ruido <span class="ot">&lt;-</span> ruido[<span class="fu">is.na</span>(ruido) <span class="sc">==</span> F]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ruido <span class="ot">&lt;-</span> nascidos <span class="sc">-</span> tendencia</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>ruido <span class="ot">&lt;-</span> ruido[<span class="fu">is.na</span>(ruido) <span class="sc">==</span> F]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Abaixo, apresentamos as principais estatísticas sobre os resíduos. A série histórica dos resíduos oscila em torno de zero e não há motivos para suspeitar de que sua variância é constante. O correlograma apresenta autocorrelações baixas, como o esperado em um ruído branco. O teste de Shapiro-Wilks não dá evidências contra normalidade, o que suporta a hipótese de ruído branco gaussiano. O teste de Box-Pierce apresenta um p-valor de 0,04 e, em conjunto com as demais evidências, vamos considerá-lo significativo ao nível de 4%.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ruido)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">h =</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(ruido), <span class="at">lty=</span><span class="dv">2</span>)</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">h =</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(ruido), <span class="at">lty=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ruido)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">h =</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(ruido), <span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">h =</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(ruido), <span class="at">lty=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tendencia_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tendencia_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(ruido)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(ruido)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tendencia_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tendencia_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(ruido)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(ruido)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -715,7 +687,7 @@ Frequency = 1
 data:  ruido
 W = 0.9711, p-value = 0.6521</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(ruido)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(ruido)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Pierce test
@@ -753,13 +725,46 @@ X-squared = 4.1804, df = 1, p-value = 0.04089</code></pre>
 </ol>
 <p>Oberve que este método pode ser utilizado para estimar a tendência da série. Abaixo, vamos analisar a série de taxa de desemprego mensal, entre março de 2002 e dezembro de 2015.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://www.dropbox.com/s/rmgymzsic99qawd/desemprego.csv?dl=1'</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>banco <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url, <span class="at">sep =</span> <span class="st">';'</span>, <span class="at">h =</span> F)</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>desemprego<span class="ot">&lt;-</span> <span class="fu">ts</span>( banco<span class="sc">$</span>V2, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2002</span>,<span class="dv">3</span>), <span class="at">frequency=</span><span class="dv">12</span>)</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(desemprego, <span class="at">ylab =</span> <span class="st">'Taxa de desemprego'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://www.dropbox.com/s/rmgymzsic99qawd/desemprego.csv?dl=1'</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>banco <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url, <span class="at">sep =</span> <span class="st">';'</span>, <span class="at">h =</span> F)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>desemprego<span class="ot">&lt;-</span> <span class="fu">ts</span>( banco<span class="sc">$</span>V2, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2002</span>,<span class="dv">3</span>), <span class="at">frequency=</span><span class="dv">12</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(desemprego, <span class="at">ylab =</span> <span class="st">'Taxa de desemprego'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(desemprego, <span class="at">lag =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vamos estimar a tendência</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># criando a variável regressora</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> <span class="fu">length</span>(desemprego)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># aplicando o loess</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>lw <span class="ot">&lt;-</span> <span class="fu">loess</span>( desemprego <span class="sc">~</span> tempo)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co"># transformando o valor predito em uma série temporal</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ts</span>(lw<span class="sc">$</span>fitted, <span class="at">start =</span> <span class="fu">start</span>(desemprego), <span class="at">frequency =</span> <span class="fu">frequency</span>(desemprego) )</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="co"># gráfico da tendência estimada</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>( desemprego, <span class="at">ylab =</span> <span class="st">'Taxa de desemprego'</span> , <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(fit, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">'tomato'</span>)</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topright'</span>, <span class="fu">c</span>(<span class="st">'Observado'</span>,<span class="st">'Ajustado'</span>),<span class="at">fill=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="st">'tomato'</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -767,32 +772,12 @@ X-squared = 4.1804, df = 1, p-value = 0.04089</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(desemprego, <span class="at">lag =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="tendencia_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
 </div>
-</div>
-</div>
-<p>Vamos estimar a tendência</p>
+<p>Vamos eliminar a tendência estimada e avaliar o restante.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># criando a variável regressora</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> <span class="fu">length</span>(desemprego)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co"># aplicando o loess</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>lw <span class="ot">&lt;-</span> <span class="fu">loess</span>( desemprego <span class="sc">~</span> tempo)</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co"># transformando o valor predito em uma série temporal</span></span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ts</span>(lw<span class="sc">$</span>fitted, <span class="at">start =</span> <span class="fu">start</span>(desemprego), <span class="at">frequency =</span> <span class="fu">frequency</span>(desemprego) )</span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a><span class="co"># gráfico da tendência estimada</span></span>
-<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>( desemprego, <span class="at">ylab =</span> <span class="st">'Taxa de desemprego'</span> , <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(fit, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">'tomato'</span>)</span>
-<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topright'</span>, <span class="fu">c</span>(<span class="st">'Observado'</span>,<span class="st">'Ajustado'</span>),<span class="at">fill=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="st">'tomato'</span>), <span class="at">bty=</span><span class="st">'n'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>yt <span class="ot">&lt;-</span> desemprego <span class="sc">-</span> fit</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(yt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -800,24 +785,11 @@ X-squared = 4.1804, df = 1, p-value = 0.04089</code></pre>
 </figure>
 </div>
 </div>
-</div>
-<p>Vamos eliminar a tendência estimada e avaliar o restante.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>yt <span class="ot">&lt;-</span> desemprego <span class="sc">-</span> fit</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(yt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(yt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tendencia_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(yt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="tendencia_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tendencia_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

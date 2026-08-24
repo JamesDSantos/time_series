@@ -12,7 +12,7 @@ Denomina-se por **defasagem** $h$ (*lag*, em inglês), um atraso em $h$ unidades
 | $x_4$          | $x_3$ |$x_2$  | $x_1$ |
 | $x_5$          | $x_4$ |$x_3$  | $x_2$ | 
 
-Conforme dito anteriormente, a existência de uma estrutura de dependência entre $x_t$ e $x_{t-h}$ permite que a série observada seja utilizada para realizar previsões. Uma ferramenta exploratória interessante para analisar esse tipo de estrutura é gráfico de defasagens (no inglês *lag plot*). Trata-se de um diagrama de dispersão entre a série original e a série defasada, para algum $h$ fixado. Abaixo apresenta-se a série de embarques e desembraques no aeroporo Eduardo Gomes para as 4 primeiras defasagens. Os números representam a ordem (temporal) dos pares do diagrama e a linha cinza pontilha é a reta $y=x$. 
+Conforme dito anteriormente, a existência de uma estrutura de dependência entre $x_t$ e $x_{t-h}$ permite que a série observada seja utilizada para realizar previsões. Uma ferramenta exploratória interessante para analisar esse tipo de estrutura é gráfico de defasagens (no inglês *lag plot*). Trata-se de um diagrama de dispersão entre a série original e a série defasada, para algum $h$ fixado. Abaixo apresenta-se a série de embarques e desembraques no aeroporto Eduardo Gomes para as 4 primeiras defasagens. Os números representam a ordem (temporal) dos pares do diagrama e a linha cinza pontilhada é a reta $y=x$. 
 
 ```{r echo=FALSE, message=FALSE , warning=FALSE}
 url <- 'https://docs.google.com/spreadsheets/d/1QpBrW2uRZcNYJo_slcl6KBYOvIJOt_CetXiqJMQoNUA/edit?usp=sharing'
@@ -25,14 +25,6 @@ y <- ts(x$DOMESTICO, start = 2006)
 lag.plot(y,4)
 ```
 
-Abaixo, a figura mostra o gráfico de defasagens para $h=1,2,3,12$ considerando a série de mortes por doenças pulmonares no Reino Unido.
-
-
-```{r echo = F}
-lag.plot(ldeaths, set.lag=c(1:12))
-```
-
-
 ## A função de autocorrelação
 
 ::: {#def-autocovariancia}
@@ -40,7 +32,7 @@ A função de autocovariância da série temporal $x_t$ é dada por
 $$\begin{equation}
 		  \gamma(s,t) = Cov(x_t,x_s)=E\left[(x_t-\mu_t)(x_s-\mu_s)\right],
 		\end{equation}$$
-para todo $s,t$ com $\mu_j=E(y_j)$ e sua respectiva função de autocorrelção é dada por
+para todo $s,t$ com $\mu_j=E(x_j)$ e sua respectiva função de autocorrelação é dada por
 $$\begin{equation}
 		\rho(s,t)=\frac{\gamma(s,t)}{\sqrt{\gamma(s,s)\gamma(t,t)}}
 		\end{equation}$$
@@ -99,7 +91,7 @@ A função de autocorrelação (ACF) para um processo estacionário é
 $$\begin{equation}
 				\rho(h)=\frac{\gamma(h)}{\gamma(0)}
 \end{equation}$$
-e ela mede a dependência linear entre $y_t$ e os valores defasados da série.Sempre será verdade que $\rho\in[-1,1]$, $\rho(h)=\rho(-h)$ e, se $y_{t+h}$ é independente de $y_t$, então $\rho(h)=0$.
+e ela mede a dependência linear entre $y_t$ e os valores defasados da série. Sempre será verdade que $\rho\in[-1,1]$, $\rho(h)=\rho(-h)$ e, se $y_{t+h}$ é independente de $y_t$, então $\rho(h)=0$.
 
 
 :::{#exm-acf2}
@@ -140,7 +132,7 @@ onde $I(A)$ é a função indicadora da ocorrência do evento $A$.
 
 ## A função de autocorrelação estimada e o correlograma
 
-Considere uma série temporal $x_1,\ldots,x_n$. Supondo que ela é proveniente de uma série estacionária (ergódico), pode-se estimar $\gamma(h)$ pelo método da substituição:
+Considere uma série temporal $x_1,\ldots,x_n$. Supondo que ela é proveniente de uma série estacionária (ergódica), pode-se estimar $\gamma(h)$ pelo método da substituição:
 $$\begin{align}
 						\widehat{\gamma(h)}&=\frac{1}{n}\sum_{i=1}^{n-h}\left(x_{i+h} - \bar{x}\right)\left(x_{i} - \bar{x}\right)
 						\end{align}$$ 
@@ -149,60 +141,90 @@ $$\begin{equation}
 		\hat{\rho}(h)=\frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}
 		\end{equation}$$
 
-É importante notar que tanto $\gamma(h)$ quanto $\rho(h)$ são invariantes a transformações de locação. Por exemplo, seja $\gamma(h)$ a função de autocovariância de $x_t$ e considere $y_t=x_t+a$. Então $E(y_t)=\mu+a$ e
-$$E[(y_t-\mu-a)(y_{t-h}-\mu-a)]=E[(x_t-\mu)(x_{t-h}-\mu)]=\gamma(h).$$
+É importante notar que tanto $\gamma(h)$ quanto $\rho(h)$ são invariantes a transformações de locação. Por exemplo, seja $\gamma_X(h)$ a função de autocovariância de $x_t$ e considere $y_t=x_t+a$. Então $E(y_t)=\mu+a$ e
+$$\begin{align}\gamma_Y(h)&=E[(y_t-\mu-a)(y_{t-h}-\mu-a)]\\&=E[(x_t-\mu)(x_{t-h}-\mu)]=\gamma_X(h).\end{align}$$
 
 O correlograma é um gráfico cartesiano construído a partir dos pontos $(h, \hat{\rho})$. A partir de cada ponto é desenhada uma linha, semelhante a um gráfico de barras. Como $\hat{\rho}(0)=1$, a implementação desta função em softwares estatísticos pode variar com $h=0$ ou em 1. Por exemplo, a função `acf` do pacote `stats` começa na defasagem 0, enquanto a função `Acf` do pacote `forecast` (ou ainda a `acf` do pacote `TSA`) começam na defasagem 1.
 
 
-:::{#exm-afogamentos}
+:::{#exm-terremoso}
 
-A série abaixo representa o número anual de óbitos por afogamento na cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o código internacional de doenças (CID10) entre W65 e W74.
+A série abaixo representa o número anual terremotos de magnitude 7 ou maiores entre 1900 e 1998.
 
 
 ```{r warning=FALSE, results = 'hide'}
-url <- 'https://docs.google.com/spreadsheets/d/13MdzvZB5U85MkLy97ZRytkylikJu7rJoC1WL0XjKw-c/edit?usp=sharing'
+url <- 'https://docs.google.com/spreadsheets/d/1PPf1nOjwh1fnr1VtFW2DKN6PY9s9TXEQTn6ZX3igCBQ/edit?usp=sharing'
 
 require(gsheet)
 dados <- gsheet2tbl(url)
-afogamentos <- ts( dados[,2], start = 1996)
+terremotos <- ts( dados[,2], start = 1900)
 ```
 
 ```{r}
 #| layout-ncol: 1
 #| fig-cap: 
-#|   - "Número anual de óbitos por afogamento em Manaus."
+#|   - "Número de terremotos de magnitude maior ou igual a 7."
 
-ts.plot(afogamentos, lwd = 2, main = '', xlab = 'Ano', ylab = 'No. óbitos por afogamento')
+ts.plot(terremotos, lwd = 2, main = '', xlab = 'Ano', ylab = 'No. de terremotos')
 ```
 
-A figura abaixo mostra o correlograma dessa série. Observe que as autocorrelações amostrais observadas são baixas. Esse tipo de comportamento é esperado em um ruído branco. Como a série não oscila em torno de zero, um modelo razoável seria
-$$y_t=\mu+\varepsilon_t,$$
-onde $\varepsilon_t$ é um ruído branco. Nesse caso, $\bar{y}_n=1,88$ é uma estimativa para $\mu$. 
+A figura abaixo mostra o correlograma dessa série. As primeiras defasagens mostram que esta série é correlacionada.
 
 ```{r}
 #| layout-ncol: 1
 #| fig-cap: 
 #|   - "Correlograma para o número anual de óbitos por afogamento em Manaus."
-#| label: fig-acf_afogamentos
+#| label: fig-acf_terremotos
 
-acf(afogamentos, lwd = 2, main = '', xlab = 'Defasagem', ylab = 'Autocorrelação')
+acf(terremotos, lwd = 2, main = '', xlab = 'Defasagem', ylab = 'Autocorrelação')
 ```
-$\blacksquare$
 :::
 
 
 Sem perda de generalidade, assuma que $x_t$ é um processo estacionário com $\mu=0$. Para uma defasagem $h>0$, considere a hipótese $H_0:\rho(h)=0$. Sob $H_0$, o processo estacionário é um ruído branco e a distribuição da função de autocorrelação amostral é $N(0,1/n)$. Portanto, uma região de rejeição ao níve de 5\% de significância para um teste baseado nessa distribuição é  
 	$$R={\hat{\rho}(h): \hat{\rho}(h)|>\frac{2}{\sqrt{n}},$$
-Este é o valor da linha pontilhada que aparece no correlograma na @fig-acf_afogamentos.
+Este é o valor da linha pontilhada que aparece nos correlogramas apresentados.
+
+::: {#exm-}
+
+A série abaixo mostra o valor de fechamento diário da ação PETR4 (Petrobrás) no primeiro semestre de 2025.  
+
+```{r}
+url <- 'https://docs.google.com/spreadsheets/d/1SLDYiFt1ohJGz51_dd4aovItCc3ghaXJ-kwOkSA3fb4/edit?usp=sharing'
+
+petro <- gsheet::gsheet2tbl(url)
+ts.plot(petro$Último, ylab= 'Valor d fechamento em R$' )
+```
+
+Em finanças, a **Hipotese do Mercado Eficiente** sugere que o preço atual de um ativo reflete todas as informações disponíveis. Portanto, a variação de preço de um dia para o outro (o retorno) é impulsionada apenas por "novas notícias", que são imprevisíveis e aleatórias. 
+
+Seja $x_t$ o preço no tempo $t$. Então, pela hipótese do mercado eficiente,
+
+$$x_t=x_{t-1}+\varepsilon_t.$$
+Isso implica que o retorno, dado por
+$$x_{t}-x_{t-1}=\varepsilon_t$$
+deve ser comportar como uma série estacionária, de preferência um ruído branco. Abaixo apresentamos o correlograma dos retornos. 
+
+```{r}
+#| layout-ncol: 1
+#| fig-cap: 
+#|   - "Correlograma para os retornos diários da PETR4 no primeri semestre de 2025."
+#| label: fig-acf_retorno
+
+acf(diff(petro$Último), lwd = 2, main = '', xlab = 'Defasagem', ylab = 'Autocorrelação')
+```
+$\blacksquare$
+:::
+
+
 
 
 ## Testes para a autocorrelação
 
 Na seção anterior mostrou-se como testar $H_0:\rho(h)=0$, para um $h$ fixado. Como várias autocorrelações para diferentes defasagens são avaliadas simultaneamente, o correto seria testar $H_0: \rho(h)=0\;\;\forall h=1,\ldots,q$, onde $q$ é o valor máximo da defasagem a ser testado. Considerando a região de rejeição dada anteriormente, pela desigualdade de Bonferroni,
 
-$$\begin{align}P(\hbox{Rejeitar }H_0|H_0\hbox{ é verdadeira})&=P\left(\cup_{h=1}^q\left\{ \hat{\rho}(h)>\frac{2}{\sqrt{n}}\right\}| H_0\hbox{ é verdade}\right)\\
-&\leq \sum_{h=1}^qP\left( \hat{\rho}(h)>\frac{2}{\sqrt{n}}| H_0\hbox{ é verdade}\right)\\ &<q\alpha\end{align}$$
+$$\begin{align}P(\hbox{Rejeitar }H_0|H_0\hbox{ é verdadeira})&=P\left(\cup_{h=1}^q\left\{ |\hat{\rho}(h)|>\frac{2}{\sqrt{n}}\right\}| H_0\hbox{ é verdade}\right)\\
+&\leq \sum_{h=1}^qP\left( |\hat{\rho}(h)|>\frac{2}{\sqrt{n}}| H_0\hbox{ é verdade}\right)\\ &<q\alpha\end{align}$$
 
 Portanto, a probabilidade de cometer o erro tipo 1 pode aumentar na medida que testamos mais de uma defasagem. 
 
@@ -212,14 +234,14 @@ e rejeita $H_0$ se $Q_{LB}>\chi^2_{1-\alpha,q}$, onde $\chi^2_{\lambda,n}$ é o 
 
 O teste de Box-Pierce (1970) possui o mesmo objetivo e tem a mesma regra de decisão, mudando apenas a estatística de teste para
 
-$$Q_{BP}=n\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}.$$
+$$Q_{BP}=n\sum_{h=1}^q \hat{\rho}(h)^2.$$
 
-:::{#exm-afogamentos_testes}
-Para a série de óbitos anuais por afogamentos em Manaus, tem-se que os teste Ljung-Box e Box-Pierce não rejeitam a hipótese de ruído branco.
+:::{#exm-}
+Para a série retornos das ações PETR4, tem-se que os teste Ljung-Box e Box-Pierce não rejeitam a hipótese de ruído branco.
 
 ```{r}
-Box.test(afogamentos, type = 'Ljung-Box')
-Box.test(afogamentos, type = 'Box-Pierce')
+Box.test(diff(petro$Último), type = 'Ljung-Box')
+Box.test(diff(petro$Último), type = 'Box-Pierce')
 
 ```
 $\blacksquare$

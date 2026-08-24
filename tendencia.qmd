@@ -4,27 +4,34 @@
 
 Diz-se que uma série temporal observada possui tendência quando ela exibe um padrão de crescimento ou decrescimento em médio/longo prazo. 
 
-A @fig-fabMes mostra a série do número mensal de acidentes com aeronaves, construída através dos dados diários mantidos pela Força Aérea Brasileira. Note uma tendência de decrescimento na série até meados de 2016, substituída então por uma tendência de crescimento.
+A @fig-hom mostra a série do número mensal de homicídios, obtida através do SUS.
+Nela é possível notar uma tendência de crescimento.
 
 ```{r warning = F}
 #| layout-ncol: 1
 #| fig-cap: 
-#|   - "Número mensal de acidentes envolvendo aeronaves. Fonte: FAB"
-#| label: fig-fabMes
+#|   - "Número mensal de homicídios em Manaus. Fonte: SUS"
+#| label: fig-hom
 
-url <- 'https://www.dropbox.com/scl/fi/kq4jwbovu94u857238sus/N-mensal-de-acidentes-com-aeronaves-2013jan.csv?rlkey=n5pa45e7ht33houmiawdkjb09&dl=1'
+url <- 'https://docs.google.com/spreadsheets/d/1NxxKFzTH7TBd3xP9r5qvggHeorJeR5xKIhn_UZwBol0/edit?usp=sharing'
 
-x <- read.csv(url, h = T)
-acidentesFAB <- ts( x, start = c(2013,1), frequency=12)
-ts.plot(acidentesFAB, lwd = 2, xlab = 'Ano', ylab = 'No. acidentes')
+x <- gsheet::gsheet2tbl(url)
+hom <- ts( x[,2], start = c(1996,1), frequency=12)
+ts.plot(hom, lwd = 2, xlab = 'Ano', ylab = 'No. homicídios')
 
 ```
 
-## Tendência aletória e tendência determinística
+## Tendência aleatória e tendência determinística
 
-A tendência pode ser duas naturezas: determinística ou aleatória. 
+A tendência pode ser de duas naturezas: determinística ou aleatória. 
 
-A tendência aleatória é construída ao acaso. Considere, por exemplo, o passeio aleatório definido por $x_0=0$ e $x_t = x_{t-1}+\varepsilon_t$, onde $\varepsilon_t$ é um ruído branco gaussiano com $\nu=1$. Já foi mostrado que $E(x_t)=0$ e $Var(x_t)=t$. A figura abaixo apresenta uma série simulada desse processo.
+A tendência aleatória é construída ao acaso. Considere, por exemplo, o passeio aleatório definido por 
+
+$$\begin{align}
+x_0&=0\\
+x_t &= x_{t-1}+\varepsilon_t,\quad t=1,2,\ldots
+\end{align}$$
+onde $\varepsilon_t$ é um ruído branco gaussiano com $\nu=1$. Já foi mostrado que $E(x_t)=0$ e $Var(x_t)=t$. A figura abaixo apresenta uma série simulada desse processo, com uma semente escolhida de propósito.
 
 ```{r}
 set.seed(1)
@@ -33,33 +40,35 @@ for( t in 2:100) x[t] = x[t - 1] + rnorm(1,0,1)
 ts.plot(x, lwd = 2)
 ```
 
-Observe que a série exibe um tendência, mas não há qualquer explicação para a sua exsitência, uma vez  que este comportamento é fruto do acaso. Ainda, teremos que $E(x_t)=0$, o que torna o padrão observado irrelevante. 
+Observe que a série exibe uma tendência, mas não há qualquer explicação para a sua existência, uma vez  que este comportamento é fruto do acaso. Ainda, teremos que $E(x_t)=0$, o que torna o padrão observado irrelevante. 
 
-Na tendência determinística, há uma função T(.) que determina seu comportamento. Nesse caso, é assumido que
+Na tendência determinística, existe uma função T(.) que determina seu comportamento. É comum assumir que
 
-$$y_t = T(t) + \varepsilon_t,$$
+$$x_t = T(t) + \varepsilon_t,$$
 onde $\varepsilon_t$ é uma série estacionária com média $0$ e variância $\nu$. Deste modo, $E(y_t)=T(t)$, o que implica que $T(.)$ representa o comportamento médio da série. O problema de estimar $T(.)$ é denominado suavização.  
 
 
-Na prática, é impossível determinar se uma tendência é aleatória ou determinística, cabendo ao estastístico procurar se há motivos para acreditar que está analisando o segundo tipo. A partir deste momento, toda tendência será considerada determinística.
+Na prática, é impossível determinar se uma tendência é aleatória ou determinística, cabendo ao analista procurar se há motivos para acreditar que está analisando o segundo tipo. A partir deste momento, toda tendência será considerada determinística.
 
 ## O modelo de tendência polinomial
 
-Considere que a série temporal foi observada até o tempo $s$. Então, a tendência é definida como uma função $T:(0,t]\rightarrow \mathbb{R}$. O Teorema de Weierstrass afirma que, se $T$ é contínua, então para qualquer $\delta>0$, existe um polinômio $u(.)$ tal que
+Considere que a série temporal foi observada até o tempo $n$. Então, a tendência é definida como uma função $T:[1,n]\rightarrow \mathbb{R}$. O Teorema de Weierstrass afirma que, se $T$ é contínua, então para qualquer $\delta>0$, existe um polinômio $u(.)$ tal que
 $$|T(t)-u(t)|<\delta.$$
 Isto quer dizer que $T(.)$ sempre pode ser aproximada por um polinômio. Assim, para determinada ordem $p$, é correto afirmar que  
 $$\begin{equation}
-		y_t = \beta_0 + \sum_{j=1}^p \beta_j t^j + \varepsilon_t
+		x_t = \beta_0 + \sum_{j=1}^p \beta_j t^j + \varepsilon_t
 		\end{equation}$$
-		onde $\varepsilon_t$ é uma série estacionária, é um modelo razoável para uma série temporal com tendência. Assumindo que $\varepsilon_t$ é um ruído branco gaussiano, tem-se o modelo de tendência polinomial de grau $p$.
+onde $\varepsilon_t$ é uma série estacionária, é um modelo razoável para uma série temporal com tendência. 
+
+Assumindo que $\varepsilon_t$ é um ruído branco gaussiano, tem-se o modelo de tendência polinomial de grau $p$.
 		
 Fazendo  $\boldsymbol{f}_t'=(1,t,\ldots,t^p)$ , o modelo de tendência polinomial é reescrito como 
-		$$\boldsymbol{y}=\boldsymbol{F}'\boldsymbol{\beta}+\boldsymbol{\varepsilon}$$
+		$$\boldsymbol{x}=\boldsymbol{F}'\boldsymbol{\beta}+\boldsymbol{\varepsilon}$$
 e inferências sobre $\boldsymbol{\beta}$ e $\nu$ são feitas utilizando o modelo linear tradicional.
 
 :::{#exm-nascidos}
 
-Considere o número anual de nascidos vivos no estado do Amazonas entre os anos 2000 e 20013:
+Considere o número anual de nascidos vivos no estado do Amazonas entre os anos 2000 e 2013:
 
 ```{r}
 x <- c( 67646 , 70252 , 70671 , 70751 , 71345 ,
@@ -82,11 +91,11 @@ stats::acf(nascidos)
 
 Vamos ajustar um modelo de tendência polinomial de ordem 1, ou seja
 
-$$y_t=\beta_0+\beta_1 t + \varepsilon_t$$
+$$x_t=\beta_0+\beta_1 t + \varepsilon_t$$
 onde $t=1,\ldots,14$ representa os tempos $2000,\ldots,2013$.
 
 ```{r}
-tempo <- 1:14
+tempo <- time(nascidos)
 mod <- lm( nascidos ~ poly(tempo, 1, raw = TRUE))
 ```
 
@@ -96,8 +105,8 @@ As estimativas de máxima verossimilhança para $\beta_0$ e $\beta_1$ são:
 mod$coefficients
 ```
 ou seja, 
-$$\hat{T}(t)=\hat{\beta}+\hat{\beta}_1 t = 68.267+715 t$$
-Os resíduos do modelo linear `mod` podem ser obtidos via função `residuals`. Abaixo, verificamos que a série dos resíduos oscila em torno de zero e que nenhuma autocorrelação parece ser relevante, o que dão indícios de que os erros são um ruído branco.
+$$\hat{T}(t)=\hat{\beta}_0+\hat{\beta}_1 t = 68.267+715 t$$
+Os resíduos do modelo linear `mod` podem ser obtidos via função `residuals`. Abaixo, verificamos que a série dos resíduos oscila em torno de zero e que nenhuma autocorrelação parece ser relevante, o que dá indícios de que os erros são um ruído branco.
 
 ```{r}
 #| layout-ncol: 2
@@ -106,7 +115,7 @@ Os resíduos do modelo linear `mod` podem ser obtidos via função `residuals`. 
 #|  - "Correlograma dos resíduos"
 
 res <- residuals(mod)
-ts.plot( res, main = '')
+ts.plot( res, main = '', ylab='Resíduos')
 acf(res, main = '')
 ```
 
@@ -135,19 +144,19 @@ ts.plot( cbind( nascidos, fitted(mod)), col = 1:2, lwd = 2)
 
 ### Previsão
 
-A previsão é realizada utilizando o modelo ajustado, estrapolando para um tempo não observado. Por exemplo
+A previsão é realizada utilizando o modelo ajustado, extrapolando para um tempo não observado. Por exemplo
 a estimativa para 2014 ($t=15$) é
 
-$$\hat{T}(15)=\hat{\beta}+\hat{\beta}_1 15 = 78.992$$
+$$\hat{T}(15)=\hat{\beta}_0+\hat{\beta}_1 15 = 78.992$$
 (o valor real foi 81.145).
 
 É importante ressaltar que esse tipo de modelo é interessante para fazer inferências sobre a tendência, mas pode ser inadequado para previsões, uma vez que o polinômio é uma aproximação apenas para o intervalo observado.
 
 ### Seleção de modelos lineares
 
-O valor do Critério de Informação de Akaike (AIC) é dado por $-2L(\hat{\theta})+2k$ onde $L$ é a função de verossimilhança e $\hat{\theta}$  e $k$ são o estimador de máxima verossimilhança para $\theta$ e sua dimensão, respectivamente. O modelo com menor AIC é considerado mais adequado. 
+O valor do Critério de Informação de Akaike (AIC) é dado por $-2\log L(\hat{\theta})+2k$ onde $L$ é a função de verossimilhança e $\hat{\theta}$  e $k$ são o estimador de máxima verossimilhança para $\theta$ e sua dimensão, respectivamente. O modelo com menor AIC é considerado mais adequado. 
 
-:::{exm-LakeHuronPoly}
+:::{#exm-LakeHuronPoly}
 Considere o nível anual, em pés, do Lago Huron. Essa série já vem carregada no `R` sob o nome `LakeHuron`.
 
 ```{r}
@@ -161,27 +170,7 @@ ts.plot(LakeHuron, lwd = 2, ylab = 'Nível (pés)')
 stats::acf(LakeHuron)
 ```
 
-Vamos ajustar alguns modelos para tentar explica a tendêndia dessa série.
-
-```{r}
-tempo <- 1 : length(LakeHuron)
-mod1 <- lm( LakeHuron ~ poly(tempo, 1, raw = T))
-mod2 <- lm( LakeHuron ~ poly(tempo, 2, raw = T))
-mod3 <- lm( LakeHuron ~ poly(tempo, 3, raw = T))
-mod4 <- lm( LakeHuron ~ poly(tempo, 4, raw = T))
-mod5 <- lm( LakeHuron ~ poly(tempo, 5, raw = T))
-mod6 <- lm( LakeHuron ~ poly(tempo, 6, raw = T))
-
-AIC(mod1)
-AIC(mod2)
-AIC(mod3)
-AIC(mod4)
-AIC(mod5)
-AIC(mod6)
-
-```
-
-Entre os modelos ajustados, o de ordem 2 foi aquele com o menor valor do AIC, sendo sua a tendência estimada por 
+Ao ajustar os modelos lineares até a ordem 6 e calcular a Informação de Akaike através da função `AIC`, obtivemos o melhor ajuste com $p=2$, sendo a tendência estimada por 
 $$\hat{T}(t) = 581 -0,091 t + 0,001 t^2$$
 
 Abaixo, apresentamos a análise de resíduos desse modelo.
@@ -192,14 +181,15 @@ Abaixo, apresentamos a análise de resíduos desse modelo.
 #| fig-cap: 
 #|  - "Série dos resíduos"
 #|  - "Correlograma dos resíduos"
-
+tempo <- time(LakeHuron)
+mod2 <- lm( LakeHuron ~ poly(tempo, 2, raw = TRUE))
 res <- residuals(mod2)
-ts.plot( res, main = '')
+ts.plot( res, main = '', ylab='Resíduos')
 abline(h = 0, lty = 2)
 acf(res, main = '')
 ```
 
-Os resíduos parecem oscilar em torno de zero com um variância constante, mas o correlograma sugere que não temos um ruído branco. O teste de Box-Pierce, dado abaixo, confirma a nossa suspeita. Deste modo, este modelo não é adequado. 
+Os resíduos parecem oscilar em torno de zero com uma variância constante, mas o correlograma sugere que não temos um ruído branco. O teste de Box-Pierce, dado abaixo, confirma a nossa suspeita. Deste modo, este modelo não é adequado. 
 
 ```{r}
 Box.test(res)

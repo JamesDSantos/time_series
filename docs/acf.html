@@ -361,22 +361,12 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p>Conforme dito anteriormente, a existência de uma estrutura de dependência entre <span class="math inline">\(x_t\)</span> e <span class="math inline">\(x_{t-h}\)</span> permite que a série observada seja utilizada para realizar previsões. Uma ferramenta exploratória interessante para analisar esse tipo de estrutura é gráfico de defasagens (no inglês <em>lag plot</em>). Trata-se de um diagrama de dispersão entre a série original e a série defasada, para algum <span class="math inline">\(h\)</span> fixado. Abaixo apresenta-se a série de embarques e desembraques no aeroporo Eduardo Gomes para as 4 primeiras defasagens. Os números representam a ordem (temporal) dos pares do diagrama e a linha cinza pontilha é a reta <span class="math inline">\(y=x\)</span>.</p>
+<p>Conforme dito anteriormente, a existência de uma estrutura de dependência entre <span class="math inline">\(x_t\)</span> e <span class="math inline">\(x_{t-h}\)</span> permite que a série observada seja utilizada para realizar previsões. Uma ferramenta exploratória interessante para analisar esse tipo de estrutura é gráfico de defasagens (no inglês <em>lag plot</em>). Trata-se de um diagrama de dispersão entre a série original e a série defasada, para algum <span class="math inline">\(h\)</span> fixado. Abaixo apresenta-se a série de embarques e desembraques no aeroporto Eduardo Gomes para as 4 primeiras defasagens. Os números representam a ordem (temporal) dos pares do diagrama e a linha cinza pontilhada é a reta <span class="math inline">\(y=x\)</span>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="acf_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Abaixo, a figura mostra o gráfico de defasagens para <span class="math inline">\(h=1,2,3,12\)</span> considerando a série de mortes por doenças pulmonares no Reino Unido.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="acf_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -387,7 +377,7 @@ window.Quarto = {
 <div id="def-autocovariancia" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 5.1</strong></span> A função de autocovariância da série temporal <span class="math inline">\(x_t\)</span> é dada por <span class="math display">\[\begin{equation}
           \gamma(s,t) = Cov(x_t,x_s)=E\left[(x_t-\mu_t)(x_s-\mu_s)\right],
-        \end{equation}\]</span> para todo <span class="math inline">\(s,t\)</span> com <span class="math inline">\(\mu_j=E(y_j)\)</span> e sua respectiva função de autocorrelção é dada por <span class="math display">\[\begin{equation}
+        \end{equation}\]</span> para todo <span class="math inline">\(s,t\)</span> com <span class="math inline">\(\mu_j=E(x_j)\)</span> e sua respectiva função de autocorrelação é dada por <span class="math display">\[\begin{equation}
         \rho(s,t)=\frac{\gamma(s,t)}{\sqrt{\gamma(s,s)\gamma(t,t)}}
         \end{equation}\]</span></p>
 </div>
@@ -410,7 +400,7 @@ window.Quarto = {
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="acf_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="acf_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>Função de autocorrelação do Exemplo <a href="#exm-acf1" class="quarto-xref">Example&nbsp;<span>5.1</span></a>, para t=100</figcaption>
 </figure>
 </div>
@@ -426,7 +416,7 @@ window.Quarto = {
         \end{equation}\]</span></p>
 <p>A função de autocorrelação (ACF) para um processo estacionário é <span class="math display">\[\begin{equation}
                 \rho(h)=\frac{\gamma(h)}{\gamma(0)}
-\end{equation}\]</span> e ela mede a dependência linear entre <span class="math inline">\(y_t\)</span> e os valores defasados da série.Sempre será verdade que <span class="math inline">\(\rho\in[-1,1]\)</span>, <span class="math inline">\(\rho(h)=\rho(-h)\)</span> e, se <span class="math inline">\(y_{t+h}\)</span> é independente de <span class="math inline">\(y_t\)</span>, então <span class="math inline">\(\rho(h)=0\)</span>.</p>
+\end{equation}\]</span> e ela mede a dependência linear entre <span class="math inline">\(y_t\)</span> e os valores defasados da série. Sempre será verdade que <span class="math inline">\(\rho\in[-1,1]\)</span>, <span class="math inline">\(\rho(h)=\rho(-h)\)</span> e, se <span class="math inline">\(y_{t+h}\)</span> é independente de <span class="math inline">\(y_t\)</span>, então <span class="math inline">\(\rho(h)=0\)</span>.</p>
 <div id="exm-acf2" class="theorem example">
 <p><span class="theorem-title"><strong>Example 5.2</strong></span> Considere a série temporal <span class="math display">\[\begin{align}
     x_t = \varepsilon_t +\frac{1}{2}\varepsilon_{t-1} \label{exer1}
@@ -454,48 +444,86 @@ tem-se que, <span class="math display">\[\begin{align}
 </section>
 <section id="a-função-de-autocorrelação-estimada-e-o-correlograma" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="a-função-de-autocorrelação-estimada-e-o-correlograma"><span class="header-section-number">5.3</span> A função de autocorrelação estimada e o correlograma</h2>
-<p>Considere uma série temporal <span class="math inline">\(x_1,\ldots,x_n\)</span>. Supondo que ela é proveniente de uma série estacionária (ergódico), pode-se estimar <span class="math inline">\(\gamma(h)\)</span> pelo método da substituição: <span class="math display">\[\begin{align}
+<p>Considere uma série temporal <span class="math inline">\(x_1,\ldots,x_n\)</span>. Supondo que ela é proveniente de uma série estacionária (ergódica), pode-se estimar <span class="math inline">\(\gamma(h)\)</span> pelo método da substituição: <span class="math display">\[\begin{align}
                         \widehat{\gamma(h)}&amp;=\frac{1}{n}\sum_{i=1}^{n-h}\left(x_{i+h} - \bar{x}\right)\left(x_{i} - \bar{x}\right)
                         \end{align}\]</span> e <span class="math inline">\(\rho\)</span> por<br>
 <span class="math display">\[\begin{equation}
         \hat{\rho}(h)=\frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}
         \end{equation}\]</span></p>
-<p>É importante notar que tanto <span class="math inline">\(\gamma(h)\)</span> quanto <span class="math inline">\(\rho(h)\)</span> são invariantes a transformações de locação. Por exemplo, seja <span class="math inline">\(\gamma(h)\)</span> a função de autocovariância de <span class="math inline">\(x_t\)</span> e considere <span class="math inline">\(y_t=x_t+a\)</span>. Então <span class="math inline">\(E(y_t)=\mu+a\)</span> e <span class="math display">\[E[(y_t-\mu-a)(y_{t-h}-\mu-a)]=E[(x_t-\mu)(x_{t-h}-\mu)]=\gamma(h).\]</span></p>
+<p>É importante notar que tanto <span class="math inline">\(\gamma(h)\)</span> quanto <span class="math inline">\(\rho(h)\)</span> são invariantes a transformações de locação. Por exemplo, seja <span class="math inline">\(\gamma_X(h)\)</span> a função de autocovariância de <span class="math inline">\(x_t\)</span> e considere <span class="math inline">\(y_t=x_t+a\)</span>. Então <span class="math inline">\(E(y_t)=\mu+a\)</span> e <span class="math display">\[\begin{align}\gamma_Y(h)&amp;=E[(y_t-\mu-a)(y_{t-h}-\mu-a)]\\&amp;=E[(x_t-\mu)(x_{t-h}-\mu)]=\gamma_X(h).\end{align}\]</span></p>
 <p>O correlograma é um gráfico cartesiano construído a partir dos pontos <span class="math inline">\((h, \hat{\rho})\)</span>. A partir de cada ponto é desenhada uma linha, semelhante a um gráfico de barras. Como <span class="math inline">\(\hat{\rho}(0)=1\)</span>, a implementação desta função em softwares estatísticos pode variar com <span class="math inline">\(h=0\)</span> ou em 1. Por exemplo, a função <code>acf</code> do pacote <code>stats</code> começa na defasagem 0, enquanto a função <code>Acf</code> do pacote <code>forecast</code> (ou ainda a <code>acf</code> do pacote <code>TSA</code>) começam na defasagem 1.</p>
-<div id="exm-afogamentos" class="theorem example">
-<p><span class="theorem-title"><strong>Example 5.4</strong></span> A série abaixo representa o número anual de óbitos por afogamento na cidade de Manaus, entre 1996 e 2021. Os dados foram obtidos do Ministério da Saúde (http://tabnet.datasus.gov.br/), considerando o código internacional de doenças (CID10) entre W65 e W74.</p>
+<div id="exm-terremoso" class="theorem example">
+<p><span class="theorem-title"><strong>Example 5.4</strong></span> A série abaixo representa o número anual terremotos de magnitude 7 ou maiores entre 1900 e 1998.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/13MdzvZB5U85MkLy97ZRytkylikJu7rJoC1WL0XjKw-c/edit?usp=sharing'</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1PPf1nOjwh1fnr1VtFW2DKN6PY9s9TXEQTn6ZX3igCBQ/edit?usp=sharing'</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gsheet)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> <span class="fu">gsheet2tbl</span>(url)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>afogamentos <span class="ot">&lt;-</span> <span class="fu">ts</span>( dados[,<span class="dv">2</span>], <span class="at">start =</span> <span class="dv">1996</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>terremotos <span class="ot">&lt;-</span> <span class="fu">ts</span>( dados[,<span class="dv">2</span>], <span class="at">start =</span> <span class="dv">1900</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(afogamentos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">''</span>, <span class="at">xlab =</span> <span class="st">'Ano'</span>, <span class="at">ylab =</span> <span class="st">'No. óbitos por afogamento'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(terremotos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">''</span>, <span class="at">xlab =</span> <span class="st">'Ano'</span>, <span class="at">ylab =</span> <span class="st">'No. de terremotos'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="acf_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Número anual de óbitos por afogamento em Manaus.</figcaption>
+<p><img src="acf_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Número de terremotos de magnitude maior ou igual a 7.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<p>A figura abaixo mostra o correlograma dessa série. Observe que as autocorrelações amostrais observadas são baixas. Esse tipo de comportamento é esperado em um ruído branco. Como a série não oscila em torno de zero, um modelo razoável seria <span class="math display">\[y_t=\mu+\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco. Nesse caso, <span class="math inline">\(\bar{y}_n=1,88\)</span> é uma estimativa para <span class="math inline">\(\mu\)</span>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(afogamentos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">''</span>, <span class="at">xlab =</span> <span class="st">'Defasagem'</span>, <span class="at">ylab =</span> <span class="st">'Autocorrelação'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A figura abaixo mostra o correlograma dessa série. As primeiras defasagens mostram que esta série é correlacionada.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(terremotos, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">''</span>, <span class="at">xlab =</span> <span class="st">'Defasagem'</span>, <span class="at">ylab =</span> <span class="st">'Autocorrelação'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-acf_afogamentos" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-acf_terremotos" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-acf_afogamentos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="acf_files/figure-html/fig-acf_afogamentos-1.png" class="img-fluid figure-img" width="672">
+<div aria-describedby="fig-acf_terremotos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="acf_files/figure-html/fig-acf_terremotos-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acf_afogamentos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acf_terremotos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.1: Correlograma para o número anual de óbitos por afogamento em Manaus.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Sem perda de generalidade, assuma que <span class="math inline">\(x_t\)</span> é um processo estacionário com <span class="math inline">\(\mu=0\)</span>. Para uma defasagem <span class="math inline">\(h&gt;0\)</span>, considere a hipótese <span class="math inline">\(H_0:\rho(h)=0\)</span>. Sob <span class="math inline">\(H_0\)</span>, o processo estacionário é um ruído branco e a distribuição da função de autocorrelação amostral é <span class="math inline">\(N(0,1/n)\)</span>. Portanto, uma região de rejeição ao níve de 5% de significância para um teste baseado nessa distribuição é<br>
+<span class="math display">\[R={\hat{\rho}(h): \hat{\rho}(h)|&gt;\frac{2}{\sqrt{n}},\]</span> Este é o valor da linha pontilhada que aparece nos correlogramas apresentados.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 5.5</strong></span> A série abaixo mostra o valor de fechamento diário da ação PETR4 (Petrobrás) no primeiro semestre de 2025.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1SLDYiFt1ohJGz51_dd4aovItCc3ghaXJ-kwOkSA3fb4/edit?usp=sharing'</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>petro <span class="ot">&lt;-</span> gsheet<span class="sc">::</span><span class="fu">gsheet2tbl</span>(url)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(petro<span class="sc">$</span>Último, <span class="at">ylab=</span> <span class="st">'Valor d fechamento em R$'</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="acf_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Em finanças, a <strong>Hipotese do Mercado Eficiente</strong> sugere que o preço atual de um ativo reflete todas as informações disponíveis. Portanto, a variação de preço de um dia para o outro (o retorno) é impulsionada apenas por “novas notícias”, que são imprevisíveis e aleatórias.</p>
+<p>Seja <span class="math inline">\(x_t\)</span> o preço no tempo <span class="math inline">\(t\)</span>. Então, pela hipótese do mercado eficiente,</p>
+<p><span class="math display">\[x_t=x_{t-1}+\varepsilon_t.\]</span> Isso implica que o retorno, dado por <span class="math display">\[x_{t}-x_{t-1}=\varepsilon_t\]</span> deve ser comportar como uma série estacionária, de preferência um ruído branco. Abaixo apresentamos o correlograma dos retornos.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">diff</span>(petro<span class="sc">$</span>Último), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span> <span class="st">''</span>, <span class="at">xlab =</span> <span class="st">'Defasagem'</span>, <span class="at">ylab =</span> <span class="st">'Autocorrelação'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-acf_retorno" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-acf_retorno-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="acf_files/figure-html/fig-acf_retorno-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acf_retorno-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.2: Correlograma para os retornos diários da PETR4 no primeri semestre de 2025.
 </figcaption>
 </figure>
 </div>
@@ -504,36 +532,34 @@ Figure&nbsp;5.1: Correlograma para o número anual de óbitos por afogamento em 
 </div>
 <p><span class="math inline">\(\blacksquare\)</span></p>
 </div>
-<p>Sem perda de generalidade, assuma que <span class="math inline">\(x_t\)</span> é um processo estacionário com <span class="math inline">\(\mu=0\)</span>. Para uma defasagem <span class="math inline">\(h&gt;0\)</span>, considere a hipótese <span class="math inline">\(H_0:\rho(h)=0\)</span>. Sob <span class="math inline">\(H_0\)</span>, o processo estacionário é um ruído branco e a distribuição da função de autocorrelação amostral é <span class="math inline">\(N(0,1/n)\)</span>. Portanto, uma região de rejeição ao níve de 5% de significância para um teste baseado nessa distribuição é<br>
-<span class="math display">\[R={\hat{\rho}(h): \hat{\rho}(h)|&gt;\frac{2}{\sqrt{n}},\]</span> Este é o valor da linha pontilhada que aparece no correlograma na <a href="#fig-acf_afogamentos" class="quarto-xref">Figure&nbsp;<span>5.1</span></a>.</p>
 </section>
 <section id="testes-para-a-autocorrelação" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="testes-para-a-autocorrelação"><span class="header-section-number">5.4</span> Testes para a autocorrelação</h2>
 <p>Na seção anterior mostrou-se como testar <span class="math inline">\(H_0:\rho(h)=0\)</span>, para um <span class="math inline">\(h\)</span> fixado. Como várias autocorrelações para diferentes defasagens são avaliadas simultaneamente, o correto seria testar <span class="math inline">\(H_0: \rho(h)=0\;\;\forall h=1,\ldots,q\)</span>, onde <span class="math inline">\(q\)</span> é o valor máximo da defasagem a ser testado. Considerando a região de rejeição dada anteriormente, pela desigualdade de Bonferroni,</p>
-<p><span class="math display">\[\begin{align}P(\hbox{Rejeitar }H_0|H_0\hbox{ é verdadeira})&amp;=P\left(\cup_{h=1}^q\left\{ \hat{\rho}(h)&gt;\frac{2}{\sqrt{n}}\right\}| H_0\hbox{ é verdade}\right)\\
-&amp;\leq \sum_{h=1}^qP\left( \hat{\rho}(h)&gt;\frac{2}{\sqrt{n}}| H_0\hbox{ é verdade}\right)\\ &amp;&lt;q\alpha\end{align}\]</span></p>
+<p><span class="math display">\[\begin{align}P(\hbox{Rejeitar }H_0|H_0\hbox{ é verdadeira})&amp;=P\left(\cup_{h=1}^q\left\{ |\hat{\rho}(h)|&gt;\frac{2}{\sqrt{n}}\right\}| H_0\hbox{ é verdade}\right)\\
+&amp;\leq \sum_{h=1}^qP\left( |\hat{\rho}(h)|&gt;\frac{2}{\sqrt{n}}| H_0\hbox{ é verdade}\right)\\ &amp;&lt;q\alpha\end{align}\]</span></p>
 <p>Portanto, a probabilidade de cometer o erro tipo 1 pode aumentar na medida que testamos mais de uma defasagem.</p>
 <p>Como alternativa, considere a mesma hipótese nula. Se todas as autocorrelaçãoes, de defasagens 1 até <span class="math inline">\(q\)</span>, são baixas, não há evidências contra <span class="math inline">\(H_0\)</span>. Com esse espírito o teste de Ljung-Box (1978) utiliza a estatística <span class="math display">\[Q_{LB}=n(n+2)\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}\]</span> e rejeita <span class="math inline">\(H_0\)</span> se <span class="math inline">\(Q_{LB}&gt;\chi^2_{1-\alpha,q}\)</span>, onde <span class="math inline">\(\chi^2_{\lambda,n}\)</span> é o quantil <span class="math inline">\(\lambda\)</span> da distribuição <span class="math inline">\(\chi^2_n\)</span>.</p>
 <p>O teste de Box-Pierce (1970) possui o mesmo objetivo e tem a mesma regra de decisão, mudando apenas a estatística de teste para</p>
-<p><span class="math display">\[Q_{BP}=n\sum_{h=1}^q \frac{\hat{\rho}(h)^2}{n-h}.\]</span></p>
-<div id="exm-afogamentos_testes" class="theorem example">
-<p><span class="theorem-title"><strong>Example 5.5</strong></span> Para a série de óbitos anuais por afogamentos em Manaus, tem-se que os teste Ljung-Box e Box-Pierce não rejeitam a hipótese de ruído branco.</p>
+<p><span class="math display">\[Q_{BP}=n\sum_{h=1}^q \hat{\rho}(h)^2.\]</span></p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 5.6</strong></span> Para a série retornos das ações PETR4, tem-se que os teste Ljung-Box e Box-Pierce não rejeitam a hipótese de ruído branco.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(afogamentos, <span class="at">type =</span> <span class="st">'Ljung-Box'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(<span class="fu">diff</span>(petro<span class="sc">$</span>Último), <span class="at">type =</span> <span class="st">'Ljung-Box'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Ljung test
 
-data:  afogamentos
-X-squared = 1.2623, df = 1, p-value = 0.2612</code></pre>
+data:  diff(petro$Último)
+X-squared = 0.017676, df = 1, p-value = 0.8942</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(afogamentos, <span class="at">type =</span> <span class="st">'Box-Pierce'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(<span class="fu">diff</span>(petro<span class="sc">$</span>Último), <span class="at">type =</span> <span class="st">'Box-Pierce'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Pierce test
 
-data:  afogamentos
-X-squared = 1.127, df = 1, p-value = 0.2884</code></pre>
+data:  diff(petro$Último)
+X-squared = 0.017176, df = 1, p-value = 0.8957</code></pre>
 </div>
 </div>
 <p><span class="math inline">\(\blacksquare\)</span></p>
