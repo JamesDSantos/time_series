@@ -198,23 +198,30 @@ Box.test(res)
 
 ## Métodos não paramétricos para estimação da tendência
 
-O modelo de tendência polinomial é robusto quando relaxamos a necessidade do ruído branco ser gaussiano. Nesse sentido, as estimativas ainda são válidas, mas perdemos todos os testes de hipóteses.
-
-Os métodos não paramétricos independem da distribuição do ruído, sendo úteis para a análise exploratória.
+O modelo de regressão polinomial tem a desvantagem de depender de um ruído branco. Os métodos não paramétricos independem da distribuição do ruído, sendo úteis para a análise exploratória.
 
 ### Médias Móveis
 
-O método das médias móveis consiste em obter $\hat{T}(t)$ através da média da série considerando os valores vizinhos à $y_t$. Para o tempo $t$ e $m=2h+1$, com $h=1,2,\ldots$, considere o conjunto $\mathcal{V}(m)_t=\{t-h,\ldots,t+h\}$. Defini-se a média móvel de ordem $m$ (notamção $m$-MM) como 
-		$$\hat{T}_h(t)=\frac{1}{m}\sum_{ i = t-h}^{t+h}y_i,\;h<t<n-h$$.
+O método das médias móveis consiste em obter $\hat{T}(t)$ através da média da série considerando uma janela contendo $x_t$. Para o tempo $t$ e $m=2h+1$, com $h=1,2,\ldots$, considere o conjunto $$\mathcal{V}(m)_t=\{t-h,\ldots,t+h\},$$
+que representa uma janela de tempo centrada em $t$ com $m$ elementos. A média móvel de ordem $m$ (notação $m$-MM) é dada por 
+		$$\hat{T}_h(t)=\frac{1}{m}\sum_{ i = t-h}^{t+h}x_i,\;h<t<n-h.$$
 
-Para compreender melhor esse estimador, considere que a relação entre pontos vizinhos é aproximadamente linear, ou seja, para qualquer $t\in\mathcal{V}(m)_t$ existem $a_\mathcal{V}$ e $b_\mathcal{V}$ tais que
-$$y_t\approx a_\mathcal{V}+b_\mathcal{V}t+\varepsilon_t,$$
-onde $\varepsilon_t$ é considerado uma série temporal estacionária e ergódica. Então
-$$\begin{align}E(\hat{T}(t))&=\frac{a_\mathcal{V}+b_\mathcal{V}(t-h)+\cdots+a_\mathcal{V}+b_\mathcal{V}t+\cdots+a_\mathcal{V}+b_\mathcal{V}(t+h)}{m}\\&=a_\mathcal{V}+b_\mathcal{V}t\end{align}$$
-$$Var(\hat{T}(t))=\frac{\nu}{m}+\frac{2}{m}\sum_{j=1}^{2h}j\gamma(j)$$
-Observe que, como $T(.)$ é determinística e os ruídos são estacionários e ergódicos, então $Var(\hat{T}(t))$ converge para zero quando $m\rightarrow \infty$. Contudo, $T(.)$ é localmente linear, logo $\hat{T}$ é um estimador razoável para valores baixos de $h$. Este é um exemplo típico de *trade off* entre víes e variância, onde não é possível minimizar os dois simultaneamente.
+Para compreender melhor esse estimador, considere que a relação entre pontos dentro de uma janela é aproximadamente linear, ou seja, para qualquer $i\in\mathcal{V}(m)_t$ existem $a_\mathcal{V}$ e $b_\mathcal{V}$ tais que
+$$x_i\approx a_\mathcal{V}+b_\mathcal{V}i+\varepsilon_i,$$
+onde $\varepsilon_i$ é considerado um ruido estacionário. Então
+$$\begin{align}E(\hat{T}_h(t))&\approx\frac{a_\mathcal{V}+b_\mathcal{V}(t-h)+\cdots+a_\mathcal{V}+b_\mathcal{V}t+\cdots+a_\mathcal{V}+b_\mathcal{V}(t+h)}{m}\\&=a_\mathcal{V}+b_\mathcal{V}t\end{align}$$
+e
+$$\begin{align}
+Var(\hat{T}_h(t))&=\text{Cov}\left(\frac{1}{m}\sum_{ i = t-h}^{t+h}x_i,\frac{1}{m}\sum_{ j = t-h}^{t+h}x_j\right)\\&=\frac{1}{m^2}\sum_{ i = t-h}^{t+h}\sum_{ j = t-h}^{t+h}\text{Cov}\left(x_i,x_j\right)\approx\frac{1}{m^2}\sum_{ i = t-h}^{t+h}\sum_{ j = t-h}^{t+h}\text{Cov}\left(\varepsilon_i,\varepsilon_j\right)\\&=\frac{1}{m^2}\sum_{ i = t-h}^{t+h}\sum_{ j = t-h}^{t+h}\gamma(j-i)=\frac{1}{m^2}\left[m\nu+2\sum_{j=1}^{2h}(m-j)\gamma(j)\right]\\&=\frac{\nu}{m}+\frac{2}{m}\sum_{j=1}^{2h}\left(1-\frac{j}{m}\right)\gamma(j),\end{align}$$
+onde $\gamma(j)$ é a função de autocovariância dos ruídos. Observe que:
 
-Utilizaremos a função `ma(x,m)`, do pacote `forecast` para encontrar $m-$MM para a série `x
+1. como $T(.)$ é determinística e os ruídos são estacionários, então $Var(\hat{T}_h(t))$ converge para zero quando $m\rightarrow \infty$ ($m$ grande desejável)
+
+2. $T_h(.)$ é localmente linear, logo $\hat{T}$ é um estimador razoável para valores baixos de $h$ ($m$ baixo desejável)
+
+Este é um exemplo típico de *trade off* entre vício e variância, onde não é possível minimizar os dois simultaneamente.
+
+Utilizaremos a função `ma(x,m)`, do pacote `forecast` para encontrar $m-$MM para a série  x
 
 :::{#exm-NACIDOSMA}
 
@@ -231,8 +238,8 @@ nascidos <- ts(x, start =1994)
 ts.plot(nascidos, lwd = 2, ylab = 'No. nascidos vivos')
 ```
 
-```{r}
-require(forecast)
+```{r message=FALSE}
+library(forecast)
 oo <- par( mfrow = c(2,2), mar = c(2,2,1,1))
 ts.plot(nascidos, lwd = 2, ylab = 'No. nascidos vivos')
 lines( ma(nascidos,3) , col =2, lwd = 2)
@@ -249,10 +256,10 @@ legend('bottomright', legend = c('Série original','9-MM'),  fill = c(1,2,3), bt
 par(oo)
 
 ```
+
 Considere a estimativa obtida pela média móvel de ordem 3.
 ```{r}
 tendencia <- ma(nascidos, 3)
-tendencia
 ```
 
 Vamos estimar o ruído da série (e eliminar as coordenadas vazias)
@@ -261,7 +268,7 @@ ruido <- nascidos - tendencia
 ruido <- ruido[is.na(ruido) == F]
 ```
 
-Abaixo, apresentamos as principais estatísticas sobre os resíduos. A série histórica dos resíduos oscila em torno de zero e não há motivos para suspeitar de que sua variância é constante. O correlograma apresenta autocorrelações baixas, como o esperado em um ruído branco. O teste de Shapiro-Wilks não dá evidências contra normalidade, o que suporta a hipótese de ruído branco gaussiano. O teste de Box-Pierce apresenta um p-valor de 0,04 e, em conjunto com as demais evidências, vamos considerá-lo significativo ao nível de 4%.  
+Abaixo, apresentamos as principais estatísticas sobre os resíduos. A série histórica dos resíduos oscila em torno de zero e não há motivos para suspeitar de que sua variância não seja constante. O correlograma apresenta autocorrelações baixas, como o esperado em um ruído branco. O teste de Shapiro-Wilk não dá evidências contra normalidade, o que suporta a hipótese de ruído branco gaussiano. O teste de Box-Pierce apresenta um p-valor de 0,04 e, em conjunto com as demais evidências, vamos considerá-lo significativo ao nível de 4%.  
 
 ```{r}
 ts.plot(ruido)
@@ -276,27 +283,28 @@ Box.test(ruido)
 $\blacksquare$
 :::
 
-Até o momento, foi considerado que a ordem da média móvel é escrita como $m=2h+1$, ou seja, a ordem é sempre ímpar. Para definir a média móvel para uma ordem par, sem perda de generalidade, assuma que $m=4$. Como não é possível escolher um número igual de vizinhos à $y_t$, tem-se duas possibilidades para $\mathcal{V}(4)_t$:
-$$\mathcal{V}'(4)_t=\{y_{t-1},y_t,y_{t+1},y_{t+2}\}$$
+Até o momento, foi considerado que a ordem da média móvel é escrita como $m=2h+1$, ou seja, a ordem é sempre ímpar. Para ilustrar como definir a média móvel para uma ordem par, sem perda de generalidade assuma que $m=4$. Como não é possível escolher uma janela de tempo centrada em $t$ com 4 elementos, tem-se duas possibilidades para $\mathcal{V}(4)_t$:
+$$\mathcal{V}'(4)_t=\{t-1,t,t+1,t+2\}$$
+que representa uma janela com mais tempos à direita de $t$ e
+$$\mathcal{V}''(4)_t=\{t-2,t-1,t,t+1\},$$
+que representa uma janela com mais tempos à esquerda de $t$. Para cada possibilidade, têm-se as seguintes estimativas
+$$\hat{T}'_h(t)=\frac{1}{4}\sum_{i=t-1}^{t+2}x_{i}$$
 e
-$$\mathcal{V}''(4)_t=\{y_{t-2},y_{t-1},y_t,y_{t+1}\}.$$
-Para cada possibilidade, tem-se
-$$\hat{T}'(t)=\frac{1}{4}\sum_{i=t-1}^{t+2}y_{i}$$
-e
-$$\hat{T}''(t)=\frac{1}{4}\sum_{i=t-2}^{t+1}y_{i}.$$
-A média móvel 2-MM será definida por
-$$\hat{T}(t)=\frac{T'(t)+T''(t)}{2}$$
+$$\hat{T}_h''(t)=\frac{1}{4}\sum_{i=t-2}^{t+1}x_{i}.$$
+A média móvel 4-MM será definida por
+$$\hat{T}_h(t)=\frac{\hat{T}_h'(t)+\hat{T}_h''(t)}{2}$$
 Observe que a média agora é ponderada, uma vez que 
 
-$$\hat{T}(t)=\frac{y_{t-2}}{8}+\frac{y_{t-1}}{4}+\frac{y_{t}}{4}+\frac{y_{t+1}}{4}+\frac{y_{t+2}}{8}.$$
+$$\hat{T}_h(t)=\frac{x_{t-2}}{8}+\frac{x_{t-1}}{4}+\frac{x_{t}}{4}+\frac{x_{t+1}}{4}+\frac{x_{t+2}}{8}.$$
 
-Para o caso de $m=2h$ com $h=1,2,\ldots$, defini-se $m$-MM por
-$$\begin{align}\hat{T}(t)&=\frac{1}{2}\left[\frac{1}{m}\sum_{i=t-h}^{t+h-1}y_i+\frac{1}{m}\sum_{i=t-h+1}^{t+h}y_i\right]\\&=\frac{y_{t-h}}{2m}+\frac{1}{m}\sum_{i=t-h+1}^{t+h-1}y_i+\frac{y_{t+h}}{2m}.\end{align}$$
-Note que o argumento de $\hat{T}(t)$ é aproximadamente não viciado para $m$ pequeno não se altera, uma vez que os pesos para os tempos $t-j$ e $t+j$ são simétricos
+Para o caso geral $m=2h$ com $h=1,2,\ldots$, define-se $m$-MM por
+$$\begin{align}\hat{T}_h(t)&=\frac{1}{2}\left[\frac{1}{m}\sum_{i=t-h}^{t+h-1}x_i+\frac{1}{m}\sum_{i=t-h+1}^{t+h}x_i\right]\\&=\frac{x_{t-h}}{2m}+\frac{1}{m}\sum_{i=t-h+1}^{t+h-1}x_i+\frac{x_{t+h}}{2m}.\end{align}$$
+
+
 
 O estimador para tendência conhecido como média móvel ponderada de ordem $m$ é dado por
 
-$$\hat{T}(t)=\sum_{i=t-h}^{t+h} w_i y_{i},$$
+$$\hat{T}(t)=\sum_{i=t-h}^{t+h} w_i x_{i},$$
 com $w_i>0$, $w_{t-j}=w_{t+j}$ e $\sum_{i=t-h}^{t+h}w_i=1$. O método tradicional é obtido fazendo $w_i=1/m$.  
 
 Por último, como as primeiras e últimas observações são removidas, esses métodos não são os mais recomendados.
@@ -306,19 +314,19 @@ Por último, como as primeiras e últimas observações são removidas, esses m�
 
 É importante ressaltar que os métodos estatísticos são ferramentas universais e que geralmente sofrem modificações ao serem aplicados em outras áreas. Deste modo, existem outras definições de médias móveis que podem causar confusão.
 
-Em epidemiologia por exemplo, a média móvel de ordem $m$ é definida por
-$$\hat{T}(t)=\frac{1}{m}\sum_{j=1}^m y_{t-j+1}$$
+Em epidemiologia, por exemplo, a média móvel de ordem $m$ é definida por
+$$\hat{T}(t)=\frac{1}{m}\sum_{j=1}^m x_{t-j+1}$$
 ou seja, a soma dos valores mais recentes em relação à $t$. Observe que o contexto é diferente: em uma epidemia por exemplo, deseja-se estimar $T(t)$ onde $t$ é o tempo mais recente e, em geral, se utiliza o 7-MM tirando a média dos últimos 7 dias. A mesma lógica vale para o mercado financeiro, que tira a média dos últimos 5 dias de preço de fechamento.
 
 Ainda no mercado financeiro, o importante é captar a mudança da tendência o mais rápido possível. Deste modo, utiliza-se uma média móvel ponderada definida por
-$$\hat{T}(t)=\frac{2}{m(m+1)}\sum_{j=1}^m(m-j+1)y_{t-j+1}.$$
-Na definição acima, o último preço da ação, dado por $y_t$, é o valor mais imporante e por isso recebe o maior peso. Note que os pesos não são simétricos.
+$$\hat{T}(t)=\frac{2}{m(m+1)}\sum_{j=1}^m(m-j+1)x_{t-j+1}.$$
+Na definição acima, o último preço da ação, dado por $x_t$, é o valor mais importante e por isso recebe o maior peso. Note que os pesos não são simétricos.
 </div>
 
 
-## Suavização do gráfico de dispersão estimada localmente (loess)
+### Suavização do gráfico de dispersão estimada localmente (loess)
 
-No método de suavisação do gráfico de dispersão, deseja-se estimar $f(x)=E(y|x)$, através da coleção $(y_1,x_1),\ldots,(y_n,x_n)$, para um valor qualquer de $x$. 
+No método de suavização do gráfico de dispersão, deseja-se estimar $f(x)=E(y|x)$, através da coleção $(y_1,x_1),\ldots,(y_n,x_n)$, para um valor qualquer de $x$. 
 
 A estimativa $\hat{f}$ para o ponto $x'$ é calculada considerando os seguintes passos:
 
@@ -327,22 +335,22 @@ A estimativa $\hat{f}$ para o ponto $x'$ é calculada considerando os seguintes 
 2. Dentro do conjunto $x_1,\ldots,x_n,$ encontre os $q$ valores mais próximos de $x'$ (via distância euclidiana). Denote este conjunto por $\mathcal{V}$ e denote por $d$ a maior distância encontrada.
 
 3. Para cada $x_1,\ldots,x_n$ seja
-$$v_j(x')=\left\{\begin{array}{ll}\left(1-\left| \frac{x_j-x'}{d}\right|^3\right)^3&,\;\;\hbox{se }|x_j-x|\leq d\\ 0,&\hbox{caso contrário}\end{array}\right.$$
+$$v_j(x')=\left\{\begin{array}{ll}\left(1-\left| \frac{x_j-x'}{d}\right|^3\right)^3&,\;\;\hbox{se }|x_j-x'|\leq d\\ 0,&\hbox{caso contrário}\end{array}\right.$$
 o peso associado à $x_j$ (valores próximos de $x'$ receberão o peso máximo e valores afastados recebem menor peso)
 
 4. Ajuste o modelo de regressão ponderado, minimizando 
-$$\sum_{i=1}^n v_i(x')\left(y_i - \sum_{j=0}^p \beta_jx^j\right)^2$$
+$$\sum_{i=1}^n v_i(x')\left(y_i - \sum_{j=0}^p \beta_jx^j_i\right)^2$$
 
 5. Estime $f(x')$ por 
-$$\hat{f}(x')=\sum_{j=0}^p \hat{\beta}_jx^j $$
+$$\hat{f}(x')=\sum_{j=0}^p \hat{\beta}_j(x')^j $$
 
 
-Oberve que este método pode ser utilizado para estimar a tendência da série. Abaixo, vamos analisar a série de taxa de desemprego mensal, entre março de 2002 e dezembro de 2015.
+Observe que este método pode ser utilizado para estimar a tendência da série. Abaixo, vamos analisar a série de taxa de desemprego mensal, entre março de 2002 e dezembro de 2015.
 
 ```{r}
 url <- 'https://www.dropbox.com/s/rmgymzsic99qawd/desemprego.csv?dl=1'
 
-banco <- read.csv(url, sep = ';', h = F)
+banco <- read.csv(url, sep = ';', header = FALSE)
 
 desemprego<- ts( banco$V2, start = c(2002,3), frequency=12)
 
@@ -381,6 +389,6 @@ ts.plot(yt)
 acf(yt)
 ```
 
-Fica claro o comportamento sazonal, o que implica que o restante não é uma série estacionária.
+Fica claro a existência de mais sinais, o que implica que o restante não é uma série estacionária.
 
 
