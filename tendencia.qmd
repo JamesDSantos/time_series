@@ -92,10 +92,15 @@ stats::acf(nascidos)
 Vamos ajustar um modelo de tendência polinomial de ordem 1, ou seja
 
 $$x_t=\beta_0+\beta_1 t + \varepsilon_t$$
-onde $t=1,\ldots,14$ representa os tempos $2000,\ldots,2013$.
-
+Os índices do tempo que formam a regressora são extraídos diretamente do objeto:
 ```{r}
 tempo <- time(nascidos)
+tempo
+```
+
+Abaixo ajustamos o modelo utilizando a função `poly`, que cria um polinômio. O argumento `raw=TRUE` cria um polinômio usual, enquanto que `raw=FALSE` (o padrão) cria um polinômio ortogonal.
+
+```{r}
 mod <- lm( nascidos ~ poly(tempo, 1, raw = TRUE))
 ```
 
@@ -105,7 +110,7 @@ As estimativas de máxima verossimilhança para $\beta_0$ e $\beta_1$ são:
 mod$coefficients
 ```
 ou seja, 
-$$\hat{T}(t)=\hat{\beta}_0+\hat{\beta}_1 t = 68.267+715 t$$
+$$\hat{T}(t)=\hat{\beta}_0+\hat{\beta}_1 t = -1.361.373+715 t$$
 Os resíduos do modelo linear `mod` podem ser obtidos via função `residuals`. Abaixo, verificamos que a série dos resíduos oscila em torno de zero e que nenhuma autocorrelação parece ser relevante, o que dá indícios de que os erros são um ruído branco.
 
 ```{r}
@@ -145,9 +150,9 @@ ts.plot( cbind( nascidos, fitted(mod)), col = 1:2, lwd = 2)
 ### Previsão
 
 A previsão é realizada utilizando o modelo ajustado, extrapolando para um tempo não observado. Por exemplo
-a estimativa para 2014 ($t=15$) é
+a estimativa para 2014 é
 
-$$\hat{T}(15)=\hat{\beta}_0+\hat{\beta}_1 15 = 78.992$$
+$$\hat{T}(15)=\hat{\beta}_0+\hat{\beta}_1 2014 = 78.636$$
 (o valor real foi 81.145).
 
 É importante ressaltar que esse tipo de modelo é interessante para fazer inferências sobre a tendência, mas pode ser inadequado para previsões, uma vez que o polinômio é uma aproximação apenas para o intervalo observado.
@@ -170,20 +175,26 @@ ts.plot(LakeHuron, lwd = 2, ylab = 'Nível (pés)')
 stats::acf(LakeHuron)
 ```
 
-Ao ajustar os modelos lineares até a ordem 6 e calcular a Informação de Akaike através da função `AIC`, obtivemos o melhor ajuste com $p=2$, sendo a tendência estimada por 
-$$\hat{T}(t) = 581 -0,091 t + 0,001 t^2$$
+Ao ajustar os modelos lineares até a ordem 6 e calcular a Informação de Akaike através da função `AIC`, obtivemos o melhor ajuste com $p=2$. Apresentamos os códigos utilizados abaixo.
+
+```{r}
+p <- 2 # ordem do polinômio
+tempo <- time(LakeHuron)
+mod <- lm( LakeHuron ~ poly(tempo, p, raw = TRUE ))
+AIC(mod)
+coefficients(mod)
+```
+
+O model ajustado é 
+$$\hat{T}(t) = 3.124 -2,6 t + 0,0006 t^2$$
 
 Abaixo, apresentamos a análise de resíduos desse modelo.
-
 
 ```{r}
 #| layout-ncol: 2
 #| fig-cap: 
 #|  - "Série dos resíduos"
 #|  - "Correlograma dos resíduos"
-tempo <- time(LakeHuron)
-mod2 <- lm( LakeHuron ~ poly(tempo, 2, raw = TRUE))
-res <- residuals(mod2)
 ts.plot( res, main = '', ylab='Resíduos')
 abline(h = 0, lty = 2)
 acf(res, main = '')
@@ -193,6 +204,11 @@ Os resíduos parecem oscilar em torno de zero com uma variância constante, mas 
 
 ```{r}
 Box.test(res)
+```
+Por último, apresentamos a série temporal com a tendência estimada.
+
+```{r}
+ts.plot( cbind(LakeHuron, fitted(mod)), col=c(1,'purple'),lwd = 2)
 ```
 :::
 
@@ -391,4 +407,26 @@ acf(yt)
 
 Fica claro a existência de mais sinais, o que implica que o restante não é uma série estacionária.
 
+
+## Exercício
+
+<div class='alert alert-warning'>
+<strong>Exercício 1</strong>
+**Tendência por modelo linar**
+
+Abaixo, temos a série do número mensal de homicídios, obtida através do SUS, em Manaus, començando em Janeiro de 1996.
+
+```{r warning = F}
+url <- 'https://docs.google.com/spreadsheets/d/1NxxKFzTH7TBd3xP9r5qvggHeorJeR5xKIhn_UZwBol0/edit?usp=sharing'
+
+x <- gsheet::gsheet2tbl(url)
+```
+
+1. Crie um objeto `ts` para representar essa série
+
+2. Encontre uma tendência polinomial adequada
+
+3. Verifique se os resíduos podem ser considerados ruído branco.
+
+</div>
 
