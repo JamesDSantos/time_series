@@ -134,17 +134,17 @@ e sempre podemos assumir que
 		Isto é equivalente a afirmar que o efeito sazonal desaparece quando as $p$ observações são agregadas. Deste modo, o estimador para tendência $p$-MM estima a tendência sem o efeito sazonal.
 
 :::{$exm-ldeathsDess}
-Considere novamente a série com o número de óbitos por doenças pulmonares no Reino Unido. A figura abaixo mostra a série original e a tendência, estimada pela 12-MM. Observe o padrão  de tendência decrescente.
+Considere novamente a série com o número de óbitos por doenças pulmonares no Reino Unido. A figura abaixo mostra a série original e a tendência estimada pela 12-MM. Observe o padrão  de tendência decrescente.
 
 ```{r}
 #| layout-ncol: 1
 #| fig-cap: 
-#| - "Em preto: número de óbitos por doenças pulmonares no Reino Unido. Em vermelho: tendência dessazonalizada"
+#| - "Número de óbitos por doenças pulmonares no Reino Unido e sua tendência dessazonalizada"
 #| label: fig-ldeathsDess
 
 library(forecast)
 series <- ts( cbind(ldeaths, ma(ldeaths,12)),names= c('No. óbitos','Série sem sazonalidade'))
-plot.ts(series)
+plot.ts(series, main = '')
 ```
 :::
 	   

@@ -458,7 +458,7 @@ Figure&nbsp;8.2: Gráfico de subséries
 <p>Considere a série <span class="math display">\[y_t = T^\star(t)+s^\star(t)+\varepsilon_t,\]</span> onde <span class="math inline">\(T^\star(t)\)</span> é a tendência e <span class="math inline">\(s^\star(t)\)</span> uma função periódica, com período igual a <span class="math inline">\(p\)</span>. É sempre verdade que existe uma constante real <span class="math inline">\(c\)</span> tal que <span class="math display">\[\sum_{j=1}^p s^\star(t+j)=c\]</span> para qualquer <span class="math inline">\(t=0,1,\ldots\)</span>. Contudo, note que <span class="math inline">\(c\)</span> é uma constante (que, por sua vez, faz parte da tendência da série). Fazendo <span class="math inline">\(T(t)=T^\star(t)+c\)</span> e <span class="math inline">\(s(t)=s^\star(t)-c\)</span>, teremos <span class="math display">\[y_t = T^\star(t)+c + s^\star(t)-c+\varepsilon_t=T(t)+ s(t)+\varepsilon_t,\]</span></p>
 <p>e sempre podemos assumir que <span class="math display">\[\sum_{t=1}^{p}s(t)=0.\]</span> Isto é equivalente a afirmar que o efeito sazonal desaparece quando as <span class="math inline">\(p\)</span> observações são agregadas. Deste modo, o estimador para tendência <span class="math inline">\(p\)</span>-MM estima a tendência sem o efeito sazonal.</p>
 <div class="{$exm-ldeathsDess}">
-<p>Considere novamente a série com o número de óbitos por doenças pulmonares no Reino Unido. A figura abaixo mostra a série original e a tendência, estimada pela 12-MM. Observe o padrão de tendência decrescente.</p>
+<p>Considere novamente a série com o número de óbitos por doenças pulmonares no Reino Unido. A figura abaixo mostra a série original e a tendência estimada pela 12-MM. Observe o padrão de tendência decrescente.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Registered S3 method overwritten by 'quantmod':
@@ -466,7 +466,7 @@ Figure&nbsp;8.2: Gráfico de subséries
   as.zoo.data.frame zoo </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> <span class="fu">ts</span>( <span class="fu">cbind</span>(ldeaths, <span class="fu">ma</span>(ldeaths,<span class="dv">12</span>)),<span class="at">names=</span> <span class="fu">c</span>(<span class="st">'No. óbitos'</span>,<span class="st">'Série sem sazonalidade'</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(series)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(series, <span class="at">main =</span> <span class="st">''</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
@@ -476,7 +476,7 @@ Figure&nbsp;8.2: Gráfico de subséries
 <img src="sazonalidade_files/figure-html/fig-ldeathsDess-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ldeathsDess-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.3: Em preto: número de óbitos por doenças pulmonares no Reino Unido. Em vermelho: tendência dessazonalizada
+Figure&nbsp;8.3: Número de óbitos por doenças pulmonares no Reino Unido e sua tendência dessazonalizada
 </figcaption>
 </figure>
 </div>
