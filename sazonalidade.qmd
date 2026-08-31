@@ -1,10 +1,12 @@
 # Sazonalidade
 
+Sazonalidade é um comportamento que se repete em um período estritamente constante de tempo. Por exemplo, a série abaixo representa a temperatura mensal aferida no Castelo de Nottingham (em Fahrenheit), durante 20 anos. Observe como as temperaturas, em cada ano, crescem durante o primeiro semestre e depois decrescem durante o segundo.
 
-## Padrão sazonal
 
-Padrões que surgem sistematicamente ao longo do tempo são denominados sazonais. Exemplos: flutuações de temperatura entre estações, início e fim do semestre letivo, Natal, dias úteis, feriados flutuantes como a Páscoa e o Carnaval.
-
+```{r}
+ts.plot(nottem)
+```
+## Função periódica
 
 Um padrão sazonal pode ser modelado através de uma função periódica.
 
@@ -15,28 +17,29 @@ $$s(t)=s(t + kp),\;\forall k=1,2,\ldots.$$
 
 :::{#exm-periodica}
 A função 
+
 $$s(t)=\left\{ \begin{align}
 -1, &\;\;t=1,4,7,\ldots\\
 0, &\;\; t=2,5,8,\ldots\\
 1,&\;\;t=3,6,9,\ldots
 \end{align}
-\right.
-$$
+\right.$$
 é periódica e possui período $p=3$.
 :::
 
-:::{#exm-periodica2}
+
+:::{#exm}
 A função 
 $$s(t)=\cos\left(2\pi\frac{t}{4}\right)$$
 é periódica (com $p=4$). De fato, para $k=1,2,3,\ldots,$
 $$\begin{align*}
-	g(t+4k) &= \cos\left(2\pi\frac{t+4k}{4}\right)=\cos\left( \pi\frac{t}{4}+2\pi k\right)\\
+	s(t+4k) &= \cos\left(2\pi\frac{t+4k}{4}\right)=\cos\left( 2\pi\frac{t}{4}+2\pi k\right)\\
 	&=\cos\left( 2\pi\frac{t}{4}\right)\underbrace{\cos\left(2\pi k\right)}_\text{1} - \sin\left( \pi\frac{t}{4}\right)\underbrace{\sin\left(2\pi k\right)}_\text{0}\\
-	&=\cos\left(2\pi\frac{t}{4}\right) = g(t).	
+	&=\cos\left(2\pi\frac{t}{4}\right) = s(t).	
 \end{align*}$$
 :::
 
-Seja $s(.)$ uma função periódica. Então, uma série temporal sazonal aditiva é descrita como 
+Seja $s(.)$ uma função periódica. Então, uma série temporal com  sazonalidade aditiva é descrita como 
 
 $$x_t=s(t)+\varepsilon_t,$$
 onde $\varepsilon_t$ é um ruído estacionário.
@@ -45,9 +48,9 @@ onde $\varepsilon_t$ é um ruído estacionário.
 **Atenção.** Ao criar um objeto do tipo `ts` no `R`, o argumento `frequency` é considerado o período do padrão sazonal. A maioria das funções voltadas para padrões sazonais acessam essa informação no objeto.
 </div>
 
-## Gráficos sazonal de subséries
+## Gráfico sazonal de subséries
 
-Seja $x_t$ uma série sazonal de período $p$. Para construir um gráfico sazonal de subséries:
+Seja $\{x_t\}$ uma série sazonal de período $p$. Para construir um gráfico sazonal de subséries:
 
 - Faça $p$ subséries:
 		$$\begin{align*}
@@ -65,9 +68,9 @@ Observe que, para um padrão sazonal, a subsérie
 $$x_{i},x_{i+p},x_{i+2p},\ldots$$
 é equivalente à
 $$s(i)+\varepsilon_i,s(i)+\varepsilon_{i+p},s(i)+\varepsilon_{i+2p},\ldots$$
-e, supondo que $\varepsilon_t$ é um ruído granco ergódico, teremos que
+e, supondo que $\varepsilon_t$ é um ruído branco, teremos que
 $$\hat{s}(i)=\frac{1}{m+1}\sum_{j=0}^m x_{i+jp}$$
-onde $m+1$ é o tamanho da amostra correspodente à subsérie.
+onde $m+1$ é o tamanho da amostra da subsérie correspodente.
 </div>
 
 No `R`, o comando `monthplot(x)` faz o gráfico de subséries. Considerando um padrão sazonal, cada subsérie deve oscilar em torno de uma média constante. Vejamos algus exemplos.
@@ -98,63 +101,23 @@ Abaixo apresentamos a série mensal da concentração de CO$_2$, em partes por m
 ts.plot(co2)
 ```
 
-O gráfico das subséries é dado abaixo. Observe que há uma tendência crescente em cada subsérie.
+O gráfico das subséries é dado abaixo. Observe que a tendência é recplicada em cada subsérie, impedindo uma visualização clara da sazonalidade.
 
 ```{r}
 monthplot(co2)
 ```
 
-A tendência crescente nas subséries não nos nos permitiria trabalhar com uma função periódica. Contudo o gráfico está sendo influenciado pela tendência. Vamos removê-la e fazer o gráfico novamente.
+A tendência crescente nas subséries não nos permitiria trabalhar com uma função periódica. Contudo o gráfico está sendo influenciado pela tendência. Vamos removê-la e fazer o gráfico novamente.
 
 
 ```{r}
-# estimação da tendência via loess
-tempo <- 1 : length(co2)
-model <- loess( co2 ~tempo)
-tend <- fitted(model)
-
-# série sem tendência e o gráfico de subséries
-plot( co2-tend)
-monthplot(co2-tend)
+monthplot( diff(co2))
 ```
 $\blacksquare$
 :::
 
-Também é possível que o padrão sazonal não seja bem representado por uma função periódica. Isto ocorre quando o gráfico de subséries possui tendência.
-
-
-:::{#exm-AirPassengersMonthplot}
-
-A @fig-AirPassengersMonthplot apresenta o gráfico da série `AirPassengers` e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série. 
-
-```{r}
-#| layout-ncol: 2
-#| fig-cap: 
-#| - 'Gráfico da série AirPassengers' 
-#| - 'Gráfico de subséries da série AirPassengers. Observe as tendências monótona crescente em cada subgráfico'
-#| label: fig-AirPassengersMonthplot
-ts.plot(AirPassengers)
-monthplot(AirPassengers)
-```
-
-Abaixo, vamos estimar a tendência da série e removê-la. Note que o padrão das subséries se altera, mostrando o real comportamento do padrão sazonal: é uma tendência de crescimento nos meses de verão americano (junho, julho e agosto) e um padrão de queda começando em novembro e pegando so três subsequentes meses do inverno.
-
-```{r}
-# estimação da tendência via loess
-tempo <- 1 : length(AirPassengers)
-model <- loess( AirPassengers ~tempo)
-tend <- fitted(model)
-
-# série sem tendência e o gráfico de subséries
-plot( AirPassengers-tend)
-monthplot(AirPassengers-tend)
-```
-$\blacksquare$
-
-:::
 
 ## Dessazonalização
-	
 	
 Existem séries que apresentam tanto tendência quanto sazonalidade. Isso pode dificultar o estudo da tendência, uma vez que a sazonalidade interfere no movimento de subida e descida da série. Nesses casos, é interessante obter uma estimativa da parte sazonal para removê-la da série.
 
@@ -171,7 +134,7 @@ e sempre podemos assumir que
 		Isto é equivalente a afirmar que o efeito sazonal desaparece quando as $p$ observações são agregadas. Deste modo, o estimador para tendência $p$-MM estima a tendência sem o efeito sazonal.
 
 :::{$exm-ldeathsDess}
-Considere novamente a série com o número de óbitos por doenças pulmonares no Reino Unido. A figura abaixo mostra a série original e a tendência, estimada pela 12-MM. Observe o padrão claro de tendência decrescente.
+Considere novamente a série com o número de óbitos por doenças pulmonares no Reino Unido. A figura abaixo mostra a série original e a tendência, estimada pela 12-MM. Observe o padrão  de tendência decrescente.
 
 ```{r}
 #| layout-ncol: 1
@@ -179,6 +142,9 @@ Considere novamente a série com o número de óbitos por doenças pulmonares no
 #| - "Em preto: número de óbitos por doenças pulmonares no Reino Unido. Em vermelho: tendência dessazonalizada"
 #| label: fig-ldeathsDess
 
+library(forecast)
+series <- ts( cbind(ldeaths, ma(ldeaths,12)),names= c('No. óbitos','Série sem sazonalidade'))
+plot.ts(series)
 ```
 :::
 	   
@@ -593,4 +559,38 @@ Box.test(res2, type = 'Ljung-Box')
 
 :::
 
+## Discutir depois
+
+Também é possível que o padrão sazonal não seja bem representado por uma função periódica. Isto ocorre quando o gráfico de subséries possui tendência.
+
+
+:::{#exm-AirPassengersMonthplot}
+
+A @fig-AirPassengersMonthplot apresenta o gráfico da série `AirPassengers` e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série. 
+
+```{r}
+#| layout-ncol: 2
+#| fig-cap: 
+#| - 'Gráfico da série AirPassengers' 
+#| - 'Gráfico de subséries da série AirPassengers. Observe as tendências monótona crescente em cada subgráfico'
+#| label: fig-AirPassengersMonthplot
+ts.plot(AirPassengers)
+monthplot(AirPassengers)
+```
+
+Abaixo, vamos estimar a tendência da série e removê-la. Note que o padrão das subséries se altera, mostrando outro comportamento:  uma tendência de crescimento acelerado dentro dos meses de verão americano (junho, julho e agosto) e um padrão de queda mais expressivo nos meses do inverno. 
+
+```{r}
+# estimação da tendência via loess
+tempo <- 1 : length(AirPassengers)
+model <- loess( AirPassengers ~tempo)
+tend <- fitted(model)
+
+# série sem tendência e o gráfico de subséries
+plot( AirPassengers-tend)
+monthplot(AirPassengers-tend)
+```
+
+
+:::
 

@@ -343,7 +343,6 @@ Na definição acima, o último preço da ação, dado por $x_t$, é o valor mai
 ### Suavização do gráfico de dispersão estimada localmente (loess)
 
 No método de suavização do gráfico de dispersão, deseja-se estimar $f(x)=E(y|x)$, através da coleção $(y_1,x_1),\ldots,(y_n,x_n)$, para um valor qualquer de $x$. 
-
 A estimativa $\hat{f}$ para o ponto $x'$ é calculada considerando os seguintes passos:
 
 1. Fixe um valor inteiro positivo $q\leq n$.
@@ -407,6 +406,71 @@ acf(yt)
 
 Fica claro a existência de mais sinais, o que implica que o restante não é uma série estacionária.
 
+## Diferenciação
+
+Os métodos de modelagem polinomial, médias móveis e LOESS apresentados anteriormente compartilham um objetivo comum: estimar a curva de tendência determinística $T(t)$ por meio de diferentes técnicas de suavização. No entanto, em diversas aplicações de séries temporais, o interesse reside não em descrever a tendência, mas sim em removê-la para obter uma série sem esse padrão. Uma alternativa puramente algébrica, robusta e que dispensa a estimação direta de parâmetros para essa finalidade é a diferenciação.
+
+A diferenciação de uma série é defina por
+$$\Delta x_t=x_t-x_{t-1},$$
+onde $\Delta$ é denominado **operador diferença**. Trata-se de um operadpor linear, ou seja, para duas séries temporais $\{x_t\}$ e $\{y_t\}$ e duas constantes $a$ e $b$, temos que 
+$\Delta(ax_t+by_t)=a\Delta x_t+b\Delta y_t.$
+
+Utilizamos potências para indicar que o operador foi utilizado diversas vezes. Por exemplo, uma série diferenciada duas vezes é dada por 
+$$\begin{align}\Delta^2x_t&=\Delta(\Delta x_t)=\Delta(x_t-x_{t-1})\\&=\Delta x_t-\Delta x_{t-1}=x_t-2x_{t-1}+x_{t-2}.\end{align}$$
+
+### Remoção de tendência
+
+Agora, considere novamente o passeio aleatório definido por 
+
+$$\begin{align}
+x_t &= x_{t-1}+\varepsilon_t,\quad t=1,2,\ldots
+\end{align}$$
+onde $\varepsilon_t$ é um ruído branco. Vimos que esse processo pode produzir tendências aleatórias. Seja $\{y_t\}$ a série obtida após a diferenciação de $\{x_t\}$. Observe que
+
+$$y_t=\Delta x_t=x_t-x_{t-1}=\varepsilon_t$$
+logo $\{y_t\}$ é um ruído branco, ou ainda, uma série sem tendência.
+
+Considere então que, 
+$$x_t=a+bt+\varepsilon_t,$$
+onde $\varepsilon_t$ é um ruído branco. Observe que 
+$$y_t=\Delta x_t= b+ \varepsilon_t,$$
+logo, $\{y_t\}$ é uma série estacionária e, portanto,  sem tendência. De fato, com as séries com tendência tendem a ser localmente lineares, a diferenciação em geral resulta na sua eliminação.
+
+:::{#exm-}
+
+Considere novamente a série anual do nível do Lago Huron. Vamos utilizar a função `diff` para fazer uma diferença na série. Os gráficos da série original e da diferenciada são apresentados abaixo. Observe que a série diferenciada não apresenta tendências, oscilnando em torno de zero. 
+
+```{r}
+Diferença = diff(LakeHuron)
+series = ts.union(LakeHuron, Diferença)
+plot.ts(series, main = '')
+```
+Abaixo, apresentamos o correlograma da série diferenciada, que apresenta um comportamento típico de ruído branco. O teste de Box-Pierce não rejeita a hipótese de ruído branco (p=0,1939), enquanto que o teste de Shapiro-Wilk não rejeita normalidade (p=0,1957). Portanto, existem evidências de que a série é composta por uma tendência e um ruído branco gaussiano.
+
+
+```{r}
+acf(Diferença, main='Série diferenciada')
+```
+
+:::
+
+### Previsão
+
+O processo de diferenciação serve para eliminar a tendência, e não para estimá-la diretamente. Contudo, é perfeitamente possível realizar previsões para a série original a partir de sua versão diferenciada. Seja $\{x_t\}$ uma série que exibe tendência e seja $y_t=\Delta x_t$ a sua primeira diferença. Suponha ainda que $\{y_t\}$ é estacionária, com média constante $E(y_t) = \mu$ e variância $\nu$. A função de previsão para a série original $\{x_t\}$ em um horizonte de tempo $h > 0$, condicionada ao conjunto de informações disponíveis até o tempo $t$ (denotado por $\mathcal{D}_t$), é dada pela esperança condicional $E(x_{t+h}|\mathcal{D}_t)$.
+
+Para o primeiro passo à frente ($h = 1$), temos: $$\begin{align} \mu &= E(y_{t+1}|\mathcal{D}t) \\ \mu &= E(x_{t+1} - x_t|\mathcal{D}_t) \\ \mu &= E(x_{t+1}|\mathcal{D}_t) - x_t \\ &\Rightarrow E(x_{t+1}|\mathcal{D}_t) = x_t + \mu \end{align}$$
+Para o segundo passo à frente ($h = 2$), utilizando a previsão obtida para o passo anterior: 
+
+$$\begin{align} \mu &= E(y_{t+2}|\mathcal{D}t) \\ \mu &= E(x_{t+2} - x_{t+1}|\mathcal{D}_t) \\ \mu &= E(x_{t+2}|\mathcal{D}_t) - E(x_{t+1}|\mathcal{D}_t) \\ &\Rightarrow E(x_{t+2}|\mathcal{D}_t) = E(x_{t+1}|\mathcal{D}_t) + \mu = (x_t + \mu) + \mu = x_t + 2\mu \end{align}$$
+Por indução matemática, para qualquer horizonte de previsão $h$, a esperança condicional assume a forma: $$E(x_{t+h}|\mathcal{D}_t)=x_t+\mu h.$$
+Por último, como supomos que $\{y_t\}$  é ergódica,
+$$\widehat{E}(x_{t+h}|\mathcal{D}_t)=x_t+\bar{y} h.$$
+
+A equação acima descreve uma reta com inclinação constante dada por $\mu$cujo intercepto é dinamicamente atualizado pelo último valor observado da série, $x_t$. Ao assumirmos que a primeira diferença elimina a tendência e gera uma série estacionária com média constante $\mu$, estamos implicitamente adotando a premissa de que a série original se comporta de forma localmente linear. 
+
+Esse comportamento dinâmico difere substancialmente da previsão gerada por modelos de tendência polinomial, dada por
+$$\hat{T}(t+h) = \hat{\beta}_0 + \hat{\beta}_1 (t+h).$$
+cuja previsão está ancorada em todos os dados da série histórica. 
 
 ## Exercício
 
@@ -422,11 +486,79 @@ url <- 'https://docs.google.com/spreadsheets/d/1NxxKFzTH7TBd3xP9r5qvggHeorJeR5xK
 x <- gsheet::gsheet2tbl(url)
 ```
 
-1. Crie um objeto `ts` para representar essa série
+1. Crie um objeto `ts` para representar essa série.
 
-2. Encontre uma tendência polinomial adequada
+2. Encontre uma tendência polinomial adequada.
 
 3. Verifique se os resíduos podem ser considerados ruído branco.
 
 </div>
 
+::: {#exr-}
+Abaixo, temos a série anual histórica de nascidos vivos no estado do Amazonas, abrangendo o período de 1994 a 20216.
+
+```{r}
+x <- c(47780, 47966, 49112, 56070, 57180, 62037, 67646, 70252, 70671, 70751, 
+       71345, 73488, 75584, 73469, 75030, 75729, 74188, 76202, 77434, 79041, 
+       81145, 80097, 76703, 78066, 78087, 77622, 75635, 78454)
+
+nascidos <- ts(x, start = 1994)
+```
+
+a) Utilizando a função `ma()` do pacote `forecast`, estime a tendência da série através de uma média móvel de ordem 3 ($3$-MM) e de ordem 7 ($7$-MM). 
+
+b) Esboce o gráfico da série original sobreposto com ambas as estimativas.
+
+c) Discuta o trade-off (dilema) entre viés e variância observado ao aumentar a ordem da média móvel de 3 para 7.
+
+d) Extraia o ruído da série utilizando a estimativa obtida pela $3$-MM. Remova as observações faltantes (NA) nas extremidades e aplique os testes de Shapiro-Wilk e Box-Pierce para avaliar se os resíduos podem ser considerados um ruído branco gaussiano.
+:::
+
+::: {#exr- }
+
+No Exemplo 7.2, vimos que o ajuste de uma tendência quadrática determinística gerou resíduos altamente autocorrelacionados.
+
+a) Aplique a primeira diferença na série do nível do Lago Huron utilizando a função `diff()` do `R`. 
+
+b) Esboce os gráficos da série original e da série diferenciada para  comparação. 
+
+c) Execute o teste de Box-Pierce na série diferenciada. Os resíduos agora podem ser considerados não correlacionados?
+
+d) Sabendo que o último nível observado da série original foi $x_{1972} = 579,96$ pés, calcule a projeção de nível do lago para o ano de 1973 ($h = 1$) e para o ano de 1977 ($h = 5$) a partir dessa metodologia de diferenciação.
+:::
+
+:::{#exr-}
+**Modelagem de Tendência Polinomial e Seleção de Modelos**
+
+A modelagem paramétrica de uma tendência determinística assume que a série observada até o tempo $n$ pode ser representada por $x_t = T(t) + \varepsilon_t$1. Pelo Teorema de Weierstrass, se $T(t)$ for contínua, ela pode ser aproximada por um polinômio de ordem $p$
+
+a) Apresente a equação geral do modelo de tendência polinomial de grau $p$ e descreva como o Critério de Informação de Akaike (AIC) é utilizado para selecionar a ordem ideal do polinômio.
+
+b) No Exemplo 7.1 (Nascidos Vivos no Amazonas), o ajuste de ordem $1$ foi considerado adequado. Já no Exemplo 7.2 (Lago Huron), embora o AIC tenha selecionado um modelo quadrático ($p=2$), os resíduos falharam no diagnóstico. Explique quais testes de hipóteses formais foram realizados para avaliar a adequação dos resíduos e interprete o motivo pelo qual o modelo quadrático do Lago Huron foi rejeitado, apesar de ter o menor AIC
+:::
+
+:::{#exr-}
+**Formulação e Propriedades das Médias Móveis (MM)**
+
+O método das médias móveis consiste em obter a tendência estimada $\hat{T}(t)$ filtrando a série por meio de uma média ponderada local em uma janela temporal centrada de tamanho $m$910.
+
+a) Para uma janela de tamanho ímpar $m = 2h+1$, mostre que se a tendência local for aproximadamente linear ($x_i \approx a + bi + \varepsilon_i$), a esperança do estimador de médias móveis $m$-MM é não viciada, ou seja, $E(\hat{T}_h(t)) \approx a + bt$9. 
+
+b) Explique conceitualmente o trade-off (dilema) entre vício (viés) e variância envolvido na escolha do tamanho da janela $m$ para o estimador de médias móveis. 
+
+c) Quando $m$ é um número par (por exemplo, $m = 2h$), não é possível centralizar a janela diretamente sobre $t$. Demonstre matematicamente como a média ponderada de ordem par é construída para contornar essa limitação (caso geral para $m=2h$) e apresente a equação resultante dos pesos ponderados para uma $4$-MM1012. 
+
+d) Discuta como as definições de médias móveis sofrem modificações quando aplicadas a outras áreas, como na epidemiologia (7-MM para os últimos 7 dias) e no mercado financeiro (médias móveis ponderadas assimétricas), relacionando com os pesos atribuídos aos dados mais recentes. :::
+
+:::{#exr-}
+**Diferenciação, Remoção de Tendência e Previsão Localmente Linear**
+
+Diferente dos métodos de suavização que buscam estimar $T(t)$, a diferenciação foca puramente na remoção da tendência para tornar a série estacionária.
+
+a) Considere o passeio aleatório definido por $x_t = x_{t-1} + \varepsilon_t$, onde $\varepsilon_t$ é um ruído branco. Prove algebricamente que a aplicação do operador diferença $\Delta x_t = x_t - x_{t-1}$ elimina a tendência aleatória deste processo.
+
+b) Seja $x_t = a + bt + \varepsilon_t$ um modelo com tendência determinística linear e ruído branco $\varepsilon_t$. Demonstre que a série diferenciada $y_t = \Delta x_t$ é uma série estacionária sem tendência1. 
+
+c) Suponha que $y_t = \Delta x_t$ seja estacionária com média constante $E(y_t) = \mu$. Deduza passo a passo, por indução matemática, que a função de previsão $h$ passos à frente para o nível da série original, $E(x_{t+h}|\mathcal{D}_t)$, é dada por: $$E(x_{t+h}|\mathcal{D}_t) = x_t + \mu h$$ 
+
+:::

@@ -287,8 +287,8 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#padrão-sazonal" id="toc-padrão-sazonal" class="nav-link active" data-scroll-target="#padrão-sazonal"><span class="header-section-number">8.1</span> Padrão sazonal</a></li>
-  <li><a href="#gráficos-sazonal-de-subséries" id="toc-gráficos-sazonal-de-subséries" class="nav-link" data-scroll-target="#gráficos-sazonal-de-subséries"><span class="header-section-number">8.2</span> Gráficos sazonal de subséries</a></li>
+  <li><a href="#função-periódica" id="toc-função-periódica" class="nav-link active" data-scroll-target="#função-periódica"><span class="header-section-number">8.1</span> Função periódica</a></li>
+  <li><a href="#gráfico-sazonal-de-subséries" id="toc-gráfico-sazonal-de-subséries" class="nav-link" data-scroll-target="#gráfico-sazonal-de-subséries"><span class="header-section-number">8.2</span> Gráfico sazonal de subséries</a></li>
   <li><a href="#dessazonalização" id="toc-dessazonalização" class="nav-link" data-scroll-target="#dessazonalização"><span class="header-section-number">8.3</span> Dessazonalização</a></li>
   <li><a href="#decomposições-de-séries" id="toc-decomposições-de-séries" class="nav-link" data-scroll-target="#decomposições-de-séries"><span class="header-section-number">8.4</span> Decomposições de séries</a></li>
   <li><a href="#modelo-de-forma-livre---ou-fatores-sazonais" id="toc-modelo-de-forma-livre---ou-fatores-sazonais" class="nav-link" data-scroll-target="#modelo-de-forma-livre---ou-fatores-sazonais"><span class="header-section-number">8.5</span> Modelo de Forma livre - ou fatores sazonais</a></li>
@@ -298,6 +298,7 @@ window.Quarto = {
   <li><a href="#o-modelo-de-regressão-harmônica-simples" id="toc-o-modelo-de-regressão-harmônica-simples" class="nav-link" data-scroll-target="#o-modelo-de-regressão-harmônica-simples"><span class="header-section-number">8.6.2</span> O modelo de regressão harmônica simples</a></li>
   </ul></li>
   <li><a href="#periodograma" id="toc-periodograma" class="nav-link" data-scroll-target="#periodograma"><span class="header-section-number">8.7</span> Periodograma</a></li>
+  <li><a href="#discutir-depois" id="toc-discutir-depois" class="nav-link" data-scroll-target="#discutir-depois"><span class="header-section-number">8.9</span> Discutir depois</a></li>
   </ul>
 </nav>
     </div>
@@ -323,38 +324,48 @@ window.Quarto = {
 </header>
 
 
-<section id="padrão-sazonal" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="padrão-sazonal"><span class="header-section-number">8.1</span> Padrão sazonal</h2>
-<p>Padrões que surgem sistematicamente ao longo do tempo são denominados sazonais. Exemplos: flutuações de temperatura entre estações, início e fim do semestre letivo, Natal, dias úteis, feriados flutuantes como a Páscoa e o Carnaval.</p>
+<p>Sazonalidade é um comportamento que se repete em um período estritamente constante de tempo. Por exemplo, a série abaixo representa a temperatura mensal aferida no Castelo de Nottingham (em Fahrenheit), durante 20 anos. Observe como as temperaturas, em cada ano, crescem durante o primeiro semestre e depois decrescem durante o segundo.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nottem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="função-periódica" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="função-periódica"><span class="header-section-number">8.1</span> Função periódica</h2>
 <p>Um padrão sazonal pode ser modelado através de uma função periódica.</p>
 <div id="def-periodica" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 8.1</strong></span> Dizemos que <span class="math inline">\(s(.)\)</span> é uma função periódica de período <span class="math inline">\(p\)</span> se <span class="math display">\[s(t)=s(t + kp),\;\forall k=1,2,\ldots.\]</span></p>
 </div>
 <div id="exm-periodica" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.1</strong></span> A função <span class="math display">\[s(t)=\left\{ \begin{align}
+<p><span class="theorem-title"><strong>Example 8.1</strong></span> A função</p>
+<p><span class="math display">\[s(t)=\left\{ \begin{align}
 -1, &amp;\;\;t=1,4,7,\ldots\\
 0, &amp;\;\; t=2,5,8,\ldots\\
 1,&amp;\;\;t=3,6,9,\ldots
 \end{align}
-\right.
-\]</span> é periódica e possui período <span class="math inline">\(p=3\)</span>.</p>
+\right.\]</span> é periódica e possui período <span class="math inline">\(p=3\)</span>.</p>
 </div>
-<div id="exm-periodica2" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.2</strong></span> A função <span class="math display">\[s(t)=\cos\left(2\pi\frac{t}{4}\right)\]</span> é periódica (com <span class="math inline">\(p=4\)</span>). De fato, para <span class="math inline">\(k=1,2,3,\ldots,\)</span> <span class="math display">\[\begin{align*}
-    g(t+4k) &amp;= \cos\left(2\pi\frac{t+4k}{4}\right)=\cos\left( \pi\frac{t}{4}+2\pi k\right)\\
+<div id="exm">
+<p>A função <span class="math display">\[s(t)=\cos\left(2\pi\frac{t}{4}\right)\]</span> é periódica (com <span class="math inline">\(p=4\)</span>). De fato, para <span class="math inline">\(k=1,2,3,\ldots,\)</span> <span class="math display">\[\begin{align*}
+    s(t+4k) &amp;= \cos\left(2\pi\frac{t+4k}{4}\right)=\cos\left( 2\pi\frac{t}{4}+2\pi k\right)\\
     &amp;=\cos\left( 2\pi\frac{t}{4}\right)\underbrace{\cos\left(2\pi k\right)}_\text{1} - \sin\left( \pi\frac{t}{4}\right)\underbrace{\sin\left(2\pi k\right)}_\text{0}\\
-    &amp;=\cos\left(2\pi\frac{t}{4}\right) = g(t).  
+    &amp;=\cos\left(2\pi\frac{t}{4}\right) = s(t).  
 \end{align*}\]</span></p>
 </div>
-<p>Seja <span class="math inline">\(s(.)\)</span> uma função periódica. Então, uma série temporal sazonal aditiva é descrita como</p>
+<p>Seja <span class="math inline">\(s(.)\)</span> uma função periódica. Então, uma série temporal com sazonalidade aditiva é descrita como</p>
 <p><span class="math display">\[x_t=s(t)+\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído estacionário.</p>
 <div class="alert alert-success">
 <p><strong>Atenção.</strong> Ao criar um objeto do tipo <code>ts</code> no <code>R</code>, o argumento <code>frequency</code> é considerado o período do padrão sazonal. A maioria das funções voltadas para padrões sazonais acessam essa informação no objeto.</p>
 </div>
 </section>
-<section id="gráficos-sazonal-de-subséries" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="gráficos-sazonal-de-subséries"><span class="header-section-number">8.2</span> Gráficos sazonal de subséries</h2>
-<p>Seja <span class="math inline">\(x_t\)</span> uma série sazonal de período <span class="math inline">\(p\)</span>. Para construir um gráfico sazonal de subséries:</p>
+<section id="gráfico-sazonal-de-subséries" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="gráfico-sazonal-de-subséries"><span class="header-section-number">8.2</span> Gráfico sazonal de subséries</h2>
+<p>Seja <span class="math inline">\(\{x_t\}\)</span> uma série sazonal de período <span class="math inline">\(p\)</span>. Para construir um gráfico sazonal de subséries:</p>
 <ul>
 <li><p>Faça <span class="math inline">\(p\)</span> subséries: <span class="math display">\[\begin{align*}
       &amp;x_1,x_{1+p},x_{1+2p},\ldots \\
@@ -366,13 +377,13 @@ window.Quarto = {
 <li><p>Faça um gráfico de cada subsérie, cada um com uma linha horizontal com o valor de sua respectiva média.</p></li>
 </ul>
 <div class="alert alert-success">
-<p>Observe que, para um padrão sazonal, a subsérie <span class="math display">\[x_{i},x_{i+p},x_{i+2p},\ldots\]</span> é equivalente à <span class="math display">\[s(i)+\varepsilon_i,s(i)+\varepsilon_{i+p},s(i)+\varepsilon_{i+2p},\ldots\]</span> e, supondo que <span class="math inline">\(\varepsilon_t\)</span> é um ruído granco ergódico, teremos que <span class="math display">\[\hat{s}(i)=\frac{1}{m+1}\sum_{j=0}^m x_{i+jp}\]</span> onde <span class="math inline">\(m+1\)</span> é o tamanho da amostra correspodente à subsérie.</p>
+<p>Observe que, para um padrão sazonal, a subsérie <span class="math display">\[x_{i},x_{i+p},x_{i+2p},\ldots\]</span> é equivalente à <span class="math display">\[s(i)+\varepsilon_i,s(i)+\varepsilon_{i+p},s(i)+\varepsilon_{i+2p},\ldots\]</span> e, supondo que <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco, teremos que <span class="math display">\[\hat{s}(i)=\frac{1}{m+1}\sum_{j=0}^m x_{i+jp}\]</span> onde <span class="math inline">\(m+1\)</span> é o tamanho da amostra da subsérie correspodente.</p>
 </div>
 <p>No <code>R</code>, o comando <code>monthplot(x)</code> faz o gráfico de subséries. Considerando um padrão sazonal, cada subsérie deve oscilar em torno de uma média constante. Vejamos algus exemplos.</p>
 <div id="exm-nottem1" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.3</strong></span> A série abaixo (gráfico à esquerda) apresenta as temperaturas médias mensais, em Fahrenheits, no Castelo de Nottingham entre 1920 e 1939. O gráfico à direita apresenta o gráfico de subséries. Como a série possui período 12, este último gráfico já identifica cada subsérie com a inicial do mês correspondente. Note que a maioria das subséries oscila em torno da média</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nottem)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(nottem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="theorem-title"><strong>Example 8.2</strong></span> A série abaixo (gráfico à esquerda) apresenta as temperaturas médias mensais, em Fahrenheits, no Castelo de Nottingham entre 1920 e 1939. O gráfico à direita apresenta o gráfico de subséries. Como a série possui período 12, este último gráfico já identifica cada subsérie com a inicial do mês correspondente. Note que a maioria das subséries oscila em torno da média</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nottem)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(nottem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -405,20 +416,9 @@ Figure&nbsp;8.2: Gráfico de subséries
 </div>
 <p>É possível que a tendência construa uma falta impressão sobre o comportamento sazonal. Portanto, é interessante remover a tendência da série antes de fazer o gráfico das subséries.</p>
 <div id="exm-co2Monthoplot" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.4</strong></span> Abaixo apresentamos a série mensal da concentração de CO<span class="math inline">\(_2\)</span>, em partes por milhão, no Mauna Loa. Observe a clara tendência de crescimento e o padrão sazonal.</p>
+<p><span class="theorem-title"><strong>Example 8.3</strong></span> Abaixo apresentamos a série mensal da concentração de CO<span class="math inline">\(_2\)</span>, em partes por milhão, no Mauna Loa. Observe a clara tendência de crescimento e o padrão sazonal.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(co2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sazonalidade_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>O gráfico das subséries é dado abaixo. Observe que há uma tendência crescente em cada subsérie.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(co2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(co2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -427,15 +427,9 @@ Figure&nbsp;8.2: Gráfico de subséries
 </div>
 </div>
 </div>
-<p>A tendência crescente nas subséries não nos nos permitiria trabalhar com uma função periódica. Contudo o gráfico está sendo influenciado pela tendência. Vamos removê-la e fazer o gráfico novamente.</p>
+<p>O gráfico das subséries é dado abaixo. Observe que a tendência é recplicada em cada subsérie, impedindo uma visualização clara da sazonalidade.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimação da tendência via loess</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> <span class="fu">length</span>(co2)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">loess</span>( co2 <span class="sc">~</span>tempo)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>tend <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># série sem tendência e o gráfico de subséries</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( co2<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(co2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -443,71 +437,14 @@ Figure&nbsp;8.2: Gráfico de subséries
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(co2<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sazonalidade_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
 </div>
-</div>
-</div>
-<p><span class="math inline">\(\blacksquare\)</span></p>
-</div>
-<p>Também é possível que o padrão sazonal não seja bem representado por uma função periódica. Isto ocorre quando o gráfico de subséries possui tendência.</p>
-<div id="exm-AirPassengersMonthplot" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.5</strong></span> A <span class="quarto-unresolved-ref">?fig-AirPassengersMonthplot</span> apresenta o gráfico da série <code>AirPassengers</code> e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(AirPassengers)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
-<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-AirPassengersMonthplot-1" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-AirPassengersMonthplot-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="sazonalidade_files/figure-html/fig-AirPassengersMonthplot-1.png" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AirPassengersMonthplot-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.3: Gráfico da série AirPassengers
-</figcaption>
-</figure>
-</div>
-</div>
-<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-AirPassengersMonthplot-2" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-AirPassengersMonthplot-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="sazonalidade_files/figure-html/fig-AirPassengersMonthplot-2.png" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AirPassengersMonthplot-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.4: Gráfico de subséries da série AirPassengers. Observe as tendências monótona crescente em cada subgráfico
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>Abaixo, vamos estimar a tendência da série e removê-la. Note que o padrão das subséries se altera, mostrando o real comportamento do padrão sazonal: é uma tendência de crescimento nos meses de verão americano (junho, julho e agosto) e um padrão de queda começando em novembro e pegando so três subsequentes meses do inverno.</p>
+<p>A tendência crescente nas subséries não nos permitiria trabalhar com uma função periódica. Contudo o gráfico está sendo influenciado pela tendência. Vamos removê-la e fazer o gráfico novamente.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimação da tendência via loess</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> <span class="fu">length</span>(AirPassengers)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">loess</span>( AirPassengers <span class="sc">~</span>tempo)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>tend <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># série sem tendência e o gráfico de subséries</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( AirPassengers<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>( <span class="fu">diff</span>(co2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="sazonalidade_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sazonalidade_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -521,9 +458,30 @@ Figure&nbsp;8.4: Gráfico de subséries da série AirPassengers. Observe as tend
 <p>Considere a série <span class="math display">\[y_t = T^\star(t)+s^\star(t)+\varepsilon_t,\]</span> onde <span class="math inline">\(T^\star(t)\)</span> é a tendência e <span class="math inline">\(s^\star(t)\)</span> uma função periódica, com período igual a <span class="math inline">\(p\)</span>. É sempre verdade que existe uma constante real <span class="math inline">\(c\)</span> tal que <span class="math display">\[\sum_{j=1}^p s^\star(t+j)=c\]</span> para qualquer <span class="math inline">\(t=0,1,\ldots\)</span>. Contudo, note que <span class="math inline">\(c\)</span> é uma constante (que, por sua vez, faz parte da tendência da série). Fazendo <span class="math inline">\(T(t)=T^\star(t)+c\)</span> e <span class="math inline">\(s(t)=s^\star(t)-c\)</span>, teremos <span class="math display">\[y_t = T^\star(t)+c + s^\star(t)-c+\varepsilon_t=T(t)+ s(t)+\varepsilon_t,\]</span></p>
 <p>e sempre podemos assumir que <span class="math display">\[\sum_{t=1}^{p}s(t)=0.\]</span> Isto é equivalente a afirmar que o efeito sazonal desaparece quando as <span class="math inline">\(p\)</span> observações são agregadas. Deste modo, o estimador para tendência <span class="math inline">\(p\)</span>-MM estima a tendência sem o efeito sazonal.</p>
 <div class="{$exm-ldeathsDess}">
-<p>Considere novamente a série com o número de óbitos por doenças pulmonares no Reino Unido. A figura abaixo mostra a série original e a tendência, estimada pela 12-MM. Observe o padrão claro de tendência decrescente.</p>
+<p>Considere novamente a série com o número de óbitos por doenças pulmonares no Reino Unido. A figura abaixo mostra a série original e a tendência, estimada pela 12-MM. Observe o padrão de tendência decrescente.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> <span class="fu">ts</span>( <span class="fu">cbind</span>(ldeaths, <span class="fu">ma</span>(ldeaths,<span class="dv">12</span>)),<span class="at">names=</span> <span class="fu">c</span>(<span class="st">'No. óbitos'</span>,<span class="st">'Série sem sazonalidade'</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(series)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
-
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-ldeathsDess" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ldeathsDess-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="sazonalidade_files/figure-html/fig-ldeathsDess-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ldeathsDess-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.3: Em preto: número de óbitos por doenças pulmonares no Reino Unido. Em vermelho: tendência dessazonalizada
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>
@@ -535,7 +493,7 @@ Figure&nbsp;8.4: Gráfico de subséries da série AirPassengers. Observe as tend
 <li><p>Estime a tendência dessazoanlizada, utilizando a <span class="math inline">\(p\)</span>-MM, obtendo <span class="math inline">\(\hat{T}\)</span></p></li>
 <li><p>Remova a tendência da série: <span class="math inline">\(\tilde{x}_t=x_t-\hat{T}\)</span></p></li>
 <li><p>Encontre as <span class="math inline">\(p\)</span> subséries de <span class="math inline">\(\tilde{x}\)</span> e estime os valores de <span class="math inline">\(s\)</span> através de suas médias.</p></li>
-<li><p>Estime os resíduos: <span class="math inline">\(\hat{\varepsilon}_t=x_t-\hat{T}(t)-\hat{s}(t)\)</span> A <a href="#fig-ldeathsDecomposicaoClassica" class="quarto-xref">Figure&nbsp;<span>8.5</span></a> apresenta a decomposição clássica da série de óbitos pode doenças pulmonares no Reino Unido.</p></li>
+<li><p>Estime os resíduos: <span class="math inline">\(\hat{\varepsilon}_t=x_t-\hat{T}(t)-\hat{s}(t)\)</span> A <a href="#fig-ldeathsDecomposicaoClassica" class="quarto-xref">Figure&nbsp;<span>8.4</span></a> apresenta a decomposição clássica da série de óbitos pode doenças pulmonares no Reino Unido.</p></li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">decompose</span>(ldeaths))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
@@ -547,14 +505,14 @@ Figure&nbsp;8.4: Gráfico de subséries da série AirPassengers. Observe as tend
 <img src="sazonalidade_files/figure-html/fig-ldeathsDecomposicaoClassica-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ldeathsDecomposicaoClassica-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.5: Decomposição da série de óbitos por doenças pulmonares no Reino Unido
+Figure&nbsp;8.4: Decomposição da série de óbitos por doenças pulmonares no Reino Unido
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<p>Como é utilizada uma média móvel, a estimativa da tendência e do ruído é prejudicada no início e fim da série. Outro problema que este método não consegue estimar padrões sazonais que não sejam representamos por uma função periódica. Para ilustrar, apresentamos abaixo a decomposição clássica da série <code>AirPassengers</code>. Como a estimação da parte sazonal utilizou a média das subséries, as tendências sazonais vistas no <a href="#exm-AirPassengersMonthplot" class="quarto-xref">Example&nbsp;<span>8.5</span></a> foram para os resíduos (identificados co)</p>
+<p>Como é utilizada uma média móvel, a estimativa da tendência e do ruído é prejudicada no início e fim da série. Outro problema que este método não consegue estimar padrões sazonais que não sejam representamos por uma função periódica. Para ilustrar, apresentamos abaixo a decomposição clássica da série <code>AirPassengers</code>. Como a estimação da parte sazonal utilizou a média das subséries, as tendências sazonais vistas no <a href="#exm-AirPassengersMonthplot" class="quarto-xref">Example&nbsp;<span>8.7</span></a> foram para os resíduos (identificados co)</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">decompose</span>(AirPassengers))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -582,7 +540,7 @@ Figure&nbsp;8.5: Decomposição da série de óbitos por doenças pulmonares no 
 <h2 data-number="8.5" class="anchored" data-anchor-id="modelo-de-forma-livre---ou-fatores-sazonais"><span class="header-section-number">8.5</span> Modelo de Forma livre - ou fatores sazonais</h2>
 <p>Considere uma série temporal com sazonalidade dada por uma função periódica <span class="math inline">\(s(.)\)</span> de período <span class="math inline">\(p\)</span>. Sejam <span class="math display">\[\beta_j=s(t+jp).\]</span> Os parâmetros <span class="math inline">\(\beta_1,\ldots,\beta_p\)</span> são denominados fatores sazonais. Note que é necessário colocar a restrição <span class="math display">\[\beta_p = -\beta_1-\cdots -\beta_{p-1},\]</span> pois <span class="math display">\[\sum_{j=1}^p\beta_j=0\]</span> (ou seja, existem na prática <span class="math inline">\(p-1\)</span> fatores sazonais para serem estimados).</p>
 <div id="exm-fatorSazonalIlustracao" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.6</strong></span> Seja <span class="math inline">\(x_t\)</span> uma série sazonal de período <span class="math inline">\(p=4\)</span> (por, exemplo, em dados trimestrais). Então <span class="math display">\[\begin{align*}
+<p><span class="theorem-title"><strong>Example 8.4</strong></span> Seja <span class="math inline">\(x_t\)</span> uma série sazonal de período <span class="math inline">\(p=4\)</span> (por, exemplo, em dados trimestrais). Então <span class="math display">\[\begin{align*}
         E(x_t)&amp;=s(t)=\beta_1, t=1,5,9 ,\ldots,\\
         E(x_t)&amp;=s(t)=\beta_2, t=2,6,10,\ldots,\\
         E(x_t)&amp;=s(t)=\beta_3, t=3,7,11,\ldots,\\
@@ -598,7 +556,7 @@ Figure&nbsp;8.5: Decomposição da série de óbitos por doenças pulmonares no 
 <p>Então, <span class="math display">\[x_t=\boldsymbol{f}_t' \boldsymbol{\beta}+\varepsilon_t,\]</span> onde <span class="math inline">\(\boldsymbol{\beta}'=(\beta_1,\ldots,\beta_{p-1})\)</span> representa os efeitos sazonais. Disto, teremos <span class="math display">\[\boldsymbol{x}=\boldsymbol{F}_n'\boldsymbol{\beta}+\boldsymbol{\varepsilon}\]</span> onde a matriz <span class="math inline">\(\boldsymbol{F}_n\)</span> é formada pelas colunas <span class="math inline">\(\boldsymbol{f}_1,\ldots,\boldsymbol{f}_p\)</span>.</p>
 <p>Portanto, a estimação de <span class="math inline">\(\beta\)</span> é feita através da teoria de modelos lineares.</p>
 <div id="exm-nottemFatores" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.7</strong></span> Considere novamente a série <code>nottem</code>, representada na figura abaixo.</p>
+<p><span class="theorem-title"><strong>Example 8.5</strong></span> Considere novamente a série <code>nottem</code>, representada na figura abaixo.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(nottem)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">mean</span>(nottem))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -770,11 +728,17 @@ X-squared = 13.109, df = 1, p-value = 0.0002939</code></pre>
         y_t = \boldsymbol{f}_t'\boldsymbol{\beta}+\varepsilon_t
         \end{equation}\]</span> Considerando <span class="math inline">\(\varepsilon_t\sim\hbox{Normal}(0,\nu)\)</span> teremos <span class="math display">\[\boldsymbol{y}|\boldsymbol{\beta},\nu\sim\hbox{Normal}( \boldsymbol{F}_n'\boldsymbol{\beta},\nu\textbf{I}_T).\]</span></p>
 <div id="exm-nottemHarmonico1" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.8</strong></span> Considere novamente a série <code>nottem</code>. A função <code>harmonic</code> do pacote <code>TSA</code> constrói a matriz necessária para compor o modelo de regressão harmônica simples.</p>
+<p><span class="theorem-title"><strong>Example 8.6</strong></span> Considere novamente a série <code>nottem</code>. A função <code>harmonic</code> do pacote <code>TSA</code> constrói a matriz necessária para compor o modelo de regressão harmônica simples.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(TSA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Carregando pacotes exigidos: TSA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 methods overwritten by 'TSA':
+  method       from    
+  fitted.Arima forecast
+  plot.Arima   forecast</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
@@ -790,9 +754,9 @@ Anexando pacote: 'TSA'</code></pre>
 
     tar</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>har <span class="ot">&lt;-</span> <span class="fu">harmonic</span>(nottem)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span> har)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>har <span class="ot">&lt;-</span> <span class="fu">harmonic</span>(nottem)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span> har)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -805,8 +769,8 @@ Coefficients:
 </div>
 <p>Note que não removemos a média da série, logo a mesma está sendo estimada pelo intercepto <span class="math inline">\(\mu\)</span>. O gráfico do harmônico gerado é mostrado abaixo.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>param <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(mod)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( param[<span class="dv">1</span>]<span class="sc">+</span> param[<span class="dv">2</span>]<span class="sc">*</span><span class="fu">cos</span>(<span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>x<span class="sc">/</span><span class="dv">12</span>) <span class="sc">+</span> param[<span class="dv">3</span>]<span class="sc">*</span><span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>x<span class="sc">/</span><span class="dv">12</span>),<span class="dv">1</span>,<span class="dv">12</span>, <span class="at">ylab =</span> <span class="st">'Harmônico estimado'</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">'Mês'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>param <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(mod)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( param[<span class="dv">1</span>]<span class="sc">+</span> param[<span class="dv">2</span>]<span class="sc">*</span><span class="fu">cos</span>(<span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>x<span class="sc">/</span><span class="dv">12</span>) <span class="sc">+</span> param[<span class="dv">3</span>]<span class="sc">*</span><span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>x<span class="sc">/</span><span class="dv">12</span>),<span class="dv">1</span>,<span class="dv">12</span>, <span class="at">ylab =</span> <span class="st">'Harmônico estimado'</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">'Mês'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -816,9 +780,9 @@ Coefficients:
 </div>
 </div>
 <p>Em relação aos resíduos do modelo, temos</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">acf</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">acf</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -865,7 +829,7 @@ Coefficients:
 <div id="exem-nottemPeriodograma">
 <p>Utilizamos a função <code>periogogram</code> do pacote <code>TSA</code> para fazer o periodograma. Abaixo, apresentamos o periodograma da série <code>nottem</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span><span class="fu">periodogram</span>(nottem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span><span class="fu">periodogram</span>(nottem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -876,21 +840,21 @@ Coefficients:
 </div>
 <p>Note que o periodograma possui um pico dominante. Abaixo, mostramos que este pico é o período 12.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># encontrando em qual coordenada ocorre o maior valor do periodograma</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">which</span>(p<span class="sc">$</span>spec <span class="sc">==</span> <span class="fu">max</span>(p<span class="sc">$</span>spec))</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando a frequência correspondente</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>omega <span class="ot">&lt;-</span> p<span class="sc">$</span>freq[k]</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando o período da série</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span>omega</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># encontrando em qual coordenada ocorre o maior valor do periodograma</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">which</span>(p<span class="sc">$</span>spec <span class="sc">==</span> <span class="fu">max</span>(p<span class="sc">$</span>spec))</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando a frequência correspondente</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>omega <span class="ot">&lt;-</span> p<span class="sc">$</span>freq[k]</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando o período da série</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span>omega</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 12</code></pre>
 </div>
 </div>
-<p>No <a href="#exm-nottemHarmonico1" class="quarto-xref">Example&nbsp;<span>8.8</span></a> aplicamos uma regressão harmônica simples e descobrimos que o ruído resultante não era branco e gaussiano. Abaixo, mostramos o periodograma dos resíduos obtidos nesse exemplo.</p>
+<p>No <a href="#exm-nottemHarmonico1" class="quarto-xref">Example&nbsp;<span>8.6</span></a> aplicamos uma regressão harmônica simples e descobrimos que o ruído resultante não era branco e gaussiano. Abaixo, mostramos o periodograma dos resíduos obtidos nesse exemplo.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">periodogram</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">periodogram</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -901,14 +865,14 @@ Coefficients:
 </div>
 <p>Observe que uma nova frequência dominante surge. Vamos identificá-la.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># encontrando em qual coordenada ocorre o maior valor do periodograma</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">which</span>(p2<span class="sc">$</span>spec <span class="sc">==</span> <span class="fu">max</span>(p2<span class="sc">$</span>spec))</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando a frequência correspondente</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>omega <span class="ot">&lt;-</span> p2<span class="sc">$</span>freq[k]</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando o período da série</span></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span>omega</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># encontrando em qual coordenada ocorre o maior valor do periodograma</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">which</span>(p2<span class="sc">$</span>spec <span class="sc">==</span> <span class="fu">max</span>(p2<span class="sc">$</span>spec))</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando a frequência correspondente</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>omega <span class="ot">&lt;-</span> p2<span class="sc">$</span>freq[k]</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># identificando o período da série</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span>omega</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6</code></pre>
 </div>
@@ -943,22 +907,22 @@ p/2-1, &amp; \hbox{se $p$ é par}
 </ul>
 <p>Abaixo, mostramos os resultados para a regressão harmônica simples e com os dois primeiros harmônicos para a série <code>nottem</code>. Note que o AIC deste último sugere que os dois primeiros harmônicos deve ser utilizados</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>simples  <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span><span class="fu">harmonic</span>(nottem) )</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>doisHarm <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span><span class="fu">harmonic</span>(nottem, <span class="dv">2</span>))</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(simples)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>simples  <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span><span class="fu">harmonic</span>(nottem) )</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>doisHarm <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span><span class="fu">harmonic</span>(nottem, <span class="dv">2</span>))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(simples)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1134.345</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(doisHarm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(doisHarm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1091.866</code></pre>
 </div>
 </div>
 <p>Os resíduos do modelo com dois harmônicos são explorados abaixo. A série dos resíduos parece flutuar em torno de zero com variância constante, enquanto que o correlograma exibe uma pequena autocorrelação na defasagem um. O teste de Shapiro-Wilks aceita a normalidade, mas o teste de Ljung-Box rejeita a hipótese de ruído branco.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(doisHarm)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(doisHarm)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -966,7 +930,7 @@ p/2-1, &amp; \hbox{se $p$ é par}
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -974,7 +938,7 @@ p/2-1, &amp; \hbox{se $p$ é par}
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -982,7 +946,7 @@ p/2-1, &amp; \hbox{se $p$ é par}
 data:  res2
 W = 0.98919, p-value = 0.06944</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res2, <span class="at">type =</span> <span class="st">'Ljung-Box'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res2, <span class="at">type =</span> <span class="st">'Ljung-Box'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Ljung test
@@ -992,6 +956,68 @@ X-squared = 10.905, df = 1, p-value = 0.0009591</code></pre>
 </div>
 </div>
 </section>
+</div>
+</section>
+<section id="discutir-depois" class="level2" data-number="8.9">
+<h2 data-number="8.9" class="anchored" data-anchor-id="discutir-depois"><span class="header-section-number">8.9</span> Discutir depois</h2>
+<p>Também é possível que o padrão sazonal não seja bem representado por uma função periódica. Isto ocorre quando o gráfico de subséries possui tendência.</p>
+<div id="exm-AirPassengersMonthplot" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.7</strong></span> A <span class="quarto-unresolved-ref">?fig-AirPassengersMonthplot</span> apresenta o gráfico da série <code>AirPassengers</code> e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(AirPassengers)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-AirPassengersMonthplot-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-AirPassengersMonthplot-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="sazonalidade_files/figure-html/fig-AirPassengersMonthplot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AirPassengersMonthplot-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.5: Gráfico da série AirPassengers
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-AirPassengersMonthplot-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-AirPassengersMonthplot-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="sazonalidade_files/figure-html/fig-AirPassengersMonthplot-2.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AirPassengersMonthplot-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.6: Gráfico de subséries da série AirPassengers. Observe as tendências monótona crescente em cada subgráfico
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Abaixo, vamos estimar a tendência da série e removê-la. Note que o padrão das subséries se altera, mostrando outro comportamento: uma tendência de crescimento acelerado dentro dos meses de verão americano (junho, julho e agosto) e um padrão de queda mais expressivo nos meses do inverno.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimação da tendência via loess</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> <span class="fu">length</span>(AirPassengers)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">loess</span>( AirPassengers <span class="sc">~</span>tempo)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>tend <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="co"># série sem tendência e o gráfico de subséries</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( AirPassengers<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 
 

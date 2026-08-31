@@ -299,7 +299,12 @@ window.Quarto = {
   <li><a href="#médias-móveis" id="toc-médias-móveis" class="nav-link" data-scroll-target="#médias-móveis"><span class="header-section-number">7.4.1</span> Médias Móveis</a></li>
   <li><a href="#suavização-do-gráfico-de-dispersão-estimada-localmente-loess" id="toc-suavização-do-gráfico-de-dispersão-estimada-localmente-loess" class="nav-link" data-scroll-target="#suavização-do-gráfico-de-dispersão-estimada-localmente-loess"><span class="header-section-number">7.4.2</span> Suavização do gráfico de dispersão estimada localmente (loess)</a></li>
   </ul></li>
-  <li><a href="#exercício" id="toc-exercício" class="nav-link" data-scroll-target="#exercício"><span class="header-section-number">7.5</span> Exercício</a></li>
+  <li><a href="#diferenciação" id="toc-diferenciação" class="nav-link" data-scroll-target="#diferenciação"><span class="header-section-number">7.5</span> Diferenciação</a>
+  <ul class="collapse">
+  <li><a href="#remoção-de-tendência" id="toc-remoção-de-tendência" class="nav-link" data-scroll-target="#remoção-de-tendência"><span class="header-section-number">7.5.1</span> Remoção de tendência</a></li>
+  <li><a href="#previsão-1" id="toc-previsão-1" class="nav-link" data-scroll-target="#previsão-1"><span class="header-section-number">7.5.2</span> Previsão</a></li>
+  </ul></li>
+  <li><a href="#exercício" id="toc-exercício" class="nav-link" data-scroll-target="#exercício"><span class="header-section-number">7.6</span> Exercício</a></li>
   </ul>
 </nav>
     </div>
@@ -736,8 +741,7 @@ X-squared = 4.1804, df = 1, p-value = 0.04089</code></pre>
 </section>
 <section id="suavização-do-gráfico-de-dispersão-estimada-localmente-loess" class="level3" data-number="7.4.2">
 <h3 data-number="7.4.2" class="anchored" data-anchor-id="suavização-do-gráfico-de-dispersão-estimada-localmente-loess"><span class="header-section-number">7.4.2</span> Suavização do gráfico de dispersão estimada localmente (loess)</h3>
-<p>No método de suavização do gráfico de dispersão, deseja-se estimar <span class="math inline">\(f(x)=E(y|x)\)</span>, através da coleção <span class="math inline">\((y_1,x_1),\ldots,(y_n,x_n)\)</span>, para um valor qualquer de <span class="math inline">\(x\)</span>.</p>
-<p>A estimativa <span class="math inline">\(\hat{f}\)</span> para o ponto <span class="math inline">\(x'\)</span> é calculada considerando os seguintes passos:</p>
+<p>No método de suavização do gráfico de dispersão, deseja-se estimar <span class="math inline">\(f(x)=E(y|x)\)</span>, através da coleção <span class="math inline">\((y_1,x_1),\ldots,(y_n,x_n)\)</span>, para um valor qualquer de <span class="math inline">\(x\)</span>. A estimativa <span class="math inline">\(\hat{f}\)</span> para o ponto <span class="math inline">\(x'\)</span> é calculada considerando os seguintes passos:</p>
 <ol type="1">
 <li><p>Fixe um valor inteiro positivo <span class="math inline">\(q\leq n\)</span>.</p></li>
 <li><p>Dentro do conjunto <span class="math inline">\(x_1,\ldots,x_n,\)</span> encontre os <span class="math inline">\(q\)</span> valores mais próximos de <span class="math inline">\(x'\)</span> (via distância euclidiana). Denote este conjunto por <span class="math inline">\(\mathcal{V}\)</span> e denote por <span class="math inline">\(d\)</span> a maior distância encontrada.</p></li>
@@ -819,24 +823,125 @@ X-squared = 4.1804, df = 1, p-value = 0.04089</code></pre>
 <p>Fica claro a existência de mais sinais, o que implica que o restante não é uma série estacionária.</p>
 </section>
 </section>
-<section id="exercício" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="exercício"><span class="header-section-number">7.5</span> Exercício</h2>
+<section id="diferenciação" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="diferenciação"><span class="header-section-number">7.5</span> Diferenciação</h2>
+<p>Os métodos de modelagem polinomial, médias móveis e LOESS apresentados anteriormente compartilham um objetivo comum: estimar a curva de tendência determinística <span class="math inline">\(T(t)\)</span> por meio de diferentes técnicas de suavização. No entanto, em diversas aplicações de séries temporais, o interesse reside não em descrever a tendência, mas sim em removê-la para obter uma série sem esse padrão. Uma alternativa puramente algébrica, robusta e que dispensa a estimação direta de parâmetros para essa finalidade é a diferenciação.</p>
+<p>A diferenciação de uma série é defina por <span class="math display">\[\Delta x_t=x_t-x_{t-1},\]</span> onde <span class="math inline">\(\Delta\)</span> é denominado <strong>operador diferença</strong>. Trata-se de um operadpor linear, ou seja, para duas séries temporais <span class="math inline">\(\{x_t\}\)</span> e <span class="math inline">\(\{y_t\}\)</span> e duas constantes <span class="math inline">\(a\)</span> e <span class="math inline">\(b\)</span>, temos que <span class="math inline">\(\Delta(ax_t+by_t)=a\Delta x_t+b\Delta y_t.\)</span></p>
+<p>Utilizamos potências para indicar que o operador foi utilizado diversas vezes. Por exemplo, uma série diferenciada duas vezes é dada por <span class="math display">\[\begin{align}\Delta^2x_t&amp;=\Delta(\Delta x_t)=\Delta(x_t-x_{t-1})\\&amp;=\Delta x_t-\Delta x_{t-1}=x_t-2x_{t-1}+x_{t-2}.\end{align}\]</span></p>
+<section id="remoção-de-tendência" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="remoção-de-tendência"><span class="header-section-number">7.5.1</span> Remoção de tendência</h3>
+<p>Agora, considere novamente o passeio aleatório definido por</p>
+<p><span class="math display">\[\begin{align}
+x_t &amp;= x_{t-1}+\varepsilon_t,\quad t=1,2,\ldots
+\end{align}\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco. Vimos que esse processo pode produzir tendências aleatórias. Seja <span class="math inline">\(\{y_t\}\)</span> a série obtida após a diferenciação de <span class="math inline">\(\{x_t\}\)</span>. Observe que</p>
+<p><span class="math display">\[y_t=\Delta x_t=x_t-x_{t-1}=\varepsilon_t\]</span> logo <span class="math inline">\(\{y_t\}\)</span> é um ruído branco, ou ainda, uma série sem tendência.</p>
+<p>Considere então que, <span class="math display">\[x_t=a+bt+\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco. Observe que <span class="math display">\[y_t=\Delta x_t= b+ \varepsilon_t,\]</span> logo, <span class="math inline">\(\{y_t\}\)</span> é uma série estacionária e, portanto, sem tendência. De fato, com as séries com tendência tendem a ser localmente lineares, a diferenciação em geral resulta na sua eliminação.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 7.4</strong></span> Considere novamente a série anual do nível do Lago Huron. Vamos utilizar a função <code>diff</code> para fazer uma diferença na série. Os gráficos da série original e da diferenciada são apresentados abaixo. Observe que a série diferenciada não apresenta tendências, oscilnando em torno de zero.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Diferença <span class="ot">=</span> <span class="fu">diff</span>(LakeHuron)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>series <span class="ot">=</span> <span class="fu">ts.union</span>(LakeHuron, Diferença)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(series, <span class="at">main =</span> <span class="st">''</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Abaixo, apresentamos o correlograma da série diferenciada, que apresenta um comportamento típico de ruído branco. O teste de Box-Pierce não rejeita a hipótese de ruído branco (p=0,1939), enquanto que o teste de Shapiro-Wilk não rejeita normalidade (p=0,1957). Portanto, existem evidências de que a série é composta por uma tendência e um ruído branco gaussiano.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(Diferença, <span class="at">main=</span><span class="st">'Série diferenciada'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tendencia_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="previsão-1" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="previsão-1"><span class="header-section-number">7.5.2</span> Previsão</h3>
+<p>O processo de diferenciação serve para eliminar a tendência, e não para estimá-la diretamente. Contudo, é perfeitamente possível realizar previsões para a série original a partir de sua versão diferenciada. Seja <span class="math inline">\(\{x_t\}\)</span> uma série que exibe tendência e seja <span class="math inline">\(y_t=\Delta x_t\)</span> a sua primeira diferença. Suponha ainda que <span class="math inline">\(\{y_t\}\)</span> é estacionária, com média constante <span class="math inline">\(E(y_t) = \mu\)</span> e variância <span class="math inline">\(\nu\)</span>. A função de previsão para a série original <span class="math inline">\(\{x_t\}\)</span> em um horizonte de tempo <span class="math inline">\(h &gt; 0\)</span>, condicionada ao conjunto de informações disponíveis até o tempo <span class="math inline">\(t\)</span> (denotado por <span class="math inline">\(\mathcal{D}_t\)</span>), é dada pela esperança condicional <span class="math inline">\(E(x_{t+h}|\mathcal{D}_t)\)</span>.</p>
+<p>Para o primeiro passo à frente (<span class="math inline">\(h = 1\)</span>), temos: <span class="math display">\[\begin{align} \mu &amp;= E(y_{t+1}|\mathcal{D}t) \\ \mu &amp;= E(x_{t+1} - x_t|\mathcal{D}_t) \\ \mu &amp;= E(x_{t+1}|\mathcal{D}_t) - x_t \\ &amp;\Rightarrow E(x_{t+1}|\mathcal{D}_t) = x_t + \mu \end{align}\]</span> Para o segundo passo à frente (<span class="math inline">\(h = 2\)</span>), utilizando a previsão obtida para o passo anterior:</p>
+<p><span class="math display">\[\begin{align} \mu &amp;= E(y_{t+2}|\mathcal{D}t) \\ \mu &amp;= E(x_{t+2} - x_{t+1}|\mathcal{D}_t) \\ \mu &amp;= E(x_{t+2}|\mathcal{D}_t) - E(x_{t+1}|\mathcal{D}_t) \\ &amp;\Rightarrow E(x_{t+2}|\mathcal{D}_t) = E(x_{t+1}|\mathcal{D}_t) + \mu = (x_t + \mu) + \mu = x_t + 2\mu \end{align}\]</span> Por indução matemática, para qualquer horizonte de previsão <span class="math inline">\(h\)</span>, a esperança condicional assume a forma: <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=x_t+\mu h.\]</span> Por último, como supomos que <span class="math inline">\(\{y_t\}\)</span> é ergódica, <span class="math display">\[\widehat{E}(x_{t+h}|\mathcal{D}_t)=x_t+\bar{y} h.\]</span></p>
+<p>A equação acima descreve uma reta com inclinação constante dada por <span class="math inline">\(\mu\)</span>cujo intercepto é dinamicamente atualizado pelo último valor observado da série, <span class="math inline">\(x_t\)</span>. Ao assumirmos que a primeira diferença elimina a tendência e gera uma série estacionária com média constante <span class="math inline">\(\mu\)</span>, estamos implicitamente adotando a premissa de que a série original se comporta de forma localmente linear.</p>
+<p>Esse comportamento dinâmico difere substancialmente da previsão gerada por modelos de tendência polinomial, dada por <span class="math display">\[\hat{T}(t+h) = \hat{\beta}_0 + \hat{\beta}_1 (t+h).\]</span> cuja previsão está ancorada em todos os dados da série histórica.</p>
+</section>
+</section>
+<section id="exercício" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="exercício"><span class="header-section-number">7.6</span> Exercício</h2>
 <div class="alert alert-warning">
 <p><strong>Exercício 1</strong> <strong>Tendência por modelo linar</strong></p>
 <p>Abaixo, temos a série do número mensal de homicídios, obtida através do SUS, em Manaus, començando em Janeiro de 1996.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1NxxKFzTH7TBd3xP9r5qvggHeorJeR5xKIhn_UZwBol0/edit?usp=sharing'</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> gsheet<span class="sc">::</span><span class="fu">gsheet2tbl</span>(url)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1NxxKFzTH7TBd3xP9r5qvggHeorJeR5xKIhn_UZwBol0/edit?usp=sharing'</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> gsheet<span class="sc">::</span><span class="fu">gsheet2tbl</span>(url)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol type="1">
-<li><p>Crie um objeto <code>ts</code> para representar essa série</p></li>
-<li><p>Encontre uma tendência polinomial adequada</p></li>
+<li><p>Crie um objeto <code>ts</code> para representar essa série.</p></li>
+<li><p>Encontre uma tendência polinomial adequada.</p></li>
 <li><p>Verifique se os resíduos podem ser considerados ruído branco.</p></li>
+</ol>
+</div>
+<div id="exr-" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.1</strong></span> Abaixo, temos a série anual histórica de nascidos vivos no estado do Amazonas, abrangendo o período de 1994 a 20216.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">47780</span>, <span class="dv">47966</span>, <span class="dv">49112</span>, <span class="dv">56070</span>, <span class="dv">57180</span>, <span class="dv">62037</span>, <span class="dv">67646</span>, <span class="dv">70252</span>, <span class="dv">70671</span>, <span class="dv">70751</span>, </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>       <span class="dv">71345</span>, <span class="dv">73488</span>, <span class="dv">75584</span>, <span class="dv">73469</span>, <span class="dv">75030</span>, <span class="dv">75729</span>, <span class="dv">74188</span>, <span class="dv">76202</span>, <span class="dv">77434</span>, <span class="dv">79041</span>, </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>       <span class="dv">81145</span>, <span class="dv">80097</span>, <span class="dv">76703</span>, <span class="dv">78066</span>, <span class="dv">78087</span>, <span class="dv">77622</span>, <span class="dv">75635</span>, <span class="dv">78454</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>nascidos <span class="ot">&lt;-</span> <span class="fu">ts</span>(x, <span class="at">start =</span> <span class="dv">1994</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol type="a">
+<li><p>Utilizando a função <code>ma()</code> do pacote <code>forecast</code>, estime a tendência da série através de uma média móvel de ordem 3 (<span class="math inline">\(3\)</span>-MM) e de ordem 7 (<span class="math inline">\(7\)</span>-MM).</p></li>
+<li><p>Esboce o gráfico da série original sobreposto com ambas as estimativas.</p></li>
+<li><p>Discuta o trade-off (dilema) entre viés e variância observado ao aumentar a ordem da média móvel de 3 para 7.</p></li>
+<li><p>Extraia o ruído da série utilizando a estimativa obtida pela <span class="math inline">\(3\)</span>-MM. Remova as observações faltantes (NA) nas extremidades e aplique os testes de Shapiro-Wilk e Box-Pierce para avaliar se os resíduos podem ser considerados um ruído branco gaussiano.</p></li>
+</ol>
+</div>
+<div id="exr-" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.2</strong></span> No Exemplo 7.2, vimos que o ajuste de uma tendência quadrática determinística gerou resíduos altamente autocorrelacionados.</p>
+<ol type="a">
+<li><p>Aplique a primeira diferença na série do nível do Lago Huron utilizando a função <code>diff()</code> do <code>R</code>.</p></li>
+<li><p>Esboce os gráficos da série original e da série diferenciada para comparação.</p></li>
+<li><p>Execute o teste de Box-Pierce na série diferenciada. Os resíduos agora podem ser considerados não correlacionados?</p></li>
+<li><p>Sabendo que o último nível observado da série original foi <span class="math inline">\(x_{1972} = 579,96\)</span> pés, calcule a projeção de nível do lago para o ano de 1973 (<span class="math inline">\(h = 1\)</span>) e para o ano de 1977 (<span class="math inline">\(h = 5\)</span>) a partir dessa metodologia de diferenciação.</p></li>
+</ol>
+</div>
+<div id="exr-" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.3</strong></span> <strong>Modelagem de Tendência Polinomial e Seleção de Modelos</strong></p>
+<p>A modelagem paramétrica de uma tendência determinística assume que a série observada até o tempo <span class="math inline">\(n\)</span> pode ser representada por $x_t = T(t) + _t$1. Pelo Teorema de Weierstrass, se <span class="math inline">\(T(t)\)</span> for contínua, ela pode ser aproximada por um polinômio de ordem <span class="math inline">\(p\)</span></p>
+<ol type="a">
+<li><p>Apresente a equação geral do modelo de tendência polinomial de grau <span class="math inline">\(p\)</span> e descreva como o Critério de Informação de Akaike (AIC) é utilizado para selecionar a ordem ideal do polinômio.</p></li>
+<li><p>No Exemplo 7.1 (Nascidos Vivos no Amazonas), o ajuste de ordem <span class="math inline">\(1\)</span> foi considerado adequado. Já no Exemplo 7.2 (Lago Huron), embora o AIC tenha selecionado um modelo quadrático (<span class="math inline">\(p=2\)</span>), os resíduos falharam no diagnóstico. Explique quais testes de hipóteses formais foram realizados para avaliar a adequação dos resíduos e interprete o motivo pelo qual o modelo quadrático do Lago Huron foi rejeitado, apesar de ter o menor AIC</p></li>
+</ol>
+</div>
+<div id="exr-" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.5</strong></span> <strong>Formulação e Propriedades das Médias Móveis (MM)</strong></p>
+<p>O método das médias móveis consiste em obter a tendência estimada <span class="math inline">\(\hat{T}(t)\)</span> filtrando a série por meio de uma média ponderada local em uma janela temporal centrada de tamanho $m$910.</p>
+<ol type="a">
+<li><p>Para uma janela de tamanho ímpar <span class="math inline">\(m = 2h+1\)</span>, mostre que se a tendência local for aproximadamente linear (<span class="math inline">\(x_i \approx a + bi + \varepsilon_i\)</span>), a esperança do estimador de médias móveis <span class="math inline">\(m\)</span>-MM é não viciada, ou seja, $E(_h(t)) a + bt$9.</p></li>
+<li><p>Explique conceitualmente o trade-off (dilema) entre vício (viés) e variância envolvido na escolha do tamanho da janela <span class="math inline">\(m\)</span> para o estimador de médias móveis.</p></li>
+<li><p>Quando <span class="math inline">\(m\)</span> é um número par (por exemplo, <span class="math inline">\(m = 2h\)</span>), não é possível centralizar a janela diretamente sobre <span class="math inline">\(t\)</span>. Demonstre matematicamente como a média ponderada de ordem par é construída para contornar essa limitação (caso geral para <span class="math inline">\(m=2h\)</span>) e apresente a equação resultante dos pesos ponderados para uma <span class="math inline">\(4\)</span>-MM1012.</p></li>
+<li><p>Discuta como as definições de médias móveis sofrem modificações quando aplicadas a outras áreas, como na epidemiologia (7-MM para os últimos 7 dias) e no mercado financeiro (médias móveis ponderadas assimétricas), relacionando com os pesos atribuídos aos dados mais recentes. :::</p></li>
+</ol>
+<div id="exr-" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 7.4</strong></span> <strong>Diferenciação, Remoção de Tendência e Previsão Localmente Linear</strong></p>
+<p>Diferente dos métodos de suavização que buscam estimar <span class="math inline">\(T(t)\)</span>, a diferenciação foca puramente na remoção da tendência para tornar a série estacionária.</p>
+<ol type="a">
+<li><p>Considere o passeio aleatório definido por <span class="math inline">\(x_t = x_{t-1} + \varepsilon_t\)</span>, onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco. Prove algebricamente que a aplicação do operador diferença <span class="math inline">\(\Delta x_t = x_t - x_{t-1}\)</span> elimina a tendência aleatória deste processo.</p></li>
+<li><p>Seja <span class="math inline">\(x_t = a + bt + \varepsilon_t\)</span> um modelo com tendência determinística linear e ruído branco <span class="math inline">\(\varepsilon_t\)</span>. Demonstre que a série diferenciada <span class="math inline">\(y_t = \Delta x_t\)</span> é uma série estacionária sem tendência1.</p></li>
+<li><p>Suponha que <span class="math inline">\(y_t = \Delta x_t\)</span> seja estacionária com média constante <span class="math inline">\(E(y_t) = \mu\)</span>. Deduza passo a passo, por indução matemática, que a função de previsão <span class="math inline">\(h\)</span> passos à frente para o nível da série original, <span class="math inline">\(E(x_{t+h}|\mathcal{D}_t)\)</span>, é dada por: <span class="math display">\[E(x_{t+h}|\mathcal{D}_t) = x_t + \mu h\]</span></p></li>
 </ol>
 </div>
 
 
+</div>
 </section>
 
 </main> <!-- /main -->
