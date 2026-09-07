@@ -5,3 +5,25 @@ Estas são as notas de aula estão sendo produzidas para a utilização na disci
 Considere-as um rascunho, e portanto, sujeita a erros.
 
 Dúvidas e sugestões podem ser enviadas para o e-mail james@ufam.edu.br
+
+
+**Modificações realizadas em 2026:**
+
+* Novos exemplos de séries brasileiras foram introduzidos. Caixas coloridas estão sendo adicionadas para separar exemplos de definições.
+
+* Erros de português e de digitação foram corrigidos.
+
+* O processamento de algumas séries está sendo revisitado. Séries como o número de acidentes aéreos no Brasil e o número de mortes por afogamento em Manaus continham erros e foram reconstruídas.
+
+* Séries que antes estavam armazenadas no Dropbox ou Google Drive estão sendo migradas para o Google Sheets.
+
+* A série do PIB brasileiro, antes vista apenas como um modelo autorregressivo integrado com raízes complexas, agora foi apresentada com seus ciclos. Esta edição traz um tratamento mais detalhado para esse tipo de problema.
+
+
+* A seção sobre funções para a classe `Date` foi encurtada e incorporada à seção do pacote `lubridate`.
+
+* O operador diferença, antes definido no capítulo sobre modelos ARMA, foi adicionado ao capítulo de tendência, sendo apresentado como um método de remoção de tendência com previsão linear.
+
+* A seção sobre o periodograma foi reescrita. Anteriormente, o periodograma era definido via máxima verossimilhança, exigindo normalidade. Agora, ele foi derivado diretamente da minimização da soma dos quadrados dos resíduos, exigindo apenas ruído branco.
+
+* Foi apresentado um exemplo sobre o vazamento espectral, algo ignorado nos anos anteriores. 

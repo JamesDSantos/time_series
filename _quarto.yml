@@ -5,7 +5,7 @@ project:
 book:
   title: "Séries Temporais"
   author: "James D Santos"
-  date: "28/09/2023"
+  date: "09/07/2026"
   chapters:
     - index.qmd
     - summary.qmd
