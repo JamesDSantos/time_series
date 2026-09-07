@@ -875,7 +875,7 @@ x_t &amp;= x_{t-1}+\varepsilon_t,\quad t=1,2,\ldots
 <section id="exercício" class="level2" data-number="7.6">
 <h2 data-number="7.6" class="anchored" data-anchor-id="exercício"><span class="header-section-number">7.6</span> Exercício</h2>
 <div class="alert alert-warning">
-<p><strong>Exercício 1</strong> <strong>Tendência por modelo linar</strong></p>
+<p><strong>Exercício 1</strong> <strong>Homicídios em Manaus</strong></p>
 <p>Abaixo, temos a série do número mensal de homicídios, obtida através do SUS, em Manaus, començando em Janeiro de 1996.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1NxxKFzTH7TBd3xP9r5qvggHeorJeR5xKIhn_UZwBol0/edit?usp=sharing'</span></span>
@@ -900,14 +900,14 @@ x_t &amp;= x_{t-1}+\varepsilon_t,\quad t=1,2,\ldots
 <ol type="a">
 <li><p>Utilizando a função <code>ma()</code> do pacote <code>forecast</code>, estime a tendência da série através de uma média móvel de ordem 3 (<span class="math inline">\(3\)</span>-MM) e de ordem 7 (<span class="math inline">\(7\)</span>-MM).</p></li>
 <li><p>Esboce o gráfico da série original sobreposto com ambas as estimativas.</p></li>
-<li><p>Discuta o trade-off (dilema) entre viés e variância observado ao aumentar a ordem da média móvel de 3 para 7.</p></li>
+<li><p>Discuta o dilema entre viés e variância observado ao aumentar a ordem da média móvel de 3 para 7.</p></li>
 <li><p>Extraia o ruído da série utilizando a estimativa obtida pela <span class="math inline">\(3\)</span>-MM. Remova as observações faltantes (NA) nas extremidades e aplique os testes de Shapiro-Wilk e Box-Pierce para avaliar se os resíduos podem ser considerados um ruído branco gaussiano.</p></li>
 </ol>
 </div>
 <div id="exr-" class="theorem exercise">
 <p><span class="theorem-title"><strong>Exercise 7.2</strong></span> No Exemplo 7.2, vimos que o ajuste de uma tendência quadrática determinística gerou resíduos altamente autocorrelacionados.</p>
 <ol type="a">
-<li><p>Aplique a primeira diferença na série do nível do Lago Huron utilizando a função <code>diff()</code> do <code>R</code>.</p></li>
+<li><p>Aplique a primeira diferença na série do nível do Lago Huron (<code>LakeHuron</code>) utilizando a função <code>diff()</code> do <code>R</code>.</p></li>
 <li><p>Esboce os gráficos da série original e da série diferenciada para comparação.</p></li>
 <li><p>Execute o teste de Box-Pierce na série diferenciada. Os resíduos agora podem ser considerados não correlacionados?</p></li>
 <li><p>Sabendo que o último nível observado da série original foi <span class="math inline">\(x_{1972} = 579,96\)</span> pés, calcule a projeção de nível do lago para o ano de 1973 (<span class="math inline">\(h = 1\)</span>) e para o ano de 1977 (<span class="math inline">\(h = 5\)</span>) a partir dessa metodologia de diferenciação.</p></li>

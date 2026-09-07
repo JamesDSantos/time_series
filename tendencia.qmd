@@ -476,7 +476,7 @@ cuja previsão está ancorada em todos os dados da série histórica.
 
 <div class='alert alert-warning'>
 <strong>Exercício 1</strong>
-**Tendência por modelo linar**
+**Homicídios em Manaus**
 
 Abaixo, temos a série do número mensal de homicídios, obtida através do SUS, em Manaus, començando em Janeiro de 1996.
 
@@ -509,7 +509,7 @@ a) Utilizando a função `ma()` do pacote `forecast`, estime a tendência da sé
 
 b) Esboce o gráfico da série original sobreposto com ambas as estimativas.
 
-c) Discuta o trade-off (dilema) entre viés e variância observado ao aumentar a ordem da média móvel de 3 para 7.
+c) Discuta o dilema entre viés e variância observado ao aumentar a ordem da média móvel de 3 para 7.
 
 d) Extraia o ruído da série utilizando a estimativa obtida pela $3$-MM. Remova as observações faltantes (NA) nas extremidades e aplique os testes de Shapiro-Wilk e Box-Pierce para avaliar se os resíduos podem ser considerados um ruído branco gaussiano.
 :::
@@ -518,14 +518,14 @@ d) Extraia o ruído da série utilizando a estimativa obtida pela $3$-MM. Remova
 
 No Exemplo 7.2, vimos que o ajuste de uma tendência quadrática determinística gerou resíduos altamente autocorrelacionados.
 
-a) Aplique a primeira diferença na série do nível do Lago Huron utilizando a função `diff()` do `R`. 
-
+a) Aplique a primeira diferença na série do nível do Lago Huron (`LakeHuron`) utilizando a função `diff()` do `R`. 
 b) Esboce os gráficos da série original e da série diferenciada para  comparação. 
 
 c) Execute o teste de Box-Pierce na série diferenciada. Os resíduos agora podem ser considerados não correlacionados?
 
 d) Sabendo que o último nível observado da série original foi $x_{1972} = 579,96$ pés, calcule a projeção de nível do lago para o ano de 1973 ($h = 1$) e para o ano de 1977 ($h = 5$) a partir dessa metodologia de diferenciação.
 :::
+
 
 :::{#exr-}
 **Modelagem de Tendência Polinomial e Seleção de Modelos**
