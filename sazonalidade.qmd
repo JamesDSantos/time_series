@@ -523,50 +523,37 @@ Portanto, ainda existe um padrão sazonal com período de seis meses, para ser e
 
 ## Regressão Harmônica
 
-Na série `nottem`, vimos que o periodograma apontou que o período deveria ser $12$. Este primeiro período encontrado será denominado 'fundamental'. Após ajustarmos uma regressão harmônica simples, com $p=12$, os resíduos mostraram outra componente sazonal com período $p'=6$. 
+Na série `nottem`, vimos que o periodograma apontou que o período deveria ser $12$. Este primeiro período encontrado é denominado **período fundamental**. Após ajustarmos uma regressão harmônica simples, com $p=12$, os resíduos mostraram outra componente sazonal com período $p'=6$. Podemos então imaginar um novo modelo dado pela soma de dois harmônicos, um com período 12 e outro com período 6, isto é, 
+$$x_t - \mu = A_1\cos\left(2\pi\frac{t}{12}+\phi_1\right) + A_2\cos\left(2\pi\frac{t}{6}+\phi_2\right) + \varepsilon_t.$$ 
 
-Na verdade, é comum termos períodos que são frações do período fundamental. Após identificar a frequência (ou período) fundamental, teremos as seguintes frequências para explorar:
-				$$\omega_k= \frac{k}{p},$$
-				com $1\leq k < \lfloor p/2 \rfloor$, onde $\lfloor a \rfloor$ é a parte inteira de $a$. 					
+De fato, o Teorema de Fourier garante que qualquer função periódica $s(t)$ pode ser escrita como: 
 
-O harmônico gerado por $\omega_k$, dado por
-$$\begin{equation}
-		A_k\cos( 2\pi\omega_k t+\phi_k)
-\end{equation}$$
-é denominado harmônico de ordem $k$. 
+$$s(t) = \sum_{k=1}^\infty A_k\cos\left(2\pi t\frac{k}{p}+\phi_k\right),$$ 
+onde $\omega_1 = 1/p$ é denominada frequência fundamental. Como a frequência máxima para se ter a identificabilidade do modelo é $1/2$, o modelo de regressão harmônica é definido por: 
 
-- O harmônico de ordem 1 completa um ciclo em $p$ unidades de tempo.
-- O harmônico de ordem 2 completa um ciclo em $p/2$ unidades de tempo.
-- O harmônico de ordem $k$ completa um ciclo em $p/k$ unidades de tempo.
+$$ \begin{align} x_t &= \sum_{k=1}^K A_k\cos\left(2\pi t\frac{k}{p}+\phi_k\right) + \varepsilon_t \\ &= \sum_{k=1}^K \left[ \beta_{1,k}\cos\left(2\pi t\frac{k}{p}\right) + \beta_{2,k}\sin\left(2\pi t\frac{k}{p}\right) \right] + \varepsilon_t, \end{align}$$ 
+onde $\beta_{1,k} = A_k\cos(\phi_k)$ e $\beta_{2,k} = -A_k\sin(\phi_k)$ são obtidos de modo similar ao apresentado para o modelo de regressão linear simples, $\varepsilon_t$ é um ruído branco e $K = \lfloor p/2 \rfloor$ é o maior inteiro tal que $K \le p/2$. 
 
-	Podemos lidar com os diversos harmônicos de modo bastante direto:
-$$\begin{equation}
-	y_t = \sum_{k=1}^{m }A_k\cos(\omega_k t + \phi_k) + \varepsilon_t
-	\end{equation}$$
-	ou ainda, utilizando os resultados já discutidos,
-$$\begin{align}
-		y_t &= \sum_{k=1}^{m }A_k\left[\cos(\omega_k t)\cos(\phi_k) -\sin(\omega_k t)\sin(\phi_k)\right] + \varepsilon_t\\
-		&= \sum_{k=1}^{m }\left[\beta_{k,1}\cos(\omega_k t)+\beta_{k,2}\sin(\omega_k t)\right] + \varepsilon_t,
-		\end{align}$$
-		onde
-$$\begin{align}
-		m = \left\{\begin{array}{ll}
-\lfloor p/2 \rfloor, & \hbox{se $p$ é ímpar} \\
-p/2-1, & \hbox{se $p$ é par}
-		\end{array}\right.
-		\end{align}$$
-Fazendo
-$$\begin{equation}
-	\boldsymbol{f}_t'=\left(\cos(w_1 t), \sin(w_1 t),\ldots,\cos(w_{m} t), \sin(w_{m} t) \right)
-	\end{equation}$$
-	e
-$$\begin{equation}
-	\boldsymbol{\beta}'=\left(\beta_{1,1},\beta_{1,2},\ldots,\beta_{m,1},\beta_{m,2}\right)
-	\end{equation}$$
-	teremos
-	$$y_t= \boldsymbol{f}_t'\boldsymbol{\beta} + \varepsilon_t,$$
-	e o tradicional modelo linear:
-	$$\boldsymbol{y}= \boldsymbol{F}_t'\boldsymbol{\beta} + \boldsymbol{\varepsilon}.$$
+$$\begin{array}{c c c c l}
+\hline
+\text{Harmônico } (k) & \text{Frequência } (k/12) & \text{Período } (12/k) & \text{Equivalência Temporal} & \text{Interpretação Física / Sazonal} \\
+\hline
+\mathbf{1} & 1/12 & 12 \text{ meses} & \mathbf{\text{Anual}} & \text{Ciclo sazonal principal.\\ Captura as grandes variações das estações do ano (Verão/Inverno)\\ou o comportamento padrão do ano comercial.} \\
+\mathbf{2} & 2/12 & 6 \text{ meses} & \mathbf{\text{Semestral}} & \text{Ciclos que ocorrem duas vezes ao ano.\\Comum em dinâmicas climáticas (equinócios),\\ pagamento de 13º salário,\\férias escolares e safras agrícolas duplas.} \\
+\mathbf{3} & 3/12 & 4 \text{ meses} & \mathbf{\text{Quadrimestral}} & \text{Ciclos de fechamento de quadrimestres.\\Muito associado ao calendário acadêmico universitário,\\ balanços corporativos de metas \\e ciclos específicos de engorda ou pastagem.} \\
+\mathbf{4} & 4/12 & 3 \text{ meses} & \mathbf{\text{Trimestral}} & \text{Sazonalidade das estações climáticas tradicionais e trimestres\\ fiscais/econômicos \\(divulgação de PIB, balanços de empresas de capital aberto).} \\
+\mathbf{5} & 5/12 & 2{,}4 \text{ meses} & \mathbf{\text{72 dias}} & \text{Não possui ciclo isolado na natureza.\\Atua matematicamente corrigindo assimetrias \\que os outros harmônicos não conseguem moldar.} \\
+\mathbf{6} & 6/12 & 2 \text{ meses} & \mathbf{\text{Bimestral}} & \text{Frequência de Nyquist (limite do modelo).\\Captura oscilações rápidas de alta frequência,\\como faturamento de contas de consumo bimensais,\\impostos (IPVA/IPTU parcelados)\\ ou comportamento alternado entre \\meses pares e ímpares.} \\
+\hline
+\end{array}
+$$
+
+
+Naturalmente, o modelo de regressão harmônica pode ser reescrito como um modelo linear. Fazendo: 
+
+$$ \boldsymbol{f}_t' = \left(\cos\left(2\pi \frac{t}{p}\right), \sin\left(2\pi \frac{t}{p}\right), \ldots, \cos\left(2\pi \frac{Kt}{p}\right), \sin\left(2\pi \frac{Kt}{p}\right)\right) $$ e $$ \boldsymbol{\beta}' = \left(\beta_{1,1}, \beta_{2,1}, \beta_{1,2}, \beta_{2,2}, \ldots, \beta_{1,K}, \beta_{2,K}\right), $$ teremos: $$x_t = \boldsymbol{f}_t'\boldsymbol{\beta} + \varepsilon_t,$$ e o tradicional modelo linear: $$\boldsymbol{x} = \boldsymbol{F}_n\boldsymbol{\beta} + \boldsymbol{\varepsilon}.$$
+
+
 :::{#exm-nottemRegressoaHarmonica}
 Já vimos que a função `harm(x)` gera a matriz necesária para ajusta a regressão harmônica simples para a série temporal $x$. Ela possui um argumento, denotado por `m` e cujo *default* é um, que gera uma regressão harmônica com `m` harmônicos.
 
@@ -591,6 +578,49 @@ Box.test(res2, type = 'Ljung-Box')
 ```
 
 :::
+
+## Exercícios
+
+::: {#exr-}
+A série abaixo contém a data dos óbitos maternos no Brasil a partir de 2010.
+
+```{r}
+url <- 'https://drive.google.com/uc?authuser=0&id=1tYFFT9L2iopKmBDUI3P8qNIRaOnMYj7d&export=download'
+
+library(data.table)
+dados <- fread(url)
+```
+
+a. Crie uma série temporal com o número de óbitos mensal e faça um gráfico. 
+
+b. Crie uma nova série removendo os anos a partir de 2020 (o período da pandemia de COVID-19). Faça a decomposição STL.
+
+c. Ajuste um modelo sazonal para os dados, utilizando o modelo de forma livre e o de regressão harmônica.
+
+
+:::
+
+::: {#exr-}
+
+A série abaixo representa a taxa de desemprego no Brasil entre março de 2002 até dezembro de 2015.
+
+```{r}
+url <- 'https://www.dropbox.com/s/rmgymzsic99qawd/desemprego.csv?dl=1'
+
+banco <- read.csv(url, sep = ';', h = F)
+desemprego<- ts( banco$V2, start = c(2002,3), frequency=12)
+```
+
+a. Explore a série utilizando a decomposição STL
+
+b. Remova a sazonalidade e identifique o período da série.
+
+c. Ainda com a série livre de tendência, ajuste um modelo de regressão harmônica simples e analise os resíduos.
+
+d. Utilise o AIC para encontrar um modelo de regressão harmônica para a série livre de tendência.
+
+:::
+
 
 ## Discutir depois
 

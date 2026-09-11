@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -76,10 +79,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-12eeb4b20e9f5a2b0bfc604bfaf942bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c574c73dd0d0ff61020859ffc61752ee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -109,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -299,7 +302,8 @@ window.Quarto = {
   </ul></li>
   <li><a href="#periodograma" id="toc-periodograma" class="nav-link" data-scroll-target="#periodograma"><span class="header-section-number">8.7</span> Periodograma</a></li>
   <li><a href="#regressão-harmônica" id="toc-regressão-harmônica" class="nav-link" data-scroll-target="#regressão-harmônica"><span class="header-section-number">8.8</span> Regressão Harmônica</a></li>
-  <li><a href="#discutir-depois" id="toc-discutir-depois" class="nav-link" data-scroll-target="#discutir-depois"><span class="header-section-number">8.9</span> Discutir depois</a></li>
+  <li><a href="#exercícios" id="toc-exercícios" class="nav-link" data-scroll-target="#exercícios"><span class="header-section-number">8.9</span> Exercícios</a></li>
+  <li><a href="#discutir-depois" id="toc-discutir-depois" class="nav-link" data-scroll-target="#discutir-depois"><span class="header-section-number">8.10</span> Discutir depois</a></li>
   </ul>
 </nav>
     </div>
@@ -909,31 +913,27 @@ Coefficients:
 </section>
 <section id="regressão-harmônica" class="level2" data-number="8.8">
 <h2 data-number="8.8" class="anchored" data-anchor-id="regressão-harmônica"><span class="header-section-number">8.8</span> Regressão Harmônica</h2>
-<p>Na série <code>nottem</code>, vimos que o periodograma apontou que o período deveria ser <span class="math inline">\(12\)</span>. Este primeiro período encontrado será denominado ‘fundamental’. Após ajustarmos uma regressão harmônica simples, com <span class="math inline">\(p=12\)</span>, os resíduos mostraram outra componente sazonal com período <span class="math inline">\(p'=6\)</span>.</p>
-<p>Na verdade, é comum termos períodos que são frações do período fundamental. Após identificar a frequência (ou período) fundamental, teremos as seguintes frequências para explorar: <span class="math display">\[\omega_k= \frac{k}{p},\]</span> com <span class="math inline">\(1\leq k &lt; \lfloor p/2 \rfloor\)</span>, onde <span class="math inline">\(\lfloor a \rfloor\)</span> é a parte inteira de <span class="math inline">\(a\)</span>.</p>
-<p>O harmônico gerado por <span class="math inline">\(\omega_k\)</span>, dado por <span class="math display">\[\begin{equation}
-        A_k\cos( 2\pi\omega_k t+\phi_k)
-\end{equation}\]</span> é denominado harmônico de ordem <span class="math inline">\(k\)</span>.</p>
-<ul>
-<li><p>O harmônico de ordem 1 completa um ciclo em <span class="math inline">\(p\)</span> unidades de tempo.</p></li>
-<li><p>O harmônico de ordem 2 completa um ciclo em <span class="math inline">\(p/2\)</span> unidades de tempo.</p></li>
-<li><p>O harmônico de ordem <span class="math inline">\(k\)</span> completa um ciclo em <span class="math inline">\(p/k\)</span> unidades de tempo.</p>
-<p>Podemos lidar com os diversos harmônicos de modo bastante direto: <span class="math display">\[\begin{equation}
-  y_t = \sum_{k=1}^{m }A_k\cos(\omega_k t + \phi_k) + \varepsilon_t
-  \end{equation}\]</span> ou ainda, utilizando os resultados já discutidos, <span class="math display">\[\begin{align}
-      y_t &amp;= \sum_{k=1}^{m }A_k\left[\cos(\omega_k t)\cos(\phi_k) -\sin(\omega_k t)\sin(\phi_k)\right] + \varepsilon_t\\
-      &amp;= \sum_{k=1}^{m }\left[\beta_{k,1}\cos(\omega_k t)+\beta_{k,2}\sin(\omega_k t)\right] + \varepsilon_t,
-      \end{align}\]</span> onde <span class="math display">\[\begin{align}
-      m = \left\{\begin{array}{ll}
-\lfloor p/2 \rfloor, &amp; \hbox{se $p$ é ímpar} \\
-p/2-1, &amp; \hbox{se $p$ é par}
-      \end{array}\right.
-      \end{align}\]</span> Fazendo <span class="math display">\[\begin{equation}
-  \boldsymbol{f}_t'=\left(\cos(w_1 t), \sin(w_1 t),\ldots,\cos(w_{m} t), \sin(w_{m} t) \right)
-  \end{equation}\]</span> e <span class="math display">\[\begin{equation}
-  \boldsymbol{\beta}'=\left(\beta_{1,1},\beta_{1,2},\ldots,\beta_{m,1},\beta_{m,2}\right)
-  \end{equation}\]</span> teremos <span class="math display">\[y_t= \boldsymbol{f}_t'\boldsymbol{\beta} + \varepsilon_t,\]</span> e o tradicional modelo linear: <span class="math display">\[\boldsymbol{y}= \boldsymbol{F}_t'\boldsymbol{\beta} + \boldsymbol{\varepsilon}.\]</span> :::{#exm-nottemRegressoaHarmonica} Já vimos que a função <code>harm(x)</code> gera a matriz necesária para ajusta a regressão harmônica simples para a série temporal <span class="math inline">\(x\)</span>. Ela possui um argumento, denotado por <code>m</code> e cujo <em>default</em> é um, que gera uma regressão harmônica com <code>m</code> harmônicos.</p></li>
-</ul>
+<p>Na série <code>nottem</code>, vimos que o periodograma apontou que o período deveria ser <span class="math inline">\(12\)</span>. Este primeiro período encontrado é denominado <strong>período fundamental</strong>. Após ajustarmos uma regressão harmônica simples, com <span class="math inline">\(p=12\)</span>, os resíduos mostraram outra componente sazonal com período <span class="math inline">\(p'=6\)</span>. Podemos então imaginar um novo modelo dado pela soma de dois harmônicos, um com período 12 e outro com período 6, isto é, <span class="math display">\[x_t - \mu = A_1\cos\left(2\pi\frac{t}{12}+\phi_1\right) + A_2\cos\left(2\pi\frac{t}{6}+\phi_2\right) + \varepsilon_t.\]</span></p>
+<p>De fato, o Teorema de Fourier garante que qualquer função periódica <span class="math inline">\(s(t)\)</span> pode ser escrita como:</p>
+<p><span class="math display">\[s(t) = \sum_{k=1}^\infty A_k\cos\left(2\pi t\frac{k}{p}+\phi_k\right),\]</span> onde <span class="math inline">\(\omega_1 = 1/p\)</span> é denominada frequência fundamental. Como a frequência máxima para se ter a identificabilidade do modelo é <span class="math inline">\(1/2\)</span>, o modelo de regressão harmônica é definido por:</p>
+<p><span class="math display">\[ \begin{align} x_t &amp;= \sum_{k=1}^K A_k\cos\left(2\pi t\frac{k}{p}+\phi_k\right) + \varepsilon_t \\ &amp;= \sum_{k=1}^K \left[ \beta_{1,k}\cos\left(2\pi t\frac{k}{p}\right) + \beta_{2,k}\sin\left(2\pi t\frac{k}{p}\right) \right] + \varepsilon_t, \end{align}\]</span> onde <span class="math inline">\(\beta_{1,k} = A_k\cos(\phi_k)\)</span> e <span class="math inline">\(\beta_{2,k} = -A_k\sin(\phi_k)\)</span> são obtidos de modo similar ao apresentado para o modelo de regressão linear simples, <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco e <span class="math inline">\(K = \lfloor p/2 \rfloor\)</span> é o maior inteiro tal que <span class="math inline">\(K \le p/2\)</span>.</p>
+<p><span class="math display">\[\begin{array}{c c c c l}
+\hline
+\text{Harmônico } (k) &amp; \text{Frequência } (k/12) &amp; \text{Período } (12/k) &amp; \text{Equivalência Temporal} &amp; \text{Interpretação Física / Sazonal} \\
+\hline
+\mathbf{1} &amp; 1/12 &amp; 12 \text{ meses} &amp; \mathbf{\text{Anual}} &amp; \text{Ciclo sazonal principal.\\ Captura as grandes variações das estações do ano (Verão/Inverno)\\ou o comportamento padrão do ano comercial.} \\
+\mathbf{2} &amp; 2/12 &amp; 6 \text{ meses} &amp; \mathbf{\text{Semestral}} &amp; \text{Ciclos que ocorrem duas vezes ao ano.\\Comum em dinâmicas climáticas (equinócios),\\ pagamento de 13º salário,\\férias escolares e safras agrícolas duplas.} \\
+\mathbf{3} &amp; 3/12 &amp; 4 \text{ meses} &amp; \mathbf{\text{Quadrimestral}} &amp; \text{Ciclos de fechamento de quadrimestres.\\Muito associado ao calendário acadêmico universitário,\\ balanços corporativos de metas \\e ciclos específicos de engorda ou pastagem.} \\
+\mathbf{4} &amp; 4/12 &amp; 3 \text{ meses} &amp; \mathbf{\text{Trimestral}} &amp; \text{Sazonalidade das estações climáticas tradicionais e trimestres\\ fiscais/econômicos \\(divulgação de PIB, balanços de empresas de capital aberto).} \\
+\mathbf{5} &amp; 5/12 &amp; 2{,}4 \text{ meses} &amp; \mathbf{\text{72 dias}} &amp; \text{Não possui ciclo isolado na natureza.\\Atua matematicamente corrigindo assimetrias \\que os outros harmônicos não conseguem moldar.} \\
+\mathbf{6} &amp; 6/12 &amp; 2 \text{ meses} &amp; \mathbf{\text{Bimestral}} &amp; \text{Frequência de Nyquist (limite do modelo).\\Captura oscilações rápidas de alta frequência,\\como faturamento de contas de consumo bimensais,\\impostos (IPVA/IPTU parcelados)\\ ou comportamento alternado entre \\meses pares e ímpares.} \\
+\hline
+\end{array}
+\]</span></p>
+<p>Naturalmente, o modelo de regressão harmônica pode ser reescrito como um modelo linear. Fazendo:</p>
+<p><span class="math display">\[ \boldsymbol{f}_t' = \left(\cos\left(2\pi \frac{t}{p}\right), \sin\left(2\pi \frac{t}{p}\right), \ldots, \cos\left(2\pi \frac{Kt}{p}\right), \sin\left(2\pi \frac{Kt}{p}\right)\right) \]</span> e <span class="math display">\[ \boldsymbol{\beta}' = \left(\beta_{1,1}, \beta_{2,1}, \beta_{1,2}, \beta_{2,2}, \ldots, \beta_{1,K}, \beta_{2,K}\right), \]</span> teremos: <span class="math display">\[x_t = \boldsymbol{f}_t'\boldsymbol{\beta} + \varepsilon_t,\]</span> e o tradicional modelo linear: <span class="math display">\[\boldsymbol{x} = \boldsymbol{F}_n\boldsymbol{\beta} + \boldsymbol{\varepsilon}.\]</span></p>
+<div id="exm-nottemRegressoaHarmonica" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.7</strong></span> Já vimos que a função <code>harm(x)</code> gera a matriz necesária para ajusta a regressão harmônica simples para a série temporal <span class="math inline">\(x\)</span>. Ela possui um argumento, denotado por <code>m</code> e cujo <em>default</em> é um, que gera uma regressão harmônica com <code>m</code> harmônicos.</p>
 <p>Abaixo, mostramos os resultados para a regressão harmônica simples e com os dois primeiros harmônicos para a série <code>nottem</code>. Note que o AIC deste último sugere que os dois primeiros harmônicos deve ser utilizados</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>simples  <span class="ot">&lt;-</span> <span class="fu">lm</span>( nottem <span class="sc">~</span><span class="fu">harmonic</span>(nottem) )</span>
@@ -984,15 +984,47 @@ data:  res2
 X-squared = 10.905, df = 1, p-value = 0.0009591</code></pre>
 </div>
 </div>
-<p>:::</p>
+</div>
 </section>
-<section id="discutir-depois" class="level2" data-number="8.9">
-<h2 data-number="8.9" class="anchored" data-anchor-id="discutir-depois"><span class="header-section-number">8.9</span> Discutir depois</h2>
+<section id="exercícios" class="level2" data-number="8.9">
+<h2 data-number="8.9" class="anchored" data-anchor-id="exercícios"><span class="header-section-number">8.9</span> Exercícios</h2>
+<div id="exr-" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.1</strong></span> A série abaixo contém a data dos óbitos maternos no Brasil a partir de 2010.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://drive.google.com/uc?authuser=0&amp;id=1tYFFT9L2iopKmBDUI3P8qNIRaOnMYj7d&amp;export=download'</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> <span class="fu">fread</span>(url)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol type="a">
+<li><p>Crie uma série temporal com o número de óbitos mensal e faça um gráfico.</p></li>
+<li><p>Crie uma nova série removendo os anos a partir de 2020 (o período da pandemia de COVID-19). Faça a decomposição STL.</p></li>
+<li><p>Ajuste um modelo sazonal para os dados, utilizando o modelo de forma livre e o de regressão harmônica.</p></li>
+</ol>
+</div>
+<div id="exr-" class="theorem exercise">
+<p><span class="theorem-title"><strong>Exercise 8.2</strong></span> A série abaixo representa a taxa de desemprego no Brasil entre março de 2002 até dezembro de 2015.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://www.dropbox.com/s/rmgymzsic99qawd/desemprego.csv?dl=1'</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>banco <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url, <span class="at">sep =</span> <span class="st">';'</span>, <span class="at">h =</span> F)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>desemprego<span class="ot">&lt;-</span> <span class="fu">ts</span>( banco<span class="sc">$</span>V2, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2002</span>,<span class="dv">3</span>), <span class="at">frequency=</span><span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol type="a">
+<li><p>Explore a série utilizando a decomposição STL</p></li>
+<li><p>Remova a sazonalidade e identifique o período da série.</p></li>
+<li><p>Ainda com a série livre de tendência, ajuste um modelo de regressão harmônica simples e analise os resíduos.</p></li>
+<li><p>Utilise o AIC para encontrar um modelo de regressão harmônica para a série livre de tendência.</p></li>
+</ol>
+</div>
+</section>
+<section id="discutir-depois" class="level2" data-number="8.10">
+<h2 data-number="8.10" class="anchored" data-anchor-id="discutir-depois"><span class="header-section-number">8.10</span> Discutir depois</h2>
 <p>Também é possível que o padrão sazonal não seja bem representado por uma função periódica. Isto ocorre quando o gráfico de subséries possui tendência.</p>
 <div id="exm-AirPassengersMonthplot" class="theorem example">
-<p><span class="theorem-title"><strong>Example 8.7</strong></span> A <span class="quarto-unresolved-ref">?fig-AirPassengersMonthplot</span> apresenta o gráfico da série <code>AirPassengers</code> e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(AirPassengers)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="theorem-title"><strong>Example 8.8</strong></span> A <span class="quarto-unresolved-ref">?fig-AirPassengersMonthplot</span> apresenta o gráfico da série <code>AirPassengers</code> e de suas subséries. Observe que todas as subséries possuem um padrão de crescimento, que deve estar sendo governado pela tendência crescente da série.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(AirPassengers)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -1023,25 +1055,25 @@ Figure&nbsp;8.6: Gráfico de subséries da série AirPassengers. Observe as tend
 </div>
 <p>Abaixo, vamos estimar a tendência da série e removê-la. Note que o padrão das subséries se altera, mostrando outro comportamento: uma tendência de crescimento acelerado dentro dos meses de verão americano (junho, julho e agosto) e um padrão de queda mais expressivo nos meses do inverno.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimação da tendência via loess</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> <span class="fu">length</span>(AirPassengers)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">loess</span>( AirPassengers <span class="sc">~</span>tempo)</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>tend <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model)</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="co"># série sem tendência e o gráfico de subséries</span></span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( AirPassengers<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimação da tendência via loess</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>tempo <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">:</span> <span class="fu">length</span>(AirPassengers)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">loess</span>( AirPassengers <span class="sc">~</span>tempo)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>tend <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="co"># série sem tendência e o gráfico de subséries</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( AirPassengers<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="sazonalidade_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(AirPassengers<span class="sc">-</span>tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="sazonalidade_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="sazonalidade_files/figure-html/unnamed-chunk-26-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
