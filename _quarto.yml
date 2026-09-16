@@ -16,7 +16,7 @@ book:
     - modelo_linear.qmd
     - tendencia.qmd
     - sazonalidade.qmd
-    - tendencia_sazonalidade.qmd
+    - state_space.qmd
     - suave_exponencial.qmd
     - processo_linear_geral.qmd
     - intervencao.qmd
