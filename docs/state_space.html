@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Modelos de Espaço Estado lineares – Séries Temporais</title>
+<title>9&nbsp; Modelos de Espaço de Estados Lineares – Séries Temporais</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -118,7 +118,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./state_space.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modelos de Espaço Estado lineares</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./state_space.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modelos de Espaço de Estados Lineares</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -200,7 +200,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./state_space.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modelos de Espaço Estado lineares</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modelos de Espaço de Estados Lineares</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -258,7 +258,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modelos de Espaço Estado lineares</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modelos de Espaço de Estados Lineares</span></h1>
 </div>
 
 
@@ -275,16 +275,16 @@ window.Quarto = {
 </header>
 
 
-<p>Um modelo de espaço de é composto, para cada tempo <span class="math inline">\(t\)</span>, por duas equações</p>
-<p><span class="math display">\[\begin{align}
-x_t &amp;= F_t(\theta_t)+\varepsilon_t\\
-\theta_t&amp;=G_t(\theta_{t-1})+w_t
-\end{align}\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> e <span class="math inline">\(w_t\)</span> são ruídos brancos e <span class="math inline">\(F_t(.)\)</span> e <span class="math inline">\(G_t(.)\)</span> são funções conhecidas.</p>
-<p>Os modelos lineares vistos até o momento possuem a seguinte forma em equações de espaço estado: <span class="math display">\[\begin{align}
-x_t &amp;= \boldsymbol{F}_t\theta_t+\varepsilon_t\\
-\theta_t&amp;=\theta_{t-1}
-\end{align}\]</span> onde <span class="math inline">\(\boldsymbol{F}_t\)</span> é uma matriz conhecida e, geralmente, <span class="math inline">\(\varepsilon\sim\hbox{Normal}(0,\nu)\)</span>.</p>
-<p>Modelos de espaço estados são ditos lineares quando <span class="math inline">\(F_t\)</span> e <span class="math inline">\(G_t\)</span> são matrizes. Nesse caso, se os ruídos forem gaussianos, então o modelo também é denominado linear dinâmico. Considere o caso particular, no qual <span class="math inline">\(F_t=F\)</span>, <span class="math inline">\(G_t=G\)</span> e <span class="math inline">\(\varepsilon_t\sim \hbox{Normal}(0,\nu)\)</span> e <span class="math inline">\(\omega\sim\hbox{Normal}(0,w)\)</span>. Então, <span class="math display">\[x_{t+1}=F'\theta_{t+1}+\varepsilon_{t+1}=F'G\theta_t+F'w_{t+1}+\varepsilon_{t+1}\]</span> ou seja <span class="math inline">\(x_{t+1}|\mathcal{D}_t\sim\hbox{N}(F'\theta_t,\nu + w F'F)\)</span>. Para <span class="math inline">\(h&gt;1\)</span>, <span class="math display">\[x_{t+h}=F'G^h\theta_{t}+\sum_{k=1}^h F'G^{k-1}\omega_{t+k-1}+\varepsilon_{t+h},\]</span> logo, <span class="math display">\[x_{t+h}|\theta_t,\mathcal{D}_t\sim\hbox{Normal}\left(F'G^h \theta_t,\nu+w\sum_{k=1}^hF'G^{k-1}G'^{k-1}F\right)\]</span></p>
+<p>Um modelo de espaço de estados é composto, para cada instante de tempo <span class="math inline">\(t\)</span>, por duas equações fundamentais</p>
+<p><span class="math display">\[\begin{align} x_t &amp;= F_t(\theta_t) + \varepsilon_t \quad \text{(Equação de Observação)} \\ \theta_t &amp;= G_t(\theta_{t-1}) + w_t \quad \text{(Equação de Estado/Sistema)} \end{align} \]</span> onde <span class="math inline">\(\varepsilon_t\)</span> representa o ruído de observação, <span class="math inline">\(w_t\)</span> é o ruído de sistema (ambos assumidos como ruídos brancos mutuamente independentes), e <span class="math inline">\(F_t(\cdot)\)</span> e <span class="math inline">\(G_t(\cdot)\)</span> são funções conhecidas. O vetor não observado <span class="math inline">\(\theta\_t\)</span> de dimensão <span class="math inline">\(p \times 1\)</span> é denominado <strong>vetor de estado</strong>.</p>
+<p>Os modelos lineares com tendência e sazonalidade determinística estudados até o momento podem ser representados na forma de espaço de estados estático</p>
+<p><span class="math display">\[ \begin{aligned} x_t &amp;= F_t' \theta_t + \varepsilon_t \\ \theta_t &amp;= \theta_{t-1} = \theta \end{aligned} \]</span> onde <span class="math inline">\(F_t\)</span> é o vetor de regressores conhecidos no tempo <span class="math inline">\(t\)</span>, <span class="math inline">\(\theta\)</span> é o vetor fixo de parâmetros e <span class="math inline">\(\varepsilon_t \sim \text{Normal}(0, \nu)\)</span>.</p>
+<p>Um modelo de espaço de estados é dito <strong>linear</strong> quando as transformações <span class="math inline">\(F_t(\cdot)\)</span> e <span class="math inline">\(G_t(\cdot)\)</span> são dadas por matrizes (ou vetores) <span class="math inline">\(F_t'\)</span> e <span class="math inline">\(G_t\)</span>. Se, além disso, os ruídos forem gaussianos, o modelo é denominado <strong>Modelo Linear Dinâmico (DLM)</strong>.</p>
+<p>Considere o caso particular invariante no tempo, no qual <span class="math inline">\(F_t = F\)</span>, <span class="math inline">\(G_t = G\)</span>, <span class="math inline">\(\varepsilon_t \sim \text{Normal}(0, \nu)\)</span> e <span class="math inline">\(w_t \sim \text{Normal}(\boldsymbol{0}, W)\)</span>. Para a previsão um passo à frente (<span class="math inline">\(h = 1\)</span>), temos</p>
+<p><span class="math display">\[\begin{align}x_{t+1} &amp;= F' \theta\_{t+1} + \varepsilon_{t+1} \\&amp;= F' G \theta_t + F' w_{t+1} + \varepsilon_{t+1}\end{align},\]</span> logo, a distribuição condicional do valor futuro dado o estado atual <span class="math inline">\(\theta_t\)</span> é dada por: <span class="math display">\[x_{t+1} \mid \theta_t,\mathcal{D}_t \sim \text{Normal}\left(F' G \theta_t, \; \nu + F' W F\right).\]</span> De forma geral, para qualquer horizonte de previsão <span class="math inline">\(h \ge 1\)</span>, aplicando recursivamente a equação de transição de estados, obtemos</p>
+<p><span class="math display">\[\theta_{t+h} = G^h \theta_t + \sum_{k=1}^h G^{k-1} w_{t+h-k+1}.\]</span> Substituindo na equação de observação, temos</p>
+<p><span class="math display">\[x_{t+h} = F' G^h \theta_t + \sum_{k=1}^h F' G^{k-1} w_{t+h-k+1} + \varepsilon\_{t+h}.\]</span> Dessa forma, a distribuição preditiva <span class="math inline">\(h\)</span> passos à frente condicionada ao estado atual <span class="math inline">\(\theta_t\)</span> é dada por</p>
+<p><span class="math display">\[x_{t+h} \mid \theta_t,\mathcal{D}_t \sim \text{Normal}\left(f_t(h), \; Q_t(h) \right),\]</span> onde <span class="math display">\[\begin{align}f_t(h)&amp;=F' G^h \theta_t\\Q_t(h)&amp;=\nu + \sum_{k=1}^h F' G^{k-1} W (G^{k-1})' F.\end{align}\]</span></p>
 
 
 

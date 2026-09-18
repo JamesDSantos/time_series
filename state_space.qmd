@@ -1,23 +1,29 @@
-# Modelos de Espaço Estado lineares
+# Modelos de Espaço de Estados Lineares 
 
-Um modelo de espaço de é composto, para cada tempo $t$, por duas equações
+Um modelo de espaço de estados é composto, para cada instante de tempo $t$, por duas equações fundamentais
 
-$$\begin{align}
-x_t &= F_t(\theta_t)+\varepsilon_t\\
-\theta_t&=G_t(\theta_{t-1})+w_t
-\end{align}$$
-onde $\varepsilon_t$ e $w_t$ são ruídos brancos e $F_t(.)$ e $G_t(.)$ são funções conhecidas. 
+$$\begin{align} x_t &= F_t(\theta_t) + \varepsilon_t \quad \text{(Equação de Observação)} \\ \theta_t &= G_t(\theta_{t-1}) + w_t \quad \text{(Equação de Estado/Sistema)} \end{align} $$ 
+onde $\varepsilon_t$ representa o ruído de observação, $w_t$ é o ruído de sistema (ambos assumidos como ruídos brancos mutuamente independentes), e $F_t(\cdot)$ e $G_t(\cdot)$ são funções conhecidas. O vetor não observado $\theta\_t$ de dimensão $p \times 1$ é denominado **vetor de estado**. 
 
-Os modelos lineares vistos até o momento possuem a seguinte forma em equações de espaço estado:
-$$\begin{align}
-x_t &= \boldsymbol{F}_t\theta_t+\varepsilon_t\\
-\theta_t&=\theta_{t-1}
-\end{align}$$
-onde $\boldsymbol{F}_t$ é uma matriz conhecida e, geralmente, $\varepsilon\sim\hbox{Normal}(0,\nu)$.
+Os modelos lineares com tendência e sazonalidade determinística estudados até o momento podem ser representados na forma de espaço de estados estático 
 
-Modelos de espaço estados são ditos lineares quando $F_t$ e $G_t$ são matrizes. Nesse caso, se os ruídos forem gaussianos, então o modelo também é denominado linear dinâmico. Considere o caso particular, no qual $F_t=F$, $G_t=G$ e $\varepsilon_t\sim \hbox{Normal}(0,\nu)$ e $\omega\sim\hbox{Normal}(0,w)$. Então,
-$$x_{t+1}=F'\theta_{t+1}+\varepsilon_{t+1}=F'G\theta_t+F'w_{t+1}+\varepsilon_{t+1}$$
-ou seja $x_{t+1}|\mathcal{D}_t\sim\hbox{N}(F'\theta_t,\nu + w F'F)$. Para $h>1$, 
-$$x_{t+h}=F'G^h\theta_{t}+\sum_{k=1}^h F'G^{k-1}\omega_{t+k-1}+\varepsilon_{t+h},$$
-logo,  $$x_{t+h}|\theta_t,\mathcal{D}_t\sim\hbox{Normal}\left(F'G^h \theta_t,\nu+w\sum_{k=1}^hF'G^{k-1}G'^{k-1}F\right)$$
+$$ \begin{aligned} x_t &= F_t' \theta_t + \varepsilon_t \\ \theta_t &= \theta_{t-1} = \theta \end{aligned} $$
+onde $F_t$ é o vetor de regressores conhecidos no tempo $t$, $\theta$ é o vetor fixo de parâmetros e $\varepsilon_t \sim \text{Normal}(0, \nu)$.
 
+Um modelo de espaço de estados é dito **linear** quando as transformações $F_t(\cdot)$ e $G_t(\cdot)$ são dadas por matrizes (ou vetores) $F_t'$ e $G_t$. Se, além disso, os ruídos forem gaussianos, o modelo é denominado **Modelo Linear Dinâmico (DLM)**. 
+
+Considere o caso particular invariante no tempo, no qual $F_t = F$, $G_t = G$, $\varepsilon_t \sim \text{Normal}(0, \nu)$ e $w_t \sim \text{Normal}(\boldsymbol{0}, W)$. Para a previsão um passo à frente ($h = 1$), temos 
+
+$$\begin{align}x_{t+1} &= F' \theta\_{t+1} + \varepsilon_{t+1} \\&= F' G \theta_t + F' w_{t+1} + \varepsilon_{t+1}\end{align},$$
+logo, a distribuição condicional do valor futuro dado o estado atual $\theta_t$ é dada por: 
+$$x_{t+1} \mid \theta_t,\mathcal{D}_t \sim \text{Normal}\left(F' G \theta_t, \; \nu + F' W F\right).$$ 
+De forma geral, para qualquer horizonte de previsão $h \ge 1$, aplicando recursivamente a equação de transição de estados, obtemos
+
+$$\theta_{t+h} = G^h \theta_t + \sum_{k=1}^h G^{k-1} w_{t+h-k+1}.$$ Substituindo na equação de observação, temos
+
+$$x_{t+h} = F' G^h \theta_t + \sum_{k=1}^h F' G^{k-1} w_{t+h-k+1} + \varepsilon\_{t+h}.$$ 
+Dessa forma, a distribuição preditiva $h$ passos à frente condicionada ao estado atual $\theta_t$ é dada por
+
+$$x_{t+h} \mid \theta_t,\mathcal{D}_t \sim \text{Normal}\left(f_t(h), \; Q_t(h) \right),$$
+onde
+$$\begin{align}f_t(h)&=F' G^h \theta_t\\Q_t(h)&=\nu + \sum_{k=1}^h F' G^{k-1} W (G^{k-1})' F.\end{align}$$

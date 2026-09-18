@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -76,10 +79,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-12eeb4b20e9f5a2b0bfc604bfaf942bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c574c73dd0d0ff61020859ffc61752ee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -109,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -231,8 +234,8 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./tendencia_sazonalidade.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Previsão para modelos lineares</span></span></a>
+  <a href="./state_space.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modelos de Espaço de Estados Lineares</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -323,7 +326,7 @@ window.Quarto = {
 <p><span class="math display">\[\begin{align}x_t&amp;=\sigma_{t|t-1}\varepsilon_t\\
 \sigma^2_{t|t-1}&amp;=\omega+\alpha x_{t-1}^2,\end{align}\]</span></p>
 <p>onde <span class="math inline">\(\omega\)</span> e <span class="math inline">\(\alpha\)</span> são parâmetros, <span class="math inline">\(\{\varepsilon_t\}\)</span> é uma sequência de variáveis indepedentes e identicamente distribuídas com média zero e variância um, com <span class="math inline">\(\varepsilon_t\)</span> independente de <span class="math inline">\(x_{t-j}\)</span> para <span class="math inline">\(j=1,2,\ldots\)</span>. Como <span class="math display">\[\begin{align}E(x_t^2|\mathcal{D}_{t-1})&amp;=E(\sigma^2_{t|t-1}\varepsilon_t^2|\mathcal{D}_{t-1})\\&amp;=\sigma^2_{t|t-1}E(\varepsilon_t^2|\mathcal{D}_{t-1})=\sigma^2_{t|t-1}Var(\varepsilon_t)=\sigma^2_{t|t-1}\end{align}\]</span> teremos que <span class="math inline">\(x_t^2\)</span> é estimador para <span class="math inline">\(\sigma^2_{t|t-1}\)</span>.</p>
-<p>Note que <span class="math display">\[Cov(x_t,x_{t-h})=Cov(\varepsilon_t(\omega+\alpha x_{t-1}^2),\varepsilon_{t-h}(\omega+\alpha x_{t-h-1}^2))=0,\]</span> logo, o correlograma não releva qualquer informação sobre esse processo. Contudo, seja <span class="math inline">\(\eta_t = x_t^2- \sigma^2_{t|t-1}\)</span>. É imediato qu <span class="math inline">\(E(\eta_t)=0\)</span> e <span class="math display">\[Var(\eta_t)=E([\sigma_{t|t-1}^2\varepsilon_t^2-\sigma^2_{t|t-1}]^2)\]</span>. Agora, observe que, para $h <span class="math inline">\(,\)</span><span class="math inline">\(\begin{align}Cov(\eta_t,\eta_{t-h})&amp;=Cov(x_{t}^2-\sigma^2_{t|t-1}, x_{t-h}^2-\sigma^2_{t-h|t-h-1})\\&amp;=Cov(x_t^2-\omega-\alpha x_{t-1}^2,x_{t-h}^2 - \omega -\alpha x_{t-h-1}^2)=0,\end{align}\)</span>$ Logo, <span class="math inline">\(\{\eta_t\}\)</span> é uma sequência com média zero de variáveis não correlacionadas. Assumindo que <span class="math inline">\(x_t\)</span> é estacionário, <span class="math display">\[Var(\eta_t)=Var(x_t^2 -\alpha x_{t-1}^2)=Var(x^2)(1+\alpha^2).\]</span> temos que <span class="math inline">\(\eta_t\)</span> é estacionário. Como <span class="math display">\[\sigma^2_{t|t-1}=\omega + \alpha x_{t-1}^2\Rightarrow x_t^2=\omega+\alpha x_{t-1}^2+\eta_t,\]</span> se <span class="math inline">\(x_t\)</span> é um ARCH(1), então <span class="math inline">\(x_t^2\)</span> é um processo AR(1). Assumindo que <span class="math inline">\(x_t^2\)</span> é um processo estacionário, teremos que</p>
+<p>Note que <span class="math display">\[Cov(x_t,x_{t-h})=Cov(\varepsilon_t(\omega+\alpha x_{t-1}^2),\varepsilon_{t-h}(\omega+\alpha x_{t-h-1}^2))=0,\]</span> logo, o correlograma não releva qualquer informação sobre esse processo. Contudo, seja <span class="math inline">\(\eta_t = x_t^2- \sigma^2_{t|t-1}\)</span>. É imediato qu <span class="math inline">\(E(\eta_t)=0\)</span> e <span class="math display">\[Var(\eta_t)=E([\sigma_{t|t-1}^2\varepsilon_t^2-\sigma^2_{t|t-1}]^2)\]</span>. Agora, observe que, para $h $, <span class="math display">\[\begin{align}Cov(\eta_t,\eta_{t-h})&amp;=Cov(x_{t}^2-\sigma^2_{t|t-1}, x_{t-h}^2-\sigma^2_{t-h|t-h-1})\\&amp;=Cov(x_t^2-\omega-\alpha x_{t-1}^2,x_{t-h}^2 - \omega -\alpha x_{t-h-1}^2)=0,\end{align}\]</span> Logo, <span class="math inline">\(\{\eta_t\}\)</span> é uma sequência com média zero de variáveis não correlacionadas. Assumindo que <span class="math inline">\(x_t\)</span> é estacionário, <span class="math display">\[Var(\eta_t)=Var(x_t^2 -\alpha x_{t-1}^2)=Var(x^2)(1+\alpha^2).\]</span> temos que <span class="math inline">\(\eta_t\)</span> é estacionário. Como <span class="math display">\[\sigma^2_{t|t-1}=\omega + \alpha x_{t-1}^2\Rightarrow x_t^2=\omega+\alpha x_{t-1}^2+\eta_t,\]</span> se <span class="math inline">\(x_t\)</span> é um ARCH(1), então <span class="math inline">\(x_t^2\)</span> é um processo AR(1). Assumindo que <span class="math inline">\(x_t^2\)</span> é um processo estacionário, teremos que</p>
 <p><span class="math display">\[E(x_t^2)=\omega + \alpha E(x_{t-1}^2)\Rightarrow \sigma^2=\omega + \alpha\sigma^2,\]</span> logo, a variância estacionária é dada por <span class="math display">\[\sigma^2=\frac{\omega}{1-\alpha},\]</span> o que implica que <span class="math inline">\(\alpha\in[0,1)\)</span>.</p>
 <p>O principal uso do modelo ARCH é para a previsão das variâncias condicionais futuras, dada por <span class="math display">\[\sigma_t^2(h)=E(x_{t+h}^2|\mathcal{D}_t).\]</span> Para <span class="math inline">\(h=1\)</span> no modelo ARCH(1) teremos</p>
 <p><span class="math display">\[\sigma_t^2(1)=\omega+\alpha x_t^2=(1-\alpha)\sigma^2+\alpha x_t^2,\]</span> que é a média ponderada entre a estimativa <span class="math inline">\(x_t\)</span> para <span class="math inline">\(\sigma^2_{t|t-1}\)</span> e a variância estacionária. A previsão para <span class="math inline">\(h&gt;0\)</span> qualquer no modelo ARCH(1) é dada por</p>

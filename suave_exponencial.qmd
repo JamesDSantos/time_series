@@ -4,22 +4,22 @@ Métodos de suavização exponencial são, em princípio, modelos semi-paramétr
 
 Inicialmente, apenas as ideias originais serão apresentadas, de modo que a lógica por trás dos métodos seja compreendida. Durante essas apresentações, não faremos aplicações.
 
-Por fim, mostraremos que os modelos de suavização exponencial podem ser escritos na forma de modelos de espaço de estados, apresentado sua estrutura e formas de previsão. Por fim, as aplicações são apresentadas, utilizando o pacote `forecast`, que apresenta as implementações destes modelos neste formato final.
+Por fim, mostraremos que os modelos de suavização exponencial podem ser escritos na forma de modelos de espaço de estados, apresentando sua estrutura e formas de previsão. Em seguida, as aplicações são apresentadas, utilizando o pacote `forecast`, que apresenta as implementações destes modelos neste formato final.
 
 
-  ## Suavização exponencial simples
+## Suavização exponencial simples
   
-  Considere uma série temporal descrita como 
+Considere uma série temporal descrita como 
   
-  $$x_t=\mu_t+\varepsilon_t,$$
-  onde $\mu_t$ é a média da série, denominada nível, para o tempo $t$. Para esse modelo, é assumido que $\mu_t$ pode oscilar, mas não ao ponto de criar qualquer sinal como uma tendência ou sazonalidade. Para a amostra $\mathcal{D}_t$, o modelo de suavização exponencial simples propõe estimar $\mu_t$ por uma média ponderada dos valores passados, dada por
+$$x_t=\mu_t+\varepsilon_t,$$
+onde $\mu_t$ é a média da série, denominada nível, para o tempo $t$. Para esse modelo, é assumido que $\mu_t$ pode oscilar, mas não ao ponto de criar qualquer sinal como uma tendência ou sazonalidade. Para a amostra $\mathcal{D}_t$, o modelo de suavização exponencial simples propõe estimar $\mu_t$ por uma média ponderada dos valores passados, dada por
   
   $$\mu_t=\alpha x_t+\sum_{j=1}^{t-1}\alpha(1-\alpha)^jx_{t-j},$$
-  onde $\alpha\in(0,1)$. A constante $\alpha$ deve ser grande o suficiente para que os valores passados não tenha alta tanta influência, mas não tão grande ao ponto de ser influenciada em excesso pelo erro associado à observação $x_t$. 
+  onde $\alpha\in(0,1)$. A constante $\alpha$ deve ser grande o suficiente para que os valores passados não tenha tanta influência, mas não tão grande ao ponto de ser influenciada em excesso pelo erro associado à observação $x_t$. 
 
 Observe que
 
-$$\begin{align}\mu_t&=\alpha x_t+\alpha\sum_{j=1}^{t-1}(1-\alpha)^jx_{t-j}\\&=\alpha x_t+(1-\alpha)\left[\alpha x_{t-1}+\sum_{j=2}^{t-1}\alpha(1-\alpha)^{j-1}x_{t-j}\right]\\&=\alpha x_t+(1-\alpha)\left[\alpha x_{t-1}+\alpha \sum_{j=1}^{t-2}(1-\alpha)^{j}x_{t-1-j}\right]\\&=\alpha x_t+(1-\alpha)\mu_{t-1}\end{align}$$
+$$\begin{aligned}\mu_t&=\alpha x_t+\alpha\sum_{j=1}^{t-1}(1-\alpha)^jx_{t-j}\\&=\alpha x_t+(1-\alpha)\left[\alpha x_{t-1}+\sum_{j=2}^{t-1}\alpha(1-\alpha)^{j-1}x_{t-j}\right]\\&=\alpha x_t+(1-\alpha)\left[\alpha x_{t-1}+\alpha \sum_{j=1}^{t-2}(1-\alpha)^{j}x_{t-1-j}\right]\\&=\alpha x_t+(1-\alpha)\mu_{t-1}\end{aligned}$$
 
 logo, $\mu_t$ pode ser obtido de modo recursivo.
 
@@ -36,7 +36,7 @@ $$\sum_{t=1}^n e_t^2.$$
 
 Para esse modelo a previsão $f_t=E(x_t|\mathcal{D}_{t-1})$ é dada pelo último nível estimado no tempo $t-1$, ou seja $\mu_{t-1}$. Portanto, a equação recursiva pode ser pensada como a combinação linear convexa de duas fontes de informação, uma proveniente da amostra no tempo $t$ e outra disponível no tempo $t-1$:
 
-$$\mu_t=\alpha\underbrace{x_t}_{\text{informação\\da amostra\\no tempo }t}+(1-\alpha)\underbrace{\mu_{t-1}}_{\text{estimativa para }\mu_t\text{\\disponível no \\tempo }t-1}$$
+$$\mu_t=\alpha\underbrace{x_t}_{\text{informação\\da amostra\\no tempo }t}+(1-\alpha)\underbrace{\mu_{t-1}}_{\substack{\text{estimativa para }}\mu_t\text{\\disponível no \\tempo }t-1}$$
 Essa composição da estimativa através da combinação de duas fontes de informação é útil para entender os próximos modelos.
 
 
@@ -44,7 +44,7 @@ Essa composição da estimativa através da combinação de duas fontes de infor
 
 Considere agora um modelo da forma
 $$x_t = \mu_t + \varepsilon_t,$$
-onde $\mu_t$ é o nível e $\varepsilon_t$ o ruído branco. Em adicional, considere que o modelo possui tendência. Uma função de previsão razoável para este problema é
+onde $\mu_t$ é o nível e $\varepsilon_t$ o ruído branco. Adicionalmente, considere que o modelo possui tendência. Uma função de previsão razoável para este problema é
 
 $$f_t(h)=E(x_{t+h}|\mathcal{D}_t)=\mu_t+h\xi_t,$$
 onde $\xi_t$ é o parâmetro de tendência. Ele recebe esse nome porque, quando nulo, o modelo é livre de tendência. Além disso, dependendo do seu sinal, a tendência será crescente ou decrescente.
@@ -53,54 +53,55 @@ Temos duas fontes de informação sobre $\mu_t$:
 
 1. A própria amostra, pois $x_t$ oscila em torno de $\mu_t$
 
-2. A previsão para $x_t$ no tempo $t-1$, dada por $f_{t-1}=\mu_{t-1}+\xi_{t-1}$ e que, por sua vez, é uma previsão para $\mu_t$.
+2. A previsão para $x_t$ no tempo $t-1$, dada por $f_{t-1}(1)=\mu_{t-1}+\xi_{t-1}$ e que, por sua vez, é uma previsão para $\mu_t$.
 
 Deste modo, assim como visto no modelo de suavização exponencial, temos que $\mu_t$ pode ser obtido a partir da seguinte recursão
 
-$$\begin{align*}
+$$\begin{aligned*}
 	\mu_t &= \alpha x_t + (1-\alpha)\left( \mu_{t-1} + \xi_{t-1}\right).
-	\end{align*}$$
+	\end{aligned*}$$
 
-Observe que a recursão só pode ser utiliza se $\xi_t$ for conhecido para todo $t$. Para construir uma recursão para $\xi_t$, vamos assumir que $\xi_t$ é a ponderação de duas fontes de informação sobre $\xi_{t-1}$:
+Observe que a recursão só pode ser utilizada se $\xi_t$ for conhecido para todo $t$. Para construir uma recursão para $\xi_t$, vamos assumir que $\xi_t$ é a ponderação de duas fontes de informação sobre $\xi_{t-1}$:
 
-1. Para o tempo $t$, sabemos que $x_t$ é estimativa para $\mu_t$. Por sua vez, $\mu_t\approx \mu_{t-1}+\xi_{t-1}$. Portanto, $\mu_t-\mu_{t-1}$ é uma estimativa para $\xi_{t-1}$  
+1. Para o tempo $t$, sabemos que $x_t$ é estimativa para $\mu_t$. Por sua vez, $\mu_t\approx f_{t-1}(1)=\mu_{t-1}+\xi_{t-1}$. Portanto, $\mu_t-\mu_{t-1}$ é uma estimativa para $\xi_{t-1}$  
 
-2. Vamos assumir que a inclinação $\xi_t$ oscila pouco, o que implica em $\xi_t\approx \xi_{t-1}$ 
+2. Vamos assumir que a inclinação $\xi_t$ oscila pouco, o que implica que $\xi_t\approx \xi_{t-1}$ 
 
 Com isso, teremos a seguinte recursão geral para a componentes de nível e tendência
 
 
-$$\begin{align*}
-	\mu_t &= \alpha y_t + (1-\alpha)\left( \mu_{t-1} + \xi_{t-1}\right) \\
+$$\begin{aligned}
+	\mu_t &= \alpha x_t + (1-\alpha)\left( \mu_{t-1} + \xi_{t-1}\right) \\
 	\xi_t &= \beta (\mu_t - \mu_{t-1}) + (1-\beta)\xi_{t-1}.
-	\end{align*}$$
-com $\beta\in(0,1)$. Mais uma vez, os valores para $\xi_0,\mu_0,\alpha$ e $\beta$ podem ser obtidos minizando a soma de quadrados dos erros de previsão.
+	\end{aligned}$$
+com $\beta\in(0,1)$. Mais uma vez, os valores para $\xi_0,\mu_0,\alpha$ e $\beta$ podem ser obtidos minimizando a soma de quadrados dos erros de previsão.
 
-## Suavisação exponencial de Holt-Winters
+## Suavização exponencial de Holt-Winters
 
 Considere o modelo
 	$$x_t = \mu_t+s_t+\varepsilon_t,$$
 onde $\mu_t$ é o nível da série e $s_t$ um fator sazonal de período $p$. Considere ainda que a série possui tendência, localmente linear, gerando uma equação de previsão do tipo
 
-$$f_t(h)=\mu_t+h\xi_t+s_{t+h}.$$
+$$f_t(h)=\mu_t+h\xi_t+s_{t+h-p}.$$
 
 Para obter estimativas para essas componentes, vamos manter o mesmo princípio de unir fontes de informação através de combinações lineares.
 
 Para obter uma equação recursiva para $\mu_t$, observe que
 
-1. Para o tempo $t$, como $x_t$ é estimativa para $\mu_t+s_t$, temos que  $x_t-s_t\approx \mu_t$.	
+1. Para o tempo $t$, como $x_t$ é estimativa para $\mu_t+s_t$, temos que  $x_t-s_t\approx \mu_t$.	Entretanto, como $s_t$ não está disponível ainda, utilizamos 
+$$x_t-s_{t-p}\approx \mu_t.$$
 
-2. No tempo $t-1$, temos que a previsão de $x_t$ é dada por $\mu_{t-1}+\xi_{t-1}+s_t$. Como $x_t$ é estimativa para $\mu_t+s_t$, teremos
+2. No tempo $t-1$, temos que a previsão de $x_t$ é dada por $$f_{t-1}(1)=\mu_{t-1}+\xi_{t-1}+s_t.$$ Como $x_t$ é estimativa para $\mu_t+s_t$, teremos
 
 $$\mu_t+s_t\approx\mu_{t-1}+\xi_{t-1}+s_t\Rightarrow\mu_t\approx \mu_{t-1}+\xi_{t-1}$$
 	
-Deste modo, podemos construir a seguinte equação recursiva
+Desse modo, podemos construir a seguinte equação recursiva
 
-$$\mu_t=\alpha(x_t-s_t)+(1-\alpha)(\mu_{t-1}+\xi_{t-1})$$
+$$\mu_t=\alpha(x_t-s_{t-p})+(1-\alpha)(\mu_{t-1}+\xi_{t-1})$$
 com $\alpha\in(0,1)$.
 
 Uma vez que temos o valor suavizado do nível, podemos suavizar a tendência exatamente como foi feito no modelo de Holt:
-$$\xi_t = \beta \xi_{t-1}+(1-\beta) (\mu_t - \mu_{t-1}).$$
+$$\xi_t =\beta (\mu_t - \mu_{t-1})+ (1-\beta) \xi_{t-1}.$$
 	
 Vamos agora reunir duas fontes de informação sobre a componente sazonal. 
 
@@ -110,45 +111,45 @@ Vamos agora reunir duas fontes de informação sobre a componente sazonal.
 
 Portanto, obtemos a seguinte recursão
 
-$$\begin{align*}
+$$\begin{aligned}
 	s_t = \gamma (x_t - \mu_t) + (1-\gamma) s_{t-p},
-	\end{align*}$$
+	\end{aligned}$$
 com $\gamma\in(0,1)$.
 
 O modelo de Holt-Winters é dado por
-$$\begin{align*}
+$$\begin{aligned}
 	\mu_t &=\alpha (x_t - s_t) + (1-\alpha) (\mu_{t-1}+ \xi_{t-1}) \\
 		\xi_t &= \beta (\mu_t - \mu_{t-1}) + (1-\beta) \xi_{t-1}
 ,\\
 	s_t &= \gamma (x_t - \mu_t) + (1-\gamma) s_{t-p}.
-	\end{align*}$$
+	\end{aligned}$$
 
-Novamente, o parâmetros $\alpha,\beta,\gamma,\mu_0,\xi_0,s_{-p+1},\ldots,s_0$ podem ser obtidos via minimização da soma de quadrados dos erros de previsão.
+Novamente, os parâmetros $\alpha,\beta,\gamma,\mu_0,\xi_0,s_{-p+1},\ldots,s_0$ podem ser obtidos via minimização da soma de quadrados dos erros de previsão.
 
 
 ## Modelo de espaço de estados com inovações 
 
 O modelo de espaço de estados com inovações é dado por
 
-$$\begin{align}x_t&=F'\theta_{t-1}+e_t\\
+$$\begin{aligned}x_t&=F'\theta_{t-1}+e_t\\
 \theta_t&= G\theta_{t-1}+\psi e_t
-\end{align}$$
+\end{aligned}$$
 
 onde $F$ e $G$ são matrizes de dimensões condizentes e $e_t$ é a única fonte de erro (ou inovação). Observe que, dado $\mathcal{D}_t$, temos as seguintes equações para previsão:
 
-$$\begin{align}
+$$\begin{aligned}
 x_{t+1}&=F'\theta_{t}+e_{t+1}\\
-x_{t+2}&=F'\theta_{t+1}+e_{t+1}=F'G\theta_t+F'\psi e_{t} + e_{t+2}\\
+x_{t+2}&=F'\theta_{t+1}+e_{t+2}=F'G\theta_t+F'\psi e_{t+1} + e_{t+2}\\
 &=\cdots\\
 x_{t+h}&=F'G^{h-1}\theta_t+\sum_{j=1}^{h-1}F'G^{j-1}\psi e_{t+h-j}+e_{t+h}
-\end{align}$$
+\end{aligned}$$
 e, sob a restrição de que $e_t$ é um ruído branco, temos que 
 
 $$x_{t+h}|\mathcal{D}_t\sim\hbox{Normal}(f_t(h),Q_t(h)),$$
 onde
-$$\begin{align}f_t(h)&=F'G^{h-1}\theta_t\\
-Q_t(t)&=\nu\left[1+\sum_{j=1}^{h-1}F'G^{j-1}\psi\psi'G'^{j-1}F\right]
-\end{align}$$
+$$\begin{aligned}f_t(h)&=F'G^{h-1}\theta_t\\
+Q_t(h)&=\nu\left[1+\sum_{j=1}^{h-1}(F'G^{j-1}\psi)^2\right]
+\end{aligned}$$
 
 Tanto $\psi$ quanto os eventuais parâmetros em $F$ e $G$ podem ser estimados via método dos mínimos quadrados, minimizando
 $$\sum_{t=1}^ne_t^2,$$
@@ -162,15 +163,15 @@ Para o modelo de suavização exponencial, seja $\theta_t=\mu_t$. Como
 $$f_t=\theta_{t-1},$$
 teremos que $x_t=f_t+e_t$. Além disso,
 
-$$\begin{align}\theta_t&=(1-\alpha)\theta_{t-1}+\alpha x_t\\&=\theta_{t-1}+\alpha e_t\end{align}$$
+$$\begin{aligned}\theta_t&=(1-\alpha)\theta_{t-1}+\alpha x_t\\&=\theta_{t-1}+\alpha e_t\end{aligned}$$
 onde $\alpha\in(0,1)$. Portanto, esse modelo pode ser escrito na seguinte forma de espaço estado:
-$$\begin{align}
+$$\begin{aligned}
 x_t&=\theta_{t-1}+e_t\\
 \theta_{t}&=\theta_{t-1}+\alpha e_t
-\end{align}$$
+\end{aligned}$$
 logo, identificando $F=1, G=1,\psi=\alpha$, teremos que
 
-$$\begin{align}f_{t}(t)&=\mu_t\\ Q_t(h)&=\nu[1+\alpha^2(h-1)]\end{align}$$
+$$\begin{aligned}f_{t}(h)&=\mu_t\\ Q_t(h)&=\nu[1+\alpha^2(h-1)]\end{aligned}$$
 :::{#exem-}
 
 Considere a série `Nile`, cujos valores representam o fluxo anual do rio Nilo entre 1871 e 1970. Note que a série aparenta oscilar em torno de dois níveis, separados pelo ano de 1898.
@@ -222,15 +223,15 @@ plot( forecast(mod, 5))
 ### Suavização Exponencial de Holt
 
 O conjunto de equações acima pode ser reescrito como
-$$\begin{align*}
+$$\begin{aligned*}
 	\mu_t &= \mu_{t-1} + \xi_{t-1}+\alpha\left( x_t-\mu_{t-1} - \xi_{t-1}\right)\\&= \tilde{\mu}_{t-1} + \xi_{t-1}+\alpha e_t\\
 	\xi_t &= \xi_{t-1}+\beta (\mu_t - \mu_{t-1}-\xi_{t-1}).
-	\end{align*}$$	
+	\end{aligned*}$$	
 A partir da primeira equação acima, deduzimos que $\mu_t-\mu_{t-1}-\xi_{t-1}=\alpha e_t$. Substituindo essa informação na segunda equação teremos
-$$\begin{align*}
+$$\begin{aligned*}
 	\mu_t &= \mu_{t-1} + \xi_{t-1}+\alpha e_t\\
 	\xi_t &= \xi_{t-1}+\alpha\beta e_t.
-	\end{align*}$$	
+	\end{aligned*}$$	
 ou, em forma matricial,
 $$\left(\begin{array}{c}\mu_t\\ \xi_t\end{array}\right)=\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c}\mu_{t-1}\\ \xi_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha\\ \alpha\beta\end{array}\right)e_t,$$
 
@@ -238,12 +239,12 @@ Note ainda que é possível escrever a equação das observações do modelo em 
 $$x_{t+h}=\mu_{t+h-1}+\xi_{t+h-1}+e_{t+h-1}=(\begin{array}{cc}1&1\end{array})\left(\begin{array}{c}\mu_{t+h-1}\\ \xi_{t+h-1}\end{array}\right)+e_{t+h}$$
 Pode-se então mostrar que este modelo possui a seguinte especificação como modelo de espaço estado:
 
-$$\begin{align}
+$$\begin{aligned}
 F'&=(1\;\; 1)\\
 G&=\left(\begin{array}{cc} 1 & 1 \\ 0 & 1\\ \end{array}\right)\\
 \theta_t'&=(\mu_t\;\;\xi_t)\\
 \psi'&=(\alpha\;\;\alpha\beta)
-\end{align}$$
+\end{aligned}$$
 
 Desse modo, os parâmetros $\alpha,\beta,\tilde{\mu}_0$ e $\tilde{b}_0$ podem ser obtidos via método de estimação da máxima verossimilhança. Logo, a distribuição da previsão com horizonte $h$ é dada por
 
@@ -290,7 +291,7 @@ Os resíduos oscilam em torno de zero, mas com um aumento progressivo da variân
 Os valores suavizados $\tilde{\mu}_0,\ldots,\tilde{\mu}_t$ podem ser acessados na lista `$states`, na primeira coluna, conforme vemos abaixo.
 
 ```{r}
-ts.plot(hom, ylab = 'No. ocorrências aeronáuticas mensal' , lwd = 2)
+ts.plot(hom, ylab = 'No. homicídios mensal' , lwd = 2)
 
 lines(mod$states[,1], col ='tomato', lwd = 3)
 ```
@@ -313,20 +314,20 @@ plot( prev)
 
 ### Suavização Exponencial de Holt-Winters
 
-Como esperado, esse modelo pode ser reescrito na forma dse espaço estado, considerando o erro de previsão 
+Como esperado, esse modelo pode ser reescrito na forma de espaço de estados, considerando o erro de previsão um passo à frente $e_t=x_t-f_t$
 
 As duas primeiras equações de estado são as mesmas do modelo de Holt: 
 $$\left(\begin{array}{c} \mu_t \\ \xi_t\end{array}\right)=\left(\begin{array}{cc}1 & 1 \\ 0 & 1\end{array}\right)\left(\begin{array}{c} \mu_{t-1} \\ \xi_{t-1}\end{array}\right)+\left(\begin{array}{c} \alpha \\ \alpha\beta\end{array}\right)e_t=G_{\hbox{Holt}}\left(\begin{array}{c} \mu_{t-1} \\ \xi_{t-1}\end{array}\right)+\psi_{\hbox{Holt}}e_t$$
 Já a terceira equação do modelo pode ser escrita como
 $$s_t=s_{t-p}+\gamma e_t.$$
 Note que essa mesma equação pode ser escrita como 
-$$\left(\begin{array}{c}s_t\\ s_{t-1} \\ \vdots \\ s_{t-p+1}\end{array}\right)=\underbrace{\left(\begin{array}{c} 0_{p-1'} & 1 \\ \textbf{I}_{p-1} & 0_{p-1} \end{array}\right)}_{P}\left(\begin{array}{c}s_{t-1}\\ s_{t-2} \\ \vdots \\ s_{t-p}\end{array}\right)+\gamma \boldsymbol{1}_{p}e_t$$
-A matriz $P$ dada acima é uma matriz do tipo permutação. Essa em particular coloca o elemento da última coordenada na primeira e faz com que todos os outros elementos seja alocados uma coordenada a frente. Fazendo $\theta_0'=(\mu_0,\xi_0,s_{1-p},\ldots,s_0)$ teremos que o modelo de Holt-Winter na forma de espaço estado é dado por 
+$$\left(\begin{array}{c}s_t\\ s_{t-1} \\ \vdots \\ s_{t-p+1}\end{array}\right)=\underbrace{\left(\begin{array}{c} 0_{p-1'} & 1 \\ \textbf{I}_{p-1} & 0_{p-1} \end{array}\right)}_{P}\left(\begin{array}{c}s_{t-1}\\ s_{t-2} \\ \vdots \\ s_{t-p}\end{array}\right)+\gamma \boldsymbol{E}_{p}e_t$$
+onde $\boldsymbol{E}_p'=(1,0,\ldots,0)$. A matriz $P$ dada acima é uma matriz do tipo permutação. Essa em particular coloca o elemento da última coordenada na primeira e faz com que todos os outros elementos seja alocados uma coordenada a frente. Fazendo $\theta_0'=(\mu_0,\xi_0,s_{1-p},\ldots,s_0)$ teremos que o modelo de Holt-Winter na forma de espaço estado é dado por 
 
-$$\begin{align}
-y_t&=\left(\begin{array}{cc|cccc}1&1&1&0&\cdots&0\end{array}\right)\theta_{t-1}+e_t\\
+$$\begin{aligned}
+x_t&=\left(\begin{array}{cc|cccc}1&1&0&0&\cdots&1\end{array}\right)\theta_{t-1}+e_t\\
 \theta_t&=\left(\begin{array}{c|c}G_{\hbox{Holt}} & 0_{2\times p}\\ \hline 
-0_{p\times 2} & P\end{array}\right)\theta_{t-1}+\left(\begin{array}{c}\alpha \\ \alpha\beta \\ \hline \gamma1_p \end{array}\right)e_t\end{align}$$
+0_{p\times 2} & P\end{array}\right)\theta_{t-1}+\left(\begin{array}{c}\alpha \\ \alpha\beta \\ \hline \gamma1_p \end{array}\right)e_t\end{aligned}$$
 
 
 :::{#exem-}
@@ -336,14 +337,14 @@ Considere novamente a série `co2`.
 ```{r}
 mod <- ets(co2, model = 'AAA')
 ```
-Abaixo, segue os gráfico da decomposição através do modelo de Holt-Winter com a normalização.
+Abaixo, seguem os gráfico da decomposição através do modelo de Holt-Winter com a normalização.
 
 ```{r}
 x <- data.frame(co2, mod$states[,1][-1], mod$states[,2][-1], mod$states[,3][-1])
 names(x) <- c('Série original','Nível', 'Inclinação','Sazonalidade')
 plot.ts(x)
 ```
-A análise dos resíduos, mostrada abaixo, mostram que o modelo está bem ajustado ao conjunto de dados.
+A análise dos resíduos, mostrada abaixo, mostra que o modelo está bem ajustado ao conjunto de dados.
 ```{r}
 res <- mod$residuals
 ts.plot(res)
@@ -354,20 +355,42 @@ Box.test(res)
 
 :::
 
+
+## Exercício
+
+::: {#exr-}
+A série abaixo aparesenta o número mensal de nascidos vivos no Amazonas desde janeiro de 1994. 
+
+```{r}
+url <- 'https://docs.google.com/spreadsheets/d/1KvXQUmIj29_CYx14KfE6NjkLYajvnw7SEyFg5vSsfQM/edit?usp=sharing'
+
+dados <- gsheet::gsheet2tbl(url)
+```
+
+
+a. Ajuste um modelo de suavização exponencial adequado e analise suas componentes.
+
+b. Em 2024 foram observados os nascimentos mensais abaixo. Verifique se o seu modelo consegue prever de modo adequado esse ano.
+
+```{r}
+x <- c(5635,5065,5556,5287,5421,5219,5314,5666,5814,5851,5483,5639)
+```
+:::
+
 ## Para outro curso...
 
 ### Modelo de Holt amortecido
 
 Considere que a previsão um passo à frente é dada por,
-$$y_{t}(1)=\tilde{\mu}_{t-1}+\phi\tilde{b}_{t-1}=(1\;\;\phi)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)$$
+$$f_{t}(1)=\mu_{t-1}+\phi\tilde{b}_{t-1}=(1\;\;\phi)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)$$
 onde $\phi\in(0,1)$ tem o objetivo de amortecer a tendência dada pelo método de Holt, criando um previsão não linear. Com isso, teremos
-$$\begin{align}
-\tilde{\mu}_t &= \alpha y_t + (1-\alpha)(\tilde{\mu}_{t-1} + \phi\tilde{b}_{t-1})\\
+$$\begin{aligned}
+\mu_t &= \alpha x_t + (1-\alpha)(\mu_{t-1} + \phi\xi_{t-1})\\
 \tilde{b}_t &= \beta(\tilde{\mu}_{t} - \tilde{\mu}_{t-1})+(1-\beta) \phi\tilde{b}_{t-1}
-\end{align}$$
+\end{aligned}$$
 que por sua vez pode ser reescrita como 
-$$\begin{align}
-\left(\begin{array}{c}\tilde{\mu}_t\\ \tilde{b}_t\end{array}\right) &= \left(\begin{array}{cc}1&\phi\\ 0 &\phi\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha_t\\ \alpha\beta\end{array}\right)e_t\end{align}$$
+$$\begin{aligned}
+\left(\begin{array}{c}\tilde{\mu}_t\\ \tilde{b}_t\end{array}\right) &= \left(\begin{array}{cc}1&\phi\\ 0 &\phi\end{array}\right)\left(\begin{array}{c}\tilde{\mu}_{t-1}\\ \tilde{b}_{t-1}\end{array}\right)+\left(\begin{array}{c}\alpha_t\\ \alpha\beta\end{array}\right)e_t\end{aligned}$$
 e, identificando a matriz acima com o termo $\phi$ como $G$, teremos que
 $$\hat{y}_{t}(h)=F'G^{h-1}\theta_{t}=\tilde{\mu}_t+(\phi+\cdots+\phi^h)\tilde{b}_t$$
 Abaixo, segue um esboço dessa função para alguns valores de $\phi.$
@@ -396,8 +419,8 @@ text(5.5,sum(.4^(1:5)),expression(phi==.4))
 Suponha que
 $$\hat{y}_t(h)=\tilde{\mu}_t\tilde{b}_t^h$$
 o que implica que o logaritmo de $y_t$ possui tendência localmente linear. Podemos adaptar o método de Holt, suavizando, como de costume, $\tilde{\mu}_t$ por
-$$\begin{align}\tilde{\mu}_t&=\alpha y_t+(1-\alpha)\hat{y}_{t-1}(1)\\
-&=\alpha\tilde{\mu}_{t}+(1-\alpha)\tilde{\mu}_{t-1}\tilde{b}_{t-1}\end{align}$$
+$$\begin{aligned}\tilde{\mu}_t&=\alpha y_t+(1-\alpha)\hat{y}_{t-1}(1)\\
+&=\alpha\tilde{\mu}_{t}+(1-\alpha)\tilde{\mu}_{t-1}\tilde{b}_{t-1}\end{aligned}$$
 
 Além disso, como o logaritmo da tendência é localmente linear, teremos que 
 $$\log \tilde{\mu}_t-\log\tilde{\mu}_{t-1}\approx \log\tilde{b}_t$$
@@ -406,17 +429,17 @@ $$\tilde{b}_t\approx \frac{\tilde{\mu}_t}{\tilde{\mu}_{t-1}},$$
 logo, considerando que $\tilde{b}_t\approx \tilde{b}_{t-1}$, podemos suavizar $b_t$ do seguinte modo:
 $$\tilde{b}_t=\beta\frac{\tilde{\mu}_t}{\tilde{\mu}_{t-1}}+(1-\beta)\tilde{b}_{t-1}.$$
 Deste modo, o modelo com tendência  multiplicativa é dado por
-$$\begin{align}
+$$\begin{aligned}
 \tilde{\mu}_t&=\alpha y_t+(1-\alpha)\tilde{\mu}_{t-1}\tilde{b}_{t-1}\\
 \tilde{b}_t&=\beta\frac{\tilde{\mu}_t}{\tilde{\mu}_{t-1}}+(1-\beta)\tilde{b}_{t-1}
-\end{align}$$
+\end{aligned}$$
 e, na forma de modelo de espaço estado,
 
-$$\begin{align}
+$$\begin{aligned}
 y_t&=\tilde{\mu}_{t-1}\tilde{b}_{t-1}+e_t\\
 \tilde{\mu}_t&=\tilde{\mu}_{t-1}\tilde{b}_{t-1}+\alpha e_t\\
 \tilde{b}_t&=\tilde{b}_{t-1}+\alpha\beta\frac{e_t}{\tilde{\mu}_{t-1}}
-\end{align}$$
+\end{aligned}$$
 
 As estimativas de máxima verossimilhança para $\tilde{\mu}_0,\alpha,\nu$ são obtidas via maximização da função de verossimilhança, conforme visto na introdução. Já a distribuição da função de previsão 
 
@@ -428,11 +451,11 @@ $$\hat{y}_t(h)=\tilde{\mu}_{t-1}\tilde{b}_{t-1}^{(\phi+\cdots+\phi^h)}$$
 que por sua vez possui a seguinte forma em espaço estado:
 
 
-$$\begin{align}
+$$\begin{aligned}
 y_t&=\tilde{\mu}_{t-1}\tilde{b}_{t-1}^\phi+e_t\\
 \tilde{\mu}_t&=\tilde{\mu}_{t-1}\tilde{b}_{t-1}^\phi+\alpha e_t\\
 \tilde{b}_t&=\tilde{b}_{t-1}^\phi+\alpha\beta\frac{e_t}{\tilde{\mu}_{t-1}}
-\end{align}$$
+\end{aligned}$$
 
 ### Tendência aditiva e sazonalidade multiplicativa
 
