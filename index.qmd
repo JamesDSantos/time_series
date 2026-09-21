@@ -27,3 +27,6 @@ Dúvidas e sugestões podem ser enviadas para o e-mail james@ufam.edu.br
 * A seção sobre o periodograma foi reescrita. Anteriormente, o periodograma era definido via máxima verossimilhança, exigindo normalidade. Agora, ele foi derivado diretamente da minimização da soma dos quadrados dos resíduos, exigindo apenas ruído branco.
 
 * Foi apresentado um exemplo sobre o vazamento espectral, algo ignorado nos anos anteriores. 
+
+* O texto sobre modelos de suavização exponencial ficou mais fluido, apresentando as ideias básicas da construção dos modelos. Em seguida, os modelos foram reformulados na forma de modelos de de espaço de estado com inovações.
+

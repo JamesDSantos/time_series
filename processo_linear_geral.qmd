@@ -19,55 +19,85 @@ Seguem algumas propriedades fundamentais do operador defasagem
 
 -   $Bc=c$
 -   $B^k a_t=a_{t-k}$.
--   $B(c+ba_{t-1})=c+bBa_t$ (operador linear)
+-   $B(c+ba_{t})=c+ba_{t-1}$ (operador linear)
 -   $(B^m - B^n)a_t = a_{t-m}-a_{t-n}.$
 -   $B^{-1}a_t = a_{t+1}$
 
-Note que o operador $B^{-1}$ leva $a_t$ para um passo a frente (como em uma previsão). É comum encontrar a definição $F=B^{-1}$, onde a letra $F$ é escolhida por causa do termo \textit{forecast} (previsão).
+Note que o operador $B^{-1}$ leva $a_t$ para um passo a frente (como em uma previsão). É comum encontrar a definição $F=B^{-1}$, onde a letra $F$ é escolhida por causa do termo *forecast* (previsão).
 
-::: {#exm-}
+::: {#def-}
 Seja $B$ o operado defasagem. Então, definimos um polinômio de defasagens como $$\psi(B)=a_0+a_1B+\cdots+a_n B^n.$$
 :::
 
-Note que $\psi(B)$ é um modo sucinto para escrever $$a(B)x_t=a_0x_t+a_1x_{t-1}+\cdots+a_n x_{t-n}.$$
+Note que $\psi(B)x_t$ é um modo sucinto para o polinômio $$a_0x_t+a_1x_{t-1}+\cdots+a_n x_{t-n}.$$
 
-O polinômio de defasagens pode ser operado como um polinômio regular. Por exemplo, se $a(B)=1-aB$ e $b(B)=1-bB$, fazer $$\begin{align}
+O polinômio de defasagens pode ser operado como um polinômio regular. Em particular, sejam $a(B)$ e $b(B)$ dois polinômios de defasagem, definidos por
+
+$$\begin{aligned} a(B)&=1-aB\\b(B)&=1-bB\end{aligned}.$$
+Então, realizar a operação
+
+$$\begin{aligned}
 a(B)b(B)x_t&=a(B)[(1-bB)x_t]=a(B)(x_t-bx_{t-1})\\
 &=a(B)x_t-ba(B)x_{t-1}=(1-aB)x_t-b(1-aB)x_{t-1}\\
-&=x_t-(a+b)x_{t-1}+abx_{t-2}\end{align}$$ é equivalente a encontrar $$c(B)=(1-aB)(1-bB)=1-(a+b)B + abB^2$$ e calcular $$c(B)x_t=x_t-(a+b)x_{t-1}+abx_{t-2}.$$
+&=x_t-(a+b)x_{t-1}+abx_{t-2}\end{aligned}$$ 
+é equivalente a encontrar $$c(B)=(1-aB)(1-bB)=1-(a+b)B + abB^2$$ e calcular $$c(B)x_t=x_t-(a+b)x_{t-1}+abx_{t-2}.$$
 
-Dizemos que o polinômio de defasagens $\psi(B)$ possui inversa se existe uma função $\psi^{-1}(B)$ tal que $\psi(B)\psi^{-1}(B)x_t=x_t$.
+Dizemos que o polinômio de defasagens $\psi(B)$ possui inversa se existe uma função $\psi^{-1}(B)$ tal que $\psi(B)\psi^{-1}(B)x_t=x_t$. Vamos estabelecer sob quais condições essa inversa existe e converge. Para tanto, considere o polinômio autoregressivo simples 
 
-::: {#exm-}
-Para entender corretamente os modelos que serão propostos, é fundamental entender o que é a inversa do polinômio de defasagens. O caso mais importante, que será a chave para os demais, é o baseado no seguinte polinômio: $$\psi(B)=1-\phi B.$$
+$$\phi(B) = 1 - \phi B$$ 
+e a relação $y_t = \phi(B)x_t = x_t - \phi x_{t-1}.$$ Isolando $x_t$ e realizando substituições retroativas sucessivas, obtemos: 
+$$\begin{aligned} x_t &= y_t + \phi x_{t-1} \\ &= y_t + \phi y_{t-1} + \phi^2 x_{t-2} \ &;;\vdots \\ &= \sum_{j=0}^{n-1} \phi^j y_{t-j} + \phi^n x_{t-n} = \left(\sum_{j=0}^{n-1} \phi^j B^j\right) y_t + \phi^n x_{t-n}. \end{aligned}$$
+Ao tomarmos o limite com $n \to \infty$, o operador candidato a inverso é a série geométrica de potências $$\phi^{-1}(B) = \sum_{j=0}^{\infty} \phi^j B^j = 1 + \phi B + \phi^2 B^2 + \dots$$
+Para que essa soma infinita convirja e o termo do passado remoto se anule ($\lim_{n \to \infty} \phi^n x_{t-n} = 0$), exige-se que a raiz $B'$ da equação característica $1 - \phi B = 0$ esteja estritamente fora do círculo unitário no plano complexo ($|B'| > 1$), o que equivale à condição $|\phi| < 1$.
 
-Suponha que $$y_t=(1-\phi B)x_t=x_t-\phi x_{t-1 }$$ Estamos procurando que qual situação existe $\psi^{-1}(B)$ tal que $$x_t=\psi^{-1}(B)y_t.$$ Como $$y_{t-1}=(1-\phi B)x_{t-1}=x_{t-1}-\phi x_{t-2},$$ teremos que $$y_t=x_t-\phi[y_{t-1}-\phi x_{t-2}]=x_t-\phi y_{t-1}-\phi^2x_{t-2}.$$ Note que podemos continuar iterando as equações acima, obtendo $$y_t=x_t-\sum_{j=1}^{t-1} \phi^jy_{t-j}-\phi^{t}x_0.$$ Assuma que $|\phi|<1$ e que $t$ é grande, o que implica que $\phi^t x_0$ é despresível. Então $$y_t=x_t-\sum_{j=1}^{t-1}\phi^j y_{t-j}=x_t-\sum_{j=1}^{t-1}\phi^j B^j y_t$$ ou ainda $$\left(1-\sum_{j=1}^{t-1}\phi^j B^j\right)y_t=x_t$$ Agora, multiplique os dois lados da equação acima por $1-\phi B$. Então $$(1-\phi B)\left(1-\sum_{j=1}^{t-1}\phi^j B^j\right)y_t=(1-\phi B)x_t=y_t $$ Deste modo, $$\psi^{-1}(B)=\lim_{t\rightarrow \infty }\left(1-\sum_{j=1}^{t}\phi^j B^j\right)=1-\sum_{j=1}^{\infty}\phi^j B^j$$
+Para estender esse resultado para polinômios de qualquer ordem $p$, considere o resultado a seguir.
 
-$\blacksquare$
-:::
-
-No exemplo anterior, o fato de $|\phi|<1$ garante que a inveresa do polinômio de defasagens existem uma vez que $\lim_{t\rightarrow\infty}\sum_{j=1}^t \phi^jB^j$ é convergente.
-
-O resultado geral é baseado no seguinte teorema.
-
-::: {#prp-pgMatrix}
-Seja $T$ uma matriz quadrada qualquer e seja $$S_n=\sum_{j=1}^n T^j.$$ A série $S_n$ converge quando $n\rightarrow\infty$ se e somente se todos os autovalores de $T$ são menores que um em módulo. Nesse caso, $T^j\rightarrow \textbf{0}$ quando $j\rightarrow\infty$ e $$S_n\rightarrow (1-T)^{-1}.$$
+::: {#prp-} 
+Seja $T$ uma matriz quadrada de ordem $m$ e considere a soma parcial 
+$$S_n = \sum_{j=0}^n T^j B^j.$$ 
+A série $S_n$ converge para $$(\mathbf{I}_m - TB)^{-1}$$ quando $n \to \infty$ se e somente se todos os autovalores de $T$ forem estritamente menores que 1 em módulo ($|\lambda_i(T)|< 1, \forall i$). Nesse caso, $T^j \to \mathbf{0}$ quando $j \to \infty$ 
 :::
 
 A proposição acima é a chave para demonstrar o seguite teorema
 
 ::: {#thm-}
-Seja $$y_t=x_t-\sum_{j=1}^p\phi_jx_{t-j}=\left(1-\sum_{j=1}^p\phi_jB^j\right)x_t=\phi(B).$$ Então, existe $\phi^{-1}(B)$ se e somente se o módulo das raízes de $\phi(B)$ são maiores que um.
+Seja $$y_t=x_t-\sum_{j=1}^p\phi_jx_{t-j}=\left(1-\sum_{j=1}^p\phi_jB^j\right)x_t=\phi(B)x_t,$$
+onde $\phi(B)$ é o respectivo polinômio de defasagens. Então, existe $\phi^{-1}(B)$ se e somente se o módulo das raízes de $\phi(B)$ são maiores que um.
 :::
 
 ::: proof
 Faremos a demonstração para o caso $p=2$, mas os mesmos passos podem ser seguidos para demonstrar o caso geral.
 
-Seja $$y_t=x_t-\phi_1x_{t-1}-\phi_2 x_{t-2}=(1-\phi_1B-\phi_2 B^2)x_t.$$ Comecemos notando que
+Seja 
 
-$$\left(\begin{array}{c} x_t \\ x_{t-1}\end{array}\right)=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\left(\begin{array}{cc} \phi_1 & \phi_2 \\ 1 & 0\end{array}\right)\left(\begin{array}{c} x_{t-1} \\ x_{t-2}\end{array}\right)$$ Fazendo $z_t=(x_t\;\;x_{t-1})$, teremos $$z_t=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\underbrace{\left(\begin{array}{cc} \phi_1 & \phi_2 \\ 1 & 0\end{array}\right)}_{A}z_{t-1}.$$ Utilizando essa relação recursiva, teremos $$z_t=A^t z_{0}+\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)$$ e, notando que $x_t=(1\;\;0)z_t$, teremos $$x_t=(1\;\;0)A^t z_{0}+(1\;\;0)\sum_{j=0}^{t-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)$$ Suponha que os autovalores de $A$ são, em módulo, maiores que um. Então, pela @prp-pgMatrix, para $t$ suficientemente grande, $$\begin{align}x_t&=(1\;\;0)\sum_{j=1}^\infty A^j \left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)=(1\;\;0)\sum_{j=1}^\infty A^j B^j\left(\begin{array}{c} y_{t} \\ 0\end{array}\right)\\&=\sum_{j=1}^\infty (1\;\;0)A^j B^j\left(\begin{array}{c} 1 \\ 0\end{array}\right)y_{t}=\phi^{-1}(B)y_t\end{align}$$ Agora, observe que os autovalores de $A$ são obtidos através da solução de\
-$$\begin{align}0=&\left|\left(\begin{array}{cc}\phi_1 & \phi_2 \\ 1 & 0\end{array}\right)-\lambda \textbf{I}\right|-\lambda(\phi_1-\lambda)-\phi_2\\&=\lambda^2-\lambda \phi_1-\phi_2\\
-&=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\end{align}$$ Fazendo $\lambda = 1/B$, teremos que a equação acima se torna $$0=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\equiv 1-\phi_1 B-\phi_2B^2=\phi(B)$$ logo, se o módulo das raízes de $\phi(B)$ são maiores que um, então o módulo dos autovalores de $A$ são menores que um e, portanto, existe $\phi^{-1}(B)$.
+$$\begin{aligned}y_t&=x_t-\phi_1x_{t-1}-\phi_2 x_{t-2}\\&=(1-\phi_1B-\phi_2 B^2)x_t\end{aligned}.$$ Comecemos notando que
+podemos reescrever $x_t$ em função de $y_t$ como segue
+
+$$\left(\begin{array}{c} x_t \\ x_{t-1}\end{array}\right)=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\left(\begin{array}{cc} \phi_1 & \phi_2 \\ 1 & 0\end{array}\right)\left(\begin{array}{c} x_{t-1} \\ x_{t-2}\end{array}\right)$$ 
+Fazendo $z_t'=(x_t,x_{t-1})$, teremos $$z_t=\left(\begin{array}{c} y_t \\ 0\end{array}\right)+\underbrace{\left(\begin{array}{cc} \phi_1 & \phi_2 \\ 1 & 0\end{array}\right)}_{A}z_{t-1}.$$
+Utilizando essa relação recursiva, teremos 
+$$\begin{aligned}z_t&=A^n z_{t-n}+\sum_{j=0}^{n-1}A^j\left(\begin{array}{c} y_{t-j} \\ 0\end{array}\right)\\&=A^n z_{t-n}+\sum_{j=0}^{n-1}A^jB^j\left(\begin{array}{c} y_{t} \\ 0\end{array}\right)\end{aligned}$$
+e, aplicando o limite de $n\to\infty$ dos dois lados,
+$$z_t=\lim_{n\to\infty}A^n z_{t-n}+\lim_{n\to\infty}\sum_{j=0}^{n-1}A^jB^j\left(\begin{array}{c} y_{t} \\ 0\end{array}\right).$$
+Seja
+$$\psi(B)=\sum_{j=0}^\infty (AB)^j.$$
+Pela Proposição 11.1, $\psi(B)$ é convergente se e somente se os autovalores de $A$ são, em módulo, menores que 1. Nessas condições, temos que
+$$\lim_{n\to\infty}A^n z_{t-n}=0$$
+e que $\psi(B)$ é convergente, sendo seu limite dado por
+$$\psi(B)=(\mathbf{I}_2-AB)^{-1}.$$
+onde
+$$\begin{aligned}(\mathbf{I}_2-AB)^{-1}&=\left(\begin{array}{cc}1-\phi_1B & -\phi_2 B \\ -B & 1\end{array}\right)^{-1}\\&=\frac{1}{\det(\mathbf{I}_2-AB)}\left(\begin{array}{cc}1 & \phi_2 B \\ B & 1-\phi_1B\end{array}\right)\end{aligned}$$
+logo,
+$$x_t=(1\;\;0)z_t=\det(\mathbf{I}_2-AB)^{-1}y_t$$
+ou seja, 
+
+$$\begin{aligned}\phi^{-1}(B)&=\det(\mathbf{I}_2-AB)^{-1}\\&=[1-\phi_1B-\phi_2B^2]^{-1}\\&=[\phi(B)]^{-1}\end{aligned}$$. 
+
+Agora, observe que os autovalores de $A$ são obtidos através da solução de
+$$\begin{align}0=&\left|\left(\begin{array}{cc}\phi_1 & \phi_2 \\ 1 & 0\end{array}\right)-\lambda \textbf{I}_2\right|\\
+&=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\end{align}.$$ 
+Fazendo $\lambda = 1/B$, teremos que a equação acima se torna $$0=1-\frac{1}{\lambda}\phi_1-\phi_2\frac{1}{\lambda^2}\equiv 1-\phi_1 B-\phi_2B^2=\phi(B)$$
+logo, as raízes de $\phi(B)$ são maiores que um em módulo, então o módulo dos autovalores de $A$ são menores que um e, portanto, existe $\phi^{-1}(B)$.
 :::
 
 ## O modelo autorregressivo
