@@ -103,20 +103,31 @@ logo, as raízes de $\phi(B)$ são maiores que um em módulo, então o módulo d
 ## O modelo autorregressivo
 
 O modelo autorregressivo de ordem $p$, ou $AR(p)$, é dado por $$\begin{equation}
-        y_t = \sum_{i=1}^{p}\phi_iy_{t-i} +\varepsilon_t
-\end{equation}$$ onde $\{\varepsilon_t\}$ é um ruído branco, tipicamente Normal$(0,\nu)$. Nesse modelo, a contribuição da observação $y_{t-j}$ em $y_t$ é dada por $\phi_j$, que é invariante no tempo.
+        x_t = \sum_{i=1}^{p}\phi_ix_{t-i} +\varepsilon_t
+\end{equation}$$ onde $\varepsilon_t$ é um ruído branco. Nesse modelo, a contribuição da observação $x_{t-j}$ em $x_t$ é dada por $\phi_j$, que é invariante no tempo.
 
-Utilizando o polinômio de defasagens, pode-se escrever o modelo AR($p$) como $$\begin{equation}
-        \phi(B)y_t = \varepsilon_t,
-\end{equation}$$ onde $\phi(B)=1-B\phi_1-\cdots \phi_p B^p$. Se o módulo das raízes desse polinômio são maiores que um, então existe $\phi^{-1}(B)$, ou seja $$y_t=\phi^{-1}(B)\varepsilon_t=\left(\sum_{j=1}^\infty \psi_jB^j\right)\varepsilon_t$$ e o processo será estacionário, com média e variância iguais à $$\begin{align}E(y_t)&=\left(\sum_{j=1}^\infty \psi_jB^j\right)E(\varepsilon_t)=0\\
-Var(y_t)&=Var\left(\sum_{j=1}^\infty \psi_jB^j\varepsilon_t\right)=\nu\sum_{j=1}^\infty \psi_j^2\\
+Utilizando o polinômio de defasagens, pode-se escrever o modelo AR($p$) como 
+
+$$\begin{equation}
+\phi(B)x_t = \varepsilon_t,
+\end{equation}$$ 
+onde $\phi(B)=1-B\phi_1-\cdots \phi_p B^p$ é um polinômio de defasagens, também denominado de polinômio autorregressivo ou ainda de característico.
+
+Se o módulo das raízes de $\phi(B)$ são maiores que um, então existe $\phi^{-1}(B)$, ou seja, existem pesos $\psi_1,\psi_2,\ldots$ tais que $$x_t=\phi^{-1}(B)\varepsilon_t=\left(\sum_{j=0}^\infty \psi_jB^j\right)\varepsilon_t,$$
+e o processo será estacionário, com média e variância iguais a 
+
+$$\begin{align}
+E(x_t)&=\left(\sum_{j=0}^\infty \psi_jB^j\right)E(\varepsilon_t)=0\\
+Var(y_t)&=Var\left(\sum_{j=0}^\infty \psi_jB^j\varepsilon_t\right)=\nu\sum_{j=1}^\infty \psi_j^2\\
 \end{align}$$ e a função de auto covariância é dada por $$\begin{align}
-\gamma(h)&=Cov(y_t,y_{t-h})\\&=Cov\left( \left(\sum_{j=1}^\infty \psi_jB^j\right)\varepsilon_t,\left(\sum_{k=1}^\infty \psi_kB^k\right)\varepsilon_{t-h}\right)\\
-&=\sum_{j=1}^\infty \sum_{k=1}^\infty \psi_j\psi_k Cov\left(   \varepsilon_{t-j},\varepsilon_{t-k-h}\right)\\
-&=\nu\sum_{j=1}^\infty \psi_j\psi_{j+h}\end{align}$$ {#eq-covariancia}
+\gamma(h)&=\text{Cov}(x_t,x_{t-h})\\&=\text{Cov}\left( \left(\sum_{j=0}^\infty \psi_jB^j\right)\varepsilon_t,\left(\sum_{k=0}^\infty \psi_kB^k\right)\varepsilon_{t-h}\right)\\
+&=\sum_{j=0}^\infty \sum_{k=0}^\infty \psi_j\psi_k \text{Cov}\left(   \varepsilon_{t-j},\varepsilon_{t-k-h}\right)\\
+&=\nu\sum_{j=0}^\infty \psi_j\psi_{j+h}\end{align}$$ {#eq-covariancia}
 
 ::: {#exm-}
-Considere o processo $AR(1)$ abaixo: $$\begin{align*}
+Considere o processo $AR(1)$ abaixo 
+
+$$\begin{align*}
     x_t(1-B\phi)&= \varepsilon_{t-1}.
 \end{align*}$$
 
@@ -124,15 +135,23 @@ Seja $\dot{B}$ a raiz do polinômio $1-B\phi$. Temos que $$\begin{align*}
     \phi(\dot{B})=0\Rightarrow 1-\phi \dot{B} =0 \Rightarrow \dot{B} =\frac{1}{\phi}
 \end{align*}$$
 
-Logo, o processo AR(1) é estacionário se $$|\dot{B}|>1\Rightarrow \left|\frac{1}{\phi}\right|>1\Rightarrow |\phi|< 1$$ Nesse caso, já vimos que $\phi^{-1}(B)=1-\sum_{j=1}^\infty\phi^j B^j$. Então, pela equação (@eq-covariancia), identificando $\psi_j=\phi^j$,teremos que
+Logo, o processo AR(1) é estacionário se $$|\dot{B}|>1\Rightarrow \left|\frac{1}{\phi}\right|>1\Rightarrow |\phi|< 1$$ 
 
-$$\gamma(h)=\nu\sum_{j=1}^\infty \phi^j\phi^{j+h}=\nu\phi^h\frac{\phi^2}{1-\phi^2} $$ Assim, a função de autocorrelação é dada por $$\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi^h.$$
+Sabemos que
+
+$$\phi^{-1}(B)=\frac{1}{1-\phi B}=\sum_{j=1}^\infty\phi^j B^j=\sum_{j=1}^\infty\psi_j B^j$$ 
+onde $\psi_j=\phi^j$. Deste modo,
+
+$$\gamma(h)=\nu\sum_{j=0}^\infty \phi^j\phi^{j+h}=\frac{\nu\phi^h}{1-\phi^2} $$ 
+Assim, a função de autocorrelação é dada por $$\rho(h)=\frac{\gamma(h)}{\gamma(0)}=\phi^h.$$
 
 Note que:
 
 -   Se $\phi\in(0,1)$, então $\rho(h)$ decai exponencialmente para zero
 
--   Se $\in(-1,0)$, então $\rho(h)$ decai exponencialmente para zero, mas alternando o sinal.
+-   Se $\phi\in(-1,0)$, então $\rho(h)$ decai exponencialmente para zero, mas alternando o sinal.
+
+Abaixo, apresentamos alguns gráficos da função de aucorrelação do processo AR(1).
 
 ```{r echo = FALSE}
 op <- par( mfrow = c(2,2)) 
@@ -155,68 +174,107 @@ abline( h= 0)
 
 ```
 
-$\blacksquare$
+
 :::
 
 ::: {#exm-}
-Considere que $x_t$ é um AR($2$), ou seja, $$x_t=\phi_1 x_{t-1}+\phi_2 x_{t-2}+\varepsilon_t=\phi(B)\varepsilon_t,$$ onde $\phi(B)=1-\phi_1B-\phi_2 B^2$. As raízes desse polinômio são $$\dot{B}=\frac{1}{2\phi_2}\left[\phi_1\pm\sqrt{\phi_1^2+4\phi_2}\right]$$ e, considerando que $|\dot{B}|>1$, o processo será estacionário se $(\phi_1,\phi_2)$ pertence ao triângulo delimitado pelos vértices (-2,-1), (0,1), (2,-1). É interessante notarmos que, se $\phi_2<0$, é possível que as raízes de $\phi(B)$ sejam um par de números complexos conjugados.
-
-$\blacksquare$
+Considere que $x_t$ é um AR($2$), ou seja, 
+$$x_t=\phi_1 x_{t-1}+\phi_2 x_{t-2}+\varepsilon_t\Rightarrow x_t\phi(B)=\varepsilon_t,$$ 
+onde $\phi(B)=1-\phi_1B-\phi_2 B^2$.
+As raízes desse polinômio são $$\dot{B}=\frac{1}{2\phi_2}\left[-\phi_1\pm\sqrt{\phi_1^2+4\phi_2}\right]$$ e, considerando que $|\dot{B}|>1$, o processo será estacionário se $(\phi_1,\phi_2)$ pertence ao triângulo delimitado pelos vértices (-2,-1), (0,1), (2,-1). É interessante notar que, se $\phi_2<0$, é possível que as raízes de $\phi(B)$ sejam um par de números complexos conjugados.
 :::
 
-### Função de autocorrelação para o $AR(p)$
+### A função de autocorrelação para o $AR(p)$
 
-Consideremos o processo $$x_t = \sum_{j=1}^p\phi_j x_{t-j}+\varepsilon_t.$$ e suponha que ele é estacionário. Multiplicando ambos os lados por $x_{t-h}$ e aplicando a esperança, teremos $$\begin{align}
+Consideremos o processo 
+$$x_t = \sum_{j=1}^p\phi_j x_{t-j}+\varepsilon_t,$$ 
+e suponha que ele é estacionário. Multiplicando ambos os lados por $x_{t-h}$ e aplicando a esperança, teremos 
+$$\begin{align}
 E(x_{t-h}x_t)&=\sum_{j=1}^p \phi_j E(x_{t-h}x_{
 t-j})
-\end{align}$$ e, como $\gamma(h)=E(x_t x_{t-h})$, teremos $$\begin{align}
+\end{align}$$ 
+e, como $\gamma(h)=E(x_t x_{t-h})$, teremos $$\begin{align}
 \gamma(h)&=\sum_{j=1}^p \phi_j \gamma(h-j)
-\end{align}$${#eq-ACF-ARP} Dividindo ambos os lados por $\gamma(0)$, teremos $$\begin{align}
+\end{align}.$${#eq-ACF-ARP} 
+
+Dividindo ambos os lados por $\gamma(0)$, teremos $$\begin{align}
 \rho(h)&=\sum_{j=1}^p \phi_j \rho(h-j)
-\end{align}$$ Essa relação pode ser utilizada para encontrar a função de autocorrelação do processo sem a necessidade de encontrar a inversa de $\phi(B)$.
+\end{align}.$$ 
+Essa relação pode ser utilizada para encontrar a função de autocorrelação do processo sem a necessidade de encontrar a inversa de $\phi(B)$.
 
 
 
 :::{#exm-}
-Considere o processo $AR(2)$ abaixo: $$x_{t}=\phi_1y_{t-1}+\phi_2y_{t-2}+\varepsilon_t.$$ Multiplicando a equação acima por $x_{t-1}$ em ambos os lados teremos $$x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon_t x_{t-1}.$$ Calculando o valor esperado, temos $$\begin{align*}
+Abaixo, ilustramos o processo prático para obter a função de autocorrelação para um processo AR($p$) qualquer. 
+
+Sem perda de generalidade, considere o processo $AR(2)$ abaixo: $$x_{t}=\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon_t.$$ 
+Multiplicando a equação acima por $x_{t-1}$ em ambos os lados teremos 
+$$x_{t}x_{t-1}=\phi_1x_{t-1}^2+\phi_2x_{t-2}x_{t-1}+\varepsilon_t x_{t-1}.$$ 
+Calculando o valor esperado, temos 
+$$\begin{align*}
     \gamma(1)&=\phi_1E(x_{t-1}^2)+\phi_2E(x_{t-2}x_{t-1})+E(\varepsilon_t x_{t-1})\\
     &=\phi_1\gamma(0) + \phi_2\gamma(1).
-    \end{align*}$$ Dividindo ambos os lados por $\gamma(0)$ teremos $$\rho(1)=\phi_1+\phi_2\rho(1),$$ logo, $$\rho(1)=\frac{\phi_1}{1-\phi_2}
-$$
+    \end{align*}$$ 
+onde $E(\varepsilon_t x_{t-1})=0$ porque $x_t$ é sempre não correlacionada com o futuro do ruído. Dividindo ambos os lados por $\gamma(0)$ teremos $$\rho(1)=\phi_1+\phi_2\rho(1),$$ logo, $$\rho(1)=\frac{\phi_1}{1-\phi_2}.$$
 
 De modo análogo, teremos $$x_{t-2} x_{t}=x_{t-2}\left(\phi_1x_{t-1}+\phi_2x_{t-2}+\varepsilon_{t}\right).$$ Aplicando a esperança, teremos $$\begin{align*}
-    \gamma(2)&=\phi_1 \gamma(1)+\phi_2\gamma(0).
-    \end{align*}$$ e dividindo os dois lados por $\gamma(0)$ teremos\
-$$\rho(2)=\phi_1\rho(1)+\phi_2=\frac{\phi_1^2}{1-\phi_2}+\phi_2$$ Com os valores de $\rho(1)$ e $\rho(2)$, podemos encontrar $\rho(3)$:
+\gamma(2)&=\phi_1 \gamma(1)+\phi_2\gamma(0).
+    \end{align*}$$
+e dividindo os dois lados por $\gamma(0)$ teremos
 
-$$\rho(3)=\phi_1\rho(2)+\phi_2\rho(1)$$ e assim sucessivamente.
+$$\rho(2)=\phi_1\rho(1)+\phi_2=\frac{\phi_1^2}{1-\phi_2}+\phi_2.$$ 
+A partir de $\rho(1)$ e $\rho(2)$, os valores subsequentes $\rho(3), \rho(4), \ldots$ podem ser calculados recursivamente: $$\rho(3) = \phi_1 \rho(2) + \phi_2 \rho(1),$$ 
+e assim sucessivamente para qualquer $h \ge 3$.
 
-$\blacksquare$
 :::
 
-Em geral, a função de autocorrelação do processo AR($p$) pode ser escrita como
+Conforme visto no exemplo anterior, a fórmula de recursão apresentada é útil para calcular a função de autocorrelação na prática. Vamos apresentar uma forma alternativa que não utiliza recursão e traz informações importantes sobre o comportamento de $\rho(h)$. Inicialmente, observe que
 
-$$\rho(h)=\sum_{j=1}^p c_j\left(\frac{1}{\dot{B}_j}\right)^h$$ onde $\dot{B}$, novamente, é a raiz de $\phi(B)=1-\sum_{j=1}^p \phi_j B^j$.
+$$x_t=\sum_{j=1}^p\phi_jx_{t-j}$$
+pode ser obtida por
+$$\underbrace{\left(\begin{array}{c}x_t \\ x_{t-1} \\ \vdots  \\ x_{t-p+1} \\x_{t-p}\end{array}\right)}_{z_t}=\underbrace{\left(\begin{array}{ccccc}\phi_1 & \phi_2 & \cdots &\phi_{p-1} & \phi_p \\ 1 &   0 & \cdots& 1 & 0 \\  0 & 0 & \cdots & 0 & 0\\ \vdots & \vdots & \ddots & \vdots &0  \\ 0 & 0 & \cdots & 1 & 0 \end{array}\right)}_{A}\underbrace{\left(\begin{array}{c}x_{t-1} \\ x_{t-2} \\ \vdots  \\ x_{t-p} \\x_{t-p-1}\end{array}\right)}_{z_{t-1}}$$
+ou seja, como $z_t=Az_{t-1}$. Desta recursão, teremos que
+$$z_t=A^h z_{t-h}.$$
+Considere que a decomposição em valores de $A$ na forma canônica é dada por $A=P\Lambda P^{-1}$, onde $\Lambda$ é a matriz diagonal com contendo os autovalores de $A$. Então,
 
-O comportamento da função de autocorrelação depende das raízes de $\phi(B)$.
+$$\begin{aligned}A^h&=AA^{h-1}=(P\Lambda P^{-1})A^{h-1}\\&=P\Lambda P^{-1}P\Lambda P^{-1}A^{h-2}\\ &=(P\Lambda^2P^{-1})A^{h-2}\\&=P\Lambda^h P^{-1}\end{aligned}$$
+deste modo,
+$$z_t=P\Lambda^hP^{-1} z_{t-h}.$$
+Ao multiplicar ambos os lados por $x_{t-h}$ e aplicar a esperança e dividir por $\gamma(0)$, observe que 
 
--   As raízes reais se comportam de acordo com o que já foi visto no $AR(1)$, decaindo exponencialmente.
+$$\begin{aligned}
+\frac{E(x_{t-h}z_t')}{\gamma(0)}&=(\rho(h),\ldots,\rho(h-p))\\
+\frac{E(x_{t-h}z_{t-h}')}{\gamma(0)}&=(1,\ldots,\rho(-p))\\
+\end{aligned}$$
+Logo, existem $c_1,\ldots, c_p$ tais que
+$$\rho(h)=\sum_{j=1}^p c_j\lambda_j^h,$$
+onde $\lambda_1,\ldots,\lambda_p$ são os autovalores de $A$, ou ainda, $1/\lambda$ são as raízes do polinômio autorregressivo.
 
--   As raízes complexas tem um comportamento de onda abafada exponencialmente.
+Como $|\lambda_j|<1$, a função de autocorrelação tem um decaimento rápido, sendo influenciada diretamente pelos maiores autovalores e exibindo os seguintes comportamentos, segundo as raízes do polinômio de defasagens: 
 
+-   Raízes reais: decaem exponencialmente, alternando de sinal se elas forem negativas, conforme apresentado no modelo AR(1)
+
+
+-   Raízes complexas: sendo $\lambda$ uma raiz complexa, ela pode ser reescrita como 
+$\lambda =re^{i\theta}.$ Deste modo $$\lambda^h = r^he^{ih\theta}=r^h[\cos(h\theta)+i\sin(h\theta)]$$
+Como essas raízes aparecem em pares conjugados, sua combinação linear produz uma senóide amortecida, dada por
+$$dr^h \cos(\theta h+g).$$
 ::: {#exm-}
-Vamos mostrar esse resultado para o caso $p=2$ (o caso geral é análogo). Teremos que
+Vamos mostrar esse resultado para o caso $p=2$ (o caso geral é análogo). O polinômio característico deste modelo é 
 
-$$\begin{align}
-\left(\begin{array}{c}\rho(h)\\ \rho(h-1)\end{array}\right)=\underbrace{\left(\begin{array}{cc}\phi_1 & \phi_2 \\ 1 & 0 \end{array}\right)}_{T}\left(\begin{array}{c}\rho(h-1)\\ \rho(h-2)\end{array}\right)=\cdots T^h\left(\begin{array}{c}\rho(0)\\ \rho(-1)\end{array}\right)\end{align}$$
+$$\phi(B)=1-\phi_1B-\phi_2B^2.$$
+e, denominando os recíprocos de suas raizes por $\lambda_1$ e $\lambda_2$, teremos $$\rho(h)=c_1\lambda_1^h+c_2\lambda_2^h.$$ 
 
-Já discutimos, na primeira seção, que os autovalores de $T$ são equivalentes aos recíprocos das raizes de $\phi(B)$. Agora, considere a decomposição de $T$ na forma canônica $$T=Q\Lambda Q^{-1},$$ onde $Q$ é a matriz cujas colunas são formadas pelos autovetores de $T$ e $\Lambda$ é uma matriz diagonal formada pelos autovalores. Note que
+- Se $\lambda_1$ é real então $\lambda_2$ também é real e o decaimento de $\rho(h)$ será exponencial, podendo alternar o sinal se algum dos autovalores for negativo.
 
-$$A^2=Q\Lambda Q^{-1}Q\Lambda Q^{-1}=Q\Lambda^2 Q^{-1}$$ e, de modo análogo, $$A^h=Q\Lambda Q^{-1}Q\Lambda Q^{-1}=Q\Lambda^h Q^{-1}$$ Como $\Lambda^h$ é a matriz diagonal com os autovalores elevados à potência $h$, os elementos de $A^h$ devem ser necessariamente do tipo $\sum_{j=1}^2 c_j \lambda_j^h$.
+-   Se $\lambda_1$ é complexo, então $\lambda_2$ é o seu conjugado. Em coordenadas polares, escrevemos $\lambda\_1 = r e^{i\omega}$ e $\lambda\_2 = r e^{-i\omega}$, onde $r = \sqrt{-\phi_2}$ é o módulo e 
+$$\omega = \arccos\left(\frac{\phi_1}{2\sqrt{-\phi_2}}\right)$$
+é a frequência angular. Como $\rho(h)$ assume apenas valores reais, as constantes $c_1$ e $c_2$ também são complexas conjugadas. Aplicando a fórmula de Euler $e^{\pm i h \omega} = \cos(h\\omega) \pm i \sin(h\omega)$, temos
+$$ \begin{aligned} \rho(h) &= c_1 (r e^{i\omega})^h + c_2 (r e^{-i\omega})^h \\ &= r^h \left[ c_1 e^{i h \omega} + c_2 e^{-i h \omega} \right] \\ &= r^h \left[ (c_1 + c_2) \cos(h\omega) + i(c_1 - c_2) \sin(h\\omega) \right]. \end{aligned} $$ Definindo os coeficientes reais $a = c\_1 + c\_2$ e $b = i(c\_1 - c\_2)$, a expressão simplifica para 
 
-O polinômio característico da matriz $T$ é $$\lambda^2-\phi_1\lambda-\phi_2$$ e, denominando suas raizes por $\lambda_1$ e $\lambda_2$, teremos $$\rho(h)=c_1\lambda_1^h+c_2\lambda_2^h.$$ - Se $\lambda_1$ é real então $\lambda_2$ também é real e o decaimento de $\rho(h)$ será exponencial, podendo alternar o sinal se algum dos autovalores for negativo.
+$$\rho(h) = r^h \left[ a \cos(h\omega) + b \sin(h\\omega) \right] = d \cdot r^h \cos(h\\omega - \theta).$$  Portanto, quando as raízes são complexas, a função de autocorrelação exibe um comportamento de onda senoidal amortecida, onde a amplitude decai exponencialmente à taxa $r^h = (-\phi_2)^{h/2}$.
 
--   Se $\lambda_1$ é complexo, então $\lambda_2$ será seu conjugado. Em coordenadas polares, teremos $\lambda_1=re^{i\omega}$ e $\lambda_2=re^{-i\omega}$. Deste modo, $$\begin{align}\rho(h)&=r^h [c_1e^{ih\omega}+c_2e^{-ih\omega}]\\&=r^h[(c_1+c_2)\cos(h\omega)+i(c_1-c_2)\sin(h\omega)]\end{align}$$ logo, $\rho(h)$ terá um comportamento de onda com a amplitude decrescendo exponencialmente. A próxima figura mostra esse efeito.
+A próxima figura mostra esse efeito.
 
 ```{r echo = F}
 set.seed(1)
@@ -226,82 +284,74 @@ acf(x,ylab = 'Aucorrelação',xlab='Defasagens', lwd = 2, main = '')
 text(10,.8,expression(phi[1]==1~','~phi[2]==-.8))
 ```
 
-$\blacksquare$
 :::
 
 ### A função de autocorrelação parcial (PACF)
 
-Inicialmente, considere a regressão 
-$$\hat{x}_t=\sum_{j=1}^p \beta_j x_{j-j}.$$
+Conforme já discutido, a função de autocorrelação mede a dependência linear entre $x_t$ e $x_{t+h}$. No entanto, para $h \ge 2$, parte dessa correlação ocorre de forma indireta, devido à influência exercida pelo conjunto das $h-1$ observações intermediárias $\{x_{t+1}, x_{t+2}, \ldots, x_{t+h-1}\}$.
 
-onde $\beta$ é o valor de minimiza
-$$E(x_t-\hat{x}_t)^2=E\left(x_t-\sum_{j=1}^p \beta_jx_{t-j}\right)^2.$${#eq-blue-PACF}
-Para calcular $\phi_{hh}$ devemos minimizar
-$$\begin{align}E(x_{t+h}-\hat{x}_{t+h})^2&=\gamma(0)+\sum_{j=1}^p\sum_{k=1}^p\beta_j\beta_k \gamma(j-k)-2\sum_{j=1}^p\beta_j\gamma(j)\end{align}$$
-e, encontrando o ponto crítico após derivar em $\beta$, concluímos que o valor de $\beta$ que minimiza (@eq-blue-PACF) satisfaz.
-$$\gamma(j)=\sum_{k=1}^p \beta_k\gamma(j-k).$$
-Contudo, comparando a equação acima com a identidade dada na @eq-ACF-ARP, temos que $\beta_k=\phi_k,$ ou seja,
+Para construir uma medida que isole a dependência direta entre $x_t$ e $x_{t+h}$, elimina-se o efeito linear desse bloco intermediário em ambas as extremidades:
 
-$$\hat{x}_t=\sum_{j=1}^p\phi_jx_{t-j}.$$
-É interessante notarmos que chegaremos ao mesmo resultado de definirmos
-$$\hat{x}_t=\sum_{j=1}^p \phi_j x_{t+j}.$$
-Vamos alternar entre essas duas formas de acordo com a conveniência.
+1. Para $x_{t+h}$, considera-se a previsão linear $f_{t+h}$ baseada nos valores intermediários $x_{t+h-1}, \ldots, x_{t+1}$: 
 
-:::{#def-}
-A função de autocorrelação parcial, denotada por $\phi_{hh}$ é
-$$\phi_{11}=\hbox{corr}(x_{t+1},x_t),$$
-e, para $h\geq 2$, 
-$$\phi_{hh}=\hbox{corr}(x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_t
-).$$
-Além disso, se $x_t$ é um processo gaussiano, então $$\phi_{hh}=\hbox{corr}(x_{t+h},x_t|x_{t+1},\ldots,x_{t+h-1}).$$
-$\blacksquare$
+$$\hat{x}_{t+h} = \sum_{j=1}^{h-1} \alpha_j x_{t+h-j}.$$ 
+
+O erro de previsão $e_{t+h} = x_{t+h} - \hat{x}_{t+h}$ representa a informação de $x_{t+h}$ não explicada pelo bloco intermediário.
+
+2. Para $x_t$, considera-se o valor suavizado de $x_t$ baseada no mesmo bloco intermediário $x_{t+1}, \ldots, x_{t+h-1}$: 
+
+$$\hat{x}_t = \sum_{j=1}^{h-1} \alpha_j x_{t+j}.$$ O erro $e_t = x_t - \hat{x}_t$ representa a informação de $x_t$ não explicada pelo bloco intermediário.
+
+Os coeficientes $\alpha_1, \ldots, \alpha_{h-1}$ são obtidos via minimização do erro quadrático médio de previsão (os resultados são os mesmos se você decidir usar $e_{t+h}$ ou $e_t$).
+
+Deste modo, a correlação entre os dois erros de previsão
+$$\text{Corr}(x_{t+h}-\hat{x}_{t+h}, x_t-\hat{x}_t)$$ 
+elimina completamente o efeito das $h-1$ variáveis intermediárias, medindo apenas a associação direta entre $x_t$ e $x_{t+h}$. Essa é a base intuitiva para a função de autocorrelação parcial.
+
+::: {#def-} 
+Seja $\{x_t\}$ um processo estacionário com média zero. A função de autocorrelação parcial na defasagem $h$, denotada por $\phi_{hh}$, é definida por: 
+1. Para $h = 1$: 
+$$\phi_{11} = \text{Corr}(x_{t+1}, x_t) = \rho(1).$$ 
+
+2. Para $h \ge 2$: 
+$$\phi_{hh} = \text{Corr}\left( x_{t+h}-\hat{x}_{t+h}, \; x_t - \hat{x}_t \right),$$
+onde: 
+
+- $\hat{x}_{t+h} = \sum_{j=1}^{h-1} \alpha_j x_{t+h-j}$ é a melhor previsão linear de $x_{t+h}$ baseada nos valores intermediários $\{x_{t+1}, \dots, x\_{t+h-1}\}$. 
+
+- $\hat{x}\_t = \sum\_{j=1}^{h-1} \alpha_j x_{t+j}$ é a melhor previsão linear retroativa de $x_t$ baseada no mesmo conjunto intermediário $\{x_{t+1}, \dots, x_{t+h-1}\}$. 
+
+Em particular, se $\{x_t\}$ for um processo gaussiano, a autocorrelação parcial equivale à correlação condicional
+
+$$\phi_{hh} =\text{Cor}\left(x_{t+h}, x_t \;\big|\; x_{t+1}, \ldots, x_{t+h-1}\right).$$
 :::
 
 
-Intuitivamente, a função de autocorrelação parcial calcula a correlação entre $x_t$ e $x_{t+h}$ eliminando a dependência linear entre os valores intermediários $x_s$, $t<s<t+h$.
-
-
 :::{#exm-}
-Considere o processo AR(1) estacionário. Como $\gamma(h)=\phi^2$, é imediato, pela definição, que $\phi_{11}=\gamma(1)/\gamma(0)=\phi$. 
+Considere o processo AR(1) estacionário. Como $\gamma(h)=\phi^h$, é imediato, pela definição, que $\phi_{11}=\gamma(1)/\gamma(0)=\phi$. 
 
-Para $h\geq 2$, vamos definir $\hat{x}_{t+h}=\phi x_{t+h-1}$ e $\hat{x}_t=\phi x_{t+1}$. Então,
-$$\begin{align}\phi_{hh}&=Cov( x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_t)\\&=Cov( x_{t+h}-\phi x_{t+h-1},x_t-\phi x_{t+1})\\&=
+Para $h \ge 2$, o bloco de variáveis intermediárias é $\{x_{t+1}, \ldots, x_{t+h-1}\}$. Pela estrutura do processo $AR(1)$, as melhores previsões baseadas nesse bloco dependem apenas das observações imediatamente vizinhas, sendo dadas por $\hat{x}_{t+h} = \phi x_{t+h-1}$ e $\hat{x}_t = \phi x_{t+1}$. Então,
+$$\begin{aligned}\phi_{hh}&=Cov( x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_t)\\&=Cov( x_{t+h}-\phi x_{t+h-1},x_t-\phi x_{t+1})\\&=
 \gamma(h)-\phi\gamma(h-1)-\phi\gamma(h-1)+\phi^2\gamma(h-2)\\
-\end{align}$$
-Pela @eq-ACF-ARP,
-$$\begin{align}\gamma(h)&=\phi \gamma(h-1)\\ \gamma(h-1)&=\phi\gamma(h-2) \end{align}$$
-logo, $\phi_{hh}=0$ para todo $h\geq 2$
+\end{aligned}$$
 
-
-$\blacksquare$
+e, como
+$$\begin{aligned}\gamma(h)&=\phi \gamma(h-1)\\ \gamma(h-1)&=\phi\gamma(h-2) \end{aligned}$$
+temos que, $\phi_{hh}=0$ para todo $h\geq 2$
 :::
 
+Para o AR(1), apenas a autocorrelação parcial de defasagem 1 é não nula. De fato, para qualquer AR($p$) estacionário, temos que apenas as $p$ primeiras defasagens da função de autocorrelação parcial serão não nulas. 
 
-:::{#exm-}
-Considere o processo AR(2) estacionário. Para $h=2$, defina
-$$\begin{align}\hat{x}_{t+2}&=\phi_1 x_{t+1}+\phi_2 x_{t}\\ \hat{x}_t&=\phi_1 x_{t+1}+\phi_2 x_{t+2}\end{align}$$
-Então
-$$\begin{align}\phi_{22}&=Cov(x_{t+2}-\hat{x}_{t+2}, x_t-\hat{x}_t)\\&=Cov(x_{t+2}-\phi_1 x_{t+1}-\phi_2 x_{t},x_t-\phi_1 x_{t+1}-\phi_2 x_{t+2})\\
-&=Cov(\varepsilon_{t+2},x_t-\phi_1 x_{t+1} - \phi_2 x_{t+2})\\&=-\phi_2Cov(\varepsilon_{t+2},x_{t+2})\end{align}$$
-
-Por último, para qualquer $h>2$,
-$$\begin{align}\phi_{hh}&=Cov(x_{t+h}-\hat{x}_{t+h}, x_t-\hat{x}_t)\\&=Cov(x_{t+h}-\phi_1 x_{t+h-1}-\phi_2 x_{t+h-2},x_t-\phi_1 x_{t+1}-\phi_2 x_{t+2})\\
-&=Cov(\varepsilon_{t+2},x_t-\phi_1 x_{t+1} - \phi_2 x_{t+h})\\&=0\end{align}$$
-
-
-$\blacksquare$
-:::
-
-
-Seja $x_t$ um processo AR($p$) estacionário. Faça,
-$$\begin{align}\hat{x}_{t+h}&=\sum_{j=1}^p \phi_j x_{t+h-j}\\ \hat{x}_t&=\sum_{j=1}^p \phi_j x_{t+j}\end{align}$$
+Para mostrar esse fato, seja $x_t$ um processo AR($p$) estacionário. Faça,
+$$\begin{aligned}
+\hat{x}_{t+h}&=\sum_{j=1}^p \phi_j x_{t+h-j}\\ \hat{x}_t&=\sum_{j=1}^p \phi_j x_{t+j}\end{aligned}$$
 
 Então,
 
-$$\begin{align}\phi_{hh}&=Cov(x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_{t})\\
-&=Cov\left(x_{t+h}-\sum_{j=1}^p\phi_j x_{t+h-j},x_{t}-\sum_{j=1}^p\phi_j x_{t-j} \right)\\
-&=Cov\left(\varepsilon_{t+h},x_{t}-\sum_{j=1}^p\phi_j x_{t-j} \right)\\ &=\sum_{j=1}^p \phi_j Cov\left(\varepsilon_{t+h}, x_{t-j} \right)\\ \end{align}$$
-logo, $\phi_{hh}$ é nulo sempre que $h>j$.
+$$\begin{aligned}\phi_{hh}&=Cov(x_{t+h}-\hat{x}_{t+h},x_t-\hat{x}_{t})\\
+&=Cov\left(x_{t+h}-\sum_{j=1}^p\phi_j x_{t+h-j},x_{t}-\sum_{j=1}^p\phi_j x_{t+j} \right)\\
+&=Cov\left(\varepsilon_{t+h},x_{t}-\sum_{j=1}^p\phi_j x_{t+j} \right)\\ &=\sum_{j=1}^p \phi_j Cov\left(\varepsilon_{t+h}, x_{t+j} \right)\\ \end{aligned}$$
+pois $\text{Cov}(\varepsilon_{t+h}, x_t)=0$. Logo, $\phi_{hh}$ é nulo sempre que $h>p$.
 
 
 :::{#def-}

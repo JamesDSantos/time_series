@@ -30,3 +30,6 @@ Dúvidas e sugestões podem ser enviadas para o e-mail james@ufam.edu.br
 
 * O texto sobre modelos de suavização exponencial ficou mais fluido, apresentando as ideias básicas da construção dos modelos. Em seguida, os modelos foram reformulados na forma de modelos de de espaço de estado com inovações.
 
+* A relação entre o polinômio de defasagens e a existência da inversa do polinômio característico foi demonstrada com mais rigor.
+
+

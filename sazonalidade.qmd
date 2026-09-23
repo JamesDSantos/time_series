@@ -15,14 +15,14 @@ Dizemos que $s(.)$ é uma função periódica de período $p$ se
 $$s(t)=s(t + kp),\;\forall k=1,2,\ldots.$$
 :::
 
-:::{#exm-periodica}
+:::{#exm-}
 A função 
 
-$$s(t)=\left\{ \begin{align}
+$$s(t)=\left\{ \begin{aligned}
 -1, &\;\;t=1,4,7,\ldots\\
 0, &\;\; t=2,5,8,\ldots\\
 1,&\;\;t=3,6,9,\ldots
-\end{align}
+\end{aligned}
 \right.$$
 é periódica e possui período $p=3$.
 :::
@@ -572,7 +572,7 @@ Os resíduos do modelo com dois harmônicos são explorados abaixo. A série dos
 ```{r}
 res2 <- residuals(doisHarm)
 ts.plot(res2)
-acf(res2)
+stats::acf(res2)
 shapiro.test(res2)
 Box.test(res2, type = 'Ljung-Box')
 ```
