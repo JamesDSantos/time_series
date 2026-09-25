@@ -540,8 +540,9 @@ t-j})
 &amp;=Cov\left(x_{t+h}-\sum_{j=1}^p\phi_j x_{t+h-j},x_{t}-\sum_{j=1}^p\phi_j x_{t+j} \right)\\
 &amp;=Cov\left(\varepsilon_{t+h},x_{t}-\sum_{j=1}^p\phi_j x_{t+j} \right)\\ &amp;=\sum_{j=1}^p \phi_j Cov\left(\varepsilon_{t+h}, x_{t+j} \right)\\ \end{aligned}\]</span> pois <span class="math inline">\(\text{Cov}(\varepsilon_{t+h}, x_t)=0\)</span>. Logo, <span class="math inline">\(\phi_{hh}\)</span> é nulo sempre que <span class="math inline">\(h&gt;p\)</span>.</p>
 <div id="def-" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 11.4</strong></span> <strong>Gráfico da autocorrelação parcial</strong></p>
-<p>O gráfico da função de autocorrelação parcial é construído a partir dos pares <span class="math inline">\((h,\phi_{hh})\)</span>, para <span class="math inline">\(h=1,2,\ldots\)</span>. <span class="math inline">\(\blakcsquare\)</span></p>
+<p><span class="theorem-title"><strong>Definition 11.4</strong></span> <strong>Autocorrelação parcial amostral</strong></p>
+<p>Para a série temporal observada <span class="math inline">\(x_1,\ldots,x_n\)</span>, a autocorrelação parcial amostral<span class="math inline">\(\hat{\phi}_{hh}\)</span> é a correlação amostral entre <span class="math inline">\(x_1-\hat{x}_1,\ldots,x_{n-h}-\hat{x}_{n-h}\)</span> e <span class="math inline">\(x_{1+h}-\hat{x}_{1+h},\ldots,x_{n}-\hat{x}_{n}\)</span>. Por sua vez <span class="math inline">\(\hat{\alpha}_1,\ldots,\hat{\alpha}_{h-1}\)</span> são os valores que minimizam</p>
+<p><span class="math display">\[\sum_{t=h}^n\left(x_t - \sum_{j=1}^{h-1} \alpha_j x_{t-j}\right)^2.\]</span> O correlograma parcial é construído com o gráfico de <span class="math inline">\((h,\hat{\phi}_{hh})\)</span>.</p>
 </div>
 <p>No exemplo abaixo, uma amostra de tamanho 100 foi gerada de um processo AR(2) estacionário e o gráfico da função de autocorrelação parcial gerado. Note que há apenas duas autocorrelações significativas, levantando evidências de que a ordem do modelo autoregressivo é 2.</p>
 <div class="cell">

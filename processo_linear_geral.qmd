@@ -355,10 +355,12 @@ pois $\text{Cov}(\varepsilon_{t+h}, x_t)=0$. Logo, $\phi_{hh}$ é nulo sempre qu
 
 
 :::{#def-}
-**Gráfico da autocorrelação parcial**
+**Autocorrelação parcial amostral**
 
-O gráfico da função de autocorrelação parcial é construído a partir dos pares  $(h,\phi_{hh})$, para $h=1,2,\ldots$.
-$\blakcsquare$
+Para a série temporal observada $x_1,\ldots,x_n$, a autocorrelação parcial amostral$\hat{\phi}_{hh}$ é a correlação amostral entre $x_1-\hat{x}_1,\ldots,x_{n-h}-\hat{x}_{n-h}$ e $x_{1+h}-\hat{x}_{1+h},\ldots,x_{n}-\hat{x}_{n}$. Por sua vez $\hat{\alpha}_1,\ldots,\hat{\alpha}_{h-1}$ são os valores que minimizam
+
+$$\sum_{t=h}^n\left(x_t - \sum_{j=1}^{h-1} \alpha_j x_{t-j}\right)^2.$$
+O correlograma parcial é construído com o gráfico de $(h,\hat{\phi}_{hh})$.
 :::
 
 
@@ -420,6 +422,8 @@ $$\gamma(0)=\sum_{j=1}^{p}\phi_j \gamma(j)+\nu$$
 Portanto, um estimador para $\nu$ é dado por
 $$\hat{\nu}=  
   \hat{\gamma(0)}=\sum_{j=1}^{p}\hat{\phi_j}\hat{\gamma(j)}$$
+
+
 
 ### Estimador de máxima verossimilhança
 
