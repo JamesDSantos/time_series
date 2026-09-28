@@ -562,45 +562,60 @@ t-j})
 </section>
 <section id="método-de-estimação-de-yule-walker" class="level3" data-number="11.2.3">
 <h3 data-number="11.2.3" class="anchored" data-anchor-id="método-de-estimação-de-yule-walker"><span class="header-section-number">11.2.3</span> Método de estimação de Yule-Walker</h3>
-<p>O método de estimação de Yule-Walker para estimar os parâmetros do modelo AR(<span class="math inline">\(p\)</span>) consiste na aplicação do método dos momentos. Sua principal vantagem é a ausência de suposição sobre a distribuição dos erros do modelo, exigindo apenas a condição de estacionaridade.</p>
-<p>Para o processo <span class="math inline">\(AR(p)\)</span> estacionário, sabemos que <span class="math display">\[\gamma(h) = \sum_{j=1}^p \phi_j \gamma( h-j).\]</span> Considere a equações do modelo AR(<span class="math inline">\(p\)</span>): <span class="math display">\[x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t.\]</span> Podemos multiplicar ambos os lados por <span class="math inline">\(x_t\)</span> (ou seja <span class="math inline">\(x_{t-h}\)</span>, com <span class="math inline">\(h=0\)</span>). Após aplicar a esperança teremos <span class="math display">\[E(x_t^2) = \sum_{j=1}^p \phi_j E(x_{t-j}x_{t})+E(\varepsilon_tx_{t}).\]</span> Aqui há um detalhe importante:<br>
+<p>O método de estimação de Yule-Walker para os parâmetros do modelo AR(<span class="math inline">\(p\)</span>) consiste na aplicação do método dos momentos. Sua principal vantagem é a ausência de suposição sobre a distribuição dos erros do modelo, exigindo apenas a condição de estacionaridade.</p>
+<p>Para o processo <span class="math inline">\(AR(p)\)</span> estacionário, sabemos que <span class="math display">\[\gamma(h) = \sum_{j=1}^p \phi_j \gamma( h-j).\]</span> Considere as equações do modelo AR(<span class="math inline">\(p\)</span>): <span class="math display">\[x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t.\]</span> Podemos multiplicar ambos os lados por <span class="math inline">\(x_t\)</span>. Após aplicar a esperança teremos <span class="math display">\[E(x_t^2) = \sum_{j=1}^p \phi_j E(x_{t-j}x_{t})+E(\varepsilon_tx_{t}).\]</span> Aqui há um detalhe importante:<br>
 <span class="math display">\[E(\varepsilon_tx_{t})=E\left(\varepsilon_t\left[\sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t\right]\right)=E(\varepsilon_t^2)=\nu\]</span> Portanto, <span class="math display">\[\begin{align}   
     \gamma(h)=\left\{\begin{array}{ll}
     \sum_{j=1}^p \phi_j \gamma( h-j),&amp;\;\;\hbox{se }h&gt;0\\
     \sum_{j=1}^p \phi_j \gamma( j)+\nu,&amp;\;\;\hbox{se }h=0 \\
     \end{array}\right.
     \end{align}\]</span></p>
-<p>O método de estimação de Yule-Walker consiste em substituir <span class="math inline">\(\gamma(1),\ldots,\gamma(p)\)</span> pelas autocovariâncias amostrais: <span class="math display">\[\begin{align*}
-\hat{\gamma}(1) &amp;= \phi_1\hat{\gamma}(0) + \phi_1\hat{\gamma}(-1) + \cdots + \phi_p\hat{\gamma}(1-p) \\
-\hat{\gamma}(2) &amp;= \phi_1\hat{\gamma}(1) + \phi_1\hat{\gamma}(0)  + \cdots + \phi_p\hat{\gamma}(2-p) \\
-\vdots &amp;= \vdots \\
-\hat{\gamma}(p) &amp;= \phi_1\hat{\gamma}(p-1) + \phi_1\hat{\gamma}(p-2)  + \cdots + \phi_p\hat{\gamma}(0)
-\end{align*}\]</span> Nota: lembre-se que <span class="math inline">\(\gamma(-i)=\gamma(i)\)</span>. Podemos escrever o sistema na forma matricial: <span class="math display">\[\begin{align*}
+<p>O método de estimação de Yule-Walker consiste em substituir <span class="math inline">\(\gamma(1),\ldots,\gamma(p)\)</span> pelas autocovariâncias amostrais:</p>
+<p><span class="math display">\[\begin{array}{c}\hat{\gamma}(1)=\\ \hat{\gamma}(2)= \\ \vdots \\ \hat{\gamma}(p)=\end{array}\begin{array}{llll}\phi_1\hat{\gamma}(0)&amp;+\phi_2\hat{\gamma}(-1) &amp;+\cdots &amp;+\phi_p\hat{\gamma}(1-p)  \\
+\phi_1\hat{\gamma}(1)&amp;+\phi_2\hat{\gamma}(0) &amp;+\cdots &amp;+\phi_p\hat{\gamma}(2-p)\\ \cdots &amp; +\cdots &amp;+\ddots&amp;+\cdots\\ \phi_1\hat{\gamma}(p-1)&amp;+\phi_2\hat{\gamma}(p-2) &amp;+\cdots &amp;+\phi_p\hat{\gamma}(0) \end{array}\]</span></p>
+<p>Recordando que <span class="math inline">\(\gamma(-i)=\gamma(i)\)</span>, podemos escrever o sistema acima na forma matricial</p>
+<p><span class="math display">\[\begin{align*}
     \underbrace{\left(
     \begin{array}{cccc}
-\hat{\gamma}(0) &amp; \hat{\gamma}(-1) &amp; \cdots &amp; \hat{\gamma}(1-p) \\
-\hat{\gamma}(1) &amp; \hat{\gamma}(0)  &amp; \cdots &amp; \hat{\gamma}(2-p) \\
+\hat{\gamma}(0) &amp; \hat{\gamma}(1) &amp; \cdots &amp; \hat{\gamma}(p-1) \\
+\hat{\gamma}(1) &amp; \hat{\gamma}(0)  &amp; \cdots &amp; \hat{\gamma}(p-2) \\
          \vdots &amp; \vdots               &amp; \ddots                &amp; \vdots\\
 \hat{\gamma}(p-1) &amp; \hat{\gamma}(p-2) &amp;  \cdots &amp; \hat{\gamma}(0)   
     \end{array}\right)}_{\hat{\boldsymbol{\Gamma}}}
     \underbrace{\left( \begin{array}{c} \hat{\phi}_1 \\ \hat{\phi}_2 \\ \vdots \\ \hat{\phi}_p   \end{array}\right)}_{\hat{\boldsymbol{\phi}}}=
     \underbrace{\left( \begin{array}{c} \hat{\gamma}(1) \\ \hat{\gamma}(2) \\ \vdots \\ \hat{\gamma}(p)   \end{array}\right)}_{\hat{\boldsymbol{\gamma}}}.
-    \end{align*}\]</span> e os estimadores de Yule-Walker para os parâmetros autoregressivos são dados por <span class="math display">\[\hat{\boldsymbol{\phi}}=\hat{\boldsymbol{\Gamma}}^{-1}\hat{\boldsymbol{\gamma}}.\]</span></p>
-<p>Voltando para a Equação (<span class="math inline">\(\ref{eq:autocovarianca-AR}\)</span>), temos que <span class="math display">\[\gamma(0)=\sum_{j=1}^{p}\phi_j \gamma(j)+\nu\]</span> Portanto, um estimador para <span class="math inline">\(\nu\)</span> é dado por <span class="math display">\[\hat{\nu}=  
-  \hat{\gamma(0)}=\sum_{j=1}^{p}\hat{\phi_j}\hat{\gamma(j)}\]</span></p>
+    \end{align*}\]</span> e os estimadores de Yule-Walker para os parâmetros autoregressivos são dados por <span class="math display">\[\hat{\boldsymbol{\phi}}=\hat{\boldsymbol{\Gamma}}^{-1}\hat{\boldsymbol{\gamma}},\]</span> onde <span class="math inline">\(\hat{\Gamma}^{-1}\)</span> é computada de modo eficiente pelo Algoritmo de Durbin-Levinson.</p>
+<p>Para estimar <span class="math inline">\(\nu\)</span>, observe que <span class="math display">\[\gamma(0)=\sum_{j=1}^{p}\phi_j \gamma(j)+\nu\]</span> Portanto, um estimador para <span class="math inline">\(\nu\)</span> é dado por <span class="math display">\[\hat{\nu}=  
+  \hat{\gamma}(0)-\sum_{j=1}^{p}\hat{\phi}_j\hat{\gamma}(j)\]</span></p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Conexão entre o Estimador de Yule-Walker e a autocorrelação parcial</strong></p>
+<p>Existe uma relação direta entre a solução do sistema de Yule-Walker e a função de autocorrelação parcial: ao resolver o sistema para uma ordem ajustada <span class="math inline">\(h\)</span>, o último elemento do vetor de estimadores obtido, <span class="math inline">\(\hat{\phi}_{hh}\)</span>, é exatamente a autocorrelação parcial amostral na defasagem <span class="math inline">\(h\)</span>.</p>
+<p>Em termos práticos, calcular o correlograma parcial (PACF) para as defasagens <span class="math inline">\(h = 1, 2, \ldots\)</span> equivale a resolver sucessivos sistemas de Yule-Walker de dimensão <span class="math inline">\(h \times h\)</span> e extrair o coeficiente da última defasagem de cada ajuste. É por essa razão que o</p>
+</div>
+</div>
 </section>
 <section id="estimador-de-máxima-verossimilhança" class="level3" data-number="11.2.4">
 <h3 data-number="11.2.4" class="anchored" data-anchor-id="estimador-de-máxima-verossimilhança"><span class="header-section-number">11.2.4</span> Estimador de máxima verossimilhança</h3>
-<p>Observe que <span class="math display">\[x_t|\mathcal{D}_{t-1}\sim x_t|x_{t-1},\ldots,x_{t-p}\]</span> ou seja, <span class="math inline">\(\{x_t\}\)</span> é uma cadeia de Markov de ordem <span class="math inline">\(p\)</span>. Deste modo, para <span class="math inline">\(n&gt;p\)</span>, <span class="math display">\[\begin{align*}
-f(x_{1},\ldots,x_n)&amp;=f\left(x_n|\mathcal{D}_{n-1}\right)f\left(\mathcal{D}_{n-1}\right)=f\left(x_T|x_{n-1},\ldots,x_{n-p}\right)f\left(\mathcal{D}_{n-1}\right)\\
+<p>Observe que o modelo autorregressivo é descrito, de modo condicional, através dos <span class="math inline">\(p\)</span> últimos valores observados. Isto implica que <span class="math display">\[x_t|\mathcal{D}_{t-1}\sim x_t|x_{t-1},\ldots,x_{t-p}\]</span> ou seja, <span class="math inline">\(\{x_t\}\)</span> é uma cadeia de Markov de ordem <span class="math inline">\(p\)</span>. Deste modo, para <span class="math inline">\(n&gt;p\)</span>, <span class="math display">\[\begin{align*}
+f(x_{1},\ldots,x_n)&amp;=f\left(x_n|\mathcal{D}_{n-1}\right)f\left(\mathcal{D}_{n-1}\right)=f\left(x_n|x_{n-1},\ldots,x_{n-p}\right)f\left(\mathcal{D}_{n-1}\right)\\
         &amp;=\prod_{t=p+1}^{n}f\left(x_t|x_{t-1},\ldots,x_{t-p}\right) f(x_{1},\ldots,x_p).
-        \end{align*}\]</span> Agora, suponha que <span class="math inline">\(\varepsilon_t\sim\hbox{Normal}(0,\nu)\)</span>. Então, <span class="math display">\[\begin{align*}
-L(\phi_1,\ldots,\phi_p,\nu)&amp;=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\sum_{j=1}^p \phi_jx_{t-j})^2\right\}\\&amp;\times f(x_{1},\ldots,x_p|\phi_1,\ldots,\phi_p,\nu).
+        \end{align*}\]</span> Agora, suponha que <span class="math inline">\(\varepsilon_t\sim\hbox{Normal}(0,\nu)\)</span>. Para <span class="math inline">\(\beta=(\phi_1,\ldots,\phi_p)\)</span>, a função de verossimilhança do processo é dada por</p>
+<p><span class="math display">\[\begin{align*}
+L(\beta,\nu)&amp;=\left(\frac{1}{2\pi\nu}\right)^{\frac{n-p}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\sum_{j=1}^p \phi_jx_{t-j})^2\right\}\\&amp;\times f(x_{1},\ldots,x_p|\beta,\nu).
         \end{align*}\]</span></p>
-<p>O método da maxima verossimilhança condicional consiste em ignorar o termo <span class="math inline">\(f(x_{1},\ldots,x_p|\phi_1,\ldots,\phi_p,\nu)\)</span>. Com isso, o restante da função de verossimilhança pode ser escrito como um modelo linear, uma vez que</p>
-<p><span class="math display">\[x_t=\sum_{j=1}^p \phi_jx_{t-j}+\varepsilon_t=\underbrace{(x_{t-1}\;\;\cdots \;\;x_{t-p})}_{F_t'}\underbrace{\left(\begin{array}{c}\phi_1 \\ \vdots \\ \phi_p\end{array}\right)}_{\beta}\]</span> e <span class="math inline">\(\hat{\beta}\)</span> e <span class="math inline">\(\hat{\nu}\)</span> podem ser obtidos pelos estimadores já discutidos na seção sobre modelos lineares.</p>
-<p>Já para o método da máxima verossimilhança, precisamos especificar a distribuição do termo adicional <span class="math inline">\(f(x_1,\ldots,x_p|\phi_1,\ldots,\phi_p)\)</span>. Desde que o processo seja estacionário, é possível mostrar que <span class="math display">\[x_1,\ldots,x_p\sim\hbox{Normal}(\textbf{0}_p,\Sigma(\phi_1,\ldots,\phi_p))\]</span> onde <span class="math inline">\(\Sigma(\phi_1,\ldots,\phi_p))\)</span> é a matriz formada pelas autocovariâncias.</p>
-<p>A maximização da função de verossimilhança é feita numericamente e pode-se utilizar as estimativas obtidas no método da máxima verossimilhança condicional como ponto de partida para o algoritmo de maximização.</p>
+<p>Note que, em termos de informação de Fisher, o termo <span class="math inline">\(f(x_1,\ldots,x_n|\beta,\nu)\)</span> tem peso reduzido com o aumento de <span class="math inline">\(n\)</span>. O método da maxima verossimilhança condicional consiste em ignorar esse termo, de modo que a função de verossimilhança possa ser escrita como um modelo linear, uma vez que</p>
+<p><span class="math display">\[x_t=\sum_{j=1}^p \phi_jx_{t-j}+\varepsilon_t=\underbrace{(x_{t-1}\;\;\cdots \;\;x_{t-p})}_{f_t'}\underbrace{\left(\begin{array}{c}\phi_1 \\ \vdots \\ \phi_p\end{array}\right)}_{\beta}+\varepsilon_t.\]</span> e <span class="math inline">\(\hat{\beta}\)</span> e <span class="math inline">\(\hat{\nu}\)</span> podem ser obtidos pelos estimadores já discutidos na seção sobre modelos lineares.</p>
+<p>Já para o método da máxima verossimilhança, precisamos especificar a distribuição do termo adicional <span class="math inline">\(f(x_1,\ldots,x_p|\beta,\nu)\)</span>. Desde que o processo seja estacionário, sabemos que <span class="math inline">\(x_1,\ldots,x_p\sim\hbox{Normal}(\textbf{0}_p,\Sigma)\)</span>, o elemento <span class="math inline">\((i,j)\)</span> de <span class="math inline">\(\Sigma\)</span> é dado por</p>
+<p><span class="math display">\[\sigma_{ij}=\gamma(|i-j|)=\nu\sum_{k=0}^\infty \psi_k\psi_{k+|i-j|}\]</span> sendo <span class="math inline">\(\psi_0,\psi_1,\ldots,\)</span> os coeficientes de <span class="math inline">\(\phi(B)^{-1}\)</span>. Para esse caso, a função de verossimilhança não possui expressão analítica para suas estimativas e as mesmas devem ser obtidas via maximização numérica.</p>
 </section>
 <section id="previsão" class="level3" data-number="11.2.5">
 <h3 data-number="11.2.5" class="anchored" data-anchor-id="previsão"><span class="header-section-number">11.2.5</span> Previsão</h3>

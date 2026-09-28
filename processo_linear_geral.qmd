@@ -376,13 +376,13 @@ pacf(x, xlab = 'Defasagem', ylab = 'Autocorrelação parcial', main = '', lwd = 
 
 ### Método de estimação de Yule-Walker
 
-O método de estimação de Yule-Walker para estimar os parâmetros do modelo AR($p$) consiste na aplicação do método dos momentos. Sua principal vantagem é a ausência de suposição sobre a distribuição dos erros do modelo, exigindo apenas a condição de estacionaridade.
+O método de estimação de Yule-Walker para os parâmetros do modelo AR($p$) consiste na aplicação do método dos momentos. Sua principal vantagem é a ausência de suposição sobre a distribuição dos erros do modelo, exigindo apenas a condição de estacionaridade.
 
 Para o processo $AR(p)$ estacionário, sabemos que
 $$\gamma(h) = \sum_{j=1}^p \phi_j \gamma( h-j).$$
-Considere a equações do modelo AR($p$):
+Considere as equações do modelo AR($p$):
 $$x_t = \sum_{j=1}^p \phi_j x_{t-j}+\varepsilon_t.$$
-Podemos multiplicar ambos os lados por $x_t$ (ou seja $x_{t-h}$, com $h=0$). Após aplicar a esperança
+Podemos multiplicar ambos os lados por $x_t$. Após aplicar a esperança
 teremos
 $$E(x_t^2) = \sum_{j=1}^p \phi_j E(x_{t-j}x_{t})+E(\varepsilon_tx_{t}).$$
 Aqui há um detalhe importante:  
@@ -396,18 +396,17 @@ $$\begin{align}
     \end{align}$$
 
 O método de estimação de Yule-Walker consiste em substituir $\gamma(1),\ldots,\gamma(p)$ pelas autocovariâncias amostrais:
-$$\begin{align*}
-\hat{\gamma}(1) &= \phi_1\hat{\gamma}(0) + \phi_1\hat{\gamma}(-1) + \cdots + \phi_p\hat{\gamma}(1-p) \\ 
-\hat{\gamma}(2) &= \phi_1\hat{\gamma}(1) + \phi_1\hat{\gamma}(0)  + \cdots + \phi_p\hat{\gamma}(2-p) \\ 
-\vdots &= \vdots \\
-\hat{\gamma}(p) &= \phi_1\hat{\gamma}(p-1) + \phi_1\hat{\gamma}(p-2)  + \cdots + \phi_p\hat{\gamma}(0)
-\end{align*}$$ 
-Nota: lembre-se que $\gamma(-i)=\gamma(i)$. Podemos escrever o sistema na forma matricial:
+
+$$\begin{array}{c}\hat{\gamma}(1)=\\ \hat{\gamma}(2)= \\ \vdots \\ \hat{\gamma}(p)=\end{array}\begin{array}{llll}\phi_1\hat{\gamma}(0)&+\phi_2\hat{\gamma}(-1) &+\cdots &+\phi_p\hat{\gamma}(1-p)  \\ 
+\phi_1\hat{\gamma}(1)&+\phi_2\hat{\gamma}(0) &+\cdots &+\phi_p\hat{\gamma}(2-p)\\ \cdots & +\cdots &+\ddots&+\cdots\\ \phi_1\hat{\gamma}(p-1)&+\phi_2\hat{\gamma}(p-2) &+\cdots &+\phi_p\hat{\gamma}(0) \end{array}$$
+
+Recordando que $\gamma(-i)=\gamma(i)$, podemos escrever o sistema acima na forma matricial
+
 $$\begin{align*}
     \underbrace{\left(
     \begin{array}{cccc}
-\hat{\gamma}(0) & \hat{\gamma}(-1) & \cdots & \hat{\gamma}(1-p) \\ 
-\hat{\gamma}(1) & \hat{\gamma}(0)  & \cdots & \hat{\gamma}(2-p) \\ 
+\hat{\gamma}(0) & \hat{\gamma}(1) & \cdots & \hat{\gamma}(p-1) \\ 
+\hat{\gamma}(1) & \hat{\gamma}(0)  & \cdots & \hat{\gamma}(p-2) \\ 
          \vdots & \vdots               & \ddots                & \vdots\\
 \hat{\gamma}(p-1) & \hat{\gamma}(p-2) &  \cdots & \hat{\gamma}(0)   
     \end{array}\right)}_{\hat{\boldsymbol{\Gamma}}}
@@ -415,41 +414,52 @@ $$\begin{align*}
     \underbrace{\left( \begin{array}{c} \hat{\gamma}(1) \\ \hat{\gamma}(2) \\ \vdots \\ \hat{\gamma}(p)   \end{array}\right)}_{\hat{\boldsymbol{\gamma}}}.
     \end{align*}$$
 e os estimadores de Yule-Walker para os parâmetros autoregressivos são dados por
-    $$\hat{\boldsymbol{\phi}}=\hat{\boldsymbol{\Gamma}}^{-1}\hat{\boldsymbol{\gamma}}.$$ 
+    $$\hat{\boldsymbol{\phi}}=\hat{\boldsymbol{\Gamma}}^{-1}\hat{\boldsymbol{\gamma}},$$ 
+onde $\hat{\Gamma}^{-1}$ é computada de modo eficiente pelo Algoritmo de Durbin-Levinson. 
 
-Voltando para a Equação (\ref{eq:autocovarianca-AR}), temos que
+Para estimar $\nu$, observe que 
 $$\gamma(0)=\sum_{j=1}^{p}\phi_j \gamma(j)+\nu$$
 Portanto, um estimador para $\nu$ é dado por
 $$\hat{\nu}=  
-  \hat{\gamma(0)}=\sum_{j=1}^{p}\hat{\phi_j}\hat{\gamma(j)}$$
+  \hat{\gamma}(0)-\sum_{j=1}^{p}\hat{\phi}_j\hat{\gamma}(j)$$
 
+::: {.callout-note icon=false} 
+
+**Conexão entre o Estimador de Yule-Walker e a autocorrelação parcial**
+
+Existe uma relação direta entre a solução do sistema de Yule-Walker e a função de autocorrelação parcial: ao resolver o sistema para uma ordem ajustada $h$, o último elemento do vetor de estimadores obtido, $\hat{\phi}_{hh}$, é exatamente a 
+autocorrelação parcial amostral na defasagem $h$. 
+
+Em termos práticos, calcular o correlograma parcial (PACF) para as defasagens $h = 1, 2, \ldots$ equivale a resolver sucessivos sistemas de Yule-Walker de dimensão $h \times h$ e extrair o coeficiente da última defasagem de cada ajuste. É por essa razão que o 
+
+:::
 
 
 ### Estimador de máxima verossimilhança
 
-Observe que
+Observe que o modelo autorregressivo é descrito, de modo condicional, através dos $p$ últimos valores observados. Isto implica que
 $$x_t|\mathcal{D}_{t-1}\sim x_t|x_{t-1},\ldots,x_{t-p}$$
 ou seja, $\{x_t\}$ é uma cadeia de Markov de ordem $p$. Deste modo, para $n>p$,
 $$\begin{align*}
-f(x_{1},\ldots,x_n)&=f\left(x_n|\mathcal{D}_{n-1}\right)f\left(\mathcal{D}_{n-1}\right)=f\left(x_T|x_{n-1},\ldots,x_{n-p}\right)f\left(\mathcal{D}_{n-1}\right)\\
+f(x_{1},\ldots,x_n)&=f\left(x_n|\mathcal{D}_{n-1}\right)f\left(\mathcal{D}_{n-1}\right)=f\left(x_n|x_{n-1},\ldots,x_{n-p}\right)f\left(\mathcal{D}_{n-1}\right)\\
         &=\prod_{t=p+1}^{n}f\left(x_t|x_{t-1},\ldots,x_{t-p}\right) f(x_{1},\ldots,x_p).
         \end{align*}$$
-Agora, suponha que $\varepsilon_t\sim\hbox{Normal}(0,\nu)$. Então,  $$\begin{align*}
-L(\phi_1,\ldots,\phi_p,\nu)&=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\sum_{j=1}^p \phi_jx_{t-j})^2\right\}\\&\times f(x_{1},\ldots,x_p|\phi_1,\ldots,\phi_p,\nu).
+Agora, suponha que $\varepsilon_t\sim\hbox{Normal}(0,\nu)$. Para $\beta=(\phi_1,\ldots,\phi_p)$, a função de verossimilhança do processo é dada por 
+
+$$\begin{align*}
+L(\beta,\nu)&=\left(\frac{1}{2\pi\nu}\right)^{\frac{n-p}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\sum_{j=1}^p \phi_jx_{t-j})^2\right\}\\&\times f(x_{1},\ldots,x_p|\beta,\nu).
         \end{align*}$$      
 
+Note que, em termos de informação de Fisher, o termo $f(x_1,\ldots,x_n|\beta,\nu)$ tem peso reduzido com o aumento de $n$. O método da maxima verossimilhança condicional consiste em ignorar esse termo, de modo que a função de verossimilhança possa ser escrita como um modelo linear, uma vez que
 
-O método da maxima verossimilhança condicional consiste em ignorar o termo $f(x_{1},\ldots,x_p|\phi_1,\ldots,\phi_p,\nu)$. Com isso, o restante da função de verossimilhança pode ser escrito como um modelo linear, uma vez que
-
-$$x_t=\sum_{j=1}^p \phi_jx_{t-j}+\varepsilon_t=\underbrace{(x_{t-1}\;\;\cdots \;\;x_{t-p})}_{F_t'}\underbrace{\left(\begin{array}{c}\phi_1 \\ \vdots \\ \phi_p\end{array}\right)}_{\beta}$$
+$$x_t=\sum_{j=1}^p \phi_jx_{t-j}+\varepsilon_t=\underbrace{(x_{t-1}\;\;\cdots \;\;x_{t-p})}_{f_t'}\underbrace{\left(\begin{array}{c}\phi_1 \\ \vdots \\ \phi_p\end{array}\right)}_{\beta}+\varepsilon_t.$$
 e $\hat{\beta}$ e $\hat{\nu}$ podem ser obtidos pelos estimadores já discutidos na seção sobre modelos lineares.
 
 
-Já para o método da máxima verossimilhança, precisamos especificar a distribuição do termo adicional $f(x_1,\ldots,x_p|\phi_1,\ldots,\phi_p)$. Desde que o processo seja estacionário, é possível mostrar que
-$$x_1,\ldots,x_p\sim\hbox{Normal}(\textbf{0}_p,\Sigma(\phi_1,\ldots,\phi_p))$$
-onde $\Sigma(\phi_1,\ldots,\phi_p))$ é a matriz formada pelas autocovariâncias.
+Já para o método da máxima verossimilhança, precisamos especificar a distribuição do termo adicional $f(x_1,\ldots,x_p|\beta,\nu)$. Desde que o processo seja estacionário, sabemos que $x_1,\ldots,x_p\sim\hbox{Normal}(\textbf{0}_p,\Sigma)$, o elemento $(i,j)$ de $\Sigma$ é dado por
 
-A maximização da função de verossimilhança é feita numericamente e pode-se utilizar as estimativas obtidas no método da máxima verossimilhança condicional como ponto de partida para o algoritmo de maximização.
+$$\sigma_{ij}=\gamma(|i-j|)=\nu\sum_{k=0}^\infty \psi_k\psi_{k+|i-j|}$$
+sendo $\psi_0,\psi_1,\ldots,$ os coeficientes de $\phi(B)^{-1}$. Para esse caso, a função de verossimilhança não possui expressão analítica para suas estimativas e as mesmas devem ser obtidas via maximização numérica.
 
 ### Previsão
 
