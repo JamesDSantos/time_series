@@ -463,53 +463,53 @@ sendo $\psi_0,\psi_1,\ldots,$ os coeficientes de $\phi(B)^{-1}$. Para esse caso,
 
 ### Previsão
 
+Conforme discutido ao longo das seções anteriores, o modelo AR($p$) pode ser representado da forma aumentada
+
+$$\underbrace{\left(\begin{array}{c}x_t \\ x_{t-1}\\   x_{t-2}\\\vdots\\  x_{t-p+1}\end{array}\right)}_{\theta_t}=\underbrace{\left(\begin{array}{ccccc}\phi_1 &\phi_2 & \cdots & \phi_{p-1} & \phi_{p} \\ 1& 0 &\cdots &0&0 \\ 0 & 1 & \cdots & 0 & 0 \\ \vdots & \vdots & \ddots & \vdots&\vdots \\0 & 0 & \cdots & 1 & 0\end{array}\right)}_{G}\underbrace{\left(\begin{array}{c}x_{t-1} \\ x_{t-2}\\ x_{t-3} \\ \vdots \\ x_{t-p}\end{array}\right)}_{\theta_{t-1}}+\underbrace{\left(\begin{array}{c}\varepsilon_t \\ 0\\0\\\vdots\\ 0\end{array}\right)}_{w_t}$$
+e, fazendo $F'=(1,\mathbf{0}_{p-1})$, o modelo autorregresivo de ordem $p$ é recuperado fazendo $F'\theta_t$. Deste modo, o modelo AR($p$) pode ser reescrito como um modelo de espaço de estados linear, dado por
+
+$$\begin{aligned}y_t&=F'\theta_t+v_t,\quad\text{(eq. das observações)} \\ \theta_t&=G\theta_{t-1}+w_t,\quad\text{(eq. de estado)}\end{aligned}$$
+de onde fica evidente que $y_t=x_t$ e que $v_t\equiv0$ para todo $t$. Deste modo, dados $\mathcal{D}_t$, a distribuição da previsão de horizonte $h\geq1$ é dada por $x_{t+h}\sim\hbox{Normal}(f_t(h),Q_t(h))$, onde
+
+$$f_t(h)=F'G^h\theta_t$$
+e
+
+$$Q_t(h)=F'\sum_{k=1}^hG^{k-1}W(G^{k-1})'F$$
+onde $W$ é uma matriz de ordem $p$ o elemento (1,1) igual a $\nu$ e os demais nulos.
+
+Como $G$ depende de $\phi_1,\ldots,\phi_p$, tanto a previsão $f_t(h)$ como a variância são calculadas substituindo esses parâmetros por suas respectivas estimativas.
+
+::: {#exm-}
 Considere a amostra $\mathcal{D}_t$ do modelo AR(1). Então,
+$F'=1$, $G=\phi$, $W=\nu$ e $\theta_t=x_t$. Então
 
-$$\begin{align}x_{t+h}&=\phi x_{t+h-1}+\varepsilon_{t+h}\\ &=\phi^2x_{t+h-2}+\phi\varepsilon_{t+h-1}+\varepsilon_{t+h}= \cdots\\&=\phi^h x_t+\sum_{j=0}^{h-1}\phi^j\varepsilon_{t+h-j}\end{align}$$
-logo
-$$E(x_{t+h}|\mathcal{D}_t)=\phi^h x_t$$
+$$f_t(h)=\phi^h x_t$$
 e
-$$Var(x_{t+h}|\mathcal{D}_t)=\nu\sum_{j=0}^{h-1}\phi^{2j}=\nu\frac{1-\phi^{2h}}{1-\phi^2}$$
-Note que, se o processo é estacionário, então $|\phi|<1$ e a previsão converge para zero exponencialmente. Na prática, tanto a previsão quanto a variância são calculadas substituíndo $\phi$ por sua estimativa.
+$$Q_t(h)=\nu\sum_{k=1}^{h}\phi^{2(k-1)}=\nu\frac{1-\phi^{2h}}{1-\phi^{2}}.$$
 
-Para o processo AR$(p)$, seja $z_t=(x_t,\ldots,x_{t-p+1})$. Então,
-$$z_t=Tz_{t-1}+\boldsymbol{\varepsilon}_t$$
-onde
-$$T=\left(\begin{array}{ccc|c}\phi_1&\cdots&\phi_{p-1} & \phi_p \\ \hline & \textbf{I}_{p-1} & & \textbf{0}_{p-1}\end{array}\right)$$
-e 
-$$\boldsymbol{\varepsilon}_t=\left(\begin{array}{c}\varepsilon_t \\ \hline \textbf{0}_{p-1}\end{array}\right)$$
-Logo, dado $\mathcal{D}_t$,
-$$z_{t+h}=T^h z_t+\sum_{j=0}^{h-1}T^j\boldsymbol{\varepsilon}_{t+h-j}$$
-Note que $x_{t+h}=(1|\textbf{0}'_{p-1})z_{t+h}$, logo
-$$E(x_{t+h}|\mathcal{D}_t)=(1|\textbf{0}'_{p-1})T^h z_t$$
-e
-$$Var(x_{t+h}|\mathcal{D}_t)=\nu\sum_{j=0}^{h-1}\left(\begin{array}{c|c}1&\textbf{0}'_{p-1}\end{array}\right)T^j \mathcal{E} T'^j\left(\begin{array}{c}1 \\ \hline \textbf{0}_{p-1}\end{array}\right) $$
-onde $\mathcal{E}$ é uma matriz com o valor 1 no elemento $a_{11}$ e zero nos demais.
+:::
 
-### Processo autorregressivo com deriva
+### Processo autorregressivo com média não nula
 
-Até o momento, assumimos que o processo AR$(p)$ é estacionário com $E(x_t)=0$. Quando $\mu=E(x_t)\neq 0$, temos um parâmetro adicional, denominado deriva e escrito como
+Até o momento, assumimos que o processo AR$(p)$ é estacionário com $E(x_t)=0$. Quando $\mu=E(x_t)\neq 0$, temos um processo com média não nula, escrito como
 
 $$x_t-\mu=\sum_{j=1}^p \phi_j(x_{t-j}-\mu)+\varepsilon_t$$
 
-Observe que a deriva não altera a estrutura de autocorrelação do processo, uma vez que podemos definir $y_t=x_t-\mu$, onde $y_t$ é um AR($p$) com $E(y_t)=0$, o que implica em
-$$\gamma(h)=Cov(x_t, x_{t-1})=Cov(x_t-\mu,x_{t-h}-\mu)=Cov(y_t,y_{t-h}).$$
+Observe que a deriva não altera a estrutura de autocorrelação do processo, uma vez que podemos definir $z_t=x_t-\mu$, onde $z_t$ é um AR($p$) com $E(z_t)=0$, o que implica em
+$$Cov(x_t, x_{t-h})=Cov(x_t-\mu,x_{t-h}-\mu)=Cov(z_t,z_{t-h}).$$
 
-Contudo, a função de previsão do processo deve ser ajusta. Defina $z_t=(x_t-\mu,\ldots,x_{t-p+1}-\mu)$. Já vimos que
+Dados $\mathcal{D}_t$, a função de previsão para $x_{t+h}$ com $h\geq 1$ é dada por
 
-$$z_{t+h}=T^h z_t+\sum_{j=0}^{h-1}T^j\boldsymbol{\varepsilon}_{t+h-j}$$
-onde $T$ e $\boldsymbol{\varepsilon}_t$ foram definidos na seção anterior. Note que $x_{t+h}-\mu=(1|\textbf{0}'_{p-1})z_{t+h}$, logo
-$$E(x_{t+h}|\mathcal{D}_t)=\mu+(1|\textbf{0}'_{p-1})T^h z_t$$
+$$E(x_{t+h}|\mathcal{D}_t)=E(z_{t+h}|\mathcal{D}_t)+\mu=f_t(h)+\mu,$$
+onde $f_t(h)$ é a função de previsão para o modelo AR($p$). Como todo processo estacionário é suposto ser ergódico, $\mu$ pode ser estimado pela média amostral da série. Também é possível escrever
 
-Em termos de estimação, a função de verossimilhança deve ser alterada para
+$$\begin{aligned}x_t-\mu&=\sum_{j=1}^p \phi_jx_{t-j}-\sum_{j=1}^p \phi_j\mu+\varepsilon_t\\x_t&=\mu\left(1-\sum_{j=1}^p \phi_j\right)+\sum_{j=1}^p\phi_jx_{t-j}+\varepsilon_t\end{aligned}$$
+onde $c=\mu(1-\sum_{j=1}^p\phi_j)$ é denominado termo constante ou intercepto. Deste modo, $x_t$ é reescrito como 
 
-$$\begin{align*}
-L(\mu,\phi_1,\ldots,\phi_p,\nu)&=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\mu-\sum_{j=1}^p \phi_j(x_{t-j}-\mu)^2\right\} \\&\times f(x_{1},\ldots,x_p|\mu,\phi_1,\ldots,\phi_p,\nu).
-        \end{align*}$$      
-onde
-$$x_{1},\ldots,x_p\sim\hbox{Normal}(\mu\textbf{1}_p,\Sigma(\phi_1,\ldots,\phi_h))$$
+$$x_t=(1,x_{t-1},\ldots,x_{t-p})\left(\begin{array}{c}c\\\phi_1\\\vdots \\\phi_p\end{array}\right)+\varepsilon_t$$
+e, reconhecendo a familiar forma linear, $c$ pode ser estimado via método da máxima verossimilhança.
 
-### Exemplo: número anual de terremotos
+::: {#exm-}
 
 A série abaixo apresenta o número anual de terremotos de magnitude maior ou igual à 7 na escala Richter.
 
@@ -523,34 +523,46 @@ terr <- unlist(dados[,2])
 terr <- ts( terr, start = 1900)
 
 ts.plot(terr, ylab = 'No terremotos', xlab = 'Ano', lwd= 2)
+
 ```
-Note que o processo parece ser estacionário. Vamos explorar as funções de autocorrelação nas duas figuras abaixo. O correlograma mostra um comportamento tendendo para zero após 5 defasagens enquanto que o gráfico da função de autocorrelação parcial apresenta um único valor significativo. Temos evidências o modelo AR(1) pode ser adequado. 
+
+Note que o processo parece ser estacionário. Vamos explorar as funções de autocorrelação nas duas figuras abaixo. O correlograma parcial apresenta um único valor significativo, dando evidências para um modelo AR(1). Enquanto isso, o correlograma mostra um comportamento tendendo rapidamente para zero após 5 defasagens.
 
 
 ```{r}
-acf(terr)
-pacf(terr)
+#| layout-ncol: 2
+#| fig-cap: 
+#|   - "Correlograma e correlograma parcial para o número anula de terremotos."
+
+pacf(terr, lwd = 2, main ='Correlograma parcial')
+stats::acf(terr, lwd =2 , main='Correlograma')
 ```
 
 
-A função `arima(x, order = c(p,0,0))` estima os parâmetros do modelo $AR(p)$ já considerando a deriva (caso contrário, utilize o argumento `include.mean=FALSE`). Abaixo apresentamos o modelo ajustado.
+A função `arima(x, order = c(p,0,0))` estima os parâmetros do modelo $AR(p)$ já considerando a média diferente de zero (caso contrário, utilize o argumento `include.mean=FALSE`). Abaixo apresentamos o modelo ajustado.
 
 ```{r}
 mod <- arima( terr, c(1,0,0))
 mod
 ```
 
-Podemos verificar se o ajuste é adequado analisando os resíduos. Note que agora possuímos uma ferramente nova, o gráfico da função de autocorrelação parcial. Abaixo, os gráficos das funções de autocorrelação não apresentam valores significativos. O teste de Box-Pierce não rejeita a hipótese de um processo estacionário e o teste de Shapiro-Wilks não rejeita a hipótese de ruído branco gaussiano. Portano, temos evidências de que o modelo AR(1) com erros gaussianos é adequado para essa série.
+Acima, temos os valores estimados para $\phi$ (`ar1`) e $\mu$ (`intercept`) - é importante ressaltar que, para a função `arima`, o termo intercepto é utilizado para designar a média.
+
+Podemos verificar se o ajuste é adequado analisando os resíduos. Ambos correlogramas não apresentam valores significativos. O teste de Box-Pierce não rejeita a hipótese de ruído branco e o teste de Shapiro-Wilk não rejeita a hipótese de ruído gaussiano. Portanto, temos evidências de que o modelo AR(1) com erros gaussianos é adequado para essa série.
 
 ```{r}
-acf(mod$residuals)
-pacf(mod$residuals)
+#| layout-ncol: 2
+#| fig-cap: 
+#|   - "Correlograma e correlograma parcial para os resíduos"
+#|   
+acf(mod$residuals, main= 'Correlograma')
+pacf(mod$residuals, main = 'Correlograma parcial')
 Box.test(mod$residuals)
 shapiro.test(mod$residuals)
 ```
 
 
-As estimativas encontradas foram $\hat{\phi}=0,5$,  $\hat{\nu}=36,7$ e $\hat{\mu}=19$. Podemos utilizar a função `forecast` do pacote de mesmo nome para fazer previsões. Note que a medida que o horizonte de previsão cresce, o modelo converge para a deriva.
+As estimativas encontradas foram $\hat{\phi}=0,5$,  $\hat{\nu}=36,7$ e $\hat{\mu}=19$. Podemos utilizar a função `forecast` do pacote de mesmo nome para fazer previsões. Note que à medida que o horizonte de previsão cresce, o modelo converge para a deriva (média estacionária da série).
 
 ```{r}
 require(forecast)
@@ -558,30 +570,51 @@ prev <- forecast(mod, 10)
 plot(prev)
 ```
 
+:::
 
 ## Médias móveis
 
 O processo
 $$	x_t= \varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j},$$
-onde $\{\varepsilon_t\}$ é um ruído branco, é denominado média móvel de ordem $q$ (onde MA é a sigle de \textit{moving average}). Note que esse modelo não está relacionado com o método de suavização de mesmo nome. Também podemos definir o modelo utilizando um polinômio de defasagens:
+onde $\{\varepsilon_t\}$ é um ruído branco, é denominado média móvel de ordem $q$ - note que esse modelo não está relacionado com o método de suavização de mesmo nome. Também podemos definir o modelo utilizando um polinômio de defasagens:
 $$\begin{align}x_t
 	=\left(1+\sum_{j=1}^{q}\theta_jB^j\right)\varepsilon_t=\theta(B)\varepsilon_t\end{align}$$
 
-O processo MA$(q)$ é estacionário. De fato
+::: {.callout-warning icon=false} 
+**Nota sobre a convenção de sinais**
+
+É comum encontrar na literatura clássica (como Box & Jenkins, Cryer & Chan e Morettin & Toloi) o modelo MA($q$) definido com sinal negativo:
+
+$$x_t = \varepsilon_t - \sum_{j=1}^q \theta_j \varepsilon_{t-j}.$$ 
+
+Nestas notas de aula, optamos por utilizar a convenção com sinal positivo porque é a convenção adotada por padrão pela função `arima()` do `R`. Deste modo, ao tentar replicar exemplos de livros-texto tradicionais utilizando o `R`, as estimativas dos parâmetros reportadas pelo terão o sinal invertido em relação às do livro. 
+
+:::
+
+Diferente do processo AR($p$), o processo MA$(q)$ é sempre estacionário. De fato
 $$E(x_t)=E\left(\varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}\right)=0,$$
-$$Var(x_t)=\nu\left(1+\sum_{j=1}^{q}\theta_j^2\right).$$
-Agora, defina $\psi_0=1$, $\psi_j=\theta_j$, para $j=1,\ldots,q$ e $\psi_j=0$ para $j>q$. Então,
-$$\begin{align}
-Cov(x_t,x_{t-h})&=\sum_{j=0}^q\sum_{k=0}^q \psi_j\psi_k Cov\left(\varepsilon_{t-j},\varepsilon_{t-k-h}\right)\\&=\nu\sum_{k=0}^{q-h} \psi_{k+h}\psi_k\\
-&=\nu\left[\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}\right]\end{align}$$
+$$Var(x_t)=\nu\left(1+\sum_{j=1}^{q}\theta_j^2\right),$$
+logo o processo tem média e variância constantes. Para mostrar que ele é estacionário basta provar que $\text{Cov}(x_t, x_{t-h})$ depende apenas de $h$. Para tanto, defina $\psi_0=1$, $\psi_j=\theta_j$, para $j=1,\ldots,q$ e $\psi_j=0$ para $j>q$. Então,
+$$\begin{aligned}
+\text{Cov}(x_t,x_{t+h})&=\sum_{j=0}^q\sum_{k=0}^q \psi_j\psi_k \text{Cov}\left(\varepsilon_{t-j},\varepsilon_{t+h-k}\right)\\ &=\sum_{j=0}^q\psi_j\psi_{j+h}\text{Cov}(\varepsilon_{t-j},\varepsilon_{t-j})\\&=\nu\sum_{j=0}^{q-h} \psi_{j+h}\psi_j\\
+&=\nu\left[\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}\right]\end{aligned}$$
 
 A função de autocorrelação desse processo é dada por
 
 $$\rho(h)=\left\{\begin{array}{ll}\frac{\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}}{1+\sum_{j=1}^q\theta^2_j },&\;\;0<h\leq q\\0,&\hbox{ caso contrário}\end{array}\right.$$
 
-Portanto, o correlograma pode ser utilizado para determinar o valor que $q$, uma vez que são esperadas $q$ autocorrelações não nulas.
+Observe que a função de autocorrelação é nula para toda defasagem maior que $q$. Deste modo, o correlograma pode ser utilizado para determinar o valor de $q$, uma vez que são esperadas $q$ autocorrelações não nulas.
 
+::: {#exm-}
+Considere o modelo MA(1), dado por
 
+$$x_t=\varepsilon_t+ \theta\varepsilon_{t-1},$$
+onde $\varepsilon_t\sim\text{rb}[0,\nu]$. Então $E(x_t)=0$,
+
+$$\text{Var}(x_t)=\nu(1+\theta^2)$$
+e para $h\geq 0$,
+$$\rho(h)=\left\{\begin{array}{ll}\frac{\theta}{1+\theta^2 },&\;\;h=1\\0,&\hbox{ caso contrário}\end{array}\right.$$
+:::
 
 ### Inversibilidade do processo de média móvel
 

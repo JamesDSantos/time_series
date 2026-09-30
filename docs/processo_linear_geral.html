@@ -298,8 +298,7 @@ window.Quarto = {
   <li><a href="#método-de-estimação-de-yule-walker" id="toc-método-de-estimação-de-yule-walker" class="nav-link" data-scroll-target="#método-de-estimação-de-yule-walker"><span class="header-section-number">11.2.3</span> Método de estimação de Yule-Walker</a></li>
   <li><a href="#estimador-de-máxima-verossimilhança" id="toc-estimador-de-máxima-verossimilhança" class="nav-link" data-scroll-target="#estimador-de-máxima-verossimilhança"><span class="header-section-number">11.2.4</span> Estimador de máxima verossimilhança</a></li>
   <li><a href="#previsão" id="toc-previsão" class="nav-link" data-scroll-target="#previsão"><span class="header-section-number">11.2.5</span> Previsão</a></li>
-  <li><a href="#processo-autorregressivo-com-deriva" id="toc-processo-autorregressivo-com-deriva" class="nav-link" data-scroll-target="#processo-autorregressivo-com-deriva"><span class="header-section-number">11.2.6</span> Processo autorregressivo com deriva</a></li>
-  <li><a href="#exemplo-número-anual-de-terremotos" id="toc-exemplo-número-anual-de-terremotos" class="nav-link" data-scroll-target="#exemplo-número-anual-de-terremotos"><span class="header-section-number">11.2.7</span> Exemplo: número anual de terremotos</a></li>
+  <li><a href="#processo-autorregressivo-com-média-não-nula" id="toc-processo-autorregressivo-com-média-não-nula" class="nav-link" data-scroll-target="#processo-autorregressivo-com-média-não-nula"><span class="header-section-number">11.2.6</span> Processo autorregressivo com média não nula</a></li>
   </ul></li>
   <li><a href="#médias-móveis" id="toc-médias-móveis" class="nav-link" data-scroll-target="#médias-móveis"><span class="header-section-number">11.3</span> Médias móveis</a>
   <ul class="collapse">
@@ -619,26 +618,28 @@ L(\beta,\nu)&amp;=\left(\frac{1}{2\pi\nu}\right)^{\frac{n-p}{2}}\exp\left\{-\fra
 </section>
 <section id="previsão" class="level3" data-number="11.2.5">
 <h3 data-number="11.2.5" class="anchored" data-anchor-id="previsão"><span class="header-section-number">11.2.5</span> Previsão</h3>
-<p>Considere a amostra <span class="math inline">\(\mathcal{D}_t\)</span> do modelo AR(1). Então,</p>
-<p><span class="math display">\[\begin{align}x_{t+h}&amp;=\phi x_{t+h-1}+\varepsilon_{t+h}\\ &amp;=\phi^2x_{t+h-2}+\phi\varepsilon_{t+h-1}+\varepsilon_{t+h}= \cdots\\&amp;=\phi^h x_t+\sum_{j=0}^{h-1}\phi^j\varepsilon_{t+h-j}\end{align}\]</span> logo <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=\phi^h x_t\]</span> e <span class="math display">\[Var(x_{t+h}|\mathcal{D}_t)=\nu\sum_{j=0}^{h-1}\phi^{2j}=\nu\frac{1-\phi^{2h}}{1-\phi^2}\]</span> Note que, se o processo é estacionário, então <span class="math inline">\(|\phi|&lt;1\)</span> e a previsão converge para zero exponencialmente. Na prática, tanto a previsão quanto a variância são calculadas substituíndo <span class="math inline">\(\phi\)</span> por sua estimativa.</p>
-<p>Para o processo AR<span class="math inline">\((p)\)</span>, seja <span class="math inline">\(z_t=(x_t,\ldots,x_{t-p+1})\)</span>. Então, <span class="math display">\[z_t=Tz_{t-1}+\boldsymbol{\varepsilon}_t\]</span> onde <span class="math display">\[T=\left(\begin{array}{ccc|c}\phi_1&amp;\cdots&amp;\phi_{p-1} &amp; \phi_p \\ \hline &amp; \textbf{I}_{p-1} &amp; &amp; \textbf{0}_{p-1}\end{array}\right)\]</span> e <span class="math display">\[\boldsymbol{\varepsilon}_t=\left(\begin{array}{c}\varepsilon_t \\ \hline \textbf{0}_{p-1}\end{array}\right)\]</span> Logo, dado <span class="math inline">\(\mathcal{D}_t\)</span>, <span class="math display">\[z_{t+h}=T^h z_t+\sum_{j=0}^{h-1}T^j\boldsymbol{\varepsilon}_{t+h-j}\]</span> Note que <span class="math inline">\(x_{t+h}=(1|\textbf{0}'_{p-1})z_{t+h}\)</span>, logo <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=(1|\textbf{0}'_{p-1})T^h z_t\]</span> e <span class="math display">\[Var(x_{t+h}|\mathcal{D}_t)=\nu\sum_{j=0}^{h-1}\left(\begin{array}{c|c}1&amp;\textbf{0}'_{p-1}\end{array}\right)T^j \mathcal{E} T'^j\left(\begin{array}{c}1 \\ \hline \textbf{0}_{p-1}\end{array}\right) \]</span> onde <span class="math inline">\(\mathcal{E}\)</span> é uma matriz com o valor 1 no elemento <span class="math inline">\(a_{11}\)</span> e zero nos demais.</p>
+<p>Conforme discutido ao longo das seções anteriores, o modelo AR(<span class="math inline">\(p\)</span>) pode ser representado da forma aumentada</p>
+<p><span class="math display">\[\underbrace{\left(\begin{array}{c}x_t \\ x_{t-1}\\   x_{t-2}\\\vdots\\  x_{t-p+1}\end{array}\right)}_{\theta_t}=\underbrace{\left(\begin{array}{ccccc}\phi_1 &amp;\phi_2 &amp; \cdots &amp; \phi_{p-1} &amp; \phi_{p} \\ 1&amp; 0 &amp;\cdots &amp;0&amp;0 \\ 0 &amp; 1 &amp; \cdots &amp; 0 &amp; 0 \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots&amp;\vdots \\0 &amp; 0 &amp; \cdots &amp; 1 &amp; 0\end{array}\right)}_{G}\underbrace{\left(\begin{array}{c}x_{t-1} \\ x_{t-2}\\ x_{t-3} \\ \vdots \\ x_{t-p}\end{array}\right)}_{\theta_{t-1}}+\underbrace{\left(\begin{array}{c}\varepsilon_t \\ 0\\0\\\vdots\\ 0\end{array}\right)}_{w_t}\]</span> e, fazendo <span class="math inline">\(F'=(1,\mathbf{0}_{p-1})\)</span>, o modelo autorregresivo de ordem <span class="math inline">\(p\)</span> é recuperado fazendo <span class="math inline">\(F'\theta_t\)</span>. Deste modo, o modelo AR(<span class="math inline">\(p\)</span>) pode ser reescrito como um modelo de espaço de estados linear, dado por</p>
+<p><span class="math display">\[\begin{aligned}y_t&amp;=F'\theta_t+v_t,\quad\text{(eq. das observações)} \\ \theta_t&amp;=G\theta_{t-1}+w_t,\quad\text{(eq. de estado)}\end{aligned}\]</span> de onde fica evidente que <span class="math inline">\(y_t=x_t\)</span> e que <span class="math inline">\(v_t\equiv0\)</span> para todo <span class="math inline">\(t\)</span>. Deste modo, dados <span class="math inline">\(\mathcal{D}_t\)</span>, a distribuição da previsão de horizonte <span class="math inline">\(h\geq1\)</span> é dada por <span class="math inline">\(x_{t+h}\sim\hbox{Normal}(f_t(h),Q_t(h))\)</span>, onde</p>
+<p><span class="math display">\[f_t(h)=F'G^h\theta_t\]</span> e</p>
+<p><span class="math display">\[Q_t(h)=F'\sum_{k=1}^hG^{k-1}W(G^{k-1})'F\]</span> onde <span class="math inline">\(W\)</span> é uma matriz de ordem <span class="math inline">\(p\)</span> o elemento (1,1) igual a <span class="math inline">\(\nu\)</span> e os demais nulos.</p>
+<p>Como <span class="math inline">\(G\)</span> depende de <span class="math inline">\(\phi_1,\ldots,\phi_p\)</span>, tanto a previsão <span class="math inline">\(f_t(h)\)</span> como a variância são calculadas substituindo esses parâmetros por suas respectivas estimativas.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 11.6</strong></span> Considere a amostra <span class="math inline">\(\mathcal{D}_t\)</span> do modelo AR(1). Então, <span class="math inline">\(F'=1\)</span>, <span class="math inline">\(G=\phi\)</span>, <span class="math inline">\(W=\nu\)</span> e <span class="math inline">\(\theta_t=x_t\)</span>. Então</p>
+<p><span class="math display">\[f_t(h)=\phi^h x_t\]</span> e <span class="math display">\[Q_t(h)=\nu\sum_{k=1}^{h}\phi^{2(k-1)}=\nu\frac{1-\phi^{2h}}{1-\phi^{2}}.\]</span></p>
+</div>
 </section>
-<section id="processo-autorregressivo-com-deriva" class="level3" data-number="11.2.6">
-<h3 data-number="11.2.6" class="anchored" data-anchor-id="processo-autorregressivo-com-deriva"><span class="header-section-number">11.2.6</span> Processo autorregressivo com deriva</h3>
-<p>Até o momento, assumimos que o processo AR<span class="math inline">\((p)\)</span> é estacionário com <span class="math inline">\(E(x_t)=0\)</span>. Quando <span class="math inline">\(\mu=E(x_t)\neq 0\)</span>, temos um parâmetro adicional, denominado deriva e escrito como</p>
+<section id="processo-autorregressivo-com-média-não-nula" class="level3" data-number="11.2.6">
+<h3 data-number="11.2.6" class="anchored" data-anchor-id="processo-autorregressivo-com-média-não-nula"><span class="header-section-number">11.2.6</span> Processo autorregressivo com média não nula</h3>
+<p>Até o momento, assumimos que o processo AR<span class="math inline">\((p)\)</span> é estacionário com <span class="math inline">\(E(x_t)=0\)</span>. Quando <span class="math inline">\(\mu=E(x_t)\neq 0\)</span>, temos um processo com média não nula, escrito como</p>
 <p><span class="math display">\[x_t-\mu=\sum_{j=1}^p \phi_j(x_{t-j}-\mu)+\varepsilon_t\]</span></p>
-<p>Observe que a deriva não altera a estrutura de autocorrelação do processo, uma vez que podemos definir <span class="math inline">\(y_t=x_t-\mu\)</span>, onde <span class="math inline">\(y_t\)</span> é um AR(<span class="math inline">\(p\)</span>) com <span class="math inline">\(E(y_t)=0\)</span>, o que implica em <span class="math display">\[\gamma(h)=Cov(x_t, x_{t-1})=Cov(x_t-\mu,x_{t-h}-\mu)=Cov(y_t,y_{t-h}).\]</span></p>
-<p>Contudo, a função de previsão do processo deve ser ajusta. Defina <span class="math inline">\(z_t=(x_t-\mu,\ldots,x_{t-p+1}-\mu)\)</span>. Já vimos que</p>
-<p><span class="math display">\[z_{t+h}=T^h z_t+\sum_{j=0}^{h-1}T^j\boldsymbol{\varepsilon}_{t+h-j}\]</span> onde <span class="math inline">\(T\)</span> e <span class="math inline">\(\boldsymbol{\varepsilon}_t\)</span> foram definidos na seção anterior. Note que <span class="math inline">\(x_{t+h}-\mu=(1|\textbf{0}'_{p-1})z_{t+h}\)</span>, logo <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=\mu+(1|\textbf{0}'_{p-1})T^h z_t\]</span></p>
-<p>Em termos de estimação, a função de verossimilhança deve ser alterada para</p>
-<p><span class="math display">\[\begin{align*}
-L(\mu,\phi_1,\ldots,\phi_p,\nu)&amp;=\left(\frac{1}{2\pi\nu}\right)^{\frac{n}{2}}\exp\left\{-\frac{1}{2\nu}\sum_{t=p+1}^n(x_t-\mu-\sum_{j=1}^p \phi_j(x_{t-j}-\mu)^2\right\} \\&amp;\times f(x_{1},\ldots,x_p|\mu,\phi_1,\ldots,\phi_p,\nu).
-        \end{align*}\]</span><br>
-onde <span class="math display">\[x_{1},\ldots,x_p\sim\hbox{Normal}(\mu\textbf{1}_p,\Sigma(\phi_1,\ldots,\phi_h))\]</span></p>
-</section>
-<section id="exemplo-número-anual-de-terremotos" class="level3" data-number="11.2.7">
-<h3 data-number="11.2.7" class="anchored" data-anchor-id="exemplo-número-anual-de-terremotos"><span class="header-section-number">11.2.7</span> Exemplo: número anual de terremotos</h3>
-<p>A série abaixo apresenta o número anual de terremotos de magnitude maior ou igual à 7 na escala Richter.</p>
+<p>Observe que a deriva não altera a estrutura de autocorrelação do processo, uma vez que podemos definir <span class="math inline">\(z_t=x_t-\mu\)</span>, onde <span class="math inline">\(z_t\)</span> é um AR(<span class="math inline">\(p\)</span>) com <span class="math inline">\(E(z_t)=0\)</span>, o que implica em <span class="math display">\[Cov(x_t, x_{t-h})=Cov(x_t-\mu,x_{t-h}-\mu)=Cov(z_t,z_{t-h}).\]</span></p>
+<p>Dados <span class="math inline">\(\mathcal{D}_t\)</span>, a função de previsão para <span class="math inline">\(x_{t+h}\)</span> com <span class="math inline">\(h\geq 1\)</span> é dada por</p>
+<p><span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=E(z_{t+h}|\mathcal{D}_t)+\mu=f_t(h)+\mu,\]</span> onde <span class="math inline">\(f_t(h)\)</span> é a função de previsão para o modelo AR(<span class="math inline">\(p\)</span>). Como todo processo estacionário é suposto ser ergódico, <span class="math inline">\(\mu\)</span> pode ser estimado pela média amostral da série. Também é possível escrever</p>
+<p><span class="math display">\[\begin{aligned}x_t-\mu&amp;=\sum_{j=1}^p \phi_jx_{t-j}-\sum_{j=1}^p \phi_j\mu+\varepsilon_t\\x_t&amp;=\mu\left(1-\sum_{j=1}^p \phi_j\right)+\sum_{j=1}^p\phi_jx_{t-j}+\varepsilon_t\end{aligned}\]</span> onde <span class="math inline">\(c=\mu(1-\sum_{j=1}^p\phi_j)\)</span> é denominado termo constante ou intercepto. Deste modo, <span class="math inline">\(x_t\)</span> é reescrito como</p>
+<p><span class="math display">\[x_t=(1,x_{t-1},\ldots,x_{t-p})\left(\begin{array}{c}c\\\phi_1\\\vdots \\\phi_p\end{array}\right)+\varepsilon_t\]</span> e, reconhecendo a familiar forma linear, <span class="math inline">\(c\)</span> pode ser estimado via método da máxima verossimilhança.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 11.7</strong></span> A série abaixo apresenta o número anual de terremotos de magnitude maior ou igual à 7 na escala Richter.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gsheet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
@@ -659,29 +660,33 @@ onde <span class="math display">\[x_{1},\ldots,x_p\sim\hbox{Normal}(\mu\textbf{1
 </div>
 </div>
 </div>
-<p>Note que o processo parece ser estacionário. Vamos explorar as funções de autocorrelação nas duas figuras abaixo. O correlograma mostra um comportamento tendendo para zero após 5 defasagens enquanto que o gráfico da função de autocorrelação parcial apresenta um único valor significativo. Temos evidências o modelo AR(1) pode ser adequado.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(terr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
+<p>Note que o processo parece ser estacionário. Vamos explorar as funções de autocorrelação nas duas figuras abaixo. O correlograma parcial apresenta um único valor significativo, dando evidências para um modelo AR(1). Enquanto isso, o correlograma mostra um comportamento tendendo rapidamente para zero após 5 defasagens.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(terr, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">main =</span><span class="st">'Correlograma parcial'</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">acf</span>(terr, <span class="at">lwd =</span><span class="dv">2</span> , <span class="at">main=</span><span class="st">'Correlograma'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Correlograma e correlograma parcial para o número anula de terremotos.</figcaption>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(terr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Correlograma e correlograma parcial para o número anula de terremotos.</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>A função <code>arima(x, order = c(p,0,0))</code> estima os parâmetros do modelo <span class="math inline">\(AR(p)\)</span> já considerando a deriva (caso contrário, utilize o argumento <code>include.mean=FALSE</code>). Abaixo apresentamos o modelo ajustado.</p>
+</div>
+<p>A função <code>arima(x, order = c(p,0,0))</code> estima os parâmetros do modelo <span class="math inline">\(AR(p)\)</span> já considerando a média diferente de zero (caso contrário, utilize o argumento <code>include.mean=FALSE</code>). Abaixo apresentamos o modelo ajustado.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">arima</span>( terr, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">arima</span>( terr, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -695,34 +700,40 @@ s.e.  0.0840     1.3180
 sigma^2 estimated as 36.7:  log likelihood = -318.98,  aic = 643.97</code></pre>
 </div>
 </div>
-<p>Podemos verificar se o ajuste é adequado analisando os resíduos. Note que agora possuímos uma ferramente nova, o gráfico da função de autocorrelação parcial. Abaixo, os gráficos das funções de autocorrelação não apresentam valores significativos. O teste de Box-Pierce não rejeita a hipótese de um processo estacionário e o teste de Shapiro-Wilks não rejeita a hipótese de ruído branco gaussiano. Portano, temos evidências de que o modelo AR(1) com erros gaussianos é adequado para essa série.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
+<p>Acima, temos os valores estimados para <span class="math inline">\(\phi\)</span> (<code>ar1</code>) e <span class="math inline">\(\mu\)</span> (<code>intercept</code>) - é importante ressaltar que, para a função <code>arima</code>, o termo intercepto é utilizado para designar a média.</p>
+<p>Podemos verificar se o ajuste é adequado analisando os resíduos. Ambos correlogramas não apresentam valores significativos. O teste de Box-Pierce não rejeita a hipótese de ruído branco e o teste de Shapiro-Wilk não rejeita a hipótese de ruído gaussiano. Portanto, temos evidências de que o modelo AR(1) com erros gaussianos é adequado para essa série.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(mod<span class="sc">$</span>residuals, <span class="at">main=</span> <span class="st">'Correlograma'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(mod<span class="sc">$</span>residuals, <span class="at">main =</span> <span class="st">'Correlograma parcial'</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(mod<span class="sc">$</span>residuals)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Correlograma e correlograma parcial para os resíduos</figcaption>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Correlograma e correlograma parcial para os resíduos</figcaption>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <pre><code>
     Box-Pierce test
 
 data:  mod$residuals
 X-squared = 0.92715, df = 1, p-value = 0.3356</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
+<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <pre><code>
     Shapiro-Wilk normality test
 
@@ -730,9 +741,10 @@ data:  mod$residuals
 W = 0.97813, p-value = 0.09826</code></pre>
 </div>
 </div>
-<p>As estimativas encontradas foram <span class="math inline">\(\hat{\phi}=0,5\)</span>, <span class="math inline">\(\hat{\nu}=36,7\)</span> e <span class="math inline">\(\hat{\mu}=19\)</span>. Podemos utilizar a função <code>forecast</code> do pacote de mesmo nome para fazer previsões. Note que a medida que o horizonte de previsão cresce, o modelo converge para a deriva.</p>
+</div>
+<p>As estimativas encontradas foram <span class="math inline">\(\hat{\phi}=0,5\)</span>, <span class="math inline">\(\hat{\nu}=36,7\)</span> e <span class="math inline">\(\hat{\mu}=19\)</span>. Podemos utilizar a função <code>forecast</code> do pacote de mesmo nome para fazer previsões. Note que à medida que o horizonte de previsão cresce, o modelo converge para a deriva (média estacionária da série).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Carregando pacotes exigidos: forecast</code></pre>
 </div>
@@ -741,8 +753,8 @@ W = 0.97813, p-value = 0.09826</code></pre>
   method            from
   as.zoo.data.frame zoo </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>prev <span class="ot">&lt;-</span> <span class="fu">forecast</span>(mod, <span class="dv">10</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(prev)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>prev <span class="ot">&lt;-</span> <span class="fu">forecast</span>(mod, <span class="dv">10</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(prev)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -751,18 +763,40 @@ W = 0.97813, p-value = 0.09826</code></pre>
 </div>
 </div>
 </div>
+</div>
 </section>
 </section>
 <section id="médias-móveis" class="level2" data-number="11.3">
 <h2 data-number="11.3" class="anchored" data-anchor-id="médias-móveis"><span class="header-section-number">11.3</span> Médias móveis</h2>
-<p>O processo <span class="math display">\[  x_t= \varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j},\]</span> onde <span class="math inline">\(\{\varepsilon_t\}\)</span> é um ruído branco, é denominado média móvel de ordem <span class="math inline">\(q\)</span> (onde MA é a sigle de ). Note que esse modelo não está relacionado com o método de suavização de mesmo nome. Também podemos definir o modelo utilizando um polinômio de defasagens: <span class="math display">\[\begin{align}x_t
+<p>O processo <span class="math display">\[  x_t= \varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j},\]</span> onde <span class="math inline">\(\{\varepsilon_t\}\)</span> é um ruído branco, é denominado média móvel de ordem <span class="math inline">\(q\)</span> - note que esse modelo não está relacionado com o método de suavização de mesmo nome. Também podemos definir o modelo utilizando um polinômio de defasagens: <span class="math display">\[\begin{align}x_t
     =\left(1+\sum_{j=1}^{q}\theta_jB^j\right)\varepsilon_t=\theta(B)\varepsilon_t\end{align}\]</span></p>
-<p>O processo MA<span class="math inline">\((q)\)</span> é estacionário. De fato <span class="math display">\[E(x_t)=E\left(\varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}\right)=0,\]</span> <span class="math display">\[Var(x_t)=\nu\left(1+\sum_{j=1}^{q}\theta_j^2\right).\]</span> Agora, defina <span class="math inline">\(\psi_0=1\)</span>, <span class="math inline">\(\psi_j=\theta_j\)</span>, para <span class="math inline">\(j=1,\ldots,q\)</span> e <span class="math inline">\(\psi_j=0\)</span> para <span class="math inline">\(j&gt;q\)</span>. Então, <span class="math display">\[\begin{align}
-Cov(x_t,x_{t-h})&amp;=\sum_{j=0}^q\sum_{k=0}^q \psi_j\psi_k Cov\left(\varepsilon_{t-j},\varepsilon_{t-k-h}\right)\\&amp;=\nu\sum_{k=0}^{q-h} \psi_{k+h}\psi_k\\
-&amp;=\nu\left[\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}\right]\end{align}\]</span></p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Nota sobre a convenção de sinais</strong></p>
+<p>É comum encontrar na literatura clássica (como Box &amp; Jenkins, Cryer &amp; Chan e Morettin &amp; Toloi) o modelo MA(<span class="math inline">\(q\)</span>) definido com sinal negativo:</p>
+<p><span class="math display">\[x_t = \varepsilon_t - \sum_{j=1}^q \theta_j \varepsilon_{t-j}.\]</span></p>
+<p>Nestas notas de aula, optamos por utilizar a convenção com sinal positivo porque é a convenção adotada por padrão pela função <code>arima()</code> do <code>R</code>. Deste modo, ao tentar replicar exemplos de livros-texto tradicionais utilizando o <code>R</code>, as estimativas dos parâmetros reportadas pelo terão o sinal invertido em relação às do livro.</p>
+</div>
+</div>
+<p>Diferente do processo AR(<span class="math inline">\(p\)</span>), o processo MA<span class="math inline">\((q)\)</span> é sempre estacionário. De fato <span class="math display">\[E(x_t)=E\left(\varepsilon_t +\sum_{j=1}^{q}\theta_j\varepsilon_{t-j}\right)=0,\]</span> <span class="math display">\[Var(x_t)=\nu\left(1+\sum_{j=1}^{q}\theta_j^2\right),\]</span> logo o processo tem média e variância constantes. Para mostrar que ele é estacionário basta provar que <span class="math inline">\(\text{Cov}(x_t, x_{t-h})\)</span> depende apenas de <span class="math inline">\(h\)</span>. Para tanto, defina <span class="math inline">\(\psi_0=1\)</span>, <span class="math inline">\(\psi_j=\theta_j\)</span>, para <span class="math inline">\(j=1,\ldots,q\)</span> e <span class="math inline">\(\psi_j=0\)</span> para <span class="math inline">\(j&gt;q\)</span>. Então, <span class="math display">\[\begin{aligned}
+\text{Cov}(x_t,x_{t+h})&amp;=\sum_{j=0}^q\sum_{k=0}^q \psi_j\psi_k \text{Cov}\left(\varepsilon_{t-j},\varepsilon_{t+h-k}\right)\\ &amp;=\sum_{j=0}^q\psi_j\psi_{j+h}\text{Cov}(\varepsilon_{t-j},\varepsilon_{t-j})\\&amp;=\nu\sum_{j=0}^{q-h} \psi_{j+h}\psi_j\\
+&amp;=\nu\left[\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}\right]\end{aligned}\]</span></p>
 <p>A função de autocorrelação desse processo é dada por</p>
 <p><span class="math display">\[\rho(h)=\left\{\begin{array}{ll}\frac{\theta_h+\sum_{j=1}^{q-h}\theta_j\theta_{j+h}}{1+\sum_{j=1}^q\theta^2_j },&amp;\;\;0&lt;h\leq q\\0,&amp;\hbox{ caso contrário}\end{array}\right.\]</span></p>
-<p>Portanto, o correlograma pode ser utilizado para determinar o valor que <span class="math inline">\(q\)</span>, uma vez que são esperadas <span class="math inline">\(q\)</span> autocorrelações não nulas.</p>
+<p>Observe que a função de autocorrelação é nula para toda defasagem maior que <span class="math inline">\(q\)</span>. Deste modo, o correlograma pode ser utilizado para determinar o valor de <span class="math inline">\(q\)</span>, uma vez que são esperadas <span class="math inline">\(q\)</span> autocorrelações não nulas.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 11.8</strong></span> Considere o modelo MA(1), dado por</p>
+<p><span class="math display">\[x_t=\varepsilon_t+ \theta\varepsilon_{t-1},\]</span> onde <span class="math inline">\(\varepsilon_t\sim\text{rb}[0,\nu]\)</span>. Então <span class="math inline">\(E(x_t)=0\)</span>,</p>
+<p><span class="math display">\[\text{Var}(x_t)=\nu(1+\theta^2)\]</span> e para <span class="math inline">\(h\geq 0\)</span>, <span class="math display">\[\rho(h)=\left\{\begin{array}{ll}\frac{\theta}{1+\theta^2 },&amp;\;\;h=1\\0,&amp;\hbox{ caso contrário}\end{array}\right.\]</span></p>
+</div>
 <section id="inversibilidade-do-processo-de-média-móvel" class="level3" data-number="11.3.1">
 <h3 data-number="11.3.1" class="anchored" data-anchor-id="inversibilidade-do-processo-de-média-móvel"><span class="header-section-number">11.3.1</span> Inversibilidade do processo de média móvel</h3>
 <p>Nem sempre o processo <span class="math inline">\(MA(q)\)</span> é inversível. De fato, note que <span class="math display">\[x_t=\varepsilon_t +\theta\varepsilon_{t-1}=(1+\theta B)\varepsilon_t\Rightarrow x_t(1+\theta B)^{-1}=\varepsilon_t.\]</span> Sabemos que <span class="math display">\[\theta^{-1}(B)=\sum_{j=0}^{\infty}\theta^j B^j,\]</span> quando <span class="math inline">\(|\theta|&lt;1\)</span>. Portanto, para este processo ser inversível é necessário que <span class="math inline">\(|\theta|&lt;1\)</span>. Observe que</p>
@@ -872,7 +906,7 @@ Note  ainda que após a primeira defasagem, a função de auto covariância se c
 <p>A previsão do processo ARI(<span class="math inline">\(p,d\)</span>) pode facilmente ser realizada a partir do modelo AR(<span class="math inline">\(p\)</span>). Por exemplo, para <span class="math inline">\(y_t=\Delta x_t\)</span>,</p>
 <p><span class="math display">\[\begin{align}E(y_{t+1}|\mathcal{D}_t)&amp;=\sum_{j=1}^p \phi_j y_{t-j}\\\end{align}\]</span> o que implica em <span class="math display">\[\begin{align} E(x_{t+1}|\mathcal{D}_t)=x_t+\sum_{j=1}^p\phi_j(x_{t-j}-x_{t-j-1})\end{align}\]</span></p>
 <div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Example 11.6</strong></span> <strong>Previsão para o modelo ARI(1,1)</strong></p>
+<p><span class="theorem-title"><strong>Example 11.9</strong></span> <strong>Previsão para o modelo ARI(1,1)</strong></p>
 <p>Seja <span class="math inline">\(x_t\)</span> uma série temporal segundo o processo ARI(1,1). Então, <span class="math inline">\(\Delta y_t\)</span> é um processo AR(1) e <span class="math inline">\(E(y_{t+h}|\mathcal{D}_t)=\phi^h y_t\)</span>. Disto, notemos que</p>
 <p><span class="math display">\[E(x_{t+1}-x_t|\mathcal{D}_t)=\phi (x_{t}-x_{t-1})\Rightarrow E(x_{t+1}|\mathcal{D}_t)=x_t+\phi(x_t-x_{t-1}),\]</span> e <span class="math display">\[\begin{align}&amp;E(x_{t+2}-x_{t+1}|\mathcal{D}_t)=\phi^2 (x_t-x_{t-1})\\&amp;\Rightarrow E(x_{t+2}|\mathcal{D}_t)=\phi^2 (x_{t}-x_{t-1})+E(x_{t+1}|\mathcal{D}_t)\\ &amp;\Rightarrow E(x_{t+2}|\mathcal{D}_t)=\phi^2 (x_{t}-x_{t-1})+\phi (x_{t}-x_{t-1})+x_t.\end{align}\]</span> Por indução, é imediato que <span class="math display">\[E(x_{t+h}|\mathcal{D}_t)=x_t+\sum_{j=1}^h \phi^{j}(x_t-x_{t-1}).\]</span> Identificando <span class="math inline">\(x_t\)</span> como a estimativa para nível da série no tempo <span class="math inline">\(t\)</span> e <span class="math inline">\((x_t-x_{t-1})\)</span> como a inclinação da tendência, temos que a função de previsão é um modleo com tendência amortecida.</p>
 <p><span class="math inline">\(\blacksquare\)</span></p>
@@ -889,7 +923,7 @@ Note  ainda que após a primeira defasagem, a função de auto covariância se c
 <p>Assim como no caso do modelo integrado, os parâmetros são estimados a partir do modelo AR(<span class="math inline">\(P\)</span>) considerando a amostra <span class="math inline">\(y_t=(1-B^{p})^Dx_t\)</span>.</p>
 <p>A previsão é</p>
 <div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Example 11.7</strong></span> Seja <span class="math inline">\(x_t\)</span> um processo autorregressivo sazonal, de período 12. Então,</p>
+<p><span class="theorem-title"><strong>Example 11.10</strong></span> Seja <span class="math inline">\(x_t\)</span> um processo autorregressivo sazonal, de período 12. Então,</p>
 <p><span class="math display">\[(1-B^{12})x_t=\Phi(1-B^{12})x_{t-1}+\varepsilon_t,\]</span> ou ainda, <span class="math display">\[x_t=x_{t-12}+\Phi x_{t-1}-\Phi x_{t-13}+\varepsilon_t\]</span></p>
 </div>
 </section>
@@ -913,7 +947,7 @@ Note  ainda que após a primeira defasagem, a função de auto covariância se c
      \gamma_{x\varepsilon}(h)\neq 0,&amp;\;\; h\leq 0 \\
     \end{align}\]</span></p>
 <div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Example 11.8</strong></span> Considere o processo ARMA(1,1), dado por <span class="math display">\[x_t = \varepsilon_{t} + \phi x_{t-1} + \theta\varepsilon_{t-1}.\]</span> Teremos que <span class="math display">\[\begin{align*}
+<p><span class="theorem-title"><strong>Example 11.11</strong></span> Considere o processo ARMA(1,1), dado por <span class="math display">\[x_t = \varepsilon_{t} + \phi x_{t-1} + \theta\varepsilon_{t-1}.\]</span> Teremos que <span class="math display">\[\begin{align*}
 \gamma_{x\varepsilon}(0)&amp;=E(x_t\varepsilon_t) = E( \left[\varepsilon_t + \phi x_{t-1} - \theta\varepsilon_{t-1} \right]\varepsilon_t)\\
 &amp;=\underbrace{E(\varepsilon_t^2)}_{\nu}+ \phi\underbrace{ E(x_{t-1}\varepsilon_t)}_{\gamma_{x\varepsilon}(1)=0} -\theta \underbrace{E(\varepsilon_{t}\varepsilon_{t-1})}_{=0} \\
 &amp;=\nu
