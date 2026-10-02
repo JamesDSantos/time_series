@@ -572,6 +572,38 @@ plot(prev)
 
 :::
 
+## Exercícios
+
+::: {#exr-}
+
+A série temporal `LakeHuron` R) contém as medições anuais da altura média do nível do mar (em pés) do Lago Huron entre os anos de 1875 e 1972. 
+
+1. Verifique os correlogramas e apresente um modelo adequado para esta série.
+
+2. Utilize a função `polyroot` para verificar se o modelo encontrado é estacionário
+
+3. Analise os erros de previsão (resíduos) e aplique o teste de Ljung-Box para avaliar se os resíduos se comportam como ruído branco.
+
+4. Faça uma previsão de horizonte 5 anos.
+:::
+
+::: {#exr-}
+
+A série `treering` (disponível no pacote `astsa`) contém medições anuais da largura/espessura dos anéis de crescimento de árvores (medidas em milímetros) na região de Campito Mountain, cobrindo um período de mais de 1.000 anos. O crescimento de uma árvore em determinado ano depende das condições climáticas atuais e da reserva energética/crescimento acumulado nos anos imediatamente anteriores, o que gera uma estrutura autorregressiva.
+
+
+1. Crie uma nova série, com a janela entre 1780 e 1899. 
+
+2. Verifique os correlogramas e apresente um modelo adequado para esta nova série.
+
+3. Utilize a função `polyroot` para verificar se o modelo encontrado é estacionário
+
+4. Analise os erros de previsão (resíduos) e aplique o teste de Ljung-Box para avaliar se os resíduos se comportam como ruído branco.
+
+5. Faça uma previsão de horizonte 5 anos.
+:::
+
+
 ## Médias móveis
 
 O processo
