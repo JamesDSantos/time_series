@@ -866,139 +866,53 @@ $$y_t = \sum_{j=1}^p \phi_j y_{t-j} + \varepsilon_t + \sum_{k=1}^q \theta_k \var
 Deste modo, inferências sobre o horizonte $h$ são feitas utilizando a já conhecida distribuição $$x_{t+h}|\mathcal{D}_t\sim\text{Normal}(f_t(h),Q_t(h)).$$
 
 
-## Modelos ARMA integrados e sazonais
-
-Dizemos que $x_t$ é um processo autorregressivo integrado de médias móveis se
-
-$$\phi(B)\Delta^d x_t =\theta(B)\varepsilon_t,$$
-e denotamos esse modelo por ARIMA$(p,d,q)$. A previsão desse modelo é dada por
-	$$\hat{y}_t(h)=E(y_{t+h}|y_t,\ldots y_{t-(p+d)}).$$
-
-Seja $x_t$ uma série temporal sazonal com período $s$. Considere que o processo ${x_t,x_{t-s},x_{t-2s}}$ é um ARIMA$(P,D,Q)$:
-	$$\Phi(B)(1-B^P)^Dx_t = \Theta(B)\eta_t,$$
-	e que o processo $\eta_t\sim \hbox{ARIMA}(p,d,q)$. Então,
-	$$\theta(B)(1-B)^d\eta_t = \theta(B)\varepsilon_t\Rightarrow \eta_t = \left[\theta(B)(1-B)^d\right]^{-1}\theta(b)\varepsilon_t.$$
-	Portanto, teremos o modelo
-	$$\theta(B)\Phi(B)(1-B^P)^D(1-B)^dx_t = \Theta(B)\theta(B)\eta_t,$$
-
-	O modelo SARIMA é representado por ARIMA$(p,d,q)(P,D,Q)_s$ onde $(p,d,q)$ é a especificação do modelo ARIMA que corresponde a parte não sazonal a série e $(P,D,Q)_s$ é o modelo ARIMA que correponde a parte sazonal da série (com período $s$).
-	
-	
-
-## Modelo autorregressivo com médias móveis
-
-O modelo autorregressivo com médias móveis (ARMA) é dado por
-$$\begin{equation}
-	x_t= \sum_{j=1}^p \phi_j x_{t-1} + \varepsilon_t + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k},
-	\end{equation}$$
-onde $(p,q)$ são as ordens da parte autorregressiva e das médias móveis, respectivamente. Definimos $ARMA(0,q)=MA(q)$ e, de modo análogo, definimos $ARMA(p,0)=AR(p).$
-	
-Utilizando o operador defasagem teremos
-$$\begin{align}
-		x_t&= \sum_{j=1}^p \phi_j x_{t-1} + \varepsilon_t + \sum_{k=1}^{q}\theta_k\varepsilon_{t-k} \\
-		&= 
-		\sum_{j=1}^p \phi_j B^jx_{t} + \varepsilon_t + \sum_{k=1}^{q}\theta_kB^k\varepsilon_{t}
-		\end{align}$$
-o que implica em
-$$\begin{align*}
-		\underbrace{\left(1-\sum_{j=1}^p \phi_j B^j\right)}_{\phi(B)}x_t = \underbrace{\left(1-\sum_{j=1}^p \theta_j B^j\right)}_{\theta(B)}\varepsilon_{t}
-		\end{align*}$$
-
-O modelo ARMA será estacionário se o módulo das raízes de $\phi(B)$ forem maiores que um e será inversível se o mesmo ocorrer com o módulo das raízes de $\theta(B)$.
-
-
-### Função de autocorrelação parcial
-	
-Se comporta como um processo MA($q$).
-\end{frame}
-
-\begin{frame}{Verossimilhança}
-	\begin{itemize}
-		\item Dados, $y_{0},\ldots,y_{-p+1}$ e $\hat{\varepsilon}_0,\ldots,\hat{\varepsilon}_{-q+1}$, temos que
-			$$y_t=(y_{t-1},\ldots,y_{t-p})'\bm{\phi} -(\hat{\varepsilon}_{t-1},\ldots,\hat{\varepsilon}_{t-q} )'\bm{\theta}+\varepsilon_t$$
-		\item A construção da verossimilhança pode ser feita de modo análogo ao modelo $MA(q)$.
-		\item Considere o modelo $ARMA(1,1)$ e que estão fixados $y_0$ e $\varepsilon_0=\hat{\varepsilon}_0$.
-		\item $t=1$, teremos 
-		\begin{align*}
-		y_1|y_0,\hat{\varepsilon}_0 &\sim \phi y_0 + \varepsilon_1-\theta\varepsilon_0|y_0,\hat{\varepsilon}_0 \\
-		&\sim \phi y_0 + \varepsilon_1-\theta\hat{\varepsilon}_0|y_0,\hat{\varepsilon}_0\\
-		&\sim \hbox{Normal}\left(\phi y_0 -\theta\hat{\varepsilon}_0, \nu\right)
-		\end{align*}
-		Note ainda que, dados $y_0$ e $\hat{\varepsilon}_0$,
-		$$y_1=\phi y_0+\varepsilon_1-\theta \hat{\varepsilon}_{0}\Rightarrow \hat{\varepsilon}_1=y_1 - \phi y_0 + \theta\hat{\varepsilon}_0$$		
-	\end{itemize}	
-\end{frame}
-
-\begin{frame}
-	\begin{itemize}
-		\item Para $t=2$,
-		\begin{align*}
-		y_2|y_1,y_0,\hat{\varepsilon}_0 &\sim \phi y_1 + \varepsilon_2-\theta\varepsilon_1|y_1,y_0,\hat{\varepsilon}_0 \\
-		&\sim \phi y_1 + \varepsilon_2-\theta\hat{\varepsilon}_1|y_0,y_1,\hat{\varepsilon}_0\\
-		&\sim \hbox{Normal}\left(\phi y_1 -\theta\hat{\varepsilon}_1, \nu\right)
-		\end{align*}
-		Novamente, dados $y_1,y_2,y_0$ e $\hat{\varepsilon}_0$, teremos
-		$$\hat{\varepsilon}_2=y_2 - \phi y_1 + \theta\hat{\varepsilon}_1.$$		
-		\item De modo geral, para qualquer $t\geq 1$,
-		$$\hat{\varepsilon}_t= y_t - \phi y_{t-1} + \theta \hat{\varepsilon}_{t-1}$$
-		e
-		$$(y_t|y_{0:t-1},\hat{\varepsilon}_0)\sim\hbox{Normal}( \phi y_{t-1} - \theta \hat{\varepsilon}_{t-1}).$$
-		
-	\end{itemize}	
-\end{frame}
-
-\begin{frame}{Verossimilhança para o modelo $ARMA(p,q)$}
-	Fixe $y_{0:-p+1}$ e $\hat{\varepsilon}_{0:-q+1}$. Para $t\geq 1$, faça,
-	\begin{align}
-	\bm{f}_t'&= \left(y_{t-1},\ldots,y_{t-p} , -\hat{\varepsilon}_{t-1},\ldots,-\hat{\varepsilon}_{t-q} \right)'\\
-	\bm{\beta}'&=\left(\bm{\phi}',\bm{\theta}'\right)
-	\end{align}
-	onde
-	$$\hat{\varepsilon}_t = y_t - \bm{f}_t'\bm{\beta}  $$
-	teremos o modelo (não linear)
-	$$L(\bm{\beta},\nu)\propto \left(\frac{1}{\nu}\right)^{\frac{T}{2}}\exp\left\{-\frac{1}{2\nu}\left(\bm{y}-\bm{F}'\bm{\beta}\right)'\left(\bm{y}-\bm{F}'\bm{\beta}\right)\right\}$$
-\end{frame}
-
 
 
 ## Modelos integrados
 
-### O operador difereNça
 
-Vimos no começo do curso que o passeio aleatório, dado por
+### O operador diferença
+
+Vimos no começo destas notas de aula que o passeio aleatório, dado por
 $$x_t=x_{t-1}+\varepsilon_t$$
-onde $\varepsilon_t$ é um ruído branco, poderia gerar tendências aleatórias. Note que o passeio aleatório nada mais é que o processo AR(1) não estacionário. Podemos escrever esse modelo como
-$$x_t-x_{t-1}=\varepsilon_t\Rightarrow(1-B)x_t=\varepsilon_t\Rightarrow\Delta x_t=\varepsilon_t$$
-Acima,$\Delta=1-B$ é denominado operador diferença. Observe que a série 
+onde $\varepsilon_t$ é um ruído branco, poderia gerar tendências aleatórias. 
+
+Note que o passeio aleatório nada mais é que o processo AR(1) não estacionário, uma vez que o polinômio de defasagens resultante é dado por
+$$\phi(B)=1-B,$$
+cuja raiz é unitária. Ao definir o operador diferença como $\Delta = 1-B$, podemos reescrever esse processo como 
+
+$$\Delta x_t=\varepsilon_t.$$
+
+Observe que a série 
 $$y_t=\Delta x_t=\varepsilon_t$$
 é um ruído branco. Desse modo, o operador elimina a tendência aleatória gerada pelo passeio.
 
 Agora, considere que 
 $$x_t=T(t)+\varepsilon_t,$$
-onde $T(t)$ é uma tendência localmente linear com inclinção constante, ou seja, para qualquer $s$ na vizinhança de $t$,
-$$T(s)=\mu_t+b s.$$
-Então
-$$\Delta x_t= \mu_t+bt-(\mu_t+b(t-1))+\varepsilon_t=b+\varepsilon_t$$
-e $y_t=\Delta x_t=b+\varepsilon_t$ será um ruído branco com deriva.
+onde $T(t)$ é um sinal de tendência. Assumindo que $T(t)$ é localmente linear em torno de $t_0$, temos que
+$$T(t)\approx T(t_0)+(t-t_0)T'(t_0)$$
+logo, para $t$ na vizinhança de $t_0$, 
 
-Por último, para qualquer $s$ na vizinhança de $t$, suponha que
-$$T(s)=\mu_t+b_t s.$$
-Nesse caso,
-$$\Delta x_t= b_t+\varepsilon_t$$
-logo, o processo $y_t=\Detal x_t$ não é um ruído branco. Contudo, como é usual que $b_t\approx b_{t+1}$, teremos
+$$y_t=\Delta x_t \approx T'(t_0)+\varepsilon_t-\varepsilon_{t-1},$$
+Ao assumir que $T'(t)$ é relativamente constante para todo $t$, temos que  $y_t$ é um modelo ARMA$(0,1)$ com intercepto.
 
-$$\Delta y_t= \Delta x_t - \Delta x_{t-1}=b_t-b_{t-1}+\varepsilon_t-\varepsilon_{t-1}\approx \varepsilon_t-\varepsilon_{t-1}$$
+Deste modo, aplicar $\Delta$ em um processo pode eliminar seu componente de tendência, caso esta seja localmente linear.
 
-logo, aplicar o operador diferença pela segunda vez gera um ruído branco. Note que
+Algumas séries podem ter tendências mais explosivas. Considere, por exemplo que é necessária uma expansão de segunda ordem, dada por
+$$T(t)\approx T(t_0)+(t-t_0)T'(t_0)+\frac{(t-t_0)^2}{2}T''(t_0)$$
+Nesse caso, aplicar o operador  diferença gera
 
-$$\Delta y_t=\Delta (x_t-x_{t-1})=\Delta(1-B)x_t=\Delta^2 x_t.$$
-Então, aplicar o operador diferença algumas vezes pode eliminar a tendência da série, gerando um ruído branco.
+$$\Delta x_t\approx T'(t_0)+[(t-t_0)-0,5]T''(t_0)+\varepsilon_{t}-\varepsilon_{t-1}$$
+e, aplicando mais uma diferença, temos que
+
+$$\Delta^2 x_t\approx T''(t_0)+\varepsilon_{t}-2\varepsilon_{t-1}+\varepsilon_{t-2}$$
+e, desde que $T''(t)$ seja aproximadamente constante para todo $t$, teremos que $y_t=\Delta^2 x_t$ é um processo ARMA(0,2) com intercepto.
 
 
 :::{#exm}
 Considere o modelo 
 $$y_t=\Delta x_t=\varepsilon_t,$$
-onde $\varepsilon_t$ é um ruído branco. Então, para $\mathcal{D}_t=\{x_1,\ldots,x_t\}$,
+onde $\varepsilon_t$ é um ruído branco. Então, para $\mathcal{D}_t=\{x_1,\ldots,x_t\}$ e $h>0$,
 $$E(y_{t+h}|\mathcal{D}_t)=0\Rightarrow E(x_{t+h}|\mathcal{D}_t)=E(x_{t+h-1}|\mathcal{D}_t)$$
 e, como $E(x_t|\mathcal{D}_t)=x_t$, teremos
 $$E(x_{t+h}|\mathcal{D}_t)=x_t.$$
@@ -1009,16 +923,47 @@ onde $\varepsilon_t$ é um ruído branco. Observe que
 $$E(y_{t+1}|\mathcal{D}_t)=0\Rightarrow E(x_{t+1}|\mathcal{D}_t)=x_t + (x_t-x_{t-1}).$$
 É simples mostrar por indução que
 $$E(x_{t+h}|\mathcal{D}_t)=x_t+ h(x_t-x_{t-1}),$$
-que é equivalente ao método de Holt com nível $m_t=x_t$ e inclinação $b_t=(x_t-x_{t-1})$.
+que é equivalente ao método de Holt com nível $m_t=x_t$ e inclinação $\xi_t=(x_t-x_{t-1})$.
 
-$\blacksquare$.
 :::
 
-### Modelo autorregressivo integrado 
+Agora, considere uma série temporal sazonal de período $p$ dada por
 
-Considere agora uma série temporal $x_t$ na qual foram necessárias $d$ diferenças para eliminar a tendência. Contudo, a série $y_t=\Delta^d x_t$ resultante é um ruído branco, mas sim um processo AR($p$). Teremos
+$$x_t=s(t)+\varepsilon_t,$$
+onde $s(t)$ é uma função periódica. Então $y_t=(1-B^p)$ implica em
 
-$$y_t=\sum_{j=1}^p \phi_j y_{t-j}+\varepsilon_t \Rightarrow \left(1-\sum_{j=1}^p \phi_jB^j\right)y_t=\varepsilon_t$$
+$$x_t-x_{t-p}=\varepsilon_t-\varepsilon_{t-p}$$
+ou seja, $y_t$ é um modelo estacionário livre de sazonalidade. Aqui, $\Delta_s=(1-B^p)$ é denominado diferença sazonal.
+
+::: {#exm-}
+Considere que $y_t=\Delta_s x_t=\varepsilon_t$, onde $\varepsilon_t\sim\text{rb}[0,\nu]$. Temos que
+
+$$0=E(y_{t+1}|\mathcal{D}_t)=E(x_{t+1}-x_{t+1-D}|\mathcal{D}_t)$$
+o que implica em
+$$E(x_{t+1}|\mathcal{D}_t)=x_{t+1-D}.$$
+Generalizando por indução para qualquer horizonte $h \ge 1$, a função de previsão assume a forma
+
+$$E(x_{t+h} \mid \mathcal{D}_t) = x_{t + h - k D},$$ em que $k = \left\lceil \frac{h}{D} \right\rceil$ garante que a previsão utilize o valor observado no mesmo período do ciclo sazonal mais recente. Essa estrutura de previsão  simplesmente utilizado o valor observado no mesmo período do último ciclo disponível.
+:::
+
+
+Considere agora uma série temporal com tendência e sazonalidade de período $p$, dada por
+
+$$x_t=T(t)+s(t)+\varepsilon_t,$$
+onde $\varepsilon_t$ é um ruído branco. Suponha que a primeira diferença é razoável para eliminar a tendência. Observe que
+$$\Delta x_t\approx s(t)-s(t-1)+\varepsilon_t-\varepsilon_{t-1}$$
+É simples mostrar que $s(t)-s(t-1)$ ainda é uma função periódica de período $D$. Deste modo,
+$$y_t=\Delta_s\Delta x_t\approx \varepsilon_t-\varepsilon_{t-1}-\varepsilon_{t-D}+\varepsilon_{t-D-1}$$
+é uma série livre de tendência e sazonalidade.
+
+### Modelo autorregressivo integrado de médias móveis (ARIMA) 
+
+Considere uma série temporal $x_t$ na qual foram necessárias $d$ diferenças para eliminar a tendência, ou seja,
+
+$$\Delta^d x_t= \varepsilon_t,$$
+$\varepsilon_t\sim \text{rb}[0,\nu]$. Seja $y_t=\Delta^d x_t$ e suponha que $y_t$ é um processo AR($p$), ou seja
+
+$$(1-\sum_{j=1}^p\phi_jB^j )y_t=\varepsilon_t.$$
 ou, de modo equivalente,
 $$\left(1-\sum_{j=1}^p \phi_jB^j\right)\Delta^d x_t=\varepsilon_t.$$
 O modelo acima é denominado autorregressivo integrado, e sua notação é ARI$(p,d)$, onde $p$ é a ordem do modelo autorregressivo resultante das $d$ diferenças da série original.
@@ -1027,68 +972,65 @@ As estimativas são obtidas criando a série $y_t=\Delta^d x_t$ e estimando os p
 
 A previsão do processo ARI($p,d$) pode facilmente ser realizada a partir do modelo AR($p$). Por exemplo, para $y_t=\Delta x_t$,
 
-$$\begin{align}E(y_{t+1}|\mathcal{D}_t)&=\sum_{j=1}^p \phi_j y_{t-j}\\\end{align}$$
+$$\begin{align}E(y_{t+1}|\mathcal{D}_t)&=\sum_{j=1}^p \phi_j y_{t+1-j}\end{align}$$
 o que implica em
-$$\begin{align} E(x_{t+1}|\mathcal{D}_t)=x_t+\sum_{j=1}^p\phi_j(x_{t-j}-x_{t-j-1})\end{align}$$
+$$\begin{align} E(x_{t+1}|\mathcal{D}_t)=x_t+\sum_{j=1}^p\phi_j(x_{t+1-j}-x_{t-j})\end{align}$$
 
 :::{#exm-}
 **Previsão para o modelo ARI(1,1)**
 
-Seja $x_t$ uma série temporal segundo o processo ARI(1,1). Então, $\Delta y_t$ é um processo AR(1) e $E(y_{t+h}|\mathcal{D}_t)=\phi^h y_t$. Disto, notemos que
+Seja $x_t$ uma série temporal segundo o processo ARI(1,1). Então, $y_t=\Delta x_t$ é um processo AR(1) e $E(y_{t+h}|\mathcal{D}_t)=\phi^h y_t$. Disto, notemos que
 
 $$E(x_{t+1}-x_t|\mathcal{D}_t)=\phi (x_{t}-x_{t-1})\Rightarrow E(x_{t+1}|\mathcal{D}_t)=x_t+\phi(x_t-x_{t-1}),$$
 e
 $$\begin{align}&E(x_{t+2}-x_{t+1}|\mathcal{D}_t)=\phi^2 (x_t-x_{t-1})\\&\Rightarrow E(x_{t+2}|\mathcal{D}_t)=\phi^2 (x_{t}-x_{t-1})+E(x_{t+1}|\mathcal{D}_t)\\ &\Rightarrow E(x_{t+2}|\mathcal{D}_t)=\phi^2 (x_{t}-x_{t-1})+\phi (x_{t}-x_{t-1})+x_t.\end{align}$$
 Por indução, é imediato que
 $$E(x_{t+h}|\mathcal{D}_t)=x_t+\sum_{j=1}^h \phi^{j}(x_t-x_{t-1}).$$
-Identificando $x_t$ como a estimativa para nível da série no tempo $t$ e $(x_t-x_{t-1})$ como a inclinação da tendência, temos que a função de previsão é um modleo com tendência amortecida.
+Identificando $x_t$ como a estimativa para nível da série no tempo $t$ e $(x_t-x_{t-1})$ como a inclinação da tendência, temos que a função de previsão é um modelo com tendência amortecida. Para $h\to\infty$,
 
-$\blacksquare$
-:::
-
-
-### Modelo autorregressivo sazonal
-
-Seja 
-$$x_t = g(t)+\varepsilon_t,$$
-onde $g(.)$ é uma função períodica com período $p$  e $\varepsilon_t$ um rúido branco. Note que
-$$x_t-x_{t-p}=g(t)-g(t-p)+\varepsilon_t-\varepsilon_{t-p}=\varepsilon_t-\varepsilon_{t-p},$$
-logo, a diferença acima gerou uma série estacionária. Observe que 
-$$x_t-x_{t-p}=(1-B^p)x_t.$$
-O operador $1-B^p$ é conhecido como diferença sazonal.
-
-Sem perda de generalidade, assuma que $D=3$. Então, a relação entre $x_t$ e $x_{t-3}$ pode ser obtida usando a seguinte transformação:
-
-$$\left(\begin{array}{c}x_t\\ x_{t-1}\\ x_{t-2}\end{array}\right)=\left(\begin{array}{cc}0 & 0 & 1\\ 1 & 0 & 0\\ 0& 1 & 0\end{array}\right)\left(\begin{array}{c}x_{t-1}\\ x_{t-2}\\ x_{t-3}\end{array}\right)=\left(\begin{array}{cc}0 & 0 & 1\\ 1 & 0 & 0\\ 0& 1 & 0\end{array}\right)^2\left(\begin{array}{c}x_{t-4}\\ x_{t-5}\\ x_{t-6}\end{array}\right)$$
-A matriz acima é denominada permutação, e já foi utilizada anteriormente. Para o caso geral,
-
-$$\left(\begin{array}{c}x_t\\ x_{t-1}\\ x_{t-2}\end{array}\right)=\left(\begin{array}{cc}0 & 0 & 1\\ 1 & 0 & 0\\ 0& 1 & 0\end{array}\right)^h\left(\begin{array}{c}x_{t-(3h-2)}\\ x_{t-(3h-1)}\\ x_{t-3h}\end{array}\right)$$
-ou ainda,
-$$x_t=\sum_{j=1}^3 c_j\lambda_j^h x_{t-(3h-j+1)},$$
-onde $\lambda_j$ são os autovalores da matriz acima. Acontece que
-$$\left|\left(\begin{array}{cc}0 & 0 & 1\\ 1 & 0 & 0\\ 0& 1 & 0\end{array}\right)-\lambda \textbf{I}_3\right|=0\Rightarrow \lambda^3=1$$
-Teremos que $\lambda=1$ é a solução real, enquanto que 
-$$\lambda= \exp\left\{\frac{\pi }{3}i\right\}=\cos\left(\frac{2\pi }{3}\right)+i\sin\left(\frac{2\pi}{3}\right).$$
-e
-$$\lambda= \exp\left\{\frac{2\pi }{3}i\right\}=\cos\left(\frac{4\pi }{3}\right)+i\sin\left(\frac{4\pi k}{3}\right).$$
-são as soluções complexas. 
-
-Na prática, para qualquer período $p$, o autovalores existirão $p-1$ autovalores da matriz de permutação satisfazendo 
-$$\lambda= \cos(2\pi k/p)+i\sin(2\pi k/p),$$
-com $k=1,\ldots,D-1$.
-
-Dizemos que $x_t$ é um processo autorregressivo sazonal se $y_t=(1-B^p)^Dx_t$ é um processo autorregressivo.
-
-Assim como no caso do modelo integrado, os parâmetros são estimados a partir do modelo AR($P$) considerando a amostra $y_t=(1-B^{p})^Dx_t$.
-
-A previsão é
-
-:::{#exm-}
-Seja $x_t$ um processo autorregressivo sazonal, de período 12. Então,
-
-$$(1-B^{12})x_t=\Phi(1-B^{12})x_{t-1}+\varepsilon_t,$$
-ou ainda,
-$$x_t=x_{t-12}+\Phi x_{t-1}-\Phi x_{t-13}+\varepsilon_t$$
+$$E(x_{t+h}|\mathcal{D}_t)\to x_t+\frac{\phi}{1-\phi}(x_t-x_{t-1}).$$
 
 :::
-	
+
+O modelo ARIMA($p,d,q$) é definido por
+
+$$\left(1-\sum_{j=1}^p \phi_jB^j\right)\Delta^dx_t=\left(1+\sum_{k=1}^q \theta_kB^k\right)\varepsilon_t,$$
+o que é equivalente a afirmar que $\Delta^dx_t$ é um processo ARMA($p,q$). 
+
+Novamente, inferências e previsões para o modelo ARIMA$(p,d,q)$ são realizadas utilizando como base o modelo ARMA$(p,q)$ correspondente.
+
+
+### Modelo autorregressivo sazonal integrado de médias móveis (SARIMA) 
+
+Seja $\{x_t\}$ uma série temporal de período $s$ (vamos modificar a denotação do período para não gerar confusão com a ordem do modelo autorregressivo). 
+
+É possível que $x_t$ dependa tanto dos valores imediatamente anteriores quanto dos últimos valores dentro do ciclo sazonal. Isto pode ser modelado por
+
+
+$$\phi(B)\Phi(B^s)x_t=\varepsilon_t,$$
+onde $\varepsilon_t\sim\text{rb}[0,\nu]$ e
+$$\begin{aligned}\phi(B)&=1-\sum_{j=1}^p \phi_{j}B^j\\ \Phi(B^s)&= 1-\sum_{j=1}^P\Phi_{j}B^{js}\end{aligned}$$
+
+Por exemplo, para $p=P=1$ e $s=12$,
+
+$$\begin{aligned}\phi(B)\Phi(B^s)x_t&=\phi(B)[x_t-\Phi_1x_{t-12}]\\&=x_t-\Phi x_{t-12}-\phi_1x_{t-1}+\phi_1\Phi_1x_{t-13}\end{aligned}$$
+e o modelo resultante é
+$$x_t=\phi_1x_{t-1}+\Phi_1 x_{t-12}-\phi_1\Phi_1x_{t-13}+\varepsilon_t.$$
+Deste modo, $\phi_1$ representa o efeito do tempo anterior, $\Phi_1$ o efeito do ciclo sazonal e $\phi_1\Phi_1$ o efeito cruzado.
+
+
+O modelo sazonal autorregressivo de médias móveis com período $s$, denotado por SARMA$(p,q)(P,Q)_s$ é definido por
+
+$$\phi(B)\Phi(B^s)x_t=\theta(B)\Theta(B^s) \varepsilon_{t},$$
+onde $\varepsilon\sim\text{rb}[0,\nu]$ e
+$$\begin{aligned}\theta(B)&=1+\sum_{j=1}^q \theta_{j}B^j\\ \Theta(B)&= 1+\sum_{j=1}^Q\Theta_{j}B^{js}\end{aligned}$$
+
+Observe que, para os devidos fins, esse processo e se comporta como um processo autorregressivo de médias móveis tradicional. Em particular
+
+* para a função de autocorrelação, observada apenas nas defasagens múltiplas de $s$, espera-se valores relevantes até a ordem $Q$, seguidos de um decaimento exponencial/senóide amortecido.
+
+* para a função de autocorrelação parcial, observada apenas nas defasagens múltiplas de $s$, espera-se valores relevantes até a ordem $P$, seguidos de um decaimento exponencial/senóide amortecido.
+
+Quando a série $x\_t$ apresenta tendência e/ou sazonalidade não estacionárias, incorporam-se $d$ diferenças ordinárias e $D$ diferenças sazonais, resultando no modelo 
+$\text{SARIMA}(p,d,q)(P,D,Q)_s$: $$\phi(B)\Phi(B^s)\Delta^d \Delta_s^D x_t = \theta(B)\Theta(B^s)\varepsilon_t,$$ em que $\Delta^d = (1-B)^d$ e $\Delta_s^D = (1-B^s)^D$.
+
