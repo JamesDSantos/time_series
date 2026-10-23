@@ -866,8 +866,6 @@ $$y_t = \sum_{j=1}^p \phi_j y_{t-j} + \varepsilon_t + \sum_{k=1}^q \theta_k \var
 Deste modo, inferências sobre o horizonte $h$ são feitas utilizando a já conhecida distribuição $$x_{t+h}|\mathcal{D}_t\sim\text{Normal}(f_t(h),Q_t(h)).$$
 
 
-
-
 ## Modelos integrados
 
 
@@ -1034,3 +1032,191 @@ Observe que, para os devidos fins, esse processo e se comporta como um processo 
 Quando a série $x\_t$ apresenta tendência e/ou sazonalidade não estacionárias, incorporam-se $d$ diferenças ordinárias e $D$ diferenças sazonais, resultando no modelo 
 $\text{SARIMA}(p,d,q)(P,D,Q)_s$: $$\phi(B)\Phi(B^s)\Delta^d \Delta_s^D x_t = \theta(B)\Theta(B^s)\varepsilon_t,$$ em que $\Delta^d = (1-B)^d$ e $\Delta_s^D = (1-B^s)^D$.
 
+## Exemplos
+
+
+### Concentração atmosférica de dióxido de carbono
+
+A série temporal `co2`, disponível nativamente no R, reúne as medições mensais da concentração atmosférica de dióxido de carbono (CO₂) expressas em partes por milhão (ppm). Os dados foram coletados continuamente no Observatório de Mauna Loa, no Havaí, abrangendo o período de 1959 a 1997. Essa série, já explorada anteriormente, possui forte tendência e sazonalidade.
+
+```{r}
+ts.plot(co2)
+```
+
+Vamos aplicar a primeira diferença e a diferença sazonal. O resultado, mostrado abaixo. A série resultante oscila em torno zero.
+
+```{r}
+Dif_co2 <- diff( diff(co2,1), 12)
+ts.plot(Dif_co2, ylab = 'Valores diferenciados')
+abline(h=0, lty = 2)
+```
+
+Em seguida, analisamos os correlogramas da série diferenciada. O resultado, mostrado a seguir, apresenta as seguintes características:
+
+* o correlograma sugere a presença de uma componente de médias móveis, de ordens 1 ou 2 e de uma sazonal de médias móveis de ordem 1.
+
+* o correlograma parcial sugere a presença de uma componente autorregressiva, de ordens 1 ou 3. O decaimento exponencial apenas nas defagens múltiplas de 12 sugere que o comportamento sazonal pode estar somente na parte de média móvel.
+
+
+```{r}
+oo <- par(mfrow = c(1,2))
+acf(Dif_co2, lag = 36)
+pacf(Dif_co2, lag = 36)
+```
+
+Portanto, vamos ajustar nosso modelo inicial, um SARIMA$(1,1,0)(1,1,1)_{12}$. Para tanto, utilizamos a função `arima` do `R`, onde o vetor $(p,d,q)$ é colocado no argumento `order` e o $(P,D,Q)$ no argumento `seasonal`. Abaixo, obtemos os resíduos deste modelo. Observe que devemos remover o primeiro ano dos resíduos, por causa da difenreça sazonal.
+
+```{r}
+modelo_inicial <- arima( co2, order = c(1,1,0), seasonal = c(1,1,1))
+
+res <- ts(residuals(modelo_inicial), start = start(co2),
+          frequency = frequency(co2))
+
+residuos <- window(res, start =c(1960,1))
+
+
+ts.plot(residuos, lwd = 2, 
+        col = "blue", ylab = "Residuos", xlab = "Anos",
+        main = "Resíduos do modelo SARIMA(1,1,0)(1,1,1)")
+abline(h = 0, lty = 2)
+```
+
+Após o ajuste do modelo, analisamos os correlogramas dos resíduos, conforme ilustrado abaixo. Observe que alguns elementos parecem ser significativos em ambos os gráficos. Contudo, os teste de Box-Pierce (p-valor=0,72) e Shapiro-Wilk (p-valor = 0,31) dão evidências de um ruído branco gaussiano.
+
+```{r}
+oo <- par( mfrow = c(1,2))
+  acf(residuos, main='', lag = 36)
+  pacf(residuos, main ='', lag = 36)
+par(oo)
+Box.test(residuos)
+shapiro.test(residuos)
+```
+
+Uma vez ajustado, o modelo pode ser utilizado para previsão. Abaixo, apresentamos a previsão até o ano de 2000 (três anos à frente).
+
+```{r}
+previsao <- forecast::forecast( modelo_inicial, 36)
+plot(previsao)
+
+knitr::kable(previsao, digits = 2, caption = "Previsão da Taxa de Desocupação")
+```
+
+### Taxa de desocupação no Brasil
+
+
+A série temporal da taxa de desocupação no Brasil é gerada a partir da Pesquisa Nacional por Amostra de Domicílios Contínua (PNAD Contínua), produzida pelo Instituto Brasileiro de Geografia e Estatística (IBGE). Diferente de indicadores mensais puros, esta série é estruturada e divulgada na forma de trimestres móveis. Isso significa que cada ponto observado na série representa o comportamento agregado de uma janela móvel de três meses (por exemplo, jan-fev-mar, seguido por fev-mar-abr), em que o mês mais antigo é descartado para a inclusão do mês subsequente. Essa metodologia visa garantir a robustez estatística e a estabilidade da amostragem do IBGE.
+
+
+A série abaixo foi obtida no mês de outubro de 2026. Entratanto, devido ao comportamento atípico da pandemia, vamos analisá-la até o trimestre outubro-novembro-dezembro de 2026 (a análise completa será realizada no capítulo sobre Intervenção).
+
+```{r}
+url <- "https://docs.google.com/spreadsheets/d/1wgX1tDVy7FL6Ymp1ldwC9J8xssDiT_IJ3UAAW1O5_Qs/edit?usp=sharing"
+
+down <- gsheet::gsheet2tbl(url)
+desemprego0 <- ts( down, start = c(2012,1), frequency = 12)
+
+desemprego <- window(desemprego0, start=c(2012,1), end =c(2019,10))
+ts.plot(desemprego, lwd = 2, 
+        col = "blue", ylab = "Taxa de desocupação (%)", xlab = "Anos",
+        main = "Evolução da Taxa de Desocupação")
+```
+
+A série apresenta tendência, oscilando entre crescente e decrescente. Vamos aplicar a primeira diferença para a remoção da tendência. O resultado, conforme apresentado abaixo, mostra uma série oscilando em torno de zero. Em contrapartida, o correlograma sugere uma componente sazonal de período 12.
+
+```{r}
+DeltaDesemprego <- diff(desemprego)
+ts.plot(DeltaDesemprego, lwd = 2, 
+        col = "blue", ylab = "Taxa de desocupação diferenciada", xlab = "Anos",
+        main = "Série diferenciada")
+abline(h = 0, lty = 2)
+acf(DeltaDesemprego,lag = 36)
+```
+
+Para eliminar o sinal da sazonalidade, vamos aplicar a diferença sazonal de período 12 na série diferenciada.
+
+```{r}
+D12_DeltaDesemprego <- diff(DeltaDesemprego, 12)
+
+ts.plot(D12_DeltaDesemprego, lwd = 2, 
+        col = "blue", ylab = "Taxa de diferenciada ", xlab = "Anos",
+        main = "Série diferenciada \n para tendência e sazonalidade")
+abline(h = 0, lty = 2)
+
+```
+
+Abaixo, apresentamos os correlogramas da série livre dos sinais de tendência e sazonalidade. O correlograma parcial sugere um modelo autorregressivo de ordem 1, seguido de um autoregressivo sazonal também de ordem 1.
+
+
+```{r}
+oo <- par( mfrow = c(1,2))
+  acf(D12_DeltaDesemprego, main='', lag = 36)
+  pacf(D12_DeltaDesemprego, main ='', lag = 36)
+par(oo)
+```
+
+Portanto, nosso primeiro modelo a ser testado é ao SARIMA$(1,1,0)(1,1,0)_{12}$. Abaixo, obtemos os resíduos deste modelo, com o corte do primeiro ano devido à diferença sazonal.
+
+```{r}
+modelo_inicial <- arima( desemprego, order = c(1,1,0), seasonal = c(1,1,0))
+
+res <- ts(residuals(modelo_inicial), start = start(desemprego),
+          frequency = frequency(desemprego))
+
+residuos <- window(res, start =c(2013,1))
+
+
+ts.plot(residuos, lwd = 2, 
+        col = "blue", ylab = "Residuos", xlab = "Anos",
+        main = "Resíduos do modelo SARIMA(1,1,0)(1,1,0)")
+abline(h = 0, lty = 2)
+```
+
+Após o ajuste do modelo, analisamos os correlogramas dos resíduos, conforme ilustrado abaixo. Observe a ausência de elementos significativos em ambos os gráficos. Os teste de Box-Pierce (p-valor=0,11) e Shapiro-Wilk (p-valor = 0,55) dão evidências de um ruído branco gaussiano.
+
+```{r}
+oo <- par( mfrow = c(1,2))
+  acf(residuos, main='', lag = 36)
+  pacf(residuos, main ='', lag = 36)
+par(oo)
+Box.test(residuos)
+shapiro.test(residuos)
+```
+
+
+Os coeficientes estimados, dados abaixo, foram: $\phi=0,78$ (influência do trimestre móvel anterior) e $\Phi=-0,57$ (influência do mesmo trimestre móvel no ano anterior).
+
+```{r}
+modelo_inicial
+```
+
+
+Uma vez ajustado, o modelo pode ser utilizado para previsão. Abaixo, apresentamos a previsão para o ano de 2020.
+
+```{r}
+previsao <- forecast::forecast( modelo_inicial, 12)
+plot(previsao)
+
+knitr::kable(previsao, digits = 2, caption = "Previsão da Taxa de Desocupação")
+```
+
+## Exercícios
+
+
+### Índice Niño 3.4
+
+A série temporal do Índice Niño 3.4 mensura as anomalias mensais da Temperatura da Superfície do Mar (TSM) em uma região estratégica do Oceano Pacífico Equatorial (entre as latitudes 5°N–5°S e longitudes 170°W–120°W). Disponibilizado pela National Oceanic and Atmospheric Administration (NOAA), o indicador expressa o desvio da temperatura da água em relação à média histórica de longo prazo. Valores persistentemente positivos (acima de +0,5 °C) indicam a ocorrência do fenômeno El Niño (aquecimento), enquanto valores negativos (abaixo de -0,5 °C) caracterizam o fenômeno La Niña (resfriamento).
+
+A série mensal, começando em janeiro 1984 pode ser obtida abaixo:
+
+```{r}
+url <- 'https://docs.google.com/spreadsheets/d/1OEBz6iIYfEaUbuxe23M2Y1Tq3MdqC1iGdNdyb263_cI/edit?usp=sharing'
+
+nino <- gsheet::gsheet2tbl(url)
+nino <- ts( nino, start = c(1964,1), frequency = 12)
+```
+
+Encontre um modelo adequado para ess série e faça previsões para 2027.
+
+### Manchas solares
+
+A série temporal `sunspot.year`, disponível nativamente no R, contém o registro numérico anual do número médio de manchas solares observadas na superfície do Sol, abrangendo um longo período histórico que vai de 1700 a 1988. Encontre um modelo adequado para essa série.

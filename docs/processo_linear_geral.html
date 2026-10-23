@@ -321,6 +321,16 @@ window.Quarto = {
   <li><a href="#modelo-autorregressivo-integrado-de-médias-móveis-arima" id="toc-modelo-autorregressivo-integrado-de-médias-móveis-arima" class="nav-link" data-scroll-target="#modelo-autorregressivo-integrado-de-médias-móveis-arima"><span class="header-section-number">11.6.2</span> Modelo autorregressivo integrado de médias móveis (ARIMA)</a></li>
   <li><a href="#modelo-autorregressivo-sazonal-integrado-de-médias-móveis-sarima" id="toc-modelo-autorregressivo-sazonal-integrado-de-médias-móveis-sarima" class="nav-link" data-scroll-target="#modelo-autorregressivo-sazonal-integrado-de-médias-móveis-sarima"><span class="header-section-number">11.6.3</span> Modelo autorregressivo sazonal integrado de médias móveis (SARIMA)</a></li>
   </ul></li>
+  <li><a href="#exemplos" id="toc-exemplos" class="nav-link" data-scroll-target="#exemplos"><span class="header-section-number">11.7</span> Exemplos</a>
+  <ul class="collapse">
+  <li><a href="#concentração-atmosférica-de-dióxido-de-carbono" id="toc-concentração-atmosférica-de-dióxido-de-carbono" class="nav-link" data-scroll-target="#concentração-atmosférica-de-dióxido-de-carbono"><span class="header-section-number">11.7.1</span> Concentração atmosférica de dióxido de carbono</a></li>
+  <li><a href="#taxa-de-desocupação-no-brasil" id="toc-taxa-de-desocupação-no-brasil" class="nav-link" data-scroll-target="#taxa-de-desocupação-no-brasil"><span class="header-section-number">11.7.2</span> Taxa de desocupação no Brasil</a></li>
+  </ul></li>
+  <li><a href="#exercícios-1" id="toc-exercícios-1" class="nav-link" data-scroll-target="#exercícios-1"><span class="header-section-number">11.8</span> Exercícios</a>
+  <ul class="collapse">
+  <li><a href="#índice-niño-3.4" id="toc-índice-niño-3.4" class="nav-link" data-scroll-target="#índice-niño-3.4"><span class="header-section-number">11.8.1</span> Índice Niño 3.4</a></li>
+  <li><a href="#manchas-solares" id="toc-manchas-solares" class="nav-link" data-scroll-target="#manchas-solares"><span class="header-section-number">11.8.2</span> Manchas solares</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1005,6 +1015,712 @@ Observe que, para <span class="math inline">\(h \ge 1\)</span>, a função de au
 <li><p>para a função de autocorrelação parcial, observada apenas nas defasagens múltiplas de <span class="math inline">\(s\)</span>, espera-se valores relevantes até a ordem <span class="math inline">\(P\)</span>, seguidos de um decaimento exponencial/senóide amortecido.</p></li>
 </ul>
 <p>Quando a série <span class="math inline">\(x\_t\)</span> apresenta tendência e/ou sazonalidade não estacionárias, incorporam-se <span class="math inline">\(d\)</span> diferenças ordinárias e <span class="math inline">\(D\)</span> diferenças sazonais, resultando no modelo <span class="math inline">\(\text{SARIMA}(p,d,q)(P,D,Q)_s\)</span>: <span class="math display">\[\phi(B)\Phi(B^s)\Delta^d \Delta_s^D x_t = \theta(B)\Theta(B^s)\varepsilon_t,\]</span> em que <span class="math inline">\(\Delta^d = (1-B)^d\)</span> e <span class="math inline">\(\Delta_s^D = (1-B^s)^D\)</span>.</p>
+</section>
+</section>
+<section id="exemplos" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="exemplos"><span class="header-section-number">11.7</span> Exemplos</h2>
+<section id="concentração-atmosférica-de-dióxido-de-carbono" class="level3" data-number="11.7.1">
+<h3 data-number="11.7.1" class="anchored" data-anchor-id="concentração-atmosférica-de-dióxido-de-carbono"><span class="header-section-number">11.7.1</span> Concentração atmosférica de dióxido de carbono</h3>
+<p>A série temporal <code>co2</code>, disponível nativamente no R, reúne as medições mensais da concentração atmosférica de dióxido de carbono (CO₂) expressas em partes por milhão (ppm). Os dados foram coletados continuamente no Observatório de Mauna Loa, no Havaí, abrangendo o período de 1959 a 1997. Essa série, já explorada anteriormente, possui forte tendência e sazonalidade.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(co2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vamos aplicar a primeira diferença e a diferença sazonal. O resultado, mostrado abaixo. A série resultante oscila em torno zero.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Dif_co2 <span class="ot">&lt;-</span> <span class="fu">diff</span>( <span class="fu">diff</span>(co2,<span class="dv">1</span>), <span class="dv">12</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(Dif_co2, <span class="at">ylab =</span> <span class="st">'Valores diferenciados'</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Em seguida, analisamos os correlogramas da série diferenciada. O resultado, mostrado a seguir, apresenta as seguintes características:</p>
+<ul>
+<li><p>o correlograma sugere a presença de uma componente de médias móveis, de ordens 1 ou 2 e de uma sazonal de médias móveis de ordem 1.</p></li>
+<li><p>o correlograma parcial sugere a presença de uma componente autorregressiva, de ordens 1 ou 3. O decaimento exponencial apenas nas defagens múltiplas de 12 sugere que o comportamento sazonal pode estar somente na parte de média móvel.</p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>oo <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(Dif_co2, <span class="at">lag =</span> <span class="dv">36</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(Dif_co2, <span class="at">lag =</span> <span class="dv">36</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Portanto, vamos ajustar nosso modelo inicial, um SARIMA<span class="math inline">\((1,1,0)(1,1,1)_{12}\)</span>. Para tanto, utilizamos a função <code>arima</code> do <code>R</code>, onde o vetor <span class="math inline">\((p,d,q)\)</span> é colocado no argumento <code>order</code> e o <span class="math inline">\((P,D,Q)\)</span> no argumento <code>seasonal</code>. Abaixo, obtemos os resíduos deste modelo. Observe que devemos remover o primeiro ano dos resíduos, por causa da difenreça sazonal.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>modelo_inicial <span class="ot">&lt;-</span> <span class="fu">arima</span>( co2, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">residuals</span>(modelo_inicial), <span class="at">start =</span> <span class="fu">start</span>(co2),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">frequency =</span> <span class="fu">frequency</span>(co2))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>residuos <span class="ot">&lt;-</span> <span class="fu">window</span>(res, <span class="at">start =</span><span class="fu">c</span>(<span class="dv">1960</span>,<span class="dv">1</span>))</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(residuos, <span class="at">lwd =</span> <span class="dv">2</span>, </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">ylab =</span> <span class="st">"Residuos"</span>, <span class="at">xlab =</span> <span class="st">"Anos"</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Resíduos do modelo SARIMA(1,1,0)(1,1,1)"</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Após o ajuste do modelo, analisamos os correlogramas dos resíduos, conforme ilustrado abaixo. Observe que alguns elementos parecem ser significativos em ambos os gráficos. Contudo, os teste de Box-Pierce (p-valor=0,72) e Shapiro-Wilk (p-valor = 0,31) dão evidências de um ruído branco gaussiano.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>oo <span class="ot">&lt;-</span> <span class="fu">par</span>( <span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(residuos, <span class="at">main=</span><span class="st">''</span>, <span class="at">lag =</span> <span class="dv">36</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(residuos, <span class="at">main =</span><span class="st">''</span>, <span class="at">lag =</span> <span class="dv">36</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(oo)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(residuos)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Pierce test
+
+data:  residuos
+X-squared = 0.12072, df = 1, p-value = 0.7283</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(residuos)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuos
+W = 0.99603, p-value = 0.3108</code></pre>
+</div>
+</div>
+<p>Uma vez ajustado, o modelo pode ser utilizado para previsão. Abaixo, apresentamos a previsão até o ano de 2000 (três anos à frente).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>previsao <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">forecast</span>( modelo_inicial, <span class="dv">36</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(previsao)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(previsao, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">"Previsão da Taxa de Desocupação"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Previsão da Taxa de Desocupação</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Point Forecast</th>
+<th style="text-align: right;">Lo 80</th>
+<th style="text-align: right;">Hi 80</th>
+<th style="text-align: right;">Lo 95</th>
+<th style="text-align: right;">Hi 95</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Jan 1998</td>
+<td style="text-align: right;">365.27</td>
+<td style="text-align: right;">364.90</td>
+<td style="text-align: right;">365.64</td>
+<td style="text-align: right;">364.70</td>
+<td style="text-align: right;">365.84</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Feb 1998</td>
+<td style="text-align: right;">366.15</td>
+<td style="text-align: right;">365.70</td>
+<td style="text-align: right;">366.61</td>
+<td style="text-align: right;">365.46</td>
+<td style="text-align: right;">366.85</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mar 1998</td>
+<td style="text-align: right;">367.00</td>
+<td style="text-align: right;">366.46</td>
+<td style="text-align: right;">367.54</td>
+<td style="text-align: right;">366.17</td>
+<td style="text-align: right;">367.83</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Apr 1998</td>
+<td style="text-align: right;">368.36</td>
+<td style="text-align: right;">367.75</td>
+<td style="text-align: right;">368.97</td>
+<td style="text-align: right;">367.43</td>
+<td style="text-align: right;">369.30</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">May 1998</td>
+<td style="text-align: right;">368.93</td>
+<td style="text-align: right;">368.25</td>
+<td style="text-align: right;">369.60</td>
+<td style="text-align: right;">367.90</td>
+<td style="text-align: right;">369.96</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jun 1998</td>
+<td style="text-align: right;">368.23</td>
+<td style="text-align: right;">367.50</td>
+<td style="text-align: right;">368.97</td>
+<td style="text-align: right;">367.11</td>
+<td style="text-align: right;">369.36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jul 1998</td>
+<td style="text-align: right;">366.74</td>
+<td style="text-align: right;">365.95</td>
+<td style="text-align: right;">367.53</td>
+<td style="text-align: right;">365.54</td>
+<td style="text-align: right;">367.95</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aug 1998</td>
+<td style="text-align: right;">364.70</td>
+<td style="text-align: right;">363.86</td>
+<td style="text-align: right;">365.54</td>
+<td style="text-align: right;">363.42</td>
+<td style="text-align: right;">365.98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sep 1998</td>
+<td style="text-align: right;">362.83</td>
+<td style="text-align: right;">361.95</td>
+<td style="text-align: right;">363.72</td>
+<td style="text-align: right;">361.48</td>
+<td style="text-align: right;">364.19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oct 1998</td>
+<td style="text-align: right;">362.96</td>
+<td style="text-align: right;">362.03</td>
+<td style="text-align: right;">363.89</td>
+<td style="text-align: right;">361.54</td>
+<td style="text-align: right;">364.39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nov 1998</td>
+<td style="text-align: right;">364.40</td>
+<td style="text-align: right;">363.42</td>
+<td style="text-align: right;">365.37</td>
+<td style="text-align: right;">362.91</td>
+<td style="text-align: right;">365.89</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dec 1998</td>
+<td style="text-align: right;">365.81</td>
+<td style="text-align: right;">364.80</td>
+<td style="text-align: right;">366.83</td>
+<td style="text-align: right;">364.26</td>
+<td style="text-align: right;">367.37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jan 1999</td>
+<td style="text-align: right;">366.87</td>
+<td style="text-align: right;">365.80</td>
+<td style="text-align: right;">367.95</td>
+<td style="text-align: right;">365.23</td>
+<td style="text-align: right;">368.51</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Feb 1999</td>
+<td style="text-align: right;">367.72</td>
+<td style="text-align: right;">366.60</td>
+<td style="text-align: right;">368.84</td>
+<td style="text-align: right;">366.00</td>
+<td style="text-align: right;">369.44</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mar 1999</td>
+<td style="text-align: right;">368.59</td>
+<td style="text-align: right;">367.41</td>
+<td style="text-align: right;">369.76</td>
+<td style="text-align: right;">366.79</td>
+<td style="text-align: right;">370.38</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Apr 1999</td>
+<td style="text-align: right;">369.93</td>
+<td style="text-align: right;">368.71</td>
+<td style="text-align: right;">371.15</td>
+<td style="text-align: right;">368.07</td>
+<td style="text-align: right;">371.80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">May 1999</td>
+<td style="text-align: right;">370.50</td>
+<td style="text-align: right;">369.24</td>
+<td style="text-align: right;">371.77</td>
+<td style="text-align: right;">368.57</td>
+<td style="text-align: right;">372.44</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jun 1999</td>
+<td style="text-align: right;">369.83</td>
+<td style="text-align: right;">368.52</td>
+<td style="text-align: right;">371.13</td>
+<td style="text-align: right;">367.83</td>
+<td style="text-align: right;">371.83</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jul 1999</td>
+<td style="text-align: right;">368.32</td>
+<td style="text-align: right;">366.97</td>
+<td style="text-align: right;">369.67</td>
+<td style="text-align: right;">366.26</td>
+<td style="text-align: right;">370.39</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aug 1999</td>
+<td style="text-align: right;">366.28</td>
+<td style="text-align: right;">364.89</td>
+<td style="text-align: right;">367.67</td>
+<td style="text-align: right;">364.15</td>
+<td style="text-align: right;">368.40</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sep 1999</td>
+<td style="text-align: right;">364.43</td>
+<td style="text-align: right;">363.00</td>
+<td style="text-align: right;">365.86</td>
+<td style="text-align: right;">362.24</td>
+<td style="text-align: right;">366.61</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oct 1999</td>
+<td style="text-align: right;">364.54</td>
+<td style="text-align: right;">363.07</td>
+<td style="text-align: right;">366.01</td>
+<td style="text-align: right;">362.29</td>
+<td style="text-align: right;">366.79</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nov 1999</td>
+<td style="text-align: right;">365.97</td>
+<td style="text-align: right;">364.46</td>
+<td style="text-align: right;">367.47</td>
+<td style="text-align: right;">363.66</td>
+<td style="text-align: right;">368.27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dec 1999</td>
+<td style="text-align: right;">367.37</td>
+<td style="text-align: right;">365.82</td>
+<td style="text-align: right;">368.91</td>
+<td style="text-align: right;">365.01</td>
+<td style="text-align: right;">369.73</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jan 2000</td>
+<td style="text-align: right;">368.43</td>
+<td style="text-align: right;">366.84</td>
+<td style="text-align: right;">370.02</td>
+<td style="text-align: right;">366.00</td>
+<td style="text-align: right;">370.86</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Feb 2000</td>
+<td style="text-align: right;">369.28</td>
+<td style="text-align: right;">367.65</td>
+<td style="text-align: right;">370.91</td>
+<td style="text-align: right;">366.78</td>
+<td style="text-align: right;">371.78</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mar 2000</td>
+<td style="text-align: right;">370.15</td>
+<td style="text-align: right;">368.47</td>
+<td style="text-align: right;">371.82</td>
+<td style="text-align: right;">367.58</td>
+<td style="text-align: right;">372.71</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Apr 2000</td>
+<td style="text-align: right;">371.49</td>
+<td style="text-align: right;">369.78</td>
+<td style="text-align: right;">373.21</td>
+<td style="text-align: right;">368.87</td>
+<td style="text-align: right;">374.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">May 2000</td>
+<td style="text-align: right;">372.06</td>
+<td style="text-align: right;">370.31</td>
+<td style="text-align: right;">373.82</td>
+<td style="text-align: right;">369.38</td>
+<td style="text-align: right;">374.75</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jun 2000</td>
+<td style="text-align: right;">371.38</td>
+<td style="text-align: right;">369.59</td>
+<td style="text-align: right;">373.18</td>
+<td style="text-align: right;">368.64</td>
+<td style="text-align: right;">374.13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jul 2000</td>
+<td style="text-align: right;">369.88</td>
+<td style="text-align: right;">368.05</td>
+<td style="text-align: right;">371.72</td>
+<td style="text-align: right;">367.07</td>
+<td style="text-align: right;">372.69</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aug 2000</td>
+<td style="text-align: right;">367.84</td>
+<td style="text-align: right;">365.96</td>
+<td style="text-align: right;">369.71</td>
+<td style="text-align: right;">364.97</td>
+<td style="text-align: right;">370.70</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sep 2000</td>
+<td style="text-align: right;">365.99</td>
+<td style="text-align: right;">364.08</td>
+<td style="text-align: right;">367.89</td>
+<td style="text-align: right;">363.06</td>
+<td style="text-align: right;">368.91</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oct 2000</td>
+<td style="text-align: right;">366.10</td>
+<td style="text-align: right;">364.15</td>
+<td style="text-align: right;">368.05</td>
+<td style="text-align: right;">363.12</td>
+<td style="text-align: right;">369.08</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nov 2000</td>
+<td style="text-align: right;">367.52</td>
+<td style="text-align: right;">365.54</td>
+<td style="text-align: right;">369.51</td>
+<td style="text-align: right;">364.49</td>
+<td style="text-align: right;">370.56</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dec 2000</td>
+<td style="text-align: right;">368.92</td>
+<td style="text-align: right;">366.91</td>
+<td style="text-align: right;">370.94</td>
+<td style="text-align: right;">365.84</td>
+<td style="text-align: right;">372.01</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="taxa-de-desocupação-no-brasil" class="level3" data-number="11.7.2">
+<h3 data-number="11.7.2" class="anchored" data-anchor-id="taxa-de-desocupação-no-brasil"><span class="header-section-number">11.7.2</span> Taxa de desocupação no Brasil</h3>
+<p>A série temporal da taxa de desocupação no Brasil é gerada a partir da Pesquisa Nacional por Amostra de Domicílios Contínua (PNAD Contínua), produzida pelo Instituto Brasileiro de Geografia e Estatística (IBGE). Diferente de indicadores mensais puros, esta série é estruturada e divulgada na forma de trimestres móveis. Isso significa que cada ponto observado na série representa o comportamento agregado de uma janela móvel de três meses (por exemplo, jan-fev-mar, seguido por fev-mar-abr), em que o mês mais antigo é descartado para a inclusão do mês subsequente. Essa metodologia visa garantir a robustez estatística e a estabilidade da amostragem do IBGE.</p>
+<p>A série abaixo foi obtida no mês de outubro de 2026. Entratanto, devido ao comportamento atípico da pandemia, vamos analisá-la até o trimestre outubro-novembro-dezembro de 2026 (a análise completa será realizada no capítulo sobre Intervenção).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://docs.google.com/spreadsheets/d/1wgX1tDVy7FL6Ymp1ldwC9J8xssDiT_IJ3UAAW1O5_Qs/edit?usp=sharing"</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>down <span class="ot">&lt;-</span> gsheet<span class="sc">::</span><span class="fu">gsheet2tbl</span>(url)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>desemprego0 <span class="ot">&lt;-</span> <span class="fu">ts</span>( down, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2012</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>desemprego <span class="ot">&lt;-</span> <span class="fu">window</span>(desemprego0, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2012</span>,<span class="dv">1</span>), <span class="at">end =</span><span class="fu">c</span>(<span class="dv">2019</span>,<span class="dv">10</span>))</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(desemprego, <span class="at">lwd =</span> <span class="dv">2</span>, </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">ylab =</span> <span class="st">"Taxa de desocupação (%)"</span>, <span class="at">xlab =</span> <span class="st">"Anos"</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Evolução da Taxa de Desocupação"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A série apresenta tendência, oscilando entre crescente e decrescente. Vamos aplicar a primeira diferença para a remoção da tendência. O resultado, conforme apresentado abaixo, mostra uma série oscilando em torno de zero. Em contrapartida, o correlograma sugere uma componente sazonal de período 12.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>DeltaDesemprego <span class="ot">&lt;-</span> <span class="fu">diff</span>(desemprego)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(DeltaDesemprego, <span class="at">lwd =</span> <span class="dv">2</span>, </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">ylab =</span> <span class="st">"Taxa de desocupação diferenciada"</span>, <span class="at">xlab =</span> <span class="st">"Anos"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Série diferenciada"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(DeltaDesemprego,<span class="at">lag =</span> <span class="dv">36</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Para eliminar o sinal da sazonalidade, vamos aplicar a diferença sazonal de período 12 na série diferenciada.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>D12_DeltaDesemprego <span class="ot">&lt;-</span> <span class="fu">diff</span>(DeltaDesemprego, <span class="dv">12</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(D12_DeltaDesemprego, <span class="at">lwd =</span> <span class="dv">2</span>, </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">ylab =</span> <span class="st">"Taxa de diferenciada "</span>, <span class="at">xlab =</span> <span class="st">"Anos"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Série diferenciada </span><span class="sc">\n</span><span class="st"> para tendência e sazonalidade"</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Abaixo, apresentamos os correlogramas da série livre dos sinais de tendência e sazonalidade. O correlograma parcial sugere um modelo autorregressivo de ordem 1, seguido de um autoregressivo sazonal também de ordem 1.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>oo <span class="ot">&lt;-</span> <span class="fu">par</span>( <span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(D12_DeltaDesemprego, <span class="at">main=</span><span class="st">''</span>, <span class="at">lag =</span> <span class="dv">36</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(D12_DeltaDesemprego, <span class="at">main =</span><span class="st">''</span>, <span class="at">lag =</span> <span class="dv">36</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(oo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Portanto, nosso primeiro modelo a ser testado é ao SARIMA<span class="math inline">\((1,1,0)(1,1,0)_{12}\)</span>. Abaixo, obtemos os resíduos deste modelo, com o corte do primeiro ano devido à diferença sazonal.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>modelo_inicial <span class="ot">&lt;-</span> <span class="fu">arima</span>( desemprego, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">residuals</span>(modelo_inicial), <span class="at">start =</span> <span class="fu">start</span>(desemprego),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">frequency =</span> <span class="fu">frequency</span>(desemprego))</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>residuos <span class="ot">&lt;-</span> <span class="fu">window</span>(res, <span class="at">start =</span><span class="fu">c</span>(<span class="dv">2013</span>,<span class="dv">1</span>))</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(residuos, <span class="at">lwd =</span> <span class="dv">2</span>, </span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">ylab =</span> <span class="st">"Residuos"</span>, <span class="at">xlab =</span> <span class="st">"Anos"</span>,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Resíduos do modelo SARIMA(1,1,0)(1,1,0)"</span>)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Após o ajuste do modelo, analisamos os correlogramas dos resíduos, conforme ilustrado abaixo. Observe a ausência de elementos significativos em ambos os gráficos. Os teste de Box-Pierce (p-valor=0,11) e Shapiro-Wilk (p-valor = 0,55) dão evidências de um ruído branco gaussiano.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>oo <span class="ot">&lt;-</span> <span class="fu">par</span>( <span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(residuos, <span class="at">main=</span><span class="st">''</span>, <span class="at">lag =</span> <span class="dv">36</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(residuos, <span class="at">main =</span><span class="st">''</span>, <span class="at">lag =</span> <span class="dv">36</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(oo)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(residuos)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Pierce test
+
+data:  residuos
+X-squared = 2.5111, df = 1, p-value = 0.1131</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(residuos)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuos
+W = 0.98662, p-value = 0.5565</code></pre>
+</div>
+</div>
+<p>Os coeficientes estimados, dados abaixo, foram: <span class="math inline">\(\phi=0,78\)</span> (influência do trimestre móvel anterior) e <span class="math inline">\(\Phi=-0,57\)</span> (influência do mesmo trimestre móvel no ano anterior).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>modelo_inicial</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+arima(x = desemprego, order = c(1, 1, 0), seasonal = c(1, 1, 0))
+
+Coefficients:
+         ar1     sar1
+      0.7812  -0.5763
+s.e.  0.0724   0.1042
+
+sigma^2 estimated as 0.0161:  log likelihood = 49.42,  aic = -92.84</code></pre>
+</div>
+</div>
+<p>Uma vez ajustado, o modelo pode ser utilizado para previsão. Abaixo, apresentamos a previsão para o ano de 2020.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>previsao <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">forecast</span>( modelo_inicial, <span class="dv">12</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(previsao)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="processo_linear_geral_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(previsao, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">caption =</span> <span class="st">"Previsão da Taxa de Desocupação"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Previsão da Taxa de Desocupação</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Point Forecast</th>
+<th style="text-align: right;">Lo 80</th>
+<th style="text-align: right;">Hi 80</th>
+<th style="text-align: right;">Lo 95</th>
+<th style="text-align: right;">Hi 95</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Nov 2019</td>
+<td style="text-align: right;">11.47</td>
+<td style="text-align: right;">11.31</td>
+<td style="text-align: right;">11.63</td>
+<td style="text-align: right;">11.22</td>
+<td style="text-align: right;">11.72</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dec 2019</td>
+<td style="text-align: right;">11.74</td>
+<td style="text-align: right;">11.40</td>
+<td style="text-align: right;">12.07</td>
+<td style="text-align: right;">11.23</td>
+<td style="text-align: right;">12.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jan 2020</td>
+<td style="text-align: right;">11.42</td>
+<td style="text-align: right;">10.91</td>
+<td style="text-align: right;">11.93</td>
+<td style="text-align: right;">10.64</td>
+<td style="text-align: right;">12.20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Feb 2020</td>
+<td style="text-align: right;">11.13</td>
+<td style="text-align: right;">10.44</td>
+<td style="text-align: right;">11.82</td>
+<td style="text-align: right;">10.07</td>
+<td style="text-align: right;">12.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mar 2020</td>
+<td style="text-align: right;">10.82</td>
+<td style="text-align: right;">9.95</td>
+<td style="text-align: right;">11.69</td>
+<td style="text-align: right;">9.49</td>
+<td style="text-align: right;">12.15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Apr 2020</td>
+<td style="text-align: right;">10.56</td>
+<td style="text-align: right;">9.52</td>
+<td style="text-align: right;">11.60</td>
+<td style="text-align: right;">8.97</td>
+<td style="text-align: right;">12.16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">May 2020</td>
+<td style="text-align: right;">10.40</td>
+<td style="text-align: right;">9.20</td>
+<td style="text-align: right;">11.61</td>
+<td style="text-align: right;">8.56</td>
+<td style="text-align: right;">12.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jun 2020</td>
+<td style="text-align: right;">10.25</td>
+<td style="text-align: right;">8.89</td>
+<td style="text-align: right;">11.62</td>
+<td style="text-align: right;">8.16</td>
+<td style="text-align: right;">12.35</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jul 2020</td>
+<td style="text-align: right;">10.03</td>
+<td style="text-align: right;">8.51</td>
+<td style="text-align: right;">11.55</td>
+<td style="text-align: right;">7.70</td>
+<td style="text-align: right;">12.35</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aug 2020</td>
+<td style="text-align: right;">9.78</td>
+<td style="text-align: right;">8.12</td>
+<td style="text-align: right;">11.45</td>
+<td style="text-align: right;">7.23</td>
+<td style="text-align: right;">12.33</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sep 2020</td>
+<td style="text-align: right;">9.68</td>
+<td style="text-align: right;">7.88</td>
+<td style="text-align: right;">11.48</td>
+<td style="text-align: right;">6.92</td>
+<td style="text-align: right;">12.44</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oct 2020</td>
+<td style="text-align: right;">10.04</td>
+<td style="text-align: right;">8.10</td>
+<td style="text-align: right;">11.98</td>
+<td style="text-align: right;">7.08</td>
+<td style="text-align: right;">13.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="exercícios-1" class="level2" data-number="11.8">
+<h2 data-number="11.8" class="anchored" data-anchor-id="exercícios-1"><span class="header-section-number">11.8</span> Exercícios</h2>
+<section id="índice-niño-3.4" class="level3" data-number="11.8.1">
+<h3 data-number="11.8.1" class="anchored" data-anchor-id="índice-niño-3.4"><span class="header-section-number">11.8.1</span> Índice Niño 3.4</h3>
+<p>A série temporal do Índice Niño 3.4 mensura as anomalias mensais da Temperatura da Superfície do Mar (TSM) em uma região estratégica do Oceano Pacífico Equatorial (entre as latitudes 5°N–5°S e longitudes 170°W–120°W). Disponibilizado pela National Oceanic and Atmospheric Administration (NOAA), o indicador expressa o desvio da temperatura da água em relação à média histórica de longo prazo. Valores persistentemente positivos (acima de +0,5 °C) indicam a ocorrência do fenômeno El Niño (aquecimento), enquanto valores negativos (abaixo de -0,5 °C) caracterizam o fenômeno La Niña (resfriamento).</p>
+<p>A série mensal, começando em janeiro 1984 pode ser obtida abaixo:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1OEBz6iIYfEaUbuxe23M2Y1Tq3MdqC1iGdNdyb263_cI/edit?usp=sharing'</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>nino <span class="ot">&lt;-</span> gsheet<span class="sc">::</span><span class="fu">gsheet2tbl</span>(url)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>nino <span class="ot">&lt;-</span> <span class="fu">ts</span>( nino, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1964</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Encontre um modelo adequado para ess série e faça previsões para 2027.</p>
+</section>
+<section id="manchas-solares" class="level3" data-number="11.8.2">
+<h3 data-number="11.8.2" class="anchored" data-anchor-id="manchas-solares"><span class="header-section-number">11.8.2</span> Manchas solares</h3>
+<p>A série temporal <code>sunspot.year</code>, disponível nativamente no R, contém o registro numérico anual do número médio de manchas solares observadas na superfície do Sol, abrangendo um longo período histórico que vai de 1700 a 1988. Encontre um modelo adequado para essa série.</p>
 
 
 </section>
