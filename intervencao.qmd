@@ -2,73 +2,75 @@
 
 ## Análise de intervenção
 
+Existem eventos que modificam o comportamento de um série temporal. Por exemplo, o fluxo em uma avenida pode ser alterado por obras no canteiro ou o nível de um rio pode ser influenciado pela instalação de uma represa em seus afluentes. No primeiro caso, a série volta ao seu comportamento usual enquanto que no segundo a série seguirá um comportamento novo. Para que os modelos de séries temporais se adequem aos eventos que geram as alterações, modificações devem ser implementadas para se adaptar às mudanças. Tais modificações são denominadas intervenções.
 
-Considere o problema no qual a série temporal $x_t$ recebe apenas uma intervenção, no tempo $T$. O modelo geral é dado por
 
-$$x_t=m_t+N_t,$$
-onde o processo $N_t$ representa a série temporal sem a intervenção e $m_t$ representa o efeito da intervenção. Ante do tempo $T$, $m_t$ é assumida ser nula. A série $\{x_t,t<T\}$ é referida como dados pré-intervenção e a série $\{x_t,t\geq T\}$ é referida como  pós-intervenção.
+Considere uma série temporal $\{x_t\}$ com uma intervenção começando no tempo $\tau$ (conhecido). O modelo geral é dado por
 
-A função degrau é definda como 
-$$S_t^{(T)}=\left\{\begin{array}{ll}1,&\hbox{ se }t\geq T\\ 0,&\hbox{ caso contrário}\end{array}\right.$$
-ou seja, $S_t(T)=0$ durante a pré-intervenção e $S_t^(T)=1$ durante a pós-intervenção. A função pulso, definida por 
-$$P^{(T)}_t=S_t^{(T)}-S_{t-1}^{(T)}$$
-é a variável indicadora do tempo da intervenção. Como
-$$P_t^{(T)}=(1-B)S_t^{(T)}$$
-podemos escrever o pulso em função de $S_t^{(T)}$. 
+$$x_t=\begin{cases}N_t,& t<\tau \\m_t+N_t,&t\geq \tau\end{cases}$$
+onde o processo $\{N_t\}$ representa a série temporal sem a intervenção e $m_t$ representa o efeito da intervenção. Antes do tempo $\tau$, $m_t$ é assumida ser nula. A coleção $\{x_t,t<\tau\}$ é referida como série pré-intervenção e  $\{x_t,t\geq \tau\}$ é referida como série pós-intervenção.
 
-Quando a intervenção possui um resultado imediato e permanente na função média, a mudança pode ser modelada por
-$$m_t=\omega S_t^{(T)},$$
+Existem duas funções úteis para construir intervenções, denomi adas degrau e pulso. A função degrau é definda como 
+
+$$S_t^{(\tau)}=\begin{cases}1,&t\geq \tau\\ 0,&t<\tau\end{cases}$$
+ou seja, $S_t^{(\tau)}$ é nula durante a pré-intervenção e $S_t^{(\tau)}=1$ durante a pós-intervenção. A função pulso, definida por 
+$$P^{(\tau)}_t=S_t^{(\tau)}-S_{t-1}^{(\tau)}$$
+é a variável indicadora do tempo da intervenção, ou seja $P_t^{(\tau)}$ é 1 quando $t=\tau$ e é nula se $t\neq \tau$. Utilizando o operador defasagem, podemos escrever o pulso como função do degrau como segue:
+
+$$P_t^{(\tau)}=(1-B)S_t^{(\tau)}$$
+Quando a intervenção possui um resultado imediato e permanente no nível da  série, o efeito da intervenção é 
+$$m_t=\omega S_t^{(\tau)},$$
 onde $\omega$ é o parâmetro que modela da mudança permantente na média. Em termos de função pulso, teremos
-$$m_t=m_{t-1}+\omega P_t^{(T)}.$$
+$$m_t=m_{t-1}+\omega P_t^{(\tau)}.$$
 A figura abaixo ilustra esse efeito 
 
-```{r}
+```{r echo = FALSE}
 #| layout-ncol: 1
 #| fig-cap: 
 #|   - ""
 
 plot.new()
 plot.window(xlim=c(0,11), ylim=c(0,1.5))
-axis(1, at = c(0,5,10),c('','T',''))
+axis(1, at = c(0,5,10),c('',expression(tau),''))
 axis(2, at = c(0,1,1.5), c(0,expression(omega),''))
 lines(0:4,rep(0,5), type= 'o', pch=16)
 lines(5:10,rep(1,6), type= 'o', pch=16)
 ```
 
-Também é possível que a mudança na função média só ocorra após um atraso de $d$ unidades de tempo em relação à intervenção. Se $d$ é conhecido, teremos
-$$m_t=\omega S_{t-d}^{(T)}.$$
-A figura abaixo apresenta essa estrutura considerando um atraso de dois dias.
+Também é possível que a mudança no nível só ocorra após um atraso de $d$ unidades de tempo em relação à intervenção. Se $d$ é conhecido, teremos
+$$m_t=\omega S_{t-d}^{(\tau)}.$$
+A figura abaixo apresenta essa estrutura considerando um atraso de duas unidades de tempo.
 
-```{r}
+```{r echo = FALSE}
 #| layout-ncol: 1
 #| fig-cap: 
 #|   - ""
 
 plot.new()
 plot.window(xlim=c(0,11), ylim=c(0,1.5))
-axis(1, at = c(0,5,10),c('','T',''))
+axis(1, at = c(0,5,6,7,10),c('',expression(tau),expression(tau+1),expression(tau+2),''), cex = .8)
 axis(2, at = c(0,1,1.5), c(0,expression(omega),''))
 lines(0:6,rep(0,7), type= 'o', pch=16)
 lines(7:10,rep(1,4), type= 'o', pch=16)
 ```
 
-Em outro cenário, é possível que a intervenção possua um efeito imediato que se apaga gradualmente. Podemos reproduzir esse efeito com utilizando a estrutura
+Em outro cenário, é possível que a intervenção possua um efeito imediato que se apaga gradualmente, até retornar ao padrão original. Podemos reproduzir esse efeito utilizando a estrutura
 
-$$m_t=\delta m_{t-1}+\omega P_{t}^{(T)},$$
-com $\delta \in (0,1)$ e $m_0=0$. Uma vez que $m_t=\omega \delta^{T-t}$ para $t\geq T$, $m_t$ decrescerá exponencialmente para zero, eliminando o efeito da intervenção. A mesma estrutura anterior pode ser reescrita como
+$$m_t=\delta m_{t-1}+\omega P_{t}^{(\tau)},$$
+com $\delta \in (0,1)$ e $m_0=0$. Uma vez que $m_{\tau+k}=\omega \delta^{k}$, para $k>0$, o efeito da intervenção será $\omega$ em $t=\tau$, decrescendo exponencialmente para zero, eliminando o efeito da intervenção. A mesma estrutura anterior pode ser reescrita como
 
-$$m_t=(1-\delta B)^{-1}\omega (1-B)S^{(T)}_t$$
+$$m_t=\frac{\omega (1-B)S^{(\tau)}_t}{1-\delta B}$$
 A figura abaixo ilustra essa estrutura.
 
 
-```{r}
+```{r echo = FALSE}
 #| layout-ncol: 1
 #| fig-cap: 
 #|   - ""
 
 plot.new()
 plot.window(xlim=c(0,11), ylim=c(0,1.5))
-axis(1, at = c(0,5,10),c('','T',''))
+axis(1, at = c(0,5,10),c('',expression(tau),''))
 axis(2, at = c(0,1,1.5), c(0,expression(omega),''))
 lines(0:4,rep(0,5), type= 'o', pch=16)
 m = 0
@@ -76,23 +78,23 @@ for(i in 1:6) m[i+1] = .5*m[i]+ifelse(i==1,1,0)
 lines(5:10,m[-1], type= 'o', pch=16)
 ```
 
-As estruturas acima podem ser combinadas para criar novas. Por exemplo, suponha que no tempo $T$ a função média se modifia e posteriormente esse efeito diminui, se tornando uma nova constante. Podemos imaginar que a função $m_t$ deve ser composta de duas partes  
+As estruturas acima podem ser combinadas para criar novas. Por exemplo, suponha que no tempo $\tau$ a função média se modifica e posteriormente esse efeito diminui, se tornando uma nova constante. Podemos imaginar que a função $m_t$ deve ser composta de duas partes  
 
 $$m_t = m_{1,t}+m_{2,t},$$
 onde 
-$$m_{1,t}=\omega_1 S_{t}^{(T)}$$
+$$m_{1,t}=\omega_1 S_{t}^{(\tau)}$$
 representa a nova mudança a ser observa em médio prazo e 
-$$m_{2,t}=\delta m_{2,t-1}+\omega_2 P_{t}^{(T)}$$
-representa a mudança momentânea, que será eliminada no curto prazo. A figua abaixo ilustra essa situação.
+$$m_{2,t}=\delta m_{2,t-1}+\omega_2 P_{t}^{(\tau)}$$
+representa a mudança momentânea, que será eliminada no curto prazo. A figura abaixo ilustra essa situação.
 
-```{r}
+```{r echo = FALSE}
 #| layout-ncol: 1
 #| fig-cap: 
 #|   - ""
 
 plot.new()
 plot.window(xlim=c(0,14), ylim=c(0,1.5))
-axis(1, at = c(0,5,10),c('','T',''))
+axis(1, at = c(0,5,10),c('',expression(tau),''))
 axis(2, at = c(0,1.5,.5), c(0,expression(omega[1]+omega[2]),expression(omega[1])))
 lines(0:4,rep(0,5), type= 'o', pch=16)
 m1 = 0
@@ -102,60 +104,79 @@ abline(h=.5, lty = 2)
 abline(h=1.5, lty = 2)
 ```
 
-Vamos discutir a estimação dos parâmetros da intervenção considerando um modelo ARIMA (sazonal ou não). Note que
-$$x_t-m_t=N_t,$$
-onde $N_t$ é um modelo ARIMA. Sejam $(\theta,\phi)$ os parâmetros do modelo ARIMA e $\omega$ os parâmetros da intervenção. Então,
+Vamos discutir a estimação dos parâmetros da intervenção. Recorde que a série temporal é escrita como 
 
-$$L(\theta,\phi,\omega|x_1,\ldots,x_n)=L_{\hbox{ARIMA}}(\theta,\phi|x_1-m_1,\ldots,x_n-m_n)$$
-e podemos utilizar a mesma função de verossimilhança para implementar a intervenção.
+$$x_t=m_t+N_t,$$
+onde $N_t$ é a série livre de intervenção e $m_t$ o efeito da intervenção. Seja $\boldsymbol{\beta}$ o vetor de parâmetros de $\{N_t\}$ e $\boldsymbol{\omega}$ os paramêtros de $\{m_t\}$. Observe que 
+
+$$x_t-m_t=N_t.$$
+Deste modo, a função de verissimilhança para $(\boldsymbol{\beta},\boldsymbol{\omega})$ é dada por
+$$L(\boldsymbol{\beta},\boldsymbol{\omega}|x_1,\ldots,x_n)=L_{N_t}(\boldsymbol{\beta}|x_1-m_1,\ldots,x_n-m_n)$$
+e podemos utilizar a mesma função de verossimilhança de $N_t$ para implementar a intervenção.
 
 ### Exemplo: Nível do Nilo
 
-Considere mais uma vez a série anual do fluxo do Rio Nilo, mostrada abaixo. A linha pontilhada vertical, no ano de 1898, mostra uma mudança de nível na série. As linhas pontilhadas horizontais mostram a média amostral da série antes e depois de 1898. Note que houve uma redução no volume de aproximadamente 247 $\times 10^8 m^3$.  
+Considere mais uma vez a série anual do fluxo do Rio Nilo, mostrada abaixo. Pode-se notar que a série é consistente com um modelo AR(1).
+
+```{r echo = FALSE}
+ts.plot(Nile)
+oo <- par(mfrow=c(1,2))
+acf(Nile);pacf(Nile)
+```
+
+
+Contudo, uma análise mais minuciosa mostra que essa série teve uma mudança. Abaixo, a linha pontilhada vertical, no ano de 1898, mostra uma mudança de nível na série. As linhas pontilhadas horizontais mostram a média amostral da série antes e depois de 1898. Note que houve uma redução no volume de aproximadamente 247 $\times 10^8 m^3$. 
 
 
 
 ```{r}
 ts.plot(Nile)
 abline( v= 1898, lty = 2)
-mediaAntes  <- mean(Nile[time(Nile)<1898])
+mediaAntes  <- mean(Nile[time(Nile)<=1898])
 mediaDepois <- mean(Nile[time(Nile)>1898])
                    
 segments(1871,mediaAntes,1898, mediaAntes, lty = 2)
 segments(1899,mediaDepois,1970, mediaDepois, lty = 2)
 
-(mediaAntes-mediaDepois)
+
 ```
 
-Abaixo, mostramos que a série após 1890 é consistente com um modelo AR(1) com deriva.
+Essa observação empírica condiz com o início da construção da primeira Represa de Aswan em 1899, concluída em 1902. Deste modo, temos uma intervenção em 1899 que mudou permanentemente (até o limite observado) o nível da série.  
+
+Abaixo, mostramos que a série pré 1898 é consistente com um modelo independente (o que equivale ao modelo ARIMA(0,0,0) com média não nula).
+
 ```{r}
-nile1890 <- window(Nile, start = 1890)
-acf(nile1890)
-pacf(nile1890)
+nile1898 <- window(Nile, end = 1898)
+acf(nile1898)
+pacf(nile1898)
 ```
 
 Vamos considerar o modelo de intervenção
 
-$$m_t=\omega S_{t-1}^{(1898)}.$$
+$$m_t=\omega S_{t}^{(1899)}.$$
+onde $\omega$ representa a mudança de nível a partir de 1899.
 
 ```{r}
+# função de verossimilhança
 La <- function(omega){
   St <- array(1,length(Nile))
   St[time(Nile)<1898]<-0
-  mod <- arima(Nile-omega*St, c(1,0,0))
+  mod <- arima(Nile-omega*St, c(0,0,0))
   mod$loglik
 } 
 
-optimize(La, c(-500,500), maximum = TRUE)
+# obtendo as estimativas
+opt = optimize(La, c(-500,500), maximum = TRUE)
+opt$maximum
 ```
 
-A estimativa de máxima verossimilhança para $\omega$ é $-241,857$. Abaixo, analisamos os resíduos do modelo ajustado
+A estimativa de máxima verossimilhança para $\omega$ é $-244$. Abaixo, analisamos os resíduos do modelo ajustado
 
 ```{r}
-  omega_chapeu <- -241.857
+  omega_chapeu <- opt$maximum
   St <- array(1,length(Nile))
   St[time(Nile)<1898]<-0
-  mod <- arima(Nile-omega_chapeu*St, c(1,0,0))
+  mod <- arima(Nile-omega_chapeu*St, c(0,0,0))
   
   ts.plot(mod$residuals)
   acf(mod$residuals)
@@ -164,6 +185,8 @@ A estimativa de máxima verossimilhança para $\omega$ é $-241,857$. Abaixo, an
   Box.test(mod$residuals)
   shapiro.test(mod$residuals)
 ```
+
+Portanto, a autocorrelação inicial observada foi induzida pela intervenção não modelada. Ao realizar a intervenção, nota-se que o nível da série sem intervenção na verdade segue com um processo fracamente estacionário sem autocorrelação.
 
 ### Exemplo: óbitos maternos durante a pandemia
 
@@ -251,7 +274,7 @@ $$m_{1,t}=\delta_1 m_{1,t-1}+\omega P_t^{(2023/4)},$$
 e
 $$m_{2,t}=\delta_2 m_{2,t-1}+\omega_2P_{t}^{(2023/5)}.$$
 
-Abaixo, constrúimos a função de verossimilhança.
+Abaixo, construímos a função de verossimilhança.
 
 ```{r}
 # selecionando a série até o fim de 2020
@@ -343,55 +366,55 @@ Outliers são observações atípicas. Segundo sua natureza, eles podem ser clas
 
 - Outliers aditivos (AO): são resultantes de erros de medição/registro
 
-- Outliers na inovação (IO): são mudanças abrúptas de curta duração no processo subjacente. 
+- Outliers na inovação (IO): são mudanças abruptas de curta duração que se propagam no processo subjacente. 
 
-Seja $x_t$ uma série temporal. Então, se um outlier aditivo ocorre no tempo $T$, a série temporal pode ser descrita como $x_t'$, onde
+Seja $x_t$ uma série temporal. Então, se um outlier aditivo ocorre no tempo $\tau$, a série temporal pode ser descrita como $x_t'$, onde
 
-$$x_t'=\left\{\begin{array}{ll}x_t,&\;\;t\neq T\\ x_t+\omega_AP_t^{(T)},&\;\;t=T.\end{array}\right.$$
-Note que um outlier aditivo pode ser tratado como uma intervenção, onde $m_t=\omega_A P_t^{(T)}$.
+$$x_t'=\left\{\begin{array}{ll}x_t,&\;\;t\neq \tau\\ x_t+\omega_AP_t^{(\tau)},&\;\;t=\tau.\end{array}\right.,$$
+onde $P^{(\tau)}_t$ é a função pulso. Note que um outlier aditivo pode ser tratado como uma intervenção, onde $m_t=\omega_A P_t^{(\tau)}$.
 
-Seja $\varepsilon_t$ erro associado à série $x_t$. Um outlier na inovação ocorre quando o erro (também conhecido como inovação) no tempo $T$ sofre uma perturbação.
+Seja $\varepsilon_t$ o erro associado à série $\{x_t\}$. Um outlier na inovação ocorre quando o erro (também conhecido como inovação) no tempo $T$ sofre uma perturbação.
 
-$$\varepsilon_t'=\left\{\begin{array}{ll}\varepsilon_t,&\;\;t\neq T\\ \varepsilon_t+\omega_I P_t^{(T)},&\;\;t=T.\end{array}\right.$$
+$$\varepsilon_t'=\left\{\begin{array}{ll}\varepsilon_t,&\;\;t\neq \tau\\ \varepsilon_t+\omega_I P_t^{(\tau)},&\;\;t=\tau.\end{array}\right.$$
 Considere o processo estacionário MA$(\infty)$
 $$x_t=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}$$
-Então, o processo com outlier na inovação no tempo $T$ é escrito como
-$$x_t'=\varepsilon_t'+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}'=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}+\theta_{t-T}\omega_I=x_t+\theta_{t-T}\omega_I,$$
-onde $\theta_0=1$ e $\theta_j=0$ se $j<0$. Portanto, um outlier na inovação perturba todas as observações no tempo $t\geq T$, embora esse efeito diminua na medida que $t$ se afasta de $T$. 
+Então, o processo com outlier na inovação no tempo $\tau$ é escrito como
+$$x_t'=\varepsilon_t'+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}'=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}+\theta_{t-\tau}\omega_I=x_t+\theta_{t-\tau}\omega_I,$$
+onde $\theta_0=1$ e $\theta_j=0$ se $j<0$. Portanto, um outlier na inovação perturba todas as observações no tempo $t\geq \tau$, embora esse efeito diminua na medida que $t$ se afasta de $\tau$. 
 
 Para detectar um IO, considere que um modelo foi ajustado, gerando a série de resíduos 
 $$\hat{\varepsilon}_t'=x_t'-E(x_t'|\mathcal{D}_{t-1}),$$ onde $\hat{\varepsilon}_t\approx N(0,\sigma^2)$. Então
-$$\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}$$
+$$\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sqrt{\nu}}$$
 se comporta como uma distribuição normal padrão quando não há outliers. Na presença de outliers, teremos
 
-$$\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}=\left\{\begin{array}{ll}\frac{\hat{\varepsilon}_t}{\sigma},&\;\; t\neq T\\ \frac{\hat{\varepsilon}_t+\omega_I}{\sigma},&\;\; t= T\end{array}\right.$$
-Se $T$ é conhecido, declaramos $x_T$ como outlier se $|\lambda_{1,T}|>1,96$ e $\hat{\omega}_I=\hat{\varepsilon}'_T$. Se $T$ é desconhecido, calcula-se
+$$\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sqrt{\nu}}=\left\{\begin{array}{ll}\frac{\hat{\varepsilon}_t}{\sqrt{\nu}},&\;\; t\neq T\\ \frac{\hat{\varepsilon}_t+\omega_I}{\sqrt{\nu}},&\;\; t= T\end{array}\right.$$
+Se $\tau$ é conhecido, declaramos $x_\tau$ como outlier se $|\lambda_{1,\tau}|>1,96$ e estimamos $\hat{\omega}_I=\hat{\varepsilon}'_\tau$. Se $\tau$ é desconhecido, calcula-se
 $$\lambda_1=\max_{1\leq t \leq n}|\lambda_{1,t}|,$$
-e define-se $T$ como sendo o valor $t$ tal que $\lambda_{1,t}=\lambda_1$. Como todos os pontos estão sendo avaliados, precisamos realizar algum teste múltiplo. O mais simples é a correção de Bonferroni, que nos leva a declarar que $x_T$ é um outlier se $\lambda_1$ é maior que o quantil $1-\alpha/2n$ da normal padrão. Na prática, $\sigma$ deve ser estimado de modo robusto, uma vez que a variância tradicional é sensível à outliers. Uma alternativa é estimar $\sigma$ por
-$$\hat{\sigma}=\sqrt{\frac{2}{\pi}}\sum_{t=1}^n\frac{|\hat{\varepsilon_t}|}{n}.$$
+e define-se $\tau$ como sendo o valor $t$ tal que $\lambda_{1,t}=\lambda_1$. Como todos os pontos estão sendo avaliados, precisamos realizar algum teste múltiplo. O mais simples é a correção de Bonferroni, que nos leva a declarar que $x_\tau$ é um outlier se $\lambda_1$ é maior que o quantil $1-\alpha/2n$ da normal padrão. Na prática, $\sigma$ deve ser estimado de modo robusto, uma vez que a variância tradicional é sensível à outliers. Uma alternativa é estimar $\nu$ por
+$$\sqrt{\hat{\nu}}=\sqrt{\frac{2}{\pi}}\sum_{t=1}^n\frac{|\hat{\varepsilon_t}|}{n}.$$
 
 Para o caso AO, considere que $x_t'$ é um processo AR($\infty$). Então
 $$\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}',$$ 
-onde $\phi_j=0$ para $j<t$. Note que, para $t<T$,
+onde $\phi_j=0$ para $j<t$. Note que, para $t<\tau$,
 $$\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}'=x_t-\sum_{j=1}^\infty \phi_j x_{t-j},$$
-Para $t=T$, teremos 
-$$\hat{\varepsilon}_T'=x_T+\omega_A-\sum_{j=1}^\infty \phi_j x_{T-j}=\omega_A+\hat{\varepsilon}_T.$$
+Para $t=\tau$, teremos 
+$$\hat{\varepsilon}_\tau'=x_\tau+\omega_A-\sum_{j=1}^\infty \phi_j x_{\tau-j}=\omega_A+\hat{\varepsilon}_\tau.$$
 Para $t=T+1$, teremos
-$$\hat{\varepsilon}_{T+1}'=x_{T+1}-\phi_1\omega_A-\sum_{j=2}^\infty \phi_j x_{T+1-j}=-\phi_1\omega_A+\hat{\varepsilon}_{T+1},$$
-e, de modo geral, para $k>T$
-$$\hat{\varepsilon}_{k}'=-\phi_{T-k}\omega_A+\hat{\varepsilon}_k.$$
+$$\hat{\varepsilon}_{\tau+1}'=x_{\tau+1}-\phi_1\omega_A-\sum_{j=2}^\infty \phi_j x_{\tau+1-j}=-\phi_1\omega_A+\hat{\varepsilon}_{\tau+1},$$
+e, de modo geral, para $k>\tau$
+$$\hat{\varepsilon}_{k}'=-\phi_{\tau-k}\omega_A+\hat{\varepsilon}_k.$$
 Definindo a soma de quadrados
-$$\sum_{j=T}^n'\hat{\varepsilon}_j^2=\sum_{j=T}^{n}(\hat{\varepsilon}_{j}+\omega_A\pi_{T-j})^2$$
+$$\sum_{j=\tau}^{n}\hat{\varepsilon}_j^{'2} = \sum_{j=\tau}^{n} (\hat{\varepsilon}_{j} +\omega_A \pi_{\tau-j})^2$$
 onde $\pi_0=1$ e $\pi_j=\phi_j$ se $j>0$, podemos estimar $\omega$ por
-$$\hat{\omega}_{T,A}=-\frac{\sum_{j=T}^n\pi_{T-j}\hat{\varepsilon}_{j}}{\sum_{j=T}^n\pi_{T-j}^2}$$
+$$\hat{\omega}_{\tau,A}=-\frac{\sum_{j=\tau}^n\pi_{\tau-j}\hat{\varepsilon}_{j}}{\sum_{j=\tau}^n\pi_{\tau-j}^2}$$
 
 Como $\hat{\varepsilon}_t\approx N(0,\sigma^2)$, teremos que
-$$\lambda_{2,T}=\frac{\hat{\omega}_{T,A}}{\sigma\sqrt{\sum_{j=T}^n \pi_{T-j}^2}}$$
-deve se comportar como uma distribuição normal padrão na ausência de outliers. Novamente, se $T$ for desconhecido, podemos escolher $T$ como o valor $t$ que gera o valor
+$$\lambda_{2,\tau}=\frac{\hat{\omega}_{\tau,A}}{\sigma\sqrt{\sum_{j=\tau}^n \pi_{\tau-j}^2}}$$
+deve se comportar como uma distribuição normal padrão na ausência de outliers. Novamente, se $\tau$ for desconhecido, podemos escolher $\tau$ como o valor $t$ que gera o valor
 $$\lambda_2=\max_{1\leq t \leq n}|\lambda_{2,t}|$$
 e podemos testar sua significância comparando seu valor com o quantil 1-$\alpha/2n$ da distribuição normal padrão.
 
-Na prática, é provável que a natureza do outlier seja desconhecida. Nesses casos, tanto o teste para o AO quanto para o IO devem detectar os mesmos outliers. Uma regra que tende a funcionar é classificar o outlier como IO se $|\lambda_{1,T}|>|\lambda_{2,T}$ ou como AO em caso contrário. Após identificar o outlier e estimar $\omega$, o mesmo deve ser incorporado na função de verossimilhança e as estimativas devem ser realziadas novamente. 
+Na prática, é provável que a natureza do outlier seja desconhecida. Nesses casos, tanto o teste para o AO quanto para o IO devem detectar os mesmos outliers. Uma regra que tende a funcionar é classificar o outlier como IO se $|\lambda_{1,T}|>|\lambda_{2,T}$ ou como AO em caso contrário. Após identificar o outlier e estimar $\omega$, o mesmo deve ser incorporado na função de verossimilhança e as estimativas devem ser realizadas novamente. 
 
 
 ### Mortes por doencas pulmonares no Reino Unidos
@@ -419,6 +442,7 @@ ts.plot(mod$residuals[-(1:12)])
 Utilizaremos as funções `detectIO` e `detectAO`, do pacote `TSA`, para a detecção de outliers na série através dos resíduos encontrados.
 
 ```{r}
+library(TSA)
 detectAO(mod)
 detectIO(mod)
 ```
@@ -440,7 +464,7 @@ detectAO(mod2)
 detectIO(mod2)
 ```
 
-Note que mais um outlier foi detectado IO, agora no tempo 50. Abaixo, constrúimos mais um modelo, agora com o outlier no tempo 50.
+Note que mais um outlier foi detectado como de inovação, agora no tempo 50. Abaixo, constrúimos mais um modelo, agora com o outlier no tempo 50.
 
 ```{r}
 mod3 <- arimax(ldeaths, c(2,1,2), c(0,1,1), xreg = pulso, io = c(26,38,50))

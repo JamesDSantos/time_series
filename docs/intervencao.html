@@ -326,16 +326,12 @@ window.Quarto = {
 
 <section id="análise-de-intervenção" class="level2" data-number="12.1">
 <h2 data-number="12.1" class="anchored" data-anchor-id="análise-de-intervenção"><span class="header-section-number">12.1</span> Análise de intervenção</h2>
-<p>Considere o problema no qual a série temporal <span class="math inline">\(x_t\)</span> recebe apenas uma intervenção, no tempo <span class="math inline">\(T\)</span>. O modelo geral é dado por</p>
-<p><span class="math display">\[x_t=m_t+N_t,\]</span> onde o processo <span class="math inline">\(N_t\)</span> representa a série temporal sem a intervenção e <span class="math inline">\(m_t\)</span> representa o efeito da intervenção. Ante do tempo <span class="math inline">\(T\)</span>, <span class="math inline">\(m_t\)</span> é assumida ser nula. A série <span class="math inline">\(\{x_t,t&lt;T\}\)</span> é referida como dados pré-intervenção e a série <span class="math inline">\(\{x_t,t\geq T\}\)</span> é referida como pós-intervenção.</p>
-<p>A função degrau é definda como <span class="math display">\[S_t^{(T)}=\left\{\begin{array}{ll}1,&amp;\hbox{ se }t\geq T\\ 0,&amp;\hbox{ caso contrário}\end{array}\right.\]</span> ou seja, <span class="math inline">\(S_t(T)=0\)</span> durante a pré-intervenção e <span class="math inline">\(S_t^(T)=1\)</span> durante a pós-intervenção. A função pulso, definida por <span class="math display">\[P^{(T)}_t=S_t^{(T)}-S_{t-1}^{(T)}\]</span> é a variável indicadora do tempo da intervenção. Como <span class="math display">\[P_t^{(T)}=(1-B)S_t^{(T)}\]</span> podemos escrever o pulso em função de <span class="math inline">\(S_t^{(T)}\)</span>.</p>
-<p>Quando a intervenção possui um resultado imediato e permanente na função média, a mudança pode ser modelada por <span class="math display">\[m_t=\omega S_t^{(T)},\]</span> onde <span class="math inline">\(\omega\)</span> é o parâmetro que modela da mudança permantente na média. Em termos de função pulso, teremos <span class="math display">\[m_t=m_{t-1}+\omega P_t^{(T)}.\]</span> A figura abaixo ilustra esse efeito</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.new</span>()</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.window</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">11</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1.5</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">10</span>),<span class="fu">c</span>(<span class="st">''</span>,<span class="st">'T'</span>,<span class="st">''</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">1.5</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="fu">expression</span>(omega),<span class="st">''</span>))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">4</span>,<span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">5</span>), <span class="at">type=</span> <span class="st">'o'</span>, <span class="at">pch=</span><span class="dv">16</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">10</span>,<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">6</span>), <span class="at">type=</span> <span class="st">'o'</span>, <span class="at">pch=</span><span class="dv">16</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Existem eventos que modificam o comportamento de um série temporal. Por exemplo, o fluxo em uma avenida pode ser alterado por obras no canteiro ou o nível de um rio pode ser influenciado pela instalação de uma represa em seus afluentes. No primeiro caso, a série volta ao seu comportamento usual enquanto que no segundo a série seguirá um comportamento novo. Para que os modelos de séries temporais se adequem aos eventos que geram as alterações, modificações devem ser implementadas para se adaptar às mudanças. Tais modificações são denominadas intervenções.</p>
+<p>Considere uma série temporal <span class="math inline">\(\{x_t\}\)</span> com uma intervenção começando no tempo <span class="math inline">\(\tau\)</span> (conhecido). O modelo geral é dado por</p>
+<p><span class="math display">\[x_t=\begin{cases}N_t,&amp; t&lt;\tau \\m_t+N_t,&amp;t\geq \tau\end{cases}\]</span> onde o processo <span class="math inline">\(\{N_t\}\)</span> representa a série temporal sem a intervenção e <span class="math inline">\(m_t\)</span> representa o efeito da intervenção. Antes do tempo <span class="math inline">\(\tau\)</span>, <span class="math inline">\(m_t\)</span> é assumida ser nula. A coleção <span class="math inline">\(\{x_t,t&lt;\tau\}\)</span> é referida como série pré-intervenção e <span class="math inline">\(\{x_t,t\geq \tau\}\)</span> é referida como série pós-intervenção.</p>
+<p>Existem duas funções úteis para construir intervenções, denomi adas degrau e pulso. A função degrau é definda como</p>
+<p><span class="math display">\[S_t^{(\tau)}=\begin{cases}1,&amp;t\geq \tau\\ 0,&amp;t&lt;\tau\end{cases}\]</span> ou seja, <span class="math inline">\(S_t^{(\tau)}\)</span> é nula durante a pré-intervenção e <span class="math inline">\(S_t^{(\tau)}=1\)</span> durante a pós-intervenção. A função pulso, definida por <span class="math display">\[P^{(\tau)}_t=S_t^{(\tau)}-S_{t-1}^{(\tau)}\]</span> é a variável indicadora do tempo da intervenção, ou seja <span class="math inline">\(P_t^{(\tau)}\)</span> é 1 quando <span class="math inline">\(t=\tau\)</span> e é nula se <span class="math inline">\(t\neq \tau\)</span>. Utilizando o operador defasagem, podemos escrever o pulso como função do degrau como segue:</p>
+<p><span class="math display">\[P_t^{(\tau)}=(1-B)S_t^{(\tau)}\]</span> Quando a intervenção possui um resultado imediato e permanente no nível da série, o efeito da intervenção é <span class="math display">\[m_t=\omega S_t^{(\tau)},\]</span> onde <span class="math inline">\(\omega\)</span> é o parâmetro que modela da mudança permantente na média. Em termos de função pulso, teremos <span class="math display">\[m_t=m_{t-1}+\omega P_t^{(\tau)}.\]</span> A figura abaixo ilustra esse efeito</p>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
@@ -343,13 +339,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Também é possível que a mudança na função média só ocorra após um atraso de <span class="math inline">\(d\)</span> unidades de tempo em relação à intervenção. Se <span class="math inline">\(d\)</span> é conhecido, teremos <span class="math display">\[m_t=\omega S_{t-d}^{(T)}.\]</span> A figura abaixo apresenta essa estrutura considerando um atraso de dois dias.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.new</span>()</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.window</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">11</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1.5</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">10</span>),<span class="fu">c</span>(<span class="st">''</span>,<span class="st">'T'</span>,<span class="st">''</span>))</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">1.5</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="fu">expression</span>(omega),<span class="st">''</span>))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>,<span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">7</span>), <span class="at">type=</span> <span class="st">'o'</span>, <span class="at">pch=</span><span class="dv">16</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">7</span><span class="sc">:</span><span class="dv">10</span>,<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">4</span>), <span class="at">type=</span> <span class="st">'o'</span>, <span class="at">pch=</span><span class="dv">16</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Também é possível que a mudança no nível só ocorra após um atraso de <span class="math inline">\(d\)</span> unidades de tempo em relação à intervenção. Se <span class="math inline">\(d\)</span> é conhecido, teremos <span class="math display">\[m_t=\omega S_{t-d}^{(\tau)}.\]</span> A figura abaixo apresenta essa estrutura considerando um atraso de duas unidades de tempo.</p>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
@@ -357,17 +347,9 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Em outro cenário, é possível que a intervenção possua um efeito imediato que se apaga gradualmente. Podemos reproduzir esse efeito com utilizando a estrutura</p>
-<p><span class="math display">\[m_t=\delta m_{t-1}+\omega P_{t}^{(T)},\]</span> com <span class="math inline">\(\delta \in (0,1)\)</span> e <span class="math inline">\(m_0=0\)</span>. Uma vez que <span class="math inline">\(m_t=\omega \delta^{T-t}\)</span> para <span class="math inline">\(t\geq T\)</span>, <span class="math inline">\(m_t\)</span> decrescerá exponencialmente para zero, eliminando o efeito da intervenção. A mesma estrutura anterior pode ser reescrita como</p>
-<p><span class="math display">\[m_t=(1-\delta B)^{-1}\omega (1-B)S^{(T)}_t\]</span> A figura abaixo ilustra essa estrutura.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.new</span>()</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.window</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">11</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1.5</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">10</span>),<span class="fu">c</span>(<span class="st">''</span>,<span class="st">'T'</span>,<span class="st">''</span>))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">1.5</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="fu">expression</span>(omega),<span class="st">''</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">4</span>,<span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">5</span>), <span class="at">type=</span> <span class="st">'o'</span>, <span class="at">pch=</span><span class="dv">16</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) m[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> .<span class="dv">5</span><span class="sc">*</span>m[i]<span class="sc">+</span><span class="fu">ifelse</span>(i<span class="sc">==</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">10</span>,m[<span class="sc">-</span><span class="dv">1</span>], <span class="at">type=</span> <span class="st">'o'</span>, <span class="at">pch=</span><span class="dv">16</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Em outro cenário, é possível que a intervenção possua um efeito imediato que se apaga gradualmente, até retornar ao padrão original. Podemos reproduzir esse efeito utilizando a estrutura</p>
+<p><span class="math display">\[m_t=\delta m_{t-1}+\omega P_{t}^{(\tau)},\]</span> com <span class="math inline">\(\delta \in (0,1)\)</span> e <span class="math inline">\(m_0=0\)</span>. Uma vez que <span class="math inline">\(m_{\tau+k}=\omega \delta^{k}\)</span>, para <span class="math inline">\(k&gt;0\)</span>, o efeito da intervenção será <span class="math inline">\(\omega\)</span> em <span class="math inline">\(t=\tau\)</span>, decrescendo exponencialmente para zero, eliminando o efeito da intervenção. A mesma estrutura anterior pode ser reescrita como</p>
+<p><span class="math display">\[m_t=\frac{\omega (1-B)S^{(\tau)}_t}{1-\delta B}\]</span> A figura abaixo ilustra essa estrutura.</p>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
@@ -375,18 +357,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>As estruturas acima podem ser combinadas para criar novas. Por exemplo, suponha que no tempo <span class="math inline">\(T\)</span> a função média se modifia e posteriormente esse efeito diminui, se tornando uma nova constante. Podemos imaginar que a função <span class="math inline">\(m_t\)</span> deve ser composta de duas partes</p>
-<p><span class="math display">\[m_t = m_{1,t}+m_{2,t},\]</span> onde <span class="math display">\[m_{1,t}=\omega_1 S_{t}^{(T)}\]</span> representa a nova mudança a ser observa em médio prazo e <span class="math display">\[m_{2,t}=\delta m_{2,t-1}+\omega_2 P_{t}^{(T)}\]</span> representa a mudança momentânea, que será eliminada no curto prazo. A figua abaixo ilustra essa situação.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.new</span>()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.window</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">14</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1.5</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">10</span>),<span class="fu">c</span>(<span class="st">''</span>,<span class="st">'T'</span>,<span class="st">''</span>))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1.5</span>,.<span class="dv">5</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="fu">expression</span>(omega[<span class="dv">1</span>]<span class="sc">+</span>omega[<span class="dv">2</span>]),<span class="fu">expression</span>(omega[<span class="dv">1</span>])))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">4</span>,<span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">5</span>), <span class="at">type=</span> <span class="st">'o'</span>, <span class="at">pch=</span><span class="dv">16</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) m1[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> .<span class="dv">5</span><span class="sc">*</span>m1[i]<span class="sc">+</span><span class="fu">ifelse</span>(i<span class="sc">==</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">14</span>,.<span class="dv">5</span><span class="sc">+</span>m1[<span class="sc">-</span><span class="dv">1</span>], <span class="at">type=</span> <span class="st">'o'</span>, <span class="at">pch=</span><span class="dv">16</span>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span>.<span class="dv">5</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="fl">1.5</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>As estruturas acima podem ser combinadas para criar novas. Por exemplo, suponha que no tempo <span class="math inline">\(\tau\)</span> a função média se modifica e posteriormente esse efeito diminui, se tornando uma nova constante. Podemos imaginar que a função <span class="math inline">\(m_t\)</span> deve ser composta de duas partes</p>
+<p><span class="math display">\[m_t = m_{1,t}+m_{2,t},\]</span> onde <span class="math display">\[m_{1,t}=\omega_1 S_{t}^{(\tau)}\]</span> representa a nova mudança a ser observa em médio prazo e <span class="math display">\[m_{2,t}=\delta m_{2,t-1}+\omega_2 P_{t}^{(\tau)}\]</span> representa a mudança momentânea, que será eliminada no curto prazo. A figura abaixo ilustra essa situação.</p>
 <div class="cell quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
@@ -394,19 +366,13 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Vamos discutir a estimação dos parâmetros da intervenção considerando um modelo ARIMA (sazonal ou não). Note que <span class="math display">\[x_t-m_t=N_t,\]</span> onde <span class="math inline">\(N_t\)</span> é um modelo ARIMA. Sejam <span class="math inline">\((\theta,\phi)\)</span> os parâmetros do modelo ARIMA e <span class="math inline">\(\omega\)</span> os parâmetros da intervenção. Então,</p>
-<p><span class="math display">\[L(\theta,\phi,\omega|x_1,\ldots,x_n)=L_{\hbox{ARIMA}}(\theta,\phi|x_1-m_1,\ldots,x_n-m_n)\]</span> e podemos utilizar a mesma função de verossimilhança para implementar a intervenção.</p>
+<p>Vamos discutir a estimação dos parâmetros da intervenção. Recorde que a série temporal é escrita como</p>
+<p><span class="math display">\[x_t=m_t+N_t,\]</span> onde <span class="math inline">\(N_t\)</span> é a série livre de intervenção e <span class="math inline">\(m_t\)</span> o efeito da intervenção. Seja <span class="math inline">\(\boldsymbol{\beta}\)</span> o vetor de parâmetros de <span class="math inline">\(\{N_t\}\)</span> e <span class="math inline">\(\boldsymbol{\omega}\)</span> os paramêtros de <span class="math inline">\(\{m_t\}\)</span>. Observe que</p>
+<p><span class="math display">\[x_t-m_t=N_t.\]</span> Deste modo, a função de verissimilhança para <span class="math inline">\((\boldsymbol{\beta},\boldsymbol{\omega})\)</span> é dada por <span class="math display">\[L(\boldsymbol{\beta},\boldsymbol{\omega}|x_1,\ldots,x_n)=L_{N_t}(\boldsymbol{\beta}|x_1-m_1,\ldots,x_n-m_n)\]</span> e podemos utilizar a mesma função de verossimilhança de <span class="math inline">\(N_t\)</span> para implementar a intervenção.</p>
 <section id="exemplo-nível-do-nilo" class="level3" data-number="12.1.1">
 <h3 data-number="12.1.1" class="anchored" data-anchor-id="exemplo-nível-do-nilo"><span class="header-section-number">12.1.1</span> Exemplo: Nível do Nilo</h3>
-<p>Considere mais uma vez a série anual do fluxo do Rio Nilo, mostrada abaixo. A linha pontilhada vertical, no ano de 1898, mostra uma mudança de nível na série. As linhas pontilhadas horizontais mostram a média amostral da série antes e depois de 1898. Note que houve uma redução no volume de aproximadamente 247 <span class="math inline">\(\times 10^8 m^3\)</span>.</p>
+<p>Considere mais uma vez a série anual do fluxo do Rio Nilo, mostrada abaixo. Pode-se notar que a série é consistente com um modelo AR(1).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(Nile)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">v=</span> <span class="dv">1898</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mediaAntes  <span class="ot">&lt;-</span> <span class="fu">mean</span>(Nile[<span class="fu">time</span>(Nile)<span class="sc">&lt;</span><span class="dv">1898</span>])</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>mediaDepois <span class="ot">&lt;-</span> <span class="fu">mean</span>(Nile[<span class="fu">time</span>(Nile)<span class="sc">&gt;</span><span class="dv">1898</span>])</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                   </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(<span class="dv">1871</span>,mediaAntes,<span class="dv">1898</span>, mediaAntes, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(<span class="dv">1899</span>,mediaDepois,<span class="dv">1970</span>, mediaDepois, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -414,15 +380,23 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(mediaAntes<span class="sc">-</span>mediaDepois)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 247.6944</code></pre>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<p>Abaixo, mostramos que a série após 1890 é consistente com um modelo AR(1) com deriva.</p>
+</div>
+<p>Contudo, uma análise mais minuciosa mostra que essa série teve uma mudança. Abaixo, a linha pontilhada vertical, no ano de 1898, mostra uma mudança de nível na série. As linhas pontilhadas horizontais mostram a média amostral da série antes e depois de 1898. Note que houve uma redução no volume de aproximadamente 247 <span class="math inline">\(\times 10^8 m^3\)</span>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nile1890 <span class="ot">&lt;-</span> <span class="fu">window</span>(Nile, <span class="at">start =</span> <span class="dv">1890</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(nile1890)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(Nile)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>( <span class="at">v=</span> <span class="dv">1898</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mediaAntes  <span class="ot">&lt;-</span> <span class="fu">mean</span>(Nile[<span class="fu">time</span>(Nile)<span class="sc">&lt;=</span><span class="dv">1898</span>])</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>mediaDepois <span class="ot">&lt;-</span> <span class="fu">mean</span>(Nile[<span class="fu">time</span>(Nile)<span class="sc">&gt;</span><span class="dv">1898</span>])</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                   </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(<span class="dv">1871</span>,mediaAntes,<span class="dv">1898</span>, mediaAntes, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(<span class="dv">1899</span>,mediaDepois,<span class="dv">1970</span>, mediaDepois, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -430,98 +404,54 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(nile1890)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Essa observação empírica condiz com o início da construção da primeira Represa de Aswan em 1899, concluída em 1902. Deste modo, temos uma intervenção em 1899 que mudou permanentemente (até o limite observado) o nível da série.</p>
+<p>Abaixo, mostramos que a série pré 1898 é consistente com um modelo independente (o que equivale ao modelo ARIMA(0,0,0) com média não nula).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>nile1898 <span class="ot">&lt;-</span> <span class="fu">window</span>(Nile, <span class="at">end =</span> <span class="dv">1898</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(nile1898)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(nile1898)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Vamos considerar o modelo de intervenção</p>
-<p><span class="math display">\[m_t=\omega S_{t-1}^{(1898)}.\]</span></p>
+<p><span class="math display">\[m_t=\omega S_{t}^{(1899)}.\]</span> onde <span class="math inline">\(\omega\)</span> representa a mudança de nível a partir de 1899.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>La <span class="ot">&lt;-</span> <span class="cf">function</span>(omega){</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  St <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">1</span>,<span class="fu">length</span>(Nile))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  St[<span class="fu">time</span>(Nile)<span class="sc">&lt;</span><span class="dv">1898</span>]<span class="ot">&lt;-</span><span class="dv">0</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  mod <span class="ot">&lt;-</span> <span class="fu">arima</span>(Nile<span class="sc">-</span>omega<span class="sc">*</span>St, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  mod<span class="sc">$</span>loglik</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>} </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">optimize</span>(La, <span class="fu">c</span>(<span class="sc">-</span><span class="dv">500</span>,<span class="dv">500</span>), <span class="at">maximum =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># função de verossimilhança</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>La <span class="ot">&lt;-</span> <span class="cf">function</span>(omega){</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  St <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">1</span>,<span class="fu">length</span>(Nile))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  St[<span class="fu">time</span>(Nile)<span class="sc">&lt;</span><span class="dv">1898</span>]<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  mod <span class="ot">&lt;-</span> <span class="fu">arima</span>(Nile<span class="sc">-</span>omega<span class="sc">*</span>St, <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  mod<span class="sc">$</span>loglik</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>} </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># obtendo as estimativas</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>opt <span class="ot">=</span> <span class="fu">optimize</span>(La, <span class="fu">c</span>(<span class="sc">-</span><span class="dv">500</span>,<span class="dv">500</span>), <span class="at">maximum =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>opt<span class="sc">$</span>maximum</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>$maximum
-[1] -241.857
-
-$objective
-[1] -626.84</code></pre>
+<pre><code>[1] -244.2694</code></pre>
 </div>
 </div>
-<p>A estimativa de máxima verossimilhança para <span class="math inline">\(\omega\)</span> é <span class="math inline">\(-241,857\)</span>. Abaixo, analisamos os resíduos do modelo ajustado</p>
+<p>A estimativa de máxima verossimilhança para <span class="math inline">\(\omega\)</span> é <span class="math inline">\(-244\)</span>. Abaixo, analisamos os resíduos do modelo ajustado</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>  omega_chapeu <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">241.857</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  St <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">1</span>,<span class="fu">length</span>(Nile))</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  St[<span class="fu">time</span>(Nile)<span class="sc">&lt;</span><span class="dv">1898</span>]<span class="ot">&lt;-</span><span class="dv">0</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  mod <span class="ot">&lt;-</span> <span class="fu">arima</span>(Nile<span class="sc">-</span>omega_chapeu<span class="sc">*</span>St, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ts.plot</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-8-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Box.test</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Box-Pierce test
-
-data:  mod$residuals
-X-squared = 0.00053994, df = 1, p-value = 0.9815</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shapiro.test</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Shapiro-Wilk normality test
-
-data:  mod$residuals
-W = 0.98747, p-value = 0.4697</code></pre>
-</div>
-</div>
-</section>
-<section id="exemplo-óbitos-maternos-durante-a-pandemia" class="level3" data-number="12.1.2">
-<h3 data-number="12.1.2" class="anchored" data-anchor-id="exemplo-óbitos-maternos-durante-a-pandemia"><span class="header-section-number">12.1.2</span> Exemplo: óbitos maternos durante a pandemia</h3>
-<p>Durante a pandemia de COVID-19, Manaus passou por duas grandes ondas de mortes. A primeira, ocorreu no início da pandemia, em abril de 2020. A segunda, e mais impactante, ocorreu em janeiro de 2021, pela falta de tubos de oxigênio.</p>
-<p>A série abaixo representa o número de óbitos maternos e de mulheres em idade fértil, 10 a 49 anos - MIF - na cidade de Manaus, entre 2005 e 2022.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gsheet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Carregando pacotes exigidos: gsheet</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1Cd9sxyI7Hm058fCXP7Sw4WzKyuRrCbal7bWz16T8smM/edit?usp=sharing'</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">gsheet2tbl</span>(url)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>obt <span class="ot">&lt;-</span> <span class="fu">ts</span>(x<span class="sc">$</span>N, <span class="at">frequency =</span> <span class="dv">12</span>, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2005</span>,<span class="dv">1</span>))</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(obt, <span class="at">ylab =</span> <span class="st">'Óbitos de MIF'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>  omega_chapeu <span class="ot">&lt;-</span> opt<span class="sc">$</span>maximum</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  St <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">1</span>,<span class="fu">length</span>(Nile))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  St[<span class="fu">time</span>(Nile)<span class="sc">&lt;</span><span class="dv">1898</span>]<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  mod <span class="ot">&lt;-</span> <span class="fu">arima</span>(Nile<span class="sc">-</span>omega_chapeu<span class="sc">*</span>St, <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ts.plot</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -529,11 +459,68 @@ W = 0.98747, p-value = 0.4697</code></pre>
 </figure>
 </div>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">acf</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pacf</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Box.test</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Pierce test
+
+data:  mod$residuals
+X-squared = 1.7522, df = 1, p-value = 0.1856</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shapiro.test</span>(mod<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  mod$residuals
+W = 0.98996, p-value = 0.6613</code></pre>
+</div>
+</div>
+<p>Portanto, a autocorrelação inicial observada foi induzida pela intervenção não modelada. Ao realizar a intervenção, nota-se que o nível da série sem intervenção na verdade segue com um processo fracamente estacionário sem autocorrelação.</p>
+</section>
+<section id="exemplo-óbitos-maternos-durante-a-pandemia" class="level3" data-number="12.1.2">
+<h3 data-number="12.1.2" class="anchored" data-anchor-id="exemplo-óbitos-maternos-durante-a-pandemia"><span class="header-section-number">12.1.2</span> Exemplo: óbitos maternos durante a pandemia</h3>
+<p>Durante a pandemia de COVID-19, Manaus passou por duas grandes ondas de mortes. A primeira, ocorreu no início da pandemia, em abril de 2020. A segunda, e mais impactante, ocorreu em janeiro de 2021, pela falta de tubos de oxigênio.</p>
+<p>A série abaixo representa o número de óbitos maternos e de mulheres em idade fértil, 10 a 49 anos - MIF - na cidade de Manaus, entre 2005 e 2022.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gsheet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: gsheet</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://docs.google.com/spreadsheets/d/1Cd9sxyI7Hm058fCXP7Sw4WzKyuRrCbal7bWz16T8smM/edit?usp=sharing'</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">gsheet2tbl</span>(url)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>obt <span class="ot">&lt;-</span> <span class="fu">ts</span>(x<span class="sc">$</span>N, <span class="at">frequency =</span> <span class="dv">12</span>, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2005</span>,<span class="dv">1</span>))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(obt, <span class="at">ylab =</span> <span class="st">'Óbitos de MIF'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>A pandemia é o nosso evento de intervenção e o período pré-pandêmico, logo a série até março de 2020 constiuirá nossos dados pré-intervenção, cuja série é mostrada abaixo</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>obt2020_3 <span class="ot">&lt;-</span> <span class="fu">window</span>(obt, <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">3</span>))</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(obt2020_3, <span class="at">ylab=</span> <span class="st">'No. óbitos'</span>, <span class="at">title =</span> <span class="st">'Óbitos de MIF, pré-pandemia'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>obt2020_3 <span class="ot">&lt;-</span> <span class="fu">window</span>(obt, <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">3</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(obt2020_3, <span class="at">ylab=</span> <span class="st">'No. óbitos'</span>, <span class="at">title =</span> <span class="st">'Óbitos de MIF, pré-pandemia'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in xy.coords(x = matrix(rep.int(tx, k), ncol = k), y = x, log = log, :
 NAs introduzidos por coerção</code></pre>
@@ -544,28 +531,28 @@ NAs introduzidos por coerção</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Podemos notar uma leve tendência na série. O correlograma e a autocorrelação parcial amostral da primeira diferença da série mostram uma estrutura compatível com um modelo ARIMA( 4,1,1).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>tend <span class="ot">&lt;-</span> <span class="fu">loess</span>( obt2020_3 <span class="sc">~</span> <span class="fu">time</span>(obt2020_3))</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>tend <span class="ot">&lt;-</span> <span class="fu">ts</span>(tend<span class="sc">$</span>fitted, <span class="at">start =</span> <span class="fu">start</span>(obt2020_3), <span class="at">frequency =</span> <span class="fu">frequency</span>(obt2020_3))</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(obt2020_3)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tend <span class="ot">&lt;-</span> <span class="fu">loess</span>( obt2020_3 <span class="sc">~</span> <span class="fu">time</span>(obt2020_3))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>tend <span class="ot">&lt;-</span> <span class="fu">ts</span>(tend<span class="sc">$</span>fitted, <span class="at">start =</span> <span class="fu">start</span>(obt2020_3), <span class="at">frequency =</span> <span class="fu">frequency</span>(obt2020_3))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(obt2020_3)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(tend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Abaixo, estudamos o comportamento da série sem a tendência, em busca de sazonalidade. Não há evidências de sazonalidade nessa etapa da análise.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(TSA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(TSA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Carregando pacotes exigidos: TSA</code></pre>
 </div>
@@ -583,36 +570,8 @@ Anexando pacote: 'TSA'</code></pre>
 
     tar</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>semTend <span class="ot">&lt;-</span> obt2020_3 <span class="sc">-</span> tend</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(semTend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">periodogram</span>(semTend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(semTend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Vamos analisar a primeira diferença da série. Há sinais de que a parte estacionária é composta por uma média móvel e ordem 1 e uma sazonal e uma autoregressiva.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">diff</span>(obt2020_3,<span class="dv">1</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(d1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>semTend <span class="ot">&lt;-</span> obt2020_3 <span class="sc">-</span> tend</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(semTend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -620,7 +579,7 @@ Anexando pacote: 'TSA'</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(d1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">periodogram</span>(semTend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -628,10 +587,38 @@ Anexando pacote: 'TSA'</code></pre>
 </figure>
 </div>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monthplot</span>(semTend)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vamos analisar a primeira diferença da série. Há sinais de que a parte estacionária é composta por uma média móvel e ordem 1 e uma sazonal e uma autoregressiva.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">diff</span>(obt2020_3,<span class="dv">1</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(d1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(d1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intervencao_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Vamos tentar ajustar o modelo ARIMA(1,1,1)(0,0,1).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Carregando pacotes exigidos: forecast</code></pre>
 </div>
@@ -646,33 +633,33 @@ Anexando pacote: 'TSA'</code></pre>
   fitted.Arima TSA 
   plot.Arima   TSA </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">Arima</span>(obt2020_3,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> mod<span class="sc">$</span>residuals</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">Arima</span>(obt2020_3,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> mod<span class="sc">$</span>residuals</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-14-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-15-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Pierce test
@@ -680,7 +667,7 @@ Anexando pacote: 'TSA'</code></pre>
 data:  res
 X-squared = 0.0070781, df = 1, p-value = 0.933</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -691,117 +678,117 @@ W = 0.99353, p-value = 0.6022</code></pre>
 </div>
 <p>Considere agora a previsão para o resto do ano de 2020, dada abaixo, com o que foi observado.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>o20 <span class="ot">&lt;-</span> <span class="fu">window</span>( obt, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">4</span>), <span class="at">end=</span><span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">12</span>))</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>( o20, <span class="at">ylab =</span> <span class="st">'No. óbitos MIF'</span>)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>prev <span class="ot">&lt;-</span> <span class="fu">forecast</span>(mod,<span class="dv">9</span>)</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(prev<span class="sc">$</span>mean, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">'seagreen'</span>, <span class="at">type =</span> <span class="st">'o'</span>)</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topright'</span>, <span class="fu">c</span>(<span class="st">'original'</span>,<span class="st">'previsão'</span>),<span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="st">'seagreen'</span>), <span class="at">bty=</span> <span class="st">'n'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>o20 <span class="ot">&lt;-</span> <span class="fu">window</span>( obt, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">4</span>), <span class="at">end=</span><span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">12</span>))</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>( o20, <span class="at">ylab =</span> <span class="st">'No. óbitos MIF'</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>prev <span class="ot">&lt;-</span> <span class="fu">forecast</span>(mod,<span class="dv">9</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(prev<span class="sc">$</span>mean, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">'seagreen'</span>, <span class="at">type =</span> <span class="st">'o'</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topright'</span>, <span class="fu">c</span>(<span class="st">'original'</span>,<span class="st">'previsão'</span>),<span class="at">fill =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="st">'seagreen'</span>), <span class="at">bty=</span> <span class="st">'n'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>omega_hat <span class="ot">&lt;-</span> o20[<span class="dv">1</span>]<span class="sc">-</span>prev<span class="sc">$</span>mean[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>omega_hat <span class="ot">&lt;-</span> o20[<span class="dv">1</span>]<span class="sc">-</span>prev<span class="sc">$</span>mean[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Note que o efeito da pandemia surge em abril, aumenta em março e desaparece logo em seguida. Então, até dezembro de 2020, vamos assumir que</p>
 <p><span class="math display">\[x_t-x_{t-1}=\phi(x_{t-1}-x_{t-2}) + \theta\varepsilon_{t-1}+\Theta \varepsilon_{t-12}+\varepsilon_t+m_t,\]</span> onde <span class="math display">\[m_t=m_{1,t}+m_{2,t}\]</span> com <span class="math display">\[m_{1,t}=\delta_1 m_{1,t-1}+\omega P_t^{(2023/4)},\]</span> e <span class="math display">\[m_{2,t}=\delta_2 m_{2,t-1}+\omega_2P_{t}^{(2023/5)}.\]</span></p>
-<p>Abaixo, constrúimos a função de verossimilhança.</p>
+<p>Abaixo, construímos a função de verossimilhança.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># selecionando a série até o fim de 2020</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>obt2020 <span class="ot">&lt;-</span> <span class="fu">window</span>( obt, <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">12</span>))</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># função pulso  </span></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>Pt1 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( <span class="fu">time</span>(obt2020) <span class="sc">==</span> <span class="fl">2020.250</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>Pt2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( <span class="fu">time</span>(obt2020) <span class="sc">==</span> <span class="fu">time</span>(obt2020)[<span class="dv">185</span>], <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="co"># função para encontrar o EMV</span></span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>fun <span class="ot">&lt;-</span> <span class="cf">function</span>(par){</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="co"># parâmetros da intervenção</span></span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>delta1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(par[<span class="dv">1</span>]) <span class="sc">/</span> ( <span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(par[<span class="dv">1</span>]) )</span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>delta2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(par[<span class="dv">2</span>]) <span class="sc">/</span> ( <span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(par[<span class="dv">2</span>]) )</span>
-<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>omega1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(par[<span class="dv">3</span>])</span>
-<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>omega2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(par[<span class="dv">4</span>])</span>
-<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a><span class="co"># mt</span></span>
-<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">=</span> mt1 <span class="ot">=</span> mt2 <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(obt2020)){</span>
-<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>  mt1[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> delta1<span class="sc">*</span>mt1[i]<span class="sc">+</span>omega1<span class="sc">*</span>Pt1[i]</span>
-<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>  mt2[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> delta2<span class="sc">*</span>mt2[i]<span class="sc">+</span>omega2<span class="sc">*</span>Pt2[i]</span>
-<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>}  </span>
-<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">=</span> mt1 <span class="sc">+</span> mt2</span>
-<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> mt[<span class="sc">-</span><span class="dv">1</span>] <span class="co"># removendo m0</span></span>
-<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> <span class="fu">ts</span>(mt, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2005</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a><span class="co"># estimação do ARIMA</span></span>
-<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">Arima</span>(obt2020<span class="sc">-</span>mt, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a><span class="co"># retorne a log verossimilhança do modelo</span></span>
-<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>mod<span class="sc">$</span>loglik</span>
-<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># selecionando a série até o fim de 2020</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>obt2020 <span class="ot">&lt;-</span> <span class="fu">window</span>( obt, <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">12</span>))</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># função pulso  </span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>Pt1 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( <span class="fu">time</span>(obt2020) <span class="sc">==</span> <span class="fl">2020.250</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>Pt2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( <span class="fu">time</span>(obt2020) <span class="sc">==</span> <span class="fu">time</span>(obt2020)[<span class="dv">185</span>], <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="co"># função para encontrar o EMV</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>fun <span class="ot">&lt;-</span> <span class="cf">function</span>(par){</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="co"># parâmetros da intervenção</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>delta1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(par[<span class="dv">1</span>]) <span class="sc">/</span> ( <span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(par[<span class="dv">1</span>]) )</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>delta2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(par[<span class="dv">2</span>]) <span class="sc">/</span> ( <span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(par[<span class="dv">2</span>]) )</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>omega1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(par[<span class="dv">3</span>])</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>omega2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(par[<span class="dv">4</span>])</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="co"># mt</span></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">=</span> mt1 <span class="ot">=</span> mt2 <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(obt2020)){</span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>  mt1[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> delta1<span class="sc">*</span>mt1[i]<span class="sc">+</span>omega1<span class="sc">*</span>Pt1[i]</span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>  mt2[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> delta2<span class="sc">*</span>mt2[i]<span class="sc">+</span>omega2<span class="sc">*</span>Pt2[i]</span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>}  </span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">=</span> mt1 <span class="sc">+</span> mt2</span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> mt[<span class="sc">-</span><span class="dv">1</span>] <span class="co"># removendo m0</span></span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> <span class="fu">ts</span>(mt, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2005</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a><span class="co"># estimação do ARIMA</span></span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">Arima</span>(obt2020<span class="sc">-</span>mt, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a><span class="co"># retorne a log verossimilhança do modelo</span></span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span>mod<span class="sc">$</span>loglik</span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Vamos obter as estimativas de máxima verossimilhança.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>opt <span class="ot">&lt;-</span> <span class="fu">optim</span>( <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), fun)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>opt<span class="sc">$</span>convergence</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>opt <span class="ot">&lt;-</span> <span class="fu">optim</span>( <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), fun)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>opt<span class="sc">$</span>convergence</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>delta1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">1</span>])<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">1</span>]))</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>delta2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">2</span>])<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">2</span>]))</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>omega1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">3</span>])</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>omega2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">4</span>])</span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(delta1,delta2,omega1,omega2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>delta1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">1</span>])<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">1</span>]))</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>delta2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">2</span>])<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">2</span>]))</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>omega1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">3</span>])</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>omega2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(opt<span class="sc">$</span>par[<span class="dv">4</span>])</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(delta1,delta2,omega1,omega2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.577569e-03 6.626144e-07 5.222526e+01 6.607272e+01</code></pre>
 </div>
 </div>
 <p>Logo em abril, os casos aumentaram em <span class="math inline">\(\hat{\omega}_1=52\)</span>. Observe que <span class="math inline">\(\delta_1&lt;0,003\)</span>, logo o efeito para o mês seguinte dos casos de maio é praticamente nulo. Portanto, <span class="math inline">\(\hat{\omega}_2=66\)</span> representa, basicamente, o efeito de maio. Como <span class="math inline">\(\delta_2\)</span> é praticamente nulo, eses efeito somem em junho.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># obtendo mt</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># mt</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">=</span> mt1 <span class="ot">=</span> mt2 <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(obt2020)){</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  mt1[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> delta1<span class="sc">*</span>mt1[i]<span class="sc">+</span>omega1<span class="sc">*</span>Pt1[i]</span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  mt2[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> delta2<span class="sc">*</span>mt2[i]<span class="sc">+</span>omega2<span class="sc">*</span>Pt2[i]</span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>}  </span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">=</span> mt1 <span class="sc">+</span> mt2</span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> mt[<span class="sc">-</span><span class="dv">1</span>] <span class="co"># removendo m0</span></span>
-<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> <span class="fu">ts</span>(mt, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2005</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a><span class="co"># obtendo os resíduos</span></span>
-<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>modFim <span class="ot">&lt;-</span> <span class="fu">Arima</span>(obt2020<span class="sc">-</span>mt,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>resFim <span class="ot">&lt;-</span> modFim<span class="sc">$</span>residuals</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># obtendo mt</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co"># mt</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">=</span> mt1 <span class="ot">=</span> mt2 <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(obt2020)){</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  mt1[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> delta1<span class="sc">*</span>mt1[i]<span class="sc">+</span>omega1<span class="sc">*</span>Pt1[i]</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  mt2[i<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> delta2<span class="sc">*</span>mt2[i]<span class="sc">+</span>omega2<span class="sc">*</span>Pt2[i]</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>}  </span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">=</span> mt1 <span class="sc">+</span> mt2</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> mt[<span class="sc">-</span><span class="dv">1</span>] <span class="co"># removendo m0</span></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>mt <span class="ot">&lt;-</span> <span class="fu">ts</span>(mt, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2005</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="co"># obtendo os resíduos</span></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>modFim <span class="ot">&lt;-</span> <span class="fu">Arima</span>(obt2020<span class="sc">-</span>mt,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>resFim <span class="ot">&lt;-</span> modFim<span class="sc">$</span>residuals</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Abaixo segue a análise usual dos resíduos</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(resFim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(resFim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(resFim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(resFim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(resFim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(resFim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-19-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-20-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(resFim);<span class="fu">shapiro.test</span>(resFim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(resFim);<span class="fu">shapiro.test</span>(resFim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Pierce test
@@ -819,11 +806,11 @@ W = 0.9931, p-value = 0.5056</code></pre>
 </div>
 <p>Por último, podemos fazer um gráfico de <span class="math inline">\(m_t\)</span> para verificar o efeito do início da pandemia na série</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">window</span>(mt, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">1</span>)), <span class="at">type =</span> <span class="st">'h'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">window</span>(mt, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">1</span>)), <span class="at">type =</span> <span class="st">'h'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -835,53 +822,53 @@ W = 0.9931, p-value = 0.5056</code></pre>
 <p>Outliers são observações atípicas. Segundo sua natureza, eles podem ser classificados como</p>
 <ul>
 <li><p>Outliers aditivos (AO): são resultantes de erros de medição/registro</p></li>
-<li><p>Outliers na inovação (IO): são mudanças abrúptas de curta duração no processo subjacente.</p></li>
+<li><p>Outliers na inovação (IO): são mudanças abruptas de curta duração que se propagam no processo subjacente.</p></li>
 </ul>
-<p>Seja <span class="math inline">\(x_t\)</span> uma série temporal. Então, se um outlier aditivo ocorre no tempo <span class="math inline">\(T\)</span>, a série temporal pode ser descrita como <span class="math inline">\(x_t'\)</span>, onde</p>
-<p><span class="math display">\[x_t'=\left\{\begin{array}{ll}x_t,&amp;\;\;t\neq T\\ x_t+\omega_AP_t^{(T)},&amp;\;\;t=T.\end{array}\right.\]</span> Note que um outlier aditivo pode ser tratado como uma intervenção, onde <span class="math inline">\(m_t=\omega_A P_t^{(T)}\)</span>.</p>
-<p>Seja <span class="math inline">\(\varepsilon_t\)</span> erro associado à série <span class="math inline">\(x_t\)</span>. Um outlier na inovação ocorre quando o erro (também conhecido como inovação) no tempo <span class="math inline">\(T\)</span> sofre uma perturbação.</p>
-<p><span class="math display">\[\varepsilon_t'=\left\{\begin{array}{ll}\varepsilon_t,&amp;\;\;t\neq T\\ \varepsilon_t+\omega_I P_t^{(T)},&amp;\;\;t=T.\end{array}\right.\]</span> Considere o processo estacionário MA<span class="math inline">\((\infty)\)</span> <span class="math display">\[x_t=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}\]</span> Então, o processo com outlier na inovação no tempo <span class="math inline">\(T\)</span> é escrito como <span class="math display">\[x_t'=\varepsilon_t'+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}'=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}+\theta_{t-T}\omega_I=x_t+\theta_{t-T}\omega_I,\]</span> onde <span class="math inline">\(\theta_0=1\)</span> e <span class="math inline">\(\theta_j=0\)</span> se <span class="math inline">\(j&lt;0\)</span>. Portanto, um outlier na inovação perturba todas as observações no tempo <span class="math inline">\(t\geq T\)</span>, embora esse efeito diminua na medida que <span class="math inline">\(t\)</span> se afasta de <span class="math inline">\(T\)</span>.</p>
-<p>Para detectar um IO, considere que um modelo foi ajustado, gerando a série de resíduos <span class="math display">\[\hat{\varepsilon}_t'=x_t'-E(x_t'|\mathcal{D}_{t-1}),\]</span> onde <span class="math inline">\(\hat{\varepsilon}_t\approx N(0,\sigma^2)\)</span>. Então <span class="math display">\[\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}\]</span> se comporta como uma distribuição normal padrão quando não há outliers. Na presença de outliers, teremos</p>
-<p><span class="math display">\[\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sigma}=\left\{\begin{array}{ll}\frac{\hat{\varepsilon}_t}{\sigma},&amp;\;\; t\neq T\\ \frac{\hat{\varepsilon}_t+\omega_I}{\sigma},&amp;\;\; t= T\end{array}\right.\]</span> Se <span class="math inline">\(T\)</span> é conhecido, declaramos <span class="math inline">\(x_T\)</span> como outlier se <span class="math inline">\(|\lambda_{1,T}|&gt;1,96\)</span> e <span class="math inline">\(\hat{\omega}_I=\hat{\varepsilon}'_T\)</span>. Se <span class="math inline">\(T\)</span> é desconhecido, calcula-se <span class="math display">\[\lambda_1=\max_{1\leq t \leq n}|\lambda_{1,t}|,\]</span> e define-se <span class="math inline">\(T\)</span> como sendo o valor <span class="math inline">\(t\)</span> tal que <span class="math inline">\(\lambda_{1,t}=\lambda_1\)</span>. Como todos os pontos estão sendo avaliados, precisamos realizar algum teste múltiplo. O mais simples é a correção de Bonferroni, que nos leva a declarar que <span class="math inline">\(x_T\)</span> é um outlier se <span class="math inline">\(\lambda_1\)</span> é maior que o quantil <span class="math inline">\(1-\alpha/2n\)</span> da normal padrão. Na prática, <span class="math inline">\(\sigma\)</span> deve ser estimado de modo robusto, uma vez que a variância tradicional é sensível à outliers. Uma alternativa é estimar <span class="math inline">\(\sigma\)</span> por <span class="math display">\[\hat{\sigma}=\sqrt{\frac{2}{\pi}}\sum_{t=1}^n\frac{|\hat{\varepsilon_t}|}{n}.\]</span></p>
-<p>Para o caso AO, considere que <span class="math inline">\(x_t'\)</span> é um processo AR(<span class="math inline">\(\infty\)</span>). Então <span class="math display">\[\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}',\]</span> onde <span class="math inline">\(\phi_j=0\)</span> para <span class="math inline">\(j&lt;t\)</span>. Note que, para <span class="math inline">\(t&lt;T\)</span>, <span class="math display">\[\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}'=x_t-\sum_{j=1}^\infty \phi_j x_{t-j},\]</span> Para <span class="math inline">\(t=T\)</span>, teremos <span class="math display">\[\hat{\varepsilon}_T'=x_T+\omega_A-\sum_{j=1}^\infty \phi_j x_{T-j}=\omega_A+\hat{\varepsilon}_T.\]</span> Para <span class="math inline">\(t=T+1\)</span>, teremos <span class="math display">\[\hat{\varepsilon}_{T+1}'=x_{T+1}-\phi_1\omega_A-\sum_{j=2}^\infty \phi_j x_{T+1-j}=-\phi_1\omega_A+\hat{\varepsilon}_{T+1},\]</span> e, de modo geral, para <span class="math inline">\(k&gt;T\)</span> <span class="math display">\[\hat{\varepsilon}_{k}'=-\phi_{T-k}\omega_A+\hat{\varepsilon}_k.\]</span> Definindo a soma de quadrados <span class="math display">\[\sum_{j=T}^n'\hat{\varepsilon}_j^2=\sum_{j=T}^{n}(\hat{\varepsilon}_{j}+\omega_A\pi_{T-j})^2\]</span> onde <span class="math inline">\(\pi_0=1\)</span> e <span class="math inline">\(\pi_j=\phi_j\)</span> se <span class="math inline">\(j&gt;0\)</span>, podemos estimar <span class="math inline">\(\omega\)</span> por <span class="math display">\[\hat{\omega}_{T,A}=-\frac{\sum_{j=T}^n\pi_{T-j}\hat{\varepsilon}_{j}}{\sum_{j=T}^n\pi_{T-j}^2}\]</span></p>
-<p>Como <span class="math inline">\(\hat{\varepsilon}_t\approx N(0,\sigma^2)\)</span>, teremos que <span class="math display">\[\lambda_{2,T}=\frac{\hat{\omega}_{T,A}}{\sigma\sqrt{\sum_{j=T}^n \pi_{T-j}^2}}\]</span> deve se comportar como uma distribuição normal padrão na ausência de outliers. Novamente, se <span class="math inline">\(T\)</span> for desconhecido, podemos escolher <span class="math inline">\(T\)</span> como o valor <span class="math inline">\(t\)</span> que gera o valor <span class="math display">\[\lambda_2=\max_{1\leq t \leq n}|\lambda_{2,t}|\]</span> e podemos testar sua significância comparando seu valor com o quantil 1-<span class="math inline">\(\alpha/2n\)</span> da distribuição normal padrão.</p>
-<p>Na prática, é provável que a natureza do outlier seja desconhecida. Nesses casos, tanto o teste para o AO quanto para o IO devem detectar os mesmos outliers. Uma regra que tende a funcionar é classificar o outlier como IO se <span class="math inline">\(|\lambda_{1,T}|&gt;|\lambda_{2,T}\)</span> ou como AO em caso contrário. Após identificar o outlier e estimar <span class="math inline">\(\omega\)</span>, o mesmo deve ser incorporado na função de verossimilhança e as estimativas devem ser realziadas novamente.</p>
+<p>Seja <span class="math inline">\(x_t\)</span> uma série temporal. Então, se um outlier aditivo ocorre no tempo <span class="math inline">\(\tau\)</span>, a série temporal pode ser descrita como <span class="math inline">\(x_t'\)</span>, onde</p>
+<p><span class="math display">\[x_t'=\left\{\begin{array}{ll}x_t,&amp;\;\;t\neq \tau\\ x_t+\omega_AP_t^{(\tau)},&amp;\;\;t=\tau.\end{array}\right.,\]</span> onde <span class="math inline">\(P^{(\tau)}_t\)</span> é a função pulso. Note que um outlier aditivo pode ser tratado como uma intervenção, onde <span class="math inline">\(m_t=\omega_A P_t^{(\tau)}\)</span>.</p>
+<p>Seja <span class="math inline">\(\varepsilon_t\)</span> o erro associado à série <span class="math inline">\(\{x_t\}\)</span>. Um outlier na inovação ocorre quando o erro (também conhecido como inovação) no tempo <span class="math inline">\(T\)</span> sofre uma perturbação.</p>
+<p><span class="math display">\[\varepsilon_t'=\left\{\begin{array}{ll}\varepsilon_t,&amp;\;\;t\neq \tau\\ \varepsilon_t+\omega_I P_t^{(\tau)},&amp;\;\;t=\tau.\end{array}\right.\]</span> Considere o processo estacionário MA<span class="math inline">\((\infty)\)</span> <span class="math display">\[x_t=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}\]</span> Então, o processo com outlier na inovação no tempo <span class="math inline">\(\tau\)</span> é escrito como <span class="math display">\[x_t'=\varepsilon_t'+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}'=\varepsilon_t+\sum_{j=1}^\infty \theta_j\varepsilon_{t-j}+\theta_{t-\tau}\omega_I=x_t+\theta_{t-\tau}\omega_I,\]</span> onde <span class="math inline">\(\theta_0=1\)</span> e <span class="math inline">\(\theta_j=0\)</span> se <span class="math inline">\(j&lt;0\)</span>. Portanto, um outlier na inovação perturba todas as observações no tempo <span class="math inline">\(t\geq \tau\)</span>, embora esse efeito diminua na medida que <span class="math inline">\(t\)</span> se afasta de <span class="math inline">\(\tau\)</span>.</p>
+<p>Para detectar um IO, considere que um modelo foi ajustado, gerando a série de resíduos <span class="math display">\[\hat{\varepsilon}_t'=x_t'-E(x_t'|\mathcal{D}_{t-1}),\]</span> onde <span class="math inline">\(\hat{\varepsilon}_t\approx N(0,\sigma^2)\)</span>. Então <span class="math display">\[\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sqrt{\nu}}\]</span> se comporta como uma distribuição normal padrão quando não há outliers. Na presença de outliers, teremos</p>
+<p><span class="math display">\[\lambda_{1,t}=\frac{\hat{\varepsilon}_t'}{\sqrt{\nu}}=\left\{\begin{array}{ll}\frac{\hat{\varepsilon}_t}{\sqrt{\nu}},&amp;\;\; t\neq T\\ \frac{\hat{\varepsilon}_t+\omega_I}{\sqrt{\nu}},&amp;\;\; t= T\end{array}\right.\]</span> Se <span class="math inline">\(\tau\)</span> é conhecido, declaramos <span class="math inline">\(x_\tau\)</span> como outlier se <span class="math inline">\(|\lambda_{1,\tau}|&gt;1,96\)</span> e estimamos <span class="math inline">\(\hat{\omega}_I=\hat{\varepsilon}'_\tau\)</span>. Se <span class="math inline">\(\tau\)</span> é desconhecido, calcula-se <span class="math display">\[\lambda_1=\max_{1\leq t \leq n}|\lambda_{1,t}|,\]</span> e define-se <span class="math inline">\(\tau\)</span> como sendo o valor <span class="math inline">\(t\)</span> tal que <span class="math inline">\(\lambda_{1,t}=\lambda_1\)</span>. Como todos os pontos estão sendo avaliados, precisamos realizar algum teste múltiplo. O mais simples é a correção de Bonferroni, que nos leva a declarar que <span class="math inline">\(x_\tau\)</span> é um outlier se <span class="math inline">\(\lambda_1\)</span> é maior que o quantil <span class="math inline">\(1-\alpha/2n\)</span> da normal padrão. Na prática, <span class="math inline">\(\sigma\)</span> deve ser estimado de modo robusto, uma vez que a variância tradicional é sensível à outliers. Uma alternativa é estimar <span class="math inline">\(\nu\)</span> por <span class="math display">\[\sqrt{\hat{\nu}}=\sqrt{\frac{2}{\pi}}\sum_{t=1}^n\frac{|\hat{\varepsilon_t}|}{n}.\]</span></p>
+<p>Para o caso AO, considere que <span class="math inline">\(x_t'\)</span> é um processo AR(<span class="math inline">\(\infty\)</span>). Então <span class="math display">\[\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}',\]</span> onde <span class="math inline">\(\phi_j=0\)</span> para <span class="math inline">\(j&lt;t\)</span>. Note que, para <span class="math inline">\(t&lt;\tau\)</span>, <span class="math display">\[\hat{\varepsilon}_t'=x_t'-\sum_{j=1}^\infty \phi_j x_{t-j}'=x_t-\sum_{j=1}^\infty \phi_j x_{t-j},\]</span> Para <span class="math inline">\(t=\tau\)</span>, teremos <span class="math display">\[\hat{\varepsilon}_\tau'=x_\tau+\omega_A-\sum_{j=1}^\infty \phi_j x_{\tau-j}=\omega_A+\hat{\varepsilon}_\tau.\]</span> Para <span class="math inline">\(t=T+1\)</span>, teremos <span class="math display">\[\hat{\varepsilon}_{\tau+1}'=x_{\tau+1}-\phi_1\omega_A-\sum_{j=2}^\infty \phi_j x_{\tau+1-j}=-\phi_1\omega_A+\hat{\varepsilon}_{\tau+1},\]</span> e, de modo geral, para <span class="math inline">\(k&gt;\tau\)</span> <span class="math display">\[\hat{\varepsilon}_{k}'=-\phi_{\tau-k}\omega_A+\hat{\varepsilon}_k.\]</span> Definindo a soma de quadrados <span class="math display">\[\sum_{j=\tau}^{n}\hat{\varepsilon}_j^{'2} = \sum_{j=\tau}^{n} (\hat{\varepsilon}_{j} +\omega_A \pi_{\tau-j})^2\]</span> onde <span class="math inline">\(\pi_0=1\)</span> e <span class="math inline">\(\pi_j=\phi_j\)</span> se <span class="math inline">\(j&gt;0\)</span>, podemos estimar <span class="math inline">\(\omega\)</span> por <span class="math display">\[\hat{\omega}_{\tau,A}=-\frac{\sum_{j=\tau}^n\pi_{\tau-j}\hat{\varepsilon}_{j}}{\sum_{j=\tau}^n\pi_{\tau-j}^2}\]</span></p>
+<p>Como <span class="math inline">\(\hat{\varepsilon}_t\approx N(0,\sigma^2)\)</span>, teremos que <span class="math display">\[\lambda_{2,\tau}=\frac{\hat{\omega}_{\tau,A}}{\sigma\sqrt{\sum_{j=\tau}^n \pi_{\tau-j}^2}}\]</span> deve se comportar como uma distribuição normal padrão na ausência de outliers. Novamente, se <span class="math inline">\(\tau\)</span> for desconhecido, podemos escolher <span class="math inline">\(\tau\)</span> como o valor <span class="math inline">\(t\)</span> que gera o valor <span class="math display">\[\lambda_2=\max_{1\leq t \leq n}|\lambda_{2,t}|\]</span> e podemos testar sua significância comparando seu valor com o quantil 1-<span class="math inline">\(\alpha/2n\)</span> da distribuição normal padrão.</p>
+<p>Na prática, é provável que a natureza do outlier seja desconhecida. Nesses casos, tanto o teste para o AO quanto para o IO devem detectar os mesmos outliers. Uma regra que tende a funcionar é classificar o outlier como IO se <span class="math inline">\(|\lambda_{1,T}|&gt;|\lambda_{2,T}\)</span> ou como AO em caso contrário. Após identificar o outlier e estimar <span class="math inline">\(\omega\)</span>, o mesmo deve ser incorporado na função de verossimilhança e as estimativas devem ser realizadas novamente.</p>
 <section id="mortes-por-doencas-pulmonares-no-reino-unidos" class="level3" data-number="12.2.1">
 <h3 data-number="12.2.1" class="anchored" data-anchor-id="mortes-por-doencas-pulmonares-no-reino-unidos"><span class="header-section-number">12.2.1</span> Mortes por doencas pulmonares no Reino Unidos</h3>
 <p>Voltemos à série <code>ldeaths</code>. Sabemos que essa série possui sazonalidade de período 12 e uma leve tendência de decrescimento. Após fazer uma diferença para remover a tendência de uma diferença sazonal para a sazonalidade, encontramos evidências para ajustar o modelo ARIMA(2,1,2)(0,1,1)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ldeaths)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(ldeaths)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>d1_ldeaths <span class="ot">&lt;-</span> <span class="fu">diff</span>(ldeaths,<span class="dv">1</span>)</span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>D12d1_ldeaths <span class="ot">&lt;-</span> <span class="fu">diff</span>(d1_ldeaths,<span class="dv">12</span>)</span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(D12d1_ldeaths)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>d1_ldeaths <span class="ot">&lt;-</span> <span class="fu">diff</span>(ldeaths,<span class="dv">1</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>D12d1_ldeaths <span class="ot">&lt;-</span> <span class="fu">diff</span>(d1_ldeaths,<span class="dv">12</span>)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(D12d1_ldeaths)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(D12d1_ldeaths)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(D12d1_ldeaths)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-21-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-22-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Abaixo, apresentamos a série dos resíduos, que apresentam possíveis outliers.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">arima</span>(ldeaths,<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">arima</span>(ldeaths,<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -894,24 +881,25 @@ s.e.   0.3997   0.1639   0.4327   0.4206   0.2385
 
 sigma^2 estimated as 47226:  log likelihood = -414.79,  aic = 839.57</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(mod<span class="sc">$</span>residuals[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(mod<span class="sc">$</span>residuals[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Utilizaremos as funções <code>detectIO</code> e <code>detectAO</code>, do pacote <code>TSA</code>, para a detecção de outliers na série através dos resíduos encontrados.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectAO</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TSA)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">detectAO</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             [,1]
 ind     72.000000
 lambda2 -3.453803</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectIO</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectIO</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             [,1]     [,2]      [,3]
 ind     26.000000 38.00000 72.000000
@@ -921,49 +909,49 @@ lambda1  6.685518 -4.41524 -3.453803</code></pre>
 <p>As observações no tempo <span class="math inline">\(26\)</span> e 38 foram consideradas outliers nas inovações. Já a observação no tempo 72 recebeu as duas classificações e vamos modelar como um AO apenas por fins didáticos.</p>
 <p>Ao considerar que o outlier no tempo 72 é aditivo, estamos modificando apenas o nível da série, assim como fizemos para a análise de intervenção. Aqui vamos utilizar a função <code>arimax</code>, do pacote <code>TSA</code> para o mesmo fim. Tal função possui o argumento <code>xreg</code> que permite o uso de variáveis regressoras (no caso, utilizaremos a função pulso como indicadora). Além disso, essa função possui o argumento <code>io</code> que nos permite colocar os índices os outliers nas inovações.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>pulso <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">0</span>,<span class="fu">length</span>(ldeaths))</span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>pulso[<span class="dv">72</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">arimax</span>(ldeaths, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xreg =</span> pulso, <span class="at">io =</span> <span class="fu">c</span>(<span class="dv">26</span>,<span class="dv">38</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>pulso <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">0</span>,<span class="fu">length</span>(ldeaths))</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>pulso[<span class="dv">72</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">arimax</span>(ldeaths, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xreg =</span> pulso, <span class="at">io =</span> <span class="fu">c</span>(<span class="dv">26</span>,<span class="dv">38</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Vamos verificar se novos ouliers foram revelados.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectAO</span>(mod2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectAO</span>(mod2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "No AO detected"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectIO</span>(mod2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectIO</span>(mod2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             [,1]
 ind     50.000000
 lambda1  3.535189</code></pre>
 </div>
 </div>
-<p>Note que mais um outlier foi detectado IO, agora no tempo 50. Abaixo, constrúimos mais um modelo, agora com o outlier no tempo 50.</p>
+<p>Note que mais um outlier foi detectado como de inovação, agora no tempo 50. Abaixo, constrúimos mais um modelo, agora com o outlier no tempo 50.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">arimax</span>(ldeaths, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xreg =</span> pulso, <span class="at">io =</span> <span class="fu">c</span>(<span class="dv">26</span>,<span class="dv">38</span>,<span class="dv">50</span>))</span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">detectAO</span>(mod3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">arimax</span>(ldeaths, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">xreg =</span> pulso, <span class="at">io =</span> <span class="fu">c</span>(<span class="dv">26</span>,<span class="dv">38</span>,<span class="dv">50</span>))</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">detectAO</span>(mod3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "No AO detected"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectIO</span>(mod3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detectIO</span>(mod3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "No IO detected"</code></pre>
 </div>
 </div>
 <p>Depois de detectar todos os outliers, vamos comparar o AIC do modelo original com o do modelo com tratamento de outliers.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>mod<span class="sc">$</span>aic</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>mod<span class="sc">$</span>aic</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 839.5738</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>mod3<span class="sc">$</span>aic</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>mod3<span class="sc">$</span>aic</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 773.1072</code></pre>
 </div>
 </div>
 <p>O modelo 3 se mostrou mais parcimonioso e vamos mantê-lo. As estimativas dos parâmetros são:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>mod3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>mod3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -987,32 +975,32 @@ sigma^2 estimated as 14410:  log likelihood = -377.55,  aic = 773.11</code></pre
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>resid <span class="ot">&lt;-</span> mod3<span class="sc">$</span>residuals[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)]</span>
-<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>resid <span class="ot">&lt;-</span> mod3<span class="sc">$</span>residuals[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)]</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-29-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-30-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intervencao_files/figure-html/unnamed-chunk-29-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="intervencao_files/figure-html/unnamed-chunk-30-3.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Box-Pierce test
@@ -1020,7 +1008,7 @@ sigma^2 estimated as 14410:  log likelihood = -377.55,  aic = 773.11</code></pre
 data:  resid
 X-squared = 0.52117, df = 1, p-value = 0.4703</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(resid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
