@@ -292,6 +292,8 @@ window.Quarto = {
   <ul>
   <li><a href="#as-funções-ts.union-e-ts.intersect" id="toc-as-funções-ts.union-e-ts.intersect" class="nav-link active" data-scroll-target="#as-funções-ts.union-e-ts.intersect"><span class="header-section-number">13.1</span> As funções <code>ts.union</code> e <code>ts.intersect</code></a></li>
   <li><a href="#a-função-de-correlação-cruzada-e-a-correlação-espúria" id="toc-a-função-de-correlação-cruzada-e-a-correlação-espúria" class="nav-link" data-scroll-target="#a-função-de-correlação-cruzada-e-a-correlação-espúria"><span class="header-section-number">13.2</span> A função de correlação cruzada e a correlação espúria</a></li>
+  <li><a href="#whitening" id="toc-whitening" class="nav-link" data-scroll-target="#whitening"><span class="header-section-number">13.3</span> Whitening</a></li>
+  <li><a href="#regressão-para-séries-temporais" id="toc-regressão-para-séries-temporais" class="nav-link" data-scroll-target="#regressão-para-séries-temporais"><span class="header-section-number">13.4</span> Regressão para séries temporais</a></li>
   </ul>
 </nav>
     </div>
@@ -319,8 +321,8 @@ window.Quarto = {
 
 <section id="as-funções-ts.union-e-ts.intersect" class="level2" data-number="13.1">
 <h2 data-number="13.1" class="anchored" data-anchor-id="as-funções-ts.union-e-ts.intersect"><span class="header-section-number">13.1</span> As funções <code>ts.union</code> e <code>ts.intersect</code></h2>
-<p>Considere novamente a série de mortes por doenças pulmonares no Reino Unido. Além da série <code>ldeaths</code>, o pacote <code>datasets</code> possui as séries <code>mdeahts</code> e <code>fdeaths</code>, que representam as mortes para os sexos masculino e feminino, respectivamente. Assim, como a primeira, essas duas séries são mensais, começando em janeiro de 1974 e terminando em dezembro de 1979.</p>
-<p>Desde de dois objetos <code>ts</code> tenham o mesmo argumento <code>frequency</code>, é possível organizá-las lado a lado e um <code>data.frame</code> respeitando o tempo do registro de cada observação. Para tanto, utilizamos a função <code>ts.union</code>. Ilustramos isso com aas duas novas séries apresentadas.</p>
+<p>Anteriormente, apresentamos a série de mortes por doenças pulmonares no Reino Unido disponível no R (<code>ldeaths</code>). Além desta série, o pacote <code>datasets</code> possui as séries <code>mdeaths</code> e <code>fdeaths</code>, que representam as mortes para os sexos masculino e feminino, respectivamente. Ambas são séries mensais, começando em janeiro de 1974 e terminando em dezembro de 1979.</p>
+<p>Desde que dois objetos <code>ts</code> tenham o mesmo argumento <code>frequency</code>, é possível organizá-los em uma matriz de séries temporais múltiplas, com cada linha representando o mesmo momento na linha do tempo. Para tanto, utilizamos a função <code>ts.union</code>. Ilustramos isso com as duas novas séries apresentadas.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">ts.union</span>( ldeaths, mdeaths)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -334,11 +336,14 @@ May 1974    2014    1492
 Jun 1974    1655    1249</code></pre>
 </div>
 </div>
-<p>Observe que é possível realizar a organização mesmo que os tempos de início ou fim sejam diferentes - nesse caso, <code>NA</code>s serão gerados quando não houverem registros. Veja o exemplo abaixo, no qual o primeiro mês da série <code>mdeaths</code> foi removido</p>
+<p>Observe que é possível construir a matriz de séries temporais múltiplas mesmo que os tempos de início ou fim sejam diferentes entre as séries - nesse caso, <code>NA</code>s serão gerados quando não houver registros. Veja o exemplo abaixo, no qual o primeiro mês da série <code>mdeaths</code> foi removido</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mdeaths2 <span class="ot">&lt;-</span> <span class="fu">window</span>(mdeaths, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1974</span>,<span class="dv">2</span>))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">ts.union</span>( ldeaths, mdeaths2)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remoção do primeiro mês</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mdeaths2 <span class="ot">&lt;-</span> <span class="fu">window</span>(mdeaths, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1974</span>,<span class="dv">2</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># criação do data.frame</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">ts.union</span>( ldeaths, mdeaths2)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ldeaths mdeaths2
 Jan 1974    3035       NA
@@ -349,11 +354,14 @@ May 1974    2014     1492
 Jun 1974    1655     1249</code></pre>
 </div>
 </div>
-<p>De modo análogo, podemos construir <code>data.frame</code> que apresenta um subconjunto das séries corresponde à interseção dos períodos registrados, utilizando a função <code>ts.intersect</code></p>
+<p>De modo análogo, podemos construir uma matriz de séries temporais múltiplas que apresenta um subconjunto das séries que corresponde à interseção dos períodos registrados, utilizando a função <code>ts.intersect</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mdeaths3 <span class="ot">&lt;-</span> <span class="fu">window</span>(mdeaths, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1974</span>,<span class="dv">2</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">1974</span>,<span class="dv">5</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>d3 <span class="ot">&lt;-</span> <span class="fu">ts.intersect</span>( ldeaths, mdeaths3)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>d3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recorte da série mdeaths entre fev/1974 e mai/1974</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mdeaths3 <span class="ot">&lt;-</span> <span class="fu">window</span>(mdeaths, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1974</span>,<span class="dv">2</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">1974</span>,<span class="dv">5</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># data.frame somente com os tempos que existem entre as duas séries</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>d3 <span class="ot">&lt;-</span> <span class="fu">ts.intersect</span>( ldeaths, mdeaths3 )</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>d3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         ldeaths mdeaths3
 Feb 1974    2552     1863
@@ -366,21 +374,35 @@ May 1974    2014     1492</code></pre>
 <section id="a-função-de-correlação-cruzada-e-a-correlação-espúria" class="level2" data-number="13.2">
 <h2 data-number="13.2" class="anchored" data-anchor-id="a-função-de-correlação-cruzada-e-a-correlação-espúria"><span class="header-section-number">13.2</span> A função de correlação cruzada e a correlação espúria</h2>
 <p>Sejam <span class="math inline">\(\{x_t\}\)</span> <span class="math inline">\(\{y_t\}\)</span> duas séries temporais. A função de covariância cruzada é dada por</p>
-<p><span class="math display">\[\gamma_{r,s}(X,Y)=Cov(X_r,Y_s).\]</span> Se as séries forem estacionárias, a covariância cruzada é função somente da diferença <span class="math inline">\(k=r-s\)</span> e escrevemos <span class="math display">\[\gamma_{k}(X,Y)=Cov(X_{t+k},Y_t)=Cov(X_{t},Y_{t-k}).\]</span></p>
-<p>Observe que a função de covariância cruzada é ímpar, uma vez que</p>
-<p><span class="math display">\[\gamma_{k}(X,Y)\neq \gamma_{-k}(X,Y).\]</span></p>
-<p>Além disso, a função de autocovariância, de <span class="math inline">\(X\)</span> por exemplo, é dada por <span class="math inline">\(\gamma_k(X,X)\)</span>.</p>
-<p>A função de correlação cruzada é definida por <span class="math display">\[\rho_k(X,Y)=\frac{\gamma_{k}(X,Y)}{\sqrt{Var(x)Var(y)}}\]</span> :::{#exm-} Considere que <span class="math display">\[y_t = \beta_0+\beta_1 x_{t-d}+\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco com variância <span class="math inline">\(\nu\)</span> e <span class="math inline">\(x_t\)</span> tem distribuição normal com variância <span class="math inline">\(\sigma^2_X\)</span> e são independentes entre si e do ruído. Como,</p>
-<p><span class="math display">\[\begin{align}
-Var(y_t)=\beta_1^2Var(x_{t-d})+Var(\varepsilon_t)=\beta_1^2\sigma^2_X+\nu.
-\end{align}\]</span> e <span class="math display">\[\begin{align}
-Cov(x_t,y_{t-k})&amp;=Cov(x_t,\beta_0+\beta_1x_{t-k-d}+\varepsilon_{t-k})\\&amp;=\beta_1Cov(x_t,x_{t-k-d})=\left\{\begin{array}{ll}\beta_1\sigma_X^2,&amp;\hbox{se }k=-d,\\0,&amp;\hbox{caso contrário}\end{array}\right.
-\end{align}\]</span> logo, <span class="math display">\[\rho_k(X,Y)=\left\{\begin{array}{ll}\frac{\beta_1\sigma_X}{\sqrt{\beta_1^2\sigma_X^2+\nu}},&amp;\hbox{ se }k=-d,\\0,&amp;\hbox{caso contrário}\end{array}\right.\]</span> <span class="math inline">\(\blacksquare\)</span> :::</p>
-<p>Para duas séries <span class="math inline">\(x_t\)</span> e <span class="math inline">\(y_t\)</span> observadas, de tamanho <span class="math inline">\(n\)</span>, a função de correlação cruzada amostral (CCF) é definida por <span class="math display">\[r_k(X,Y)=\frac{\sum_{t=k+1}^n (x_t-\bar{x}_n)(y_{t-k}-\bar{y}_n)}{\sqrt{\sum_{t=1}^n(x_t-\bar{x}_n)^2}\sqrt{\sum_{t=1}^n(y_t-\bar{y}_n)^2}}\]</span> e a regra</p>
-<p>pode ser utilizada para detectar se Para o modelo <span class="math display">\[y_t=\beta_0+\beta_1 x_{t-d}+\varepsilon_t,\]</span> <span class="math inline">\(x\)</span> é independente de <span class="math inline">\(y\)</span> se e somente se <span class="math inline">\(\beta_1=0\)</span>. Nesse caso, <span class="math inline">\(r_k(X,Y)\)</span> tem distribuição aproximadamente normal com média zero e variância <span class="math inline">\(1/n\)</span> e a regra <span class="math display">\[|r_k(X,Y)|&gt;\frac{1,96}{\sqrt{n}}\]</span> pode ser utilizada para detectar se a defasagem <span class="math inline">\(k\)</span> na regressora é significativa. Entretanto, esse modelo é muito restritivo e um modelo mais geral seria</p>
-<p><span class="math display">\[y_t= \beta_0+\beta_1 x_{t-d}+z_t,\]</span> onde <span class="math inline">\(z_t\)</span> é um processo ARIMA. Nesse caso, mesmo se <span class="math inline">\(x_t\)</span> e <span class="math inline">\(y_t\)</span> forem processos estacionários, a variância de <span class="math inline">\(r_k(X,Y)\)</span> não é mais aproximadamente <span class="math inline">\(1/n\)</span>, sendo geralmente inflada. Isso implica que, ao utilizar a regra de comparar o módulo de <span class="math inline">\(r_k(X,Y)\)</span> com <span class="math inline">\(1,96/\sqrt{n}\)</span>, é possível encontrar correlações que não fazem sentido, ou seja, <strong>espúrias</strong>.</p>
+<p><span class="math display">\[\gamma_{XY}(r,s)=\text{Cov}(X_r,Y_s).\]</span></p>
+<p>Dizemos que as séries <span class="math inline">\(\{x_t,y_t\}\)</span> são conjuntamente estacionárias quando elas são estacionárias e sua covariância cruzada é função somente da diferença <span class="math inline">\(h=r-s\)</span>. Nesse caso, escrevemos a covariância cruzada como</p>
+<p><span class="math display">\[\gamma_{XY}(h)=\text{Cov}(X_{t+h},Y_t).\]</span></p>
+<p>Observe que a função de covariância assimétrica, uma vez que</p>
+<p><span class="math display">\[\gamma_{XY}(h)\neq \gamma_{XX}(-h).\]</span> Além disso, a função de autocovariância de <span class="math inline">\(X\)</span> é dada por <span class="math inline">\(\gamma_X(h)=\gamma_{XY}(h)\)</span>.</p>
+<p>Para duas séries temporais <span class="math inline">\(\{x_t,y_t\}\)</span> conjuntamente estacionárias, a função de correlação cruzada é definida por <span class="math display">\[\rho_{XY}(h)=\frac{\gamma_{XY}(h)}{\sqrt{\gamma_X(0)\gamma_Y(0)}}.\]</span></p>
 <div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Example 13.2</strong></span> Como exemplo de correlação espúria, considere a produção mensal de leite e a produção de energia elétrica (em escala logaritmica) nos EUA entre janeiro de 1994 e dezembro de 2006. Note como hà várias correlações significativas, quando comparadas com o limiar 1,96/<span class="math inline">\(\sqrt{n}\)</span>. Entretanto, não parece fazer sentido a relação entre produção de eletricidade e de leite.</p>
+<p><span class="theorem-title"><strong>Example 13.1</strong></span> Considere que</p>
+<p><span class="math display">\[y_t = \beta_0+\beta_1 x_{t-d}+\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\)</span> é um ruído branco com variância <span class="math inline">\(\nu\)</span> e <span class="math inline">\(\{x_t\}\)</span> é uma sequência de variáveis aleatórias independentes com distribuição Normal(0,<span class="math inline">\(\sigma^2_X)\)</span>. Além disso, <span class="math inline">\(\{x_t\}\)</span> e <span class="math inline">\(\{\varepsilon_t\}\)</span> são independentes entre si. Observe que <span class="math inline">\(\{x_t\}\)</span> já é estacionária. Para a série <span class="math inline">\(\{y_t\}\)</span>, temos</p>
+<p><span class="math display">\[\begin{align}
+E(y_t)&amp;=E(\beta_0+\beta_1x_{t-d}+\varepsilon_t)=\beta_0\\
+Var(y_t)&amp;=\beta_1^2Var(x_{t-d})+Var(\varepsilon_t)=\beta_1^2\sigma^2_X+\nu.
+\end{align}\]</span> e <span class="math display">\[\begin{align}
+\text{Cov}(y_t,y_{t+h})=\text{Cov}(\beta_1 x_{t-d}+\varepsilon_{t},\beta_1 x_{t-d+h}+\varepsilon_{t+h})=0
+\end{align}\]</span> para $h $. Portanto <span class="math inline">\(\{y_t\}\)</span> também é estacionária. Observe que</p>
+<p><span class="math display">\[\begin{align}
+\text{Cov}(x_{t+h},y_{t})&amp;=\text{Cov}(x_{t+h},\beta_0+\beta_1x_{t-d}+\varepsilon_{t})\\&amp;=\beta_1Cov(x_{t+h},x_{t-d})=\left\{\begin{array}{ll}\beta_1\sigma_X^2,&amp;\hbox{se }h=-d,\\0,&amp;\hbox{caso contrário}\end{array}\right.
+\end{align}\]</span> logo, <span class="math display">\[\rho_{XY}(h)=\begin{cases}\frac{\beta_1\sigma_X}{\sqrt{\beta_1^2\sigma_X^2+\nu}},&amp;\hbox{ se }h=-d,\\0,&amp;\hbox{caso contrário}\end{cases}\]</span></p>
+</div>
+<p>A partir do exemplo anterior, podemos notar que a função de correlação cruzada de duas séries temporais conjuntamente estacionárias pode ser utilizada para determinar o quão defasada está um série em relação à outra.</p>
+<p>Na prática, precisamos estimar a função de correlação cruzada. Para duas séries <span class="math inline">\(x_t\)</span> e <span class="math inline">\(y_t\)</span> observadas, de tamanho <span class="math inline">\(n\)</span>, tal função é estimada por</p>
+<p><span class="math display">\[r_{xy}(h)=\frac{\sum_{t=\max\{1,1-h\}}^{\min\{n,n-h\}} (x_{t+h}-\bar{x}_n)(y_{t}-\bar{y}_n)}{\sqrt{\sum_{t=1}^n(x_t-\bar{x}_n)^2}\sqrt{\sum_{t=1}^n(y_t-\bar{y}_n)^2}}\]</span> e, desde que as duas séries sejam conjuntamente estacionárias, <span class="math inline">\(r_{xy}(h)\)</span> significativamente diferente de zero indica uma associação linear defasada. Como <span class="math inline">\(r_{xy}(h)\)</span> não é simétrica, existem as seguintes situações:</p>
+<ol type="1">
+<li><p>Se <span class="math inline">\(r_{xy}(h)\)</span> é significativa com <span class="math inline">\(h \gt 0\)</span>, o comportamento de <span class="math inline">\(y\)</span> no instante <span class="math inline">\(t\)</span> antecede o de <span class="math inline">\(x\)</span> em <span class="math inline">\(h\)</span> unidades de tempo</p></li>
+<li><p>Se <span class="math inline">\(r_{xy}(h)\)</span> é significativa com <span class="math inline">\(h \lt 0\)</span>, éa série <span class="math inline">\(x\)</span> que antecede <span class="math inline">\(y\)</span> em <span class="math inline">\(|h|\)</span> unidades de tempo.</p></li>
+</ol>
+<p>Contudo, a correlação cruzada falha quando as séries não são conjuntamente estacionárias, gerando um fenômeno conhecido como <strong>correlação espúria.</strong></p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 13.2</strong></span> Como exemplo de correlação espúria, considere a produção mensal de leite e a produção de energia elétrica (em escala logarítmica) nos EUA entre janeiro de 1994 e dezembro de 2006. Ambas as séries apresentam tendência e sazonalidade.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(TSA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
@@ -410,68 +432,45 @@ Anexando pacote: 'TSA'</code></pre>
 </figure>
 </div>
 </div>
+</div>
+<p>Abaixo, apresentamos a correlação cruzada (<code>ccf</code>). Note como há várias correlações significativas, quando comparadas com o limiar 1,96/<span class="math inline">\(\sqrt{n}\)</span>. Embora os gráficos apresentem uma tendência crescente e padrão sazonal de período 12, não há justificativa plausível de causalidade entre as séries. Deste modo, os picos observados na <code>ccf</code> são gerados pelo fato de ambas compartilharem uma tendência crescente e um padrão sazonal de período 12.</p>
+<div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ccf</span>( leiteLogEle[,<span class="dv">1</span>] , leiteLogEle[,<span class="dv">2</span>] ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regressao_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="whitening" class="level2" data-number="13.3">
-<h2 data-number="13.3" class="anchored" data-anchor-id="whitening"><span class="header-section-number">13.3</span> Whitening</h2>
-<p>Considere o modelo</p>
-<p><span class="math display">\[y_t= \sum_{j=-\infty}^\infty \beta_j x_{t-j}+z_t,\]</span> onde <span class="math inline">\(z_t\)</span> é um processo ARIMA. Se ambos <span class="math inline">\(\{x_t\}\)</span> e <span class="math inline">\(\{y_t\}\)</span> são estacionários, a variância de <span class="math inline">\(r_k(X,Y)\)</span> é aproximadamente <span class="math display">\[\frac{1}{n}\left[1+2\sum_{k=1}^\infty \rho_k(x)\rho_k(y)\right]\]</span> onde <span class="math inline">\(\rho_k(x)\)</span> e <span class="math inline">\(\rho_k(y)\)</span> são as funções de autocorrelação de <span class="math inline">\(\{x_t\}\)</span> e <span class="math inline">\(\{y_t\}\)</span>, respectivamente. Note que, se pelo menos um dos processos for um ruído branco, então a variância será aproximadamente 1/<span class="math inline">\(n\)</span>.</p>
-<p>Suponha então <span class="math inline">\(\{x_t\}\)</span> é um processo ARIMA, <span class="math display">\[\phi(B)(1-B)^d x_t=\theta(B)\epsilon_t,\]</span> onde <span class="math inline">\(\epsilon_t\)</span> é ruído branco. Suponha ainda que o processo é inversível, ou seja, existe <span class="math inline">\(\pi(B)\)</span> tal que <span class="math display">\[\pi(B)x_t=\epsilon_t.\]</span> Então, <span class="math inline">\(\pi(B)x_t\)</span> é um ruído branco. A aplicação do filtro <span class="math inline">\(\pi(B)\)</span> em <span class="math inline">\(x_t\)</span> para obter um ruído branco é denominado <em>whitening</em> ou <em>prewhitening</em>. Aplicando o filtro ao modelo no começo dessa seção, teremos</p>
-<p><span class="math display">\[\pi(B)y_t= \sum_{j=-\infty}^\infty \pi(\beta)x_{t-j}+\pi(B)\varepsilon_t.\]</span></p>
-<p>Como <span class="math inline">\(\pi(B)x_t\)</span> é independente de <span class="math inline">\(\pi(B)\varepsilon_t\)</span>, a correlação cruzara entre <span class="math inline">\(\pi(B)y_t\)</span> e <span class="math inline">\(\pi(B)x_t\)</span> é igual à <span class="math display">\[\rho_k(\pi(X),\pi(Y))=\beta_{-k}\sqrt{\frac{Var(\pi(B)x_t)}{Var(\pi(B)y_t)}},\]</span> ou seja, a correlação cruzada do processo <em>whitened</em> é proporcional à <span class="math inline">\(\beta_{-k}\)</span> e, sob <span class="math inline">\(H_0\)</span>, pode-se verificar a significância da defasagem comparando o módulo da correlação cruzada amostral com 1,96<span class="math inline">\(/\sqrt{n}\)</span>.</p>
-<div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Example 13.1</strong></span> Considere novamente as séries de produção de leite e eletricidade vistas na seção anterior. Ambas possuem tendência e sazonalidade, que podem ser removidas com operadores diferença para obter um processo estacionário.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>estacionario <span class="ot">&lt;-</span> <span class="fu">ts.intersect</span>(<span class="fu">diff</span>(<span class="fu">diff</span>(milk,<span class="dv">12</span>)),</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span>(<span class="fu">diff</span>(<span class="fu">log</span>(electricity),<span class="dv">12</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Abaixo, encontramos a correlação cruzada utilizando o processo <em>whitened</em>. Note que as correlações espúrias se foram e não há correlação digna de nota.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prewhiten</span>( estacionario[,<span class="dv">1</span>],  estacionario[,<span class="dv">2</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="regressao_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regressao_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 </section>
-<section id="regressão-para-séries-temporais" class="level2" data-number="13.4">
-<h2 data-number="13.4" class="anchored" data-anchor-id="regressão-para-séries-temporais"><span class="header-section-number">13.4</span> Regressão para séries temporais</h2>
-<p>Sejam <span class="math inline">\(\{x_t\}\)</span> e <span class="math inline">\(\{y_t\}\)</span> séries temporais onde</p>
-<p><span class="math display">\[y_t=\sum_{j=-\infty}^\infty \beta_j x_{t-j}+z_t,\]</span> onde <span class="math inline">\(z_t\)</span> é um modelo ARIMA. Na prática, apenas um número finito dos <span class="math inline">\(\beta\)</span>’s é diferente de zero. Seja <span class="math inline">\(\dot{x}_t=\pi(B)x_t\)</span>, onde <span class="math inline">\(\dot{x}_t\)</span> é um processo AR(<span class="math inline">\(\infty\)</span>). Seja <span class="math inline">\(\dot{y}_t=\pi(B)\)</span>. Então,</p>
-<p><span class="math display">\[\dot{y}_t=\sum_{j=-\infty}^\infty \beta_j \dot{x}_{t-j}+\dot{z}_t,\]</span> onde <span class="math inline">\(\dot{z}_t=\pi(B)z_t\)</span>. Como <span class="math inline">\(\dot{x}_t\)</span> é um ruído branco e independente de <span class="math inline">\(\dot{z}_t\)</span>, a correlação cruzada entre <span class="math inline">\(\dot{x}_t\)</span> e <span class="math inline">\(\dot{y}_t\)</span> na defasagem <span class="math inline">\(k\)</span> é igual à <span class="math inline">\(\beta_{-k}\sigma_{\dot{X}}/\sigma_{\dot{Y}}.\)</span></p>
-<p>Abaixo, segue um roteiro para uma análise preliminar: 1. Se necessário, remova o sinal de <span class="math inline">\(x_t\)</span> de <span class="math inline">\(y_t\)</span>, aplicando os operadores diferença necessários. 2. Encontre uma representação de um modelo AR para <span class="math inline">\(x_t\)</span>, minimizando o AIC por exemplo, estime <span class="math inline">\(\pi(B)\)</span> 3. Obtenha <span class="math inline">\(\dot{x}_t=\pi(B)x_t\)</span> e <span class="math inline">\(\dot{y}_t=\pi(B)y_t.\)</span> 4. Estime a função de correlação cruzada entre <span class="math inline">\(\dot{y}_t\)</span> e <span class="math inline">\(\dot{x}_t\)</span>. Determine <span class="math inline">\(\mathcal{K}\)</span>, um conjunto de defasagens significativas 5. Encontre os estimadores de mínimos quadrados para <span class="math inline">\(\beta\)</span>, minimizando</p>
-<p><span class="math display">\[\sum_{t=1}^n z_t^2=\sum_{t=1}^n\left(y_t-\sum_{j\in\mathcal{K}}\beta_j x_{t-j}\right)^2\]</span> 6. Estime <span class="math inline">\(z_t\)</span> pelos resíduos</p>
-<p><span class="math display">\[\hat{z}_t=y_t-\sum_{j\in\mathcal{K}}\hat{\beta}_j x_{t-j}\]</span> e determine o modelo ARIMA estimado para <span class="math inline">\(z_t\)</span> 7. Encontre os estimadores de máxima verossimilhança para o modelo</p>
-<p><span class="math display">\[y_t=\sum_{j\in\mathcal{K}} \beta_j x_{t-j}+z_t\]</span> onde <span class="math inline">\(z_t\)</span> é um modelo ARIMA com a ordem encontrada no passo anterior.</p>
-<div id="exm">
-<p>Vamos simular um processo do seguinte modelo:</p>
-<p><span class="math display">\[y_t = 2x_{t-4}+z_t,\]</span> onde <span class="math inline">\(x_t\)</span> é um processo AR(1) com <span class="math inline">\(\phi=.8\)</span> e <span class="math inline">\(z_t\)</span> um ARMA(1,1) com <span class="math inline">\(\phi=.2\)</span> e <span class="math inline">\(\theta=.5\)</span>.</p>
+<section id="whitening" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="whitening"><span class="header-section-number">13.3</span> Whitening</h2>
+<p>Considere o modelo dado por</p>
+<p><span class="math display">\[y_t = \sum_{j=-\infty}^\infty \beta_j x_{t-j} + z_t,\]</span> onde <span class="math inline">\(\{z_t\}\)</span> é um processo ARIMA independente de <span class="math inline">\(\{x_t\}\)</span>. Se <span class="math inline">\(\{x_t\}\)</span> e <span class="math inline">\(\{y_t\}\)</span> são estacionários e independentes entre si, a variância assintótica de <span class="math inline">\(r_{xy}(h)\)</span> é aproximadamente</p>
+<p><span class="math display">\[\text{Var}\big(r_{xy}(h)\big) \approx \frac{1}{n}\left[1 + 2\sum_{k=1}^\infty \rho_X(k)\rho_Y(k)\right],\]</span> onde <span class="math inline">\(\rho_X(k)\)</span> e <span class="math inline">\(\rho_Y(k)\)</span> são as funções de autocorrelação de <span class="math inline">\(\{x_t\}\)</span> e <span class="math inline">\(\{y_t\}\)</span>, respectivamente.</p>
+<p>Note que, se pelo menos um dos processos for um ruído branco, todas as autocorrelações para <span class="math inline">\(k \ge 1\)</span> se anulam e a variância reduz-se a aproximadamente <span class="math inline">\(1/n\)</span>. Suponha então que <span class="math inline">\(\{x_t\}\)</span> é um processo ARIMA,</p>
+<p><span class="math display">\[\phi(B)(1-B)^d x_t = \theta(B)\varepsilon_t,\]</span> onde <span class="math inline">\(\{\varepsilon_t\} \sim \text{rb}(0, \nu)\)</span>. Assumindo que o processo é inversível, podemos escrever <span class="math inline">\(\pi(B)x_t = \varepsilon_t\)</span>, em que o operador <span class="math display">\[\pi(B) = \theta(B)^{-1}\phi(B)(1-B)^d\]</span> converte a série <span class="math inline">\(\{x_t\}\)</span> em um ruído branco. A aplicação do filtro <span class="math inline">\(\pi(B)\)</span> em <span class="math inline">\(x_t\)</span> para obter um ruído branco é denominada <em>whitening</em> ou <em>prewhitening</em>. Aplicando o mesmo filtro <span class="math inline">\(\pi(B)\)</span> a ambos os lados do modelo apresentado no início desta seção, obtemos</p>
+<p><span class="math display">\[\pi(B)y_t = \sum_{j=-\infty}^\infty \beta_j \big[\pi(B)x_{t-j}\big] + \pi(B)z_t.\]</span></p>
+<p>Definindo as séries filtradas <span class="math inline">\(\tilde{x}_t = \pi(B)x_t = \varepsilon_t\)</span>, <span class="math inline">\(\tilde{y}_t = \pi(B)y_t\)</span> e <span class="math inline">\(\tilde{z}_t = \pi(B)z_t\)</span> (e assumindo que <span class="math inline">\(\tilde{y}_t\)</span> resultante é estacionária), temos que <span class="math inline">\(\tilde{x}_t\)</span> é independente de <span class="math inline">\(\tilde{z}_t\)</span>. Como <span class="math inline">\(\{\tilde{x}_t\}\)</span> é um ruído branco, a função de correlação cruzada entre <span class="math inline">\(\tilde{x}_t\)</span> e <span class="math inline">\(\tilde{y}_t\)</span> reduz-se a:</p>
+<p><span class="math display">\[\rho_{\tilde{X}\tilde{Y}}(h) = \beta_{-h}\sqrt{\frac{\text{Var}\big(\pi(B)x_t\big)}{\text{Var}\big(\pi(B)y_t\big)}},\]</span> ou seja, a correlação cruzada das séries após o <em>prewhitening</em> é diretamente proporcional a <span class="math inline">\(\beta_{-h}\)</span> (em particular, se <span class="math inline">\(y_t\)</span> depende apenas de valores presentes e passados de <span class="math inline">\(x_t\)</span>, os picos surgirão em <span class="math inline">\(h \le 0\)</span>). Além disso, como <span class="math inline">\(\{\tilde{x}_t\}\)</span> é ruído branco, sob a hipótese nula <span class="math inline">\(H_0\)</span> de independência entre as séries podemos testar a significância de cada defasagem comparando <span class="math inline">\(|r_{\tilde{x}\tilde{y}}(h)|\)</span> com o limiar usual <span class="math inline">\(1,96/\sqrt{n}\)</span>.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 13.3</strong></span> Considere novamente as séries mensais de produção de leite e logaritmo da produção de energia elétrica vistas na seção anterior. Ambas possuem tendência e sazonalidade, que podem ser removidas inicialmente com diferenças ordinária e sazonal para obter séries estacionárias:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>( <span class="fu">list</span>( <span class="at">ar =</span> .<span class="dv">2</span>, <span class="at">ma =</span> .<span class="dv">5</span>), <span class="dv">105</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>( <span class="fu">list</span>(<span class="at">ar =</span> .<span class="dv">8</span>, <span class="at">ma =</span> <span class="dv">0</span>), <span class="dv">105</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">ts</span>(x, <span class="at">start =</span> <span class="dv">1</span>); z <span class="ot">&lt;-</span> <span class="fu">ts</span>(z, <span class="at">start=</span><span class="dv">1</span>)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">105</span>) y[t] <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>x[t<span class="dv">-4</span>] <span class="sc">+</span> z[t]</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">ts</span>(x[<span class="dv">5</span><span class="sc">:</span><span class="dv">105</span>])</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">ts</span>(y[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)])</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>( <span class="fu">cbind</span>(y,x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>estacionario <span class="ot">&lt;-</span> <span class="fu">ts.intersect</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">leite =</span> <span class="fu">diff</span>(<span class="fu">diff</span>(milk, <span class="dv">12</span>)),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">eletricidade =</span> <span class="fu">diff</span>(<span class="fu">diff</span>(<span class="fu">log</span>(electricity), <span class="dv">12</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Como as séries diferenciadas ainda podem preservar estrutura de autocorrelação, aplicamos o procedimento de prewhitening antes de avaliar a função de correlação cruzada. A função <code>prewhiten</code> do pacote <code>TSA</code> ajusta um modelo autorregressivo à primeira série (selecionado via AIC) e aplica o mesmo filtro linear a ambas as séries antes de calcular a correlação cruzada amostral</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prewhiten</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.vector</span>(estacionario[, <span class="dv">1</span>]),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.vector</span>(estacionario[, <span class="dv">2</span>]),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"CCF"</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -480,9 +479,20 @@ Anexando pacote: 'TSA'</code></pre>
 </div>
 </div>
 </div>
-<p>Observe abaixo que a correlação cruzada apresenta a defasagem -4 significativa e conunto com várias outras, que são espúrias.</p>
+<p>Note que o padrão de correlações espúrias desapareceu, com exceção de uma oscilação marginal na defasagem <span class="math inline">\(-3\)</span>, que é compatível com o número esperado de falsos positivos ao testar dezenas de defasagens simultaneamente ao nível de 5%). Portanto, não há evidência de associação linear entre as duas séries.</p>
+</div>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Example 13.4</strong></span> O BOVA11 é um fundo que imita do Índice BOVESPA, que por sua vez é composto pelas empresas com maior volume de negociação na Bolsa de Valores de São Paulo. Abaixo, apresentamos o preço de fechamento mensal na escala logaritmica.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ccf</span>(x,y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://drive.google.com/uc?authuser=0&amp;id=1d1dp1q7_Jdp8yOMlcsLxdZZcCMmwjZ04&amp;export=download'</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>dados<span class="sc">$</span>Data <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(dados<span class="sc">$</span>Data, <span class="st">'%d.%m.%Y'</span>) </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>dados0 <span class="ot">&lt;-</span> dados[<span class="fu">order</span>(dados<span class="sc">$</span>Data),]</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>dados0<span class="sc">$</span>IPCA[<span class="dv">141</span>] <span class="ot">&lt;-</span> <span class="fl">3.1352</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>bova11 <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">log</span>(dados0<span class="sc">$</span>Último), <span class="at">frequency=</span><span class="dv">12</span>, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2009</span>,<span class="dv">1</span>))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>bova11 <span class="ot">&lt;-</span> <span class="fu">window</span>(bova11, <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2019</span>,<span class="dv">12</span>))</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>( bova11, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -491,10 +501,14 @@ Anexando pacote: 'TSA'</code></pre>
 </div>
 </div>
 </div>
-<p>As séries <span class="math inline">\(x_t\)</span> e <span class="math inline">\(y_t\)</span> já parecem ser estacionárias. Abaixo, aplicamos o <em>whitening</em> e as correlações espúrias desapareceram. Temos evidências de que apenas <span class="math inline">\(\beta_{4}\)</span> é relevante.</p>
+<p>Pessoas vendem as ações para obter lucro (vender por um valor maior do que comprou) ou por acreditar que o valor de mercado da empresa vai diminuir. Entretanto, não é apenas o desempenho da empresa que determina o valor da ação, mas a dinâmica do mercado, que tenta se antecipar a possíveis perdas. Se muitas pessoas vendem suas ações, o preço cai. Mas se muitas pessoas querem comprar, o preço sobe. Esse movimento é explicado pela Lei da Oferta e da Procura.</p>
+<p>O pessimismo da economia tende a diminuir o ânimo dos investidores, fazendo com que eles se desfaçam de suas ações antes que elas desvalorizem mais.</p>
+<p>Um indicador importante da econômia é o IPCA (Índice Nacional de Preços ao Consumidor Amplo), nosso principal índice de inflação. Abaixo, mostramos a série do IPCA, acumulado em 12 meses</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(TSA)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prewhiten</span>(x,y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ipca <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">as.numeric</span>(dados0<span class="sc">$</span>IPCA), <span class="at">frequency=</span><span class="dv">12</span>, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2009</span>,<span class="dv">1</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ipca <span class="ot">&lt;-</span> <span class="fu">window</span>(ipca, <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2019</span>,<span class="dv">12</span>))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(ipca, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -503,18 +517,32 @@ Anexando pacote: 'TSA'</code></pre>
 </div>
 </div>
 </div>
-<p>Vamos ajustar o modelo de regressão <span class="math display">\[y_t=\beta_{4}x_{t-j}\]</span> e obter o AIC e seus resíduos.</p>
+<p>Quando a inflaçãoo está alta, o Banco Central aumenta os juros e existe um movimento de saída da bolsa para os papéis do tesouro, fazendo com que o índice BOVESPA caia, e, por consequência, o BOVA11</p>
+<p>Portanto, é esperado uma relação negativa entre a série do IPCA com o BOVA11. Abaixo, apresentamos a correlação cruzada (espúria).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>( y[<span class="dv">5</span><span class="sc">:</span><span class="dv">100</span>] <span class="sc">~</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">96</span>] <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 296.0433</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>series <span class="ot">&lt;-</span> <span class="fu">ts.union</span>(bova11,ipca)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( series)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regressao_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>resReg <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Vamos analisar os resíduos obtibos para determinar o modelo de <span class="math inline">\(z_t\)</span>. Abaixo, vemos indícios para o modelo ARMA(1,1).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ccf</span>(bova11, ipca)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regressao_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vamos diferenciar as séries e aplicar o prewhiten.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(resReg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dipca   <span class="ot">&lt;-</span> <span class="fu">diff</span>(ipca)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>dbova11 <span class="ot">&lt;-</span> <span class="fu">diff</span>(bova11)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">prewhiten</span>(dipca ,dbova11)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -522,29 +550,137 @@ Anexando pacote: 'TSA'</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(resReg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Após a diferenciação e o <em>prewhitening</em>, o padrão intenso de correlações observado inicialmente desaparece: nenhuma defasagem ultrapassa claramente as bandas de confiança de 95%, restando apenas um sinal negativo limítrofe (que apenas toca o limite inferior de confiança, em torno da defasagem de 6 meses). Esse comportamento limítrofe mostra que, embora exista uma intuição econômica sólida para que altas na inflação levem ao aumento dos juros e à consequente migração de recursos da bolsa para títulos públicos, o gráfico mostra que esse movimento não é forte o suficiente para ditar, sozinho, a dinâmica mensal entre o IPCA e o BOVA11.</p>
+</div>
+</section>
+<section id="regressão-para-séries-temporais" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="regressão-para-séries-temporais"><span class="header-section-number">13.4</span> Regressão para séries temporais</h2>
+<p>Retomando o modelo da seção anterior, sejam <span class="math inline">\(\{x_t\}\)</span> e <span class="math inline">\(\{y_t\}\)</span> duas séries temporais relacionadas por <span class="math display">\[y_t = \sum_{j=-\infty}^\infty \beta_j x_{t-j} + z_t,\]</span> onde <span class="math inline">\(\{z_t\}\)</span> segue um processo ARIMA independente de <span class="math inline">\(\{x_t\}\)</span>. Na prática, apenas um conjunto finito de coeficientes <span class="math inline">\(\beta_j\)</span> é diferente de zero. Supondo que <span class="math inline">\(\{x_t\}\)</span> (após eventual diferenciação) seja estacionária e possua representação <span class="math inline">\(\text{AR}(\infty)\)</span> dada por <span class="math inline">\(\pi(B)x_t = \dot{x}_t\)</span>, onde <span class="math inline">\(\{\dot{x}_t\}\)</span> é um ruído branco, definimos também <span class="math inline">\(\dot{y}_t = \pi(B)y_t\)</span> e <span class="math inline">\(\dot{z}_t = \pi(B)z_t\)</span>. Aplicando o filtro <span class="math inline">\(\pi(B)\)</span> ao modelo acima, obtemos <span class="math display">\[\dot{y}_t = \sum_{j=-\infty}^\infty \beta_j \dot{x}_{t-j} + \dot{z}_t.\]</span> Como <span class="math inline">\(\{\dot{x}_t\}\)</span> é ruído branco e independente de <span class="math inline">\(\{\dot{z}_t\}\)</span>, vimos que a função de correlação cruzada entre <span class="math inline">\(\dot{x}_t\)</span> e <span class="math inline">\(\dot{y}_t\)</span> na defasagem <span class="math inline">\(h\)</span> é igual a <span class="math inline">\(\beta_{-h}\,\sigma_{\dot{X}}/\sigma_{\dot{Y}}\)</span>. Abaixo, segue um roteiro para identificação e estimação desse modelo.</p>
+<ol type="1">
+<li><p>Se necessário, remova eventuais tendências e sazonalidades de <span class="math inline">\(x_t\)</span> e de <span class="math inline">\(y_t\)</span>, aplicando os operadores diferença adequados (quando o mesmo operador <span class="math inline">\(\\Delta^d\)</span> é aplicado a ambos os lados da equação, os coeficientes <span class="math inline">\(\beta_j\)</span> permanecem preservados.)</p></li>
+<li><p>Encontre uma aproximação <span class="math inline">\(\text{AR}(p)\)</span> para a série <span class="math inline">\(x_t\)</span> (já estacionarizada) — minimizando o critério AIC, por exemplo — e estime o operador <span class="math inline">\(\pi(B)\)</span>.</p></li>
+<li><p>Obtenha as séries filtradas <span class="math inline">\(\dot{x}_t = \pi(B)x_t\)</span> e <span class="math inline">\(\dot{y}_t = \pi(B)y_t\)</span>.</p></li>
+<li><p>Estime a função de correlação cruzada entre <span class="math inline">\(\dot{x}_t\)</span> e <span class="math inline">\(\dot{y}_t\)</span> e determine o conjunto <span class="math inline">\(\\mathcal{K}\)</span> das defasagens relevantes (recordando que, nessa ordem, um pico significativo na defasagem <span class="math inline">\(h\)</span> corresponde ao regressor <span class="math inline">\(x_{t-j}\)</span> com <span class="math inline">\(j = -h \in \mathcal{K}\)</span>).</p></li>
+<li><p>Alinhando as séries nas datas em que todos os regressores estão disponíveis, obtenha estimativas iniciais para <span class="math inline">\((\beta_j)_{j \in \mathcal{K}}\)</span> (incluindo um intercepto <span class="math inline">\(\beta_0\)</span>, se aplicável) minimizando a soma de quadrados dos erros <span class="math display">\[\sum_{t} z_t^2 = \sum_{t} \left(y_t - \sum_{j \in \mathcal{K}} \beta_j x_{t-j}\right)^2.\]</span></p></li>
+<li><p>Calcule a série de resíduos preliminares <span class="math display">\[\hat{z}_t = y_t - \sum_{j \in \mathcal{K}} \hat{\beta}_j x_{t-j}\]</span> e identifique a ordem <span class="math inline">\((p, d, q)\)</span> de um modelo ARIMA adequado para <span class="math inline">\(\{z_t\}\)</span> (por meio da ACF, PACF e critérios de informação).</p></li>
+<li><p>Encontre os estimadores de máxima verossimilhança para o modelo completo <span class="math display">\[y_t = \sum_{j \in \mathcal{K}} \beta_j x_{t-j} + z_t,\]</span> assumindo que <span class="math inline">\(\{z_t\}\)</span> segue o modelo ARIMA com a ordem determinada no passo anterior, e realize a análise diagnóstica dos resíduos finais.</p></li>
+</ol>
+<div id="exm">
+<p>Vamos simular um processo do seguinte modelo:</p>
+<p><span class="math display">\[y_t = 2x_{t-4}+z_t,\]</span> onde <span class="math inline">\(x_t\)</span> é um processo AR(1) com <span class="math inline">\(\phi=.8\)</span> e <span class="math inline">\(z_t\)</span> um ARMA(1,1) com <span class="math inline">\(\phi=.2\)</span> e <span class="math inline">\(\theta=.5\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>( <span class="fu">list</span>( <span class="at">ar =</span> .<span class="dv">2</span>, <span class="at">ma =</span> .<span class="dv">5</span>), <span class="dv">104</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>( <span class="fu">list</span>(<span class="at">ar =</span> .<span class="dv">8</span>, <span class="at">ma =</span> <span class="dv">0</span>), <span class="dv">104</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">ts</span>(x, <span class="at">start =</span> <span class="dv">1</span>); z <span class="ot">&lt;-</span> <span class="fu">ts</span>(z, <span class="at">start=</span><span class="dv">1</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">104</span>) y[t] <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>x[t<span class="dv">-4</span>] <span class="sc">+</span> z[t]</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">ts</span>(x[<span class="dv">5</span><span class="sc">:</span><span class="dv">104</span>])</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">ts</span>(y[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)])</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>( <span class="fu">cbind</span>(y,x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="regressao_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="regressao_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Vamos ajustar o modelo de regressão para séries temporais:</p>
+<p>Observe abaixo que a correlação cruzada apresenta a defasagem -4 significativa em conjunto com várias outras, que são espúrias.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>modFinal <span class="ot">&lt;-</span> <span class="fu">arima</span>(y[<span class="dv">5</span><span class="sc">:</span><span class="dv">100</span>] , <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">xreg =</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">96</span>] , <span class="at">include.mean =</span>  <span class="cn">FALSE</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>modFinal<span class="sc">$</span>aic</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ccf</span>(x,y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regressao_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As séries <span class="math inline">\(x_t\)</span> e <span class="math inline">\(y_t\)</span> já parecem ser estacionárias. Abaixo, aplicamos o <em>whitening</em> e as correlações espúrias desapareceram. Temos evidências de que apenas <span class="math inline">\(\beta_{4}\)</span> é relevante.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(TSA)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prewhiten</span>(x,y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regressao_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vamos ajustar o modelo de regressão <span class="math display">\[y_t=\beta_{4}x_{t-4}+z_t\]</span> e obter o AIC e seus resíduos.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>( y[<span class="dv">5</span><span class="sc">:</span><span class="dv">100</span>] <span class="sc">~</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">96</span>] <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 256.901</code></pre>
+<pre><code>[1] 296.465</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>resReg <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Vamos analisar os resíduos obtibos para determinar o modelo de <span class="math inline">\(z_t\)</span>. Abaixo, vemos indícios para o modelo ARMA(1,1).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(resReg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regressao_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<p><span class="math inline">\(\blacksquare\)</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(resReg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regressao_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ajustamos o modelo de regressão para séries temporais abaixo, com <span class="math inline">\(\hat{\beta}_4=1,94\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>modFinal <span class="ot">&lt;-</span> <span class="fu">arima</span>(y[<span class="dv">5</span><span class="sc">:</span><span class="dv">100</span>] , <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">xreg =</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">96</span>] , <span class="at">include.mean =</span>  <span class="cn">FALSE</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>modFinal</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+arima(x = y[5:100], order = c(1, 0, 1), xreg = x[1:96], include.mean = FALSE)
+
+Coefficients:
+          ar1     ma1    xreg
+      -0.0150  0.7540  2.0392
+s.e.   0.1576  0.1198  0.0887
+
+sigma^2 estimated as 0.7935:  log likelihood = -125.53,  aic = 257.05</code></pre>
+</div>
+</div>
+<p>Para validar o ajuste final, verificamos se os resíduos do modelo completo se comportam como ruído branco:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(modFinal<span class="sc">$</span>residuals, <span class="at">main =</span> <span class="st">"ACF dos resíduos finais"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regressao_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(modFinal<span class="sc">$</span>residuals, <span class="at">lag =</span> <span class="dv">10</span>, <span class="at">type =</span> <span class="st">"Ljung-Box"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Ljung test
+
+data:  modFinal$residuals
+X-squared = 5.9911, df = 10, p-value = 0.816</code></pre>
+</div>
+</div>
 </div>
 
 
-</section>
-</div>
 </section>
 
 </main> <!-- /main -->
