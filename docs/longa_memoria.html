@@ -321,20 +321,21 @@ window.Quarto = {
 <h2 data-number="14.1" class="anchored" data-anchor-id="o-teorema-binomial"><span class="header-section-number">14.1</span> O Teorema Binomial</h2>
 <p>Recordemos o Teorema Binomial:</p>
 <div id="thm-" class="theorem">
-<p><span class="theorem-title"><strong>Theorem 14.1</strong></span> <em>Teorema Binomial</em>. Para quaisquer <span class="math inline">\(a,b\)</span> reais e <span class="math inline">\(n\)</span> natural, <span class="math display">\[(a+b)^n=\sum_{k=0}^n{n\choose j}a^ jb^{n-j}=\sum_{k=0}^n{n\choose j}b^ ja^{n-j}.\]</span> <span class="math inline">\(\blacksquare\)</span></p>
+<p><span class="theorem-title"><strong>Theorem 14.1</strong></span> <em>Teorema Binomial</em>. Para quaisquer <span class="math inline">\(a,b\)</span> reais e <span class="math inline">\(n\)</span> natural, <span class="math display">\[(a+b)^n=\sum_{j=0}^n{n\choose j}a^ jb^{n-j}=\sum_{k=0}^n{n\choose j}b^ ja^{n-j}.\]</span></p>
 </div>
 <p>Em particular, fazendo <span class="math inline">\(a=1\)</span>, <span class="math inline">\(b=-B\)</span> e <span class="math inline">\(d=n\)</span> , teremos que nosso tradicional operador diferença pode ser reescrito como</p>
 <p><span class="math display">\[\begin{align}(1-B)^d&amp;=\sum_{j=0}^d{
 d\choose j}(-1)^jB^j\\&amp;=1-d B + \frac{d(d-1)}{2!}B^2-\frac{d(d-1)(d-2)}{3!}B^3\\&amp;+\cdots+(-1)^d B^d\end{align}\]</span></p>
 <p>Acontece que o Teorema Binomial pode ser generalizado para <span class="math inline">\(n\)</span> real, conforme o teorema abaixo.</p>
 <div id="thm-" class="theorem">
-<p><span class="theorem-title"><strong>Theorem 14.2</strong></span> Teorema Binomial Generalizado. Se <span class="math inline">\(|x|&lt;1\)</span>, então para qualquer <span class="math inline">\(n\)</span> real, <span class="math display">\[(1-x)^n=\sum_{j=0}^\infty (-1)^j\frac{n(n-1)\ldots(n-j+1)}{j!}x^j\]</span></p>
+<p><span class="theorem-title"><strong>Theorem 14.2</strong></span> Teorema Binomial Generalizado. Se <span class="math inline">\(|x|&lt;1\)</span>, então para qualquer <span class="math inline">\(n\)</span> real, <span class="math display">\[\begin{aligned}(1-x)^n&amp;=\sum_{j=0}^\infty \binom{n}{j} (-1)^j x^j,\end{aligned}\]</span></p>
 </div>
 <p>Para demonstrar o resultado acima, basta expandir <span class="math inline">\((1-x)^n\)</span> em séries de Taylor em torno de zero.</p>
 </section>
 <section id="séries-de-longa-memória" class="level2" data-number="14.2">
 <h2 data-number="14.2" class="anchored" data-anchor-id="séries-de-longa-memória"><span class="header-section-number">14.2</span> Séries de longa memória</h2>
-<p>Varva é cada um dos componentes separados que compõem uma única camada anual em sedimentos de lagos glaciais. Uma camada anual pode ser altamente visível porque as partículas lavadas para a camada na primavera, quando há maior intensidade de fluxo, são muito mais grossas do que aquelas depositadas no final do ano. Isso forma um par de camadas – uma grossa e outra fina – para cada ciclo anual. A seguir, apresentamos uma série de de espessuras de varvas glaciais em Massachusetts, totalizando 634 anos.</p>
+<p>Varva é cada um dos componentes separados que compõem uma única camada anual em sedimentos de lagos glaciais. Uma camada anual pode ser altamente visível porque as partículas lavadas para a camada na primavera, quando há maior intensidade de fluxo, são muito mais grossas do que aquelas depositadas no final do ano. Isso forma um par de camadas – uma grossa e outra fina – para cada ciclo anual.</p>
+<p>A seguir, apresentamos uma série de de espessuras de varvas glaciais em Massachusetts, totalizando 634 anos.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(astsa)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
@@ -363,10 +364,10 @@ d\choose j}(-1)^jB^j\\&amp;=1-d B + \frac{d(d-1)}{2!}B^2-\frac{d(d-1)(d-2)}{3!}B
 </div>
 </div>
 </div>
-<p>No correlograma acima, existem muitas autocorrelações significativas, mas não de valor expressivo, como aquelas que encontramos em séries com claro sinal de tendência. Esse comportamento é denominado longa memória, sendo comuns em dados geológico e hidrológicos que remontam vários anos.</p>
-<p>Observe que é possível interpretar essa denpendência longa como uma tendência. De fato, aplicar a primeira diferença nessa série a torna estacionária, como vemos abaixo. É possível mostrar que o modelo ARIMA(1,1,1) é razoável para esse problema.</p>
+<p>O correlograma mostra que essa série não é estacionária. Contudo, o decaimento hiperbólico indica a ausência de tendência (uma vez que esta última tem um decaimento linear).</p>
+<p>Ao tomar a diferença ordinária, obtemos um processo estacionário, consistente com o ARIMA(1,1,1). Contudo, isso ocorre por causa de um fenômeno denominado superdiferença, no qual o valor <span class="math inline">\(d\)</span> utilizado no operador diferença é maior do que o necessário.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">diff</span>(<span class="fu">log</span>(varve)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">diff</span>(<span class="fu">log</span>(varve)), <span class="at">main=</span><span class="st">'Primeira diferença de log(varve)'</span>, <span class="at">sub=</span><span class="st">'O processo é estacionário devido a uma superdiferenciação'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -374,25 +375,9 @@ d\choose j}(-1)^jB^j\\&amp;=1-d B + \frac{d(d-1)}{2!}B^2-\frac{d(d-1)(d-2)}{3!}B
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">diff</span>(<span class="fu">log</span>(varve)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="longa_memoria_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
 </div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="fu">diff</span>(<span class="fu">log</span>(varve)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="longa_memoria_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>O problema é que, ao aplicar o operador diferença, estamos forçando a série a ter uma autocorrelação com decaimento exponencial, o que ignora a longa dependência da série. Isso ocorre porque aplicar uma diferença nessa série ocasiona o fenômeno de superdiferença. Para ilustrar, considere que <span class="math display">\[y_t= t+\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\sim\hbox{Normal}(0,1)\)</span> é um ruído branco. A primeira diferença já é o suficiente para obter um ruído branco, uma vez que <span class="math display">\[\Delta y_t = \varepsilon_t-\varepsilon_{t-1}\sim\hbox{Normal}(0,2)\]</span> Acontece que, para qualquer <span class="math inline">\(d&gt;1\)</span>, a série também será um ruído branco, logo, utilizar outro valor de <span class="math inline">\(d\)</span>, como <span class="math inline">\(d=2\)</span> por exemplo, seria superdiferenciar a série.</p>
-<p>Para evitar a superdiferenciação, seria necessário aplicar uma diferença <span class="math inline">\(d\)</span> onde <span class="math inline">\(|d|&lt;1\)</span>. Nesse caso, para uma série com longa memória <span class="math inline">\(\{x_t\}\)</span>, o processo ARIMA correspondente seria <span class="math display">\[\phi(B)(1-B)^d=\theta(B)\varepsilon_t,\]</span> onde <span class="math inline">\(|d|&lt;0,5\)</span>, para garantir a estacionaridade. Esse processo é conhecido como ARIMA fracionário (ou ainda ARFIMA ou FARIMA). Pode-se provar que <span class="math display">\[\rho(h)\approx h^{2d-1},\]</span> logo, o decaimento é mais lento que o exponencial. Se <span class="math inline">\(|d|&lt;.5\)</span>, teremos <span class="math display">\[\sum_{h=-\infty}^\infty |\rho(h)|=\infty,\]</span> e daí vem o termo longa memória.</p>
+<p>Para ilustrar o fenômeno da superdiferença, considere que <span class="math display">\[x_t= t+\varepsilon_t,\]</span> onde <span class="math inline">\(\varepsilon_t\sim\hbox{rb}(\nu)\)</span>. A primeira diferença já é o suficiente para obter um processo estacionário, uma vez que <span class="math display">\[\Delta x_t = \varepsilon_t-\varepsilon_{t-1}\]</span> é um modelo MA(1). Acontece que, para qualquer <span class="math inline">\(d&gt;1\)</span>, a série também será estacionária. Por exemplo, para <span class="math inline">\(d=2\)</span>, <span class="math display">\[\Delta^2x_t=\Delta(\varepsilon_t - \varepsilon_{t-1})=\varepsilon_t-2\varepsilon_{t-1}+\varepsilon_{t-2},\]</span> ou seja, um processo MA(2).</p>
+<p>Para evitar a superdiferenciação em uma série com longa dependência, seria necessário aplicar uma diferença <span class="math inline">\(d\)</span> onde <span class="math inline">\(|d|&lt;1\)</span>. Nesse caso, para uma série com longa memória <span class="math inline">\(\{x_t\}\)</span>, o processo ARIMA correspondente seria <span class="math display">\[\phi(B)(1-B)^dx_t=\theta(B)\varepsilon_t,\]</span> onde <span class="math inline">\(|d|&lt;0,5\)</span>, para garantir que o processo é estacionário e inversível. Esse processo é conhecido como ARIMA fracionário (ou ainda ARFIMA ou FARIMA). Pode-se provar que <span class="math display">\[\rho(h)\approx h^{2d-1},\]</span> apresentando um decaimento hiperbólico, muito mais lento que o decaimento exponencial dos modelos ARMA tradicionais. Em particular, quando <span class="math inline">\(0 &lt; d &lt; 0{,}5\)</span>, temos <span class="math display">\[\sum_{h=-\infty}^\infty |\rho(h)|=\infty,\]</span> e é justamente dessa propriedade que provém o termo <strong>longa memória</strong>.</p>
 <p>A estimação de <span class="math inline">\(d\)</span> pode ser realizada via máxima verossimilhança, uma vez que o modelo possui a mesma função de verossimilhança do modelo ARIMA tradicional.</p>
 <p>Considerando o modelo apenas com a diferença fracionária, podemos escrever</p>
 <p><span class="math display">\[\begin{align}(1-B)^d x_t=\varepsilon_t&amp;\Rightarrow \sum_{j=0}^\infty {d \choose j}(-B)^jx_t=\varepsilon_t\\ &amp;\Rightarrow x_t-\sum_{j=1}^\infty \underbrace{{d \choose j}(-1)^{j-1}}_{\pi_j}x_{t-j}=\varepsilon_t\\
@@ -400,13 +385,13 @@ d\choose j}(-1)^jB^j\\&amp;=1-d B + \frac{d(d-1)}{2!}B^2-\frac{d(d-1)(d-2)}{3!}B
 &amp;\Rightarrow x_t=\sum_{j=1}^\infty \psi_j \varepsilon_{t-j}+\varepsilon_t\end{align}\]</span></p>
 <p>Abaixo, mostramos como estimar <span class="math inline">\(d\)</span> para a série <code>valve</code>, utilizando a função <code>fracdiff</code> do pacote de mesmo nome. A função estima <span class="math inline">\(d\)</span> em conjunto com o parâmetros do modelo autorregressivos e de média móvel, mas o <em>default</em> é considerar <span class="math inline">\(p=q=0\)</span>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fracdiff)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">fracdiff</span>(<span class="fu">log</span>(varve))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> mod<span class="sc">$</span>d</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fracdiff)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">fracdiff</span>(<span class="fu">log</span>(varve))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> mod<span class="sc">$</span>d</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Podemos agora fazer o correlograma com a diferença estimada. Note que a estrutura ARMA que havia aparecido utilizando <span class="math inline">\((1-B)\)</span> desapareceram. Se houvesse tais estruturas, deveríamos construir um novo modelo com a função <code>fracdiff</code> colocando os argumentos <code>nar</code> e <code>nam</code> representando <span class="math inline">\(p\)</span> e <span class="math inline">\(q\)</span>.</p>
+<p>Podemos agora fazer o correlograma com a diferença estimada. Note que a estrutura ARMA que havia aparecido utilizando a diferença ordinária desapareceu. Se houvesse tais estruturas, deveríamos construir um novo modelo com a função <code>fracdiff</code> colocando os argumentos <code>nar</code> e <code>nam</code> representando <span class="math inline">\(p\)</span> e <span class="math inline">\(q\)</span>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>( <span class="fu">diffseries</span>( <span class="fu">log</span>(varve), d))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>( <span class="fu">diffseries</span>( <span class="fu">log</span>(varve), d))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -414,7 +399,7 @@ d\choose j}(-1)^jB^j\\&amp;=1-d B + \frac{d(d-1)}{2!}B^2-\frac{d(d-1)(d-2)}{3!}B
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>( <span class="fu">diffseries</span>( <span class="fu">log</span>(varve), d))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>( <span class="fu">diffseries</span>( <span class="fu">log</span>(varve), d))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -423,21 +408,21 @@ d\choose j}(-1)^jB^j\\&amp;=1-d B + \frac{d(d-1)}{2!}B^2-\frac{d(d-1)(d-2)}{3!}B
 </div>
 </div>
 </div>
-<p>Por fim, vamos comparar o AIC do modelo ARIMA(1,1,1) e do modelo ARIMA(0, .37, 0). Note que não parece haver vantagens em termos de parcimônia.</p>
+<p>Por fim, vamos comparar o AIC do modelo ARIMA(1,1,1) e do modelo ARFIMA(0, .37, 0). Note que não parece haver diferenças entre esses valores, o que torna o ARFIMA mais parcimonioso.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ARIMA111 <span class="ot">&lt;-</span> <span class="fu">arima</span>( <span class="fu">log</span>(varve), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>( ARIMA111)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ARIMA111 <span class="ot">&lt;-</span> <span class="fu">arima</span>( <span class="fu">log</span>(varve), <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>( ARIMA111)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 868.8751</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>( <span class="fu">arima</span>( <span class="fu">diffseries</span>( <span class="fu">log</span>(varve),d), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.mean =</span> <span class="cn">FALSE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>( <span class="fu">arima</span>( <span class="fu">diffseries</span>( <span class="fu">log</span>(varve),d), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.mean =</span> <span class="cn">FALSE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 867.958</code></pre>
 </div>
 </div>
-<p>Talvez a maior vantagem esteja na previsão. Enquanto que a previsão para o modelo ARIMA(1,1,1) vai rapidamente convergir para um constante, a previsão para o modelo fracionário vai utilizar a relação de longa dependência do processo AR correspondente para cosntruir a previsão.</p>
+<p>Talvez a maior vantagem do modelo fracionário esteja na previsão de médio e longo prazo. Enquanto a previsão do modelo <span class="math inline">\(\text{ARIMA}(1,1,1)\)</span> (sem deriva) converge rapidamente de forma exponencial para uma constante local, a previsão do modelo <span class="math inline">\(\text{ARFIMA}(0, \hat{d}, 0)\)</span> utiliza a estrutura de longa dependência (os pesos <span class="math inline">\(\pi_j\)</span> sobre todo o histórico observado) e decai de forma lenta (hiperbólica) em direção à média global da série.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(forecast)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Carregando pacotes exigidos: forecast</code></pre>
 </div>
@@ -455,7 +440,7 @@ Anexando pacote: 'forecast'</code></pre>
 
     gas</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(mod,<span class="dv">30</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(mod,<span class="dv">30</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -463,7 +448,7 @@ Anexando pacote: 'forecast'</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(ARIMA111,<span class="dv">30</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">forecast</span>(ARIMA111,<span class="dv">30</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

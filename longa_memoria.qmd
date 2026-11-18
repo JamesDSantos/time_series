@@ -7,8 +7,7 @@ Recordemos o Teorema Binomial:
 
 :::{#thm-}
 *Teorema Binomial*. Para quaisquer $a,b$ reais e $n$ natural,
-$$(a+b)^n=\sum_{k=0}^n{n\choose j}a^ jb^{n-j}=\sum_{k=0}^n{n\choose j}b^ ja^{n-j}.$$
-$\blacksquare$
+$$(a+b)^n=\sum_{j=0}^n{n\choose j}a^ jb^{n-j}=\sum_{k=0}^n{n\choose j}b^ ja^{n-j}.$$
 :::
 
 Em particular, fazendo $a=1$, $b=-B$ e $d=n$ , teremos que nosso tradicional operador diferença pode ser reescrito como
@@ -20,7 +19,8 @@ Acontece que o Teorema Binomial pode ser generalizado para $n$ real, conforme o 
 
 :::{#thm-}
 Teorema Binomial Generalizado. Se $|x|<1$, então para qualquer $n$ real,
-$$(1-x)^n=\sum_{j=0}^\infty (-1)^j\frac{n(n-1)\ldots(n-j+1)}{j!}x^j$$
+$$\begin{aligned}(1-x)^n&=\sum_{j=0}^\infty \binom{n}{j} (-1)^j x^j,\end{aligned}$$
+
 :::
 
 Para demonstrar o resultado acima, basta expandir $(1-x)^n$ em séries de Taylor em torno de zero. 
@@ -28,6 +28,7 @@ Para demonstrar o resultado acima, basta expandir $(1-x)^n$ em séries de Taylor
 ## Séries de longa memória
 
 Varva é cada um dos componentes separados que compõem uma única camada anual em sedimentos de lagos glaciais. Uma camada anual pode ser altamente visível porque as partículas lavadas para a camada na primavera, quando há maior intensidade de fluxo, são muito mais grossas do que aquelas depositadas no final do ano. Isso forma um par de camadas – uma grossa e outra fina – para cada ciclo anual.
+
 A seguir, apresentamos uma série de de espessuras de varvas glaciais em Massachusetts, totalizando 634 anos.
 
 
@@ -42,30 +43,29 @@ Pelos gráficos acima, optamos por lidar com a série após a transformação lo
 acf(log(varve), lag = 100)
 ```
 
-No correlograma acima, existem muitas autocorrelações significativas, mas não de valor expressivo, como aquelas que encontramos em séries com claro sinal de tendência. Esse comportamento é denominado longa memória, sendo comuns em dados geológico e hidrológicos que remontam vários anos.
+O correlograma mostra que essa série não é estacionária. Contudo, o decaimento hiperbólico indica a ausência de tendência (uma vez que esta última tem um decaimento linear). 
 
-Observe que é possível interpretar essa denpendência longa como uma tendência. De fato, aplicar a primeira diferença nessa série a torna estacionária, como vemos abaixo. É possível mostrar que o modelo ARIMA(1,1,1) é razoável para esse problema.
+Ao tomar a diferença ordinária, obtemos um processo estacionário, consistente com o ARIMA(1,1,1). Contudo, isso ocorre por causa de um fenômeno denominado superdiferença, no qual o valor $d$ utilizado no operador diferença é maior do que o necessário.  
 
 ```{r}
-ts.plot(diff(log(varve)))
-acf(diff(log(varve)))
-pacf(diff(log(varve)))
-
+ts.plot(diff(log(varve)), main='Primeira diferença de log(varve)', sub='O processo é estacionário devido a uma superdiferenciação')
 ```
 
-O problema é que, ao aplicar o operador diferença, estamos forçando a série a ter uma autocorrelação com decaimento exponencial, o que ignora a longa dependência da série. Isso ocorre porque aplicar uma diferença nessa série ocasiona o fenômeno de superdiferença. Para ilustrar, considere que
-$$y_t= t+\varepsilon_t,$$
-onde $\varepsilon_t\sim\hbox{Normal}(0,1)$ é um ruído branco. A primeira diferença já é o suficiente para obter um ruído branco, uma vez que 
-$$\Delta y_t = \varepsilon_t-\varepsilon_{t-1}\sim\hbox{Normal}(0,2)$$
-Acontece que, para qualquer $d>1$, a série também será um ruído branco, logo, utilizar outro valor de $d$, como $d=2$ por exemplo, seria superdiferenciar a série.
+Para ilustrar o fenômeno da superdiferença, considere que
+$$x_t= t+\varepsilon_t,$$
+onde $\varepsilon_t\sim\hbox{rb}(\nu)$. A primeira diferença já é o suficiente para obter um processo estacionário, uma vez que 
+$$\Delta x_t = \varepsilon_t-\varepsilon_{t-1}$$
+é um modelo MA(1). Acontece que, para qualquer $d>1$, a série também será estacionária. Por exemplo, para $d=2$, 
+$$\Delta^2x_t=\Delta(\varepsilon_t - \varepsilon_{t-1})=\varepsilon_t-2\varepsilon_{t-1}+\varepsilon_{t-2},$$
+ou seja, um processo MA(2). 
 
-Para evitar a superdiferenciação, seria necessário aplicar uma diferença $d$ onde $|d|<1$. Nesse caso, para uma série com longa memória $\{x_t\}$, o processo ARIMA correspondente seria
-$$\phi(B)(1-B)^d=\theta(B)\varepsilon_t,$$
-onde $|d|<0,5$, para garantir a estacionaridade. Esse processo é conhecido como ARIMA fracionário (ou ainda ARFIMA ou FARIMA). Pode-se provar que
+Para evitar a superdiferenciação em uma série com longa dependência, seria necessário aplicar uma diferença $d$ onde $|d|<1$. Nesse caso, para uma série com longa memória $\{x_t\}$, o processo ARIMA correspondente seria
+$$\phi(B)(1-B)^dx_t=\theta(B)\varepsilon_t,$$
+onde $|d|<0,5$, para garantir que o processo é estacionário e inversível. Esse processo é conhecido como ARIMA fracionário (ou ainda ARFIMA ou FARIMA). Pode-se provar que
 $$\rho(h)\approx h^{2d-1},$$
-logo, o decaimento é mais lento que o exponencial. Se $|d|<.5$, teremos
+apresentando um decaimento hiperbólico, muito mais lento que o decaimento exponencial dos modelos ARMA tradicionais. Em particular, quando $0 < d < 0{,}5$, temos
 $$\sum_{h=-\infty}^\infty |\rho(h)|=\infty,$$
-e daí vem o termo longa memória. 
+e é justamente dessa propriedade que provém o termo **longa memória**. 
 
 A estimação de $d$ pode ser realizada via máxima verossimilhança, uma vez que o modelo possui a mesma função de verossimilhança do modelo ARIMA tradicional. 
 
@@ -86,7 +86,7 @@ mod <- fracdiff(log(varve))
 d <- mod$d
 ```
 
-Podemos agora fazer o correlograma com a diferença estimada. Note que a estrutura ARMA que havia aparecido utilizando $(1-B)$ desapareceram. Se houvesse tais estruturas, deveríamos construir um novo modelo com a função `fracdiff` 
+Podemos agora fazer o correlograma com a diferença estimada. Note que a estrutura ARMA que havia aparecido utilizando a diferença ordinária desapareceu. Se houvesse tais estruturas, deveríamos construir um novo modelo com a função `fracdiff` 
 colocando os argumentos `nar` e `nam` representando $p$ e $q$.
 
 ```{r}
@@ -95,14 +95,14 @@ pacf( diffseries( log(varve), d))
 ```
 
 
-Por fim, vamos comparar o AIC do modelo ARIMA(1,1,1) e do modelo ARIMA(0, .37, 0). Note que não parece haver vantagens em termos de parcimônia.
+Por fim, vamos comparar o AIC do modelo ARIMA(1,1,1) e do modelo ARFIMA(0, .37, 0). Note que não parece haver diferenças entre esses valores, o que torna o ARFIMA mais parcimonioso.
 
 ```{r}
 ARIMA111 <- arima( log(varve), c(1,1,1))
 AIC( ARIMA111)
 AIC( arima( diffseries( log(varve),d), c(0,0,0), include.mean = FALSE))
 ```
-Talvez a maior vantagem esteja na previsão. Enquanto que a previsão para o modelo ARIMA(1,1,1) vai rapidamente convergir para um constante, a previsão para o modelo fracionário vai utilizar a relação de longa dependência do processo AR correspondente para cosntruir a previsão.
+Talvez a maior vantagem do modelo fracionário esteja na previsão de médio e longo prazo. Enquanto a previsão do modelo $\text{ARIMA}(1,1,1)$ (sem deriva) converge rapidamente de forma exponencial para uma constante local, a previsão do modelo $\text{ARFIMA}(0, \hat{d}, 0)$ utiliza a estrutura de longa dependência (os pesos $\pi_j$ sobre todo o histórico observado) e decai de forma lenta (hiperbólica) em direção à média global da série.
 
 ```{r}
 require(forecast)
